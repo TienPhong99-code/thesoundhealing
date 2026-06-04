@@ -1,0 +1,17 @@
+{
+    "name": "monamedia/theme",
+    "description": "Mona theme wordpress",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Hồ Tiên Phong",
+            "email": "phonght.dev@gmail.com"
+        }
+    ],
+    "require": {
+        "vinkla/extended-acf": "^14"
+    },
+    "require-dev": {
+        "php-stubs/acf-pro-stubs": "*"
+    }
+}

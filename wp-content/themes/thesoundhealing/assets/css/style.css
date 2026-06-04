@@ -1,0 +1,1590 @@
+/* ── Montserrat self-hosted ── */
+@import url("../fonts/Monsterrat/stylesheet.css");
+/* @import url("../fonts/PlayfairDisplay/stylesheet.css"); */
+@import url("../fonts/BeautiqueDisplay/stylesheet.css");
+
+:root {
+  /* Colors — KienA System Design */
+  --color-pri: #133a35;
+  --color-sec: #1b1c19;
+  --color-text: #283377;
+  --color-white: #fff;
+  --color-black: #000;
+  --cl-border: #d9d9d9;
+  --font-body: "Monsterrat", serif;
+  --font-title: "Beautique Display", serif;
+  /* Layout */
+  --size-hd: 80px;
+  --pd-sc: 80px;
+  --rs: 16px;
+}
+
+@theme {
+  --color-pri: #133a35;
+  --color-sec: #1b1c19;
+  --font-body: "Monsterrat", serif;
+  --font-title: "Beautique Display", serif;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #ddd;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-pri);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sec);
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --pd-sc: 40px;
+    --size-hd: 60px;
+    --rs: 8px;
+  }
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat";
+  font-size: 16px;
+  line-height: 1.55;
+  font-weight: 400;
+  color: var(--color-text);
+  overflow: hidden auto;
+}
+
+.main {
+  min-height: 68vh;
+  position: relative;
+  z-index: 1;
+  padding-top: var(--size-hd);
+}
+.main.page-home {
+  padding-top: 0;
+}
+.container {
+  width: 100%;
+  max-width: 1245px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+iframe {
+  vertical-align: middle;
+}
+
+.row {
+  --cg: 24px;
+  --rg: 24px;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0 calc(var(--cg) * -0.5) calc(var(--rg) * -1);
+}
+.row.small {
+  --cg: 16px;
+  --rg: 16px;
+}
+@media screen and (max-width: 1200px) {
+  .hd-logo {
+    width: 100px;
+  }
+  .row {
+    --cg: 12px;
+    --rg: 12px;
+  }
+}
+
+.rows {
+  --cg: 24px;
+  --rg: 24px;
+  margin: 0 calc(var(--cg) * -0.5);
+}
+
+@media screen and (max-width: 1200px) {
+  .rows {
+    --cg: 12px;
+    --rg: 12px;
+  }
+}
+.rows .col {
+  margin-bottom: 0;
+}
+.col {
+  width: 100%;
+  padding: 0 calc(var(--cg) / 2);
+  margin-bottom: var(--rg);
+}
+.col-11 {
+  width: 91.6666666667%;
+}
+.col-10 {
+  width: 83.3333333333%;
+}
+.col-9 {
+  width: 75%;
+}
+.col-8 {
+  width: 66.6666666667%;
+}
+.col-7 {
+  width: 58.3333333333%;
+}
+.col-6 {
+  width: 50%;
+}
+.col-5 {
+  width: 41.6666666667%;
+}
+.col-4 {
+  width: 33.3333333333%;
+}
+.col-3 {
+  width: 25%;
+}
+.col-2 {
+  width: 16.6666666667%;
+}
+.col-1 {
+  width: 8.3333333333%;
+}
+.col-5i {
+  width: 20%;
+}
+.col-4i {
+  width: 25%;
+}
+
+.mona-content strong,
+.mona-content b {
+  font-weight: bold;
+}
+.mona-content em,
+.mona-content i {
+  font-style: italic;
+}
+.mona-content h1,
+.mona-content h2,
+.mona-content h3,
+.mona-content h4,
+.mona-content h5,
+.mona-content h6 {
+  line-height: 1.3;
+  margin-bottom: 0.5em;
+  margin-top: 0.6em;
+  font-weight: 700;
+}
+.mona-content h1 {
+  font-size: 1.7em;
+}
+.mona-content h2 {
+  font-size: 1.6em;
+}
+.mona-content h3 {
+  font-size: 1.25em;
+}
+.mona-content h4 {
+  font-size: 1.125em;
+}
+.mona-content h5 {
+  font-size: 1em;
+}
+.mona-content h6 {
+  font-size: 0.85em;
+}
+.mona-content p {
+  margin-top: 0.4em;
+}
+.mona-content ul,
+.mona-content ol {
+  margin: 1em 0;
+  list-style-position: inside;
+}
+.mona-content ul ul,
+.mona-content ul ol,
+.mona-content ol ul,
+.mona-content ol ol {
+  margin-left: 1em;
+}
+.mona-content ul {
+  list-style-type: disc;
+}
+.mona-content ol {
+  list-style-type: decimal;
+}
+.mona-content ul ul,
+.mona-content ol ul {
+  list-style-type: circle;
+}
+.mona-content ol ol,
+.mona-content ul ol {
+  list-style-type: lower-latin;
+}
+.mona-content img,
+.mona-content iframe {
+  max-width: 100% !important;
+  height: auto;
+}
+.mona-content blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1em 0;
+  padding: 1em;
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+.mona-content blockquote::before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+.mona-content blockquote p {
+  display: inline;
+}
+.mona-content table {
+  border-collapse: collapse;
+  max-width: 100%;
+  margin: 1em 0;
+  border: 1px solid #e1e1e1;
+}
+.mona-content table th,
+.mona-content table td {
+  border-right: 1px solid #e1e1e1;
+  border-bottom: 1px solid #e1e1e1;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+.mona-content .mona-youtube-wrap {
+  position: relative;
+  height: 0;
+  padding-top: 56.25%;
+}
+.mona-content .mona-youtube-wrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.mona-content .mona-table-wrap {
+  overflow: auto;
+}
+
+/* =============================================
+   TITLE MAIN — dùng chung toàn site
+   Figma: H3 / Montserrat Black 48px / uppercase
+   <h2 class="title-main">Lĩnh vực <span>HOẠT ĐỘNG</span></h2>
+============================================= */
+.title-main {
+  font-family: "Montserrat", sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1.5;
+  color: var(--color-pri);
+  text-transform: uppercase;
+  letter-spacing: -1.92px;
+}
+
+.title-main span {
+  color: var(--color-sec);
+  display: inline-block;
+}
+
+@media (max-width: 1200px) {
+  .title-main {
+    font-size: 36px;
+    letter-spacing: -1.44px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .title-main {
+    font-size: 24px;
+    letter-spacing: -1.12px;
+  }
+}
+
+/* =============================================
+   BUTTON — dùng chung toàn site
+   Figma: Montserrat Bold 16px / padding 10px 20px / radius 8px
+============================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+/* Button trên nền sáng — bg primary, text trắng */
+.btn-pri {
+  padding: 8px 16px;
+  border: 1px solid var(--color-pri);
+  border-radius: 4px;
+  background-color: var(--color-pri);
+  color: #fff;
+}
+.btn-second {
+  padding: 8px 16px;
+  border: 1px solid var(--color-sec);
+  border-radius: 4px;
+  background-color: var(--color-sec);
+  color: #fff;
+}
+.btn-second:hover {
+  background-color: #fff;
+  color: var(--color-sec);
+}
+.btn-pri:hover {
+  background-color: #fff;
+  color: var(--color-pri);
+}
+.btn-white {
+  padding: 10px 20px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  background-color: #fff;
+  color: var(--color-pri);
+}
+.btn-white:hover {
+  background-color: var(--color-pri);
+  color: #fff;
+}
+.btn-white:hover img {
+  filter: brightness(0) invert(100%);
+}
+/* Button trên nền tối — border trắng, text trắng */
+.btn-outline-white {
+  padding: 10px 20px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  color: #fff;
+}
+.btn-outline-white img {
+  filter: brightness(0) invert(1);
+}
+.btn-outline-white:hover {
+  background-color: #fff;
+  color: var(--color-pri);
+}
+.btn-outline-white:hover img {
+  filter: unset;
+}
+
+/* Link button — không border, không bg */
+.btn-link {
+  color: var(--color-pri);
+}
+.btn-link:hover {
+  color: var(--color-sec);
+}
+
+@media (max-width: 1200px) {
+  .btn-pri,
+  .btn-white,
+  .btn-outline-white {
+    padding: 8px 16px;
+  }
+  .container-second {
+    padding: 0 15px;
+  }
+}
+.bg-linear {
+  background: linear-gradient(
+    360deg,
+    rgba(26, 26, 26, 0.8) 0%,
+    rgba(26, 26, 26, 0.407772) 71.82%,
+    rgba(26, 26, 26, 0) 99.94%
+  );
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+}
+.section-banner {
+  position: sticky;
+  top: 0;
+}
+
+@media (max-width: 768px) {
+  .btn-pri,
+  .btn-white,
+  .btn-outline-white {
+    padding: 7px 14px;
+  }
+  .bg-linear {
+    height: 70%;
+  }
+  .section-banner {
+    position: relative;
+  }
+  .project-desc br {
+    display: none;
+  }
+  .wysiwyg-content br {
+    display: none;
+  }
+}
+
+.svg-title-about {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.project-desc .text-sec {
+  font-weight: 700;
+}
+.container-second {
+  width: calc((100vw - (100vw - 1230px) / 2));
+  max-width: 100%;
+}
+
+/* ── Pagination tin tức ── */
+.pagination-tin-tuc .page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pagination-tin-tuc .page-numbers li {
+  list-style: none;
+}
+.pagination-tin-tuc .page-numbers li a,
+.pagination-tin-tuc .page-numbers li span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-pri);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  text-decoration: none;
+}
+.pagination-tin-tuc .page-numbers li a:hover {
+  background-color: var(--color-pri);
+  color: #fff;
+}
+.pagination-tin-tuc .page-numbers li span.current {
+  background-color: var(--color-pri);
+  color: #fff;
+}
+.pagination-tin-tuc .page-numbers li .prev,
+.pagination-tin-tuc .page-numbers li .next {
+  color: var(--color-pri);
+}
+
+/* ── Easy TOC: ẩn TOC inline trong bài, chỉ dùng ở sidebar ── */
+.article-content #ez-toc-container {
+  display: none !important;
+}
+.mona-content #ez-toc-container {
+  display: none !important;
+}
+#ez-toc-container {
+  padding: 0;
+  background: unset;
+  border: unset;
+}
+#ez-toc-container a {
+  text-decoration: unset !important;
+}
+#ez-toc-container a:hover {
+  color: var(--color-pri);
+}
+div#ez-toc-container .ez-toc-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-pri);
+  margin-bottom: 16px;
+  display: block;
+}
+div#ez-toc-container ul li,
+div#ez-toc-container ul li a {
+  font-size: 14px;
+  font-weight: 700;
+  color: #818181;
+}
+div#ez-toc-container ul li:not(:last-child) {
+  margin-bottom: 8px;
+}
+#ez-toc-container ul ul,
+.ez-toc div.ez-toc-widget-container ul ul {
+  margin-left: 0.8em;
+  margin-top: 0.4em;
+}
+/* ══════════════════════════════════════════════════════
+   Modal overlay — generic reusable
+   ══════════════════════════════════════════════════════ */
+[data-modal] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  background: rgba(40, 51, 119, 0.4);
+}
+[data-modal].is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+[data-modal] .modal-box {
+  transform: translateY(16px);
+  transition: transform 0.25s ease;
+}
+[data-modal].is-active .modal-box {
+  transform: translateY(0);
+}
+
+/* ── Popup dự án home ── */
+[data-modal="popup-du-an"] .modal-box {
+  transform: scale(0.96) translateY(12px);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 0;
+}
+[data-modal="popup-du-an"].is-active .modal-box {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* ── CF7 form override cho modal ứng tuyển ── */
+.cf7-ung-tuyen .wpcf7-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cf7-ung-tuyen .wpcf7-form > p {
+  margin: 0;
+}
+
+.cf7-ung-tuyen .cf7-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cf7-ung-tuyen .cf7-field-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #283377;
+  display: block;
+}
+.cf7-ung-tuyen .cf7-required {
+  color: #f04438;
+}
+
+.cf7-ung-tuyen .cf7-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 480px) {
+  .cf7-ung-tuyen .cf7-row-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+#cf7-vi-tri[readonly] {
+  background: #f4f5f8;
+  cursor: default;
+  color: #283377;
+  font-weight: 600;
+}
+
+.cf7-ung-tuyen .wpcf7-text,
+.cf7-ung-tuyen .wpcf7-email,
+.cf7-ung-tuyen .wpcf7-tel {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #e7e7e9;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #283377;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: -0.04em;
+}
+.cf7-ung-tuyen .wpcf7-textarea {
+  width: 100%;
+  height: 96px;
+  padding: 12px;
+  border: 1px solid #e7e7e9;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #283377;
+  background: #fff;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: -0.04em;
+}
+.cf7-ung-tuyen .wpcf7-text::placeholder,
+.cf7-ung-tuyen .wpcf7-email::placeholder,
+.cf7-ung-tuyen .wpcf7-tel::placeholder,
+.cf7-ung-tuyen .wpcf7-textarea::placeholder {
+  color: #bdbdbd;
+}
+.cf7-ung-tuyen .wpcf7-text:focus,
+.cf7-ung-tuyen .wpcf7-email:focus,
+.cf7-ung-tuyen .wpcf7-tel:focus,
+.cf7-ung-tuyen .wpcf7-textarea:focus {
+  border-color: #283377;
+}
+
+/* File upload */
+.cf7-ung-tuyen .cf7-upload-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 116px;
+  border: 1px solid #e7e7e9;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  padding: 12px;
+  cursor: pointer;
+}
+.cf7-ung-tuyen .cf7-upload-area .wpcf7-form-control-wrap {
+  position: absolute;
+  inset: 0;
+}
+.cf7-ung-tuyen .cf7-upload-area .wpcf7-file {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.cf7-ung-tuyen .cf7-upload-text {
+  font-size: 14px;
+  color: #818181;
+  pointer-events: none;
+  line-height: 20px;
+}
+.cf7-ung-tuyen .cf7-upload-text strong {
+  color: #283377;
+  font-weight: 600;
+}
+.cf7-ung-tuyen .cf7-upload-hint {
+  font-size: 14px;
+  color: #818181;
+  pointer-events: none;
+  line-height: 20px;
+}
+.cf7-ung-tuyen .cf7-upload-area.has-file {
+  border-color: #283377;
+  background: #f0f2fb;
+}
+.cf7-ung-tuyen .cf7-upload-area.has-file .cf7-upload-hint {
+  display: none;
+}
+.cf7-ung-tuyen .cf7-upload-area.has-file .cf7-upload-text strong {
+  color: #283377;
+  word-break: break-all;
+}
+
+/* Buttons */
+.cf7-ung-tuyen .cf7-btn-row {
+  display: flex;
+  gap: 8px;
+}
+.cf7-ung-tuyen .cf7-submit-wrap,
+.cf7-ung-tuyen .cf7-btn-row .cf7-cancel-btn {
+  flex: 1;
+  border-radius: 6px;
+}
+.cf7-ung-tuyen .cf7-submit-wrap {
+  display: flex;
+}
+.cf7-ung-tuyen .cf7-submit-wrap .wpcf7-submit {
+  width: 100%;
+  justify-content: center;
+  border-radius: 6px;
+}
+.cf7-ung-tuyen .cf7-cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: transparent;
+  color: #283377;
+  font-size: 16px;
+  font-weight: 700;
+  border: 1px solid #e7e7e9;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.cf7-submit-wrap {
+  position: relative;
+}
+/* Submit loading state */
+.is-loading .wpcf7-submit {
+  opacity: 0.75;
+  pointer-events: none;
+}
+.is-loading::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: cf7-spin 0.65s linear infinite;
+  transform: translateY(-50%);
+}
+@keyframes cf7-spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+/* Validation */
+
+.cf7-ung-tuyen .wpcf7-response-output {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+.wpcf7-form-control-wrap {
+  display: block;
+  position: relative;
+}
+.screen-reader-response {
+  display: none;
+}
+
+.sidebar-td .item-td {
+  border: 1px solid #e7e7e9;
+}
+
+/* ============================================================
+   CF7 — Liên hệ
+   ============================================================ */
+.cf7-lien-he .wpcf7-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cf7-lien-he .wpcf7-form > p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cf7-lien-he label {
+  font-family: var(--font-title);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  color: var(--color-pri);
+  display: block;
+}
+.cf7-lien-he .wpcf7-form-control-wrap {
+  display: block;
+}
+.cf7-lien-he .wpcf7-text,
+.cf7-lien-he .wpcf7-email,
+.cf7-lien-he .wpcf7-tel {
+  width: 100%;
+  padding: 14px 17px;
+  border: 1px solid #c0c8c6;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #414847;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.cf7-lien-he .wpcf7-textarea {
+  width: 100%;
+  padding: 14px 17px;
+  border: 1px solid #c0c8c6;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #414847;
+  background: #fff;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  height: 120px;
+  overflow-y: auto;
+}
+.cf7-lien-he .wpcf7-text::placeholder,
+.cf7-lien-he .wpcf7-email::placeholder,
+.cf7-lien-he .wpcf7-tel::placeholder,
+.cf7-lien-he .wpcf7-textarea::placeholder {
+  color: #717977;
+}
+.cf7-lien-he .wpcf7-text:focus,
+.cf7-lien-he .wpcf7-email:focus,
+.cf7-lien-he .wpcf7-tel:focus,
+.cf7-lien-he .wpcf7-textarea:focus {
+  border-color: var(--color-pri);
+}
+.cf7-lien-he .wpcf7-submit {
+  display: block;
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--color-pri);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  text-align: center;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+}
+.cf7-lien-he .wpcf7-submit:hover {
+  opacity: 0.88;
+}
+.cf7-lien-he .wpcf7-response-output {
+  margin: 0;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+@media (max-width: 767px) {
+  .cf7-lien-he label {
+    font-size: 18px;
+  }
+}
+.wpcf7-spinner {
+  display: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(19, 58, 53, 0.2);
+  border-top-color: var(--color-pri);
+  animation: cf7-spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-left: 10px;
+  background: none !important;
+}
+.wpcf7-spinner.is-active {
+  display: inline-block;
+}
+
+form .wpcf7-not-valid-tip::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #bb0000;
+  bottom: 100%;
+  right: 16px;
+}
+
+form .wpcf7-not-valid-tip {
+  font-size: 10px !important;
+  padding: 6px;
+  border-radius: 4px;
+  background-color: #bb0000;
+  color: #fff;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 10;
+  font-weight: 500;
+}
+
+.wpcf7 form .wpcf7-response-output {
+  padding: 2px 4px;
+  font-size: 14px;
+  text-align: center;
+  background: #fff;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 12px;
+  color: #1e994f;
+}
+
+.wpcf7 form.invalid .wpcf7-response-output {
+  color: red;
+}
+.hide-sitename {
+  display: none;
+}
+
+/* =============================================
+   Section About Mission
+   ============================================= */
+.sec-about-mission .mission-col-desc.is-active {
+  max-height: 400px;
+  opacity: 1;
+}
+.mission-col-desc {
+  transition:
+    max-height 0.25s ease,
+    opacity 0.25s ease;
+}
+.section-about-awards:before {
+  content: "";
+  position: absolute;
+  top: 0%;
+  left: 100%;
+  width: 5%;
+  transform: translate(-50%, 50%);
+  aspect-ratio: 9 / 60;
+  background: #ffca1b;
+  border-radius: 100rem;
+  filter: blur(8rem);
+}
+.section-about-awards:after {
+  content: "";
+  position: absolute;
+  top: 22%;
+  right: 100%;
+  width: 5%;
+  transform: translate(50%, 50%);
+  aspect-ratio: 9 / 60;
+  background: #ffca1b;
+  border-radius: 100rem;
+  filter: blur(8rem);
+}
+
+/* =============================================
+   ABOUT JOURNEY — Timeline active state
+   ============================================= */
+.journey-tl-item.is-active .journey-tl-year {
+  color: var(--color-sec) !important;
+  font-weight: 700;
+}
+.journey-tl-item.is-active .journey-tl-icon {
+  color: var(--color-sec);
+}
+
+.bg-line-sm {
+  position: absolute;
+  bottom: 0;
+  left: 0%;
+  height: 1rem;
+  width: 100%;
+  background-image: url("../images/about/journey/line-sm.svg");
+  background-repeat: repeat-x;
+  background-size: contain;
+}
+.journey-slide.active .t-titlte {
+  color: var(--color-sec);
+}
+.c-second {
+  color: var(--color-sec);
+}
+
+@keyframes spin8932 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#circle8932 {
+  transform-origin: 50% 50%;
+  stroke: url(#RadialGradient8932);
+  fill: none;
+  animation: spin8932 0.5s infinite linear;
+}
+.tts-btn {
+  border: 1px solid #b3b4b9;
+  border-radius: 100rem;
+}
+.tts-btn:hover {
+  background: var(--color-pri);
+  cursor: pointer;
+  border-color: var(--color-pri);
+}
+.tts-btn:hover svg {
+  filter: brightness(0) invert(1);
+}
+
+/* ── section-hoat-dong Masonry ── */
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  padding: 12px 0;
+}
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--color-pri);
+}
+.breadcrumb-item:not(:last-child)::after {
+  content: "";
+  margin-left: 11px;
+  width: 11px;
+  height: 11px;
+  background-image: url("../images/ic-chevron-right2.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.breadcrumb-item a {
+  color: var(--color-pri);
+  transition: color 0.2s;
+}
+
+.breadcrumb-item.is-current span {
+  font-weight: 600;
+}
+
+.item-prj.is-custom {
+  background-color: #283377;
+  color: white;
+}
+.item-prj.is-custom h3,
+.item-prj.is-custom p,
+.item-prj.is-custom span {
+  filter: brightness(0) invert(1);
+}
+.item-prj.is-custom .w-4.h-4 img,
+.item-prj.is-custom .w-5.h-5 img {
+  filter: brightness(0) invert(1);
+}
+
+/* ===== PAGE INTRO ===== */
+
+/* Each split char keeps its own gradient */
+.banner-char {
+  display: inline-block;
+  padding: 0 2px;
+}
+
+/* Home banner intro: hidden before GSAP animation takes over */
+
+.page-home .banner-hero-overlay,
+.page-home .banner-hero-caption {
+  opacity: 0;
+}
+
+/* Scroll dot bounce animation */
+@keyframes intro-scroll-bounce {
+  0% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0;
+  }
+}
+.intro-scroll-dot {
+  animation: intro-scroll-bounce 1.6s ease-in-out infinite;
+}
+@keyframes scroll-chevron-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(5px);
+    opacity: 0.4;
+  }
+}
+.banner-scroll-chevron {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: scroll-chevron-bounce 1.4s ease-in-out infinite;
+}
+.main.page-contact {
+  background: #f4f5f8;
+}
+.icon-link:hover {
+  filter: brightness(0) saturate(100%) invert(88%) sepia(12%) saturate(1116%)
+    hue-rotate(358deg) brightness(102%) contrast(91%);
+}
+
+/* ── Back to top ── */
+#backToTop {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 999;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease;
+}
+#backToTop.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+#backToTop:hover svg rect {
+  fill: var(--color-pri);
+  transition: fill 0.2s ease;
+}
+#backToTop:hover svg path {
+  fill: #fff;
+  transition: fill 0.2s ease;
+}
+.section-about-journey .container {
+  max-width: 1280px;
+}
+@media (max-width: 767px) {
+  #backToTop {
+    bottom: 20px;
+    right: 16px;
+  }
+}
+.journey-slide ul,
+.journey-slide ol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.journey-slide .b-content .c-second {
+  color: var(--color-pri);
+}
+.journey-slide br {
+  display: none;
+}
+.bn-hero:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #666666 35%);
+  z-index: 1;
+}
+
+/* mona-content: responsive images in post content */
+.mona-content img {
+  max-width: 100%;
+  height: auto;
+}
+.mona-content .wp-caption {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.mona-content .wp-caption img {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+.font-title {
+  font-family: var(--font-title);
+}
+
+/* ── Gallery Swiper — line pagination ── */
+.swiper-pagination {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+}
+
+.swiper-pagination-bullet {
+  width: 32px;
+  height: 2px;
+  border-radius: 0;
+  background: #c8c4bb;
+  opacity: 1;
+  transition:
+    width 0.3s ease,
+    background 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  width: 56px;
+  background: var(--color-pri);
+}
+.swiper-slide {
+  height: auto;
+}
+/* =============================================
+   HEADER
+   ============================================= */
+.hd {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  height: 80px;
+  background: #fbf9f4;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  transition:
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+.hd > .container {
+  height: 100%;
+}
+.hd-logo {
+  width: 140px;
+}
+@media screen and (max-width: 1280px) {
+  .hd-logo {
+    width: 110px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .hd {
+    height: 64px;
+  }
+  .hd-logo {
+    width: 90px;
+  }
+}
+
+/* Nav link – desktop */
+.hd-nav-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-sec);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.2s ease;
+}
+.hd-nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--color-pri);
+  transition: width 0.25s ease;
+}
+.hd-nav-link:hover,
+.current-menu-item > .hd-nav-link,
+.current-page-ancestor > .hd-nav-link {
+  color: var(--color-pri);
+}
+.hd-nav-link:hover::after,
+.current-menu-item > .hd-nav-link::after,
+.current-page-ancestor > .hd-nav-link::after {
+  width: 100%;
+}
+
+/* Language switcher */
+.hd-lang a {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-sec);
+  transition: color 0.2s ease;
+}
+.hd-lang a:hover,
+.hd-lang a.lang-active {
+  color: var(--color-pri);
+}
+
+/* =============================================
+   MOBILE DRAWER
+   ============================================= */
+.hd-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  width: 300px;
+  height: 100%;
+  background: #fbf9f4;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+.hd-nav.is-open {
+  transform: translateX(0);
+}
+
+/* Overlay */
+.hd-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.hd-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mobile nav items */
+.hd-nav-item {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-sec);
+  display: block;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: color 0.2s ease;
+}
+.hd-nav-item:hover,
+.current-menu-item > .hd-nav-item {
+  color: var(--color-pri);
+}
+
+.main {
+  background: #fbf9f4;
+}
+.section-pd {
+  padding: var(--pd-sc) 0;
+}
+
+/* ── CF7 form override cho trang chi tiết khóa học + workshop ── */
+.cf7-khoa-hoc .wpcf7-form,
+.cf7-workshop .wpcf7-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.cf7-khoa-hoc .wpcf7-form > p,
+.cf7-workshop .wpcf7-form > p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cf7-khoa-hoc .wpcf7-form > p > label,
+.cf7-workshop .wpcf7-form > p > label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #4e635a;
+}
+.cf7-khoa-hoc .wpcf7-text,
+.cf7-khoa-hoc .wpcf7-email,
+.cf7-khoa-hoc .wpcf7-tel,
+.cf7-workshop .wpcf7-text,
+.cf7-workshop .wpcf7-email,
+.cf7-workshop .wpcf7-tel {
+  width: 100%;
+  padding: 14px 16px;
+  background: #fbf9f4;
+  border: 1px solid #c0c8c6;
+  border-radius: 2px;
+  font-size: 16px;
+  color: var(--color-sec);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.cf7-khoa-hoc .wpcf7-text::placeholder,
+.cf7-khoa-hoc .wpcf7-email::placeholder,
+.cf7-khoa-hoc .wpcf7-tel::placeholder,
+.cf7-workshop .wpcf7-text::placeholder,
+.cf7-workshop .wpcf7-email::placeholder,
+.cf7-workshop .wpcf7-tel::placeholder {
+  color: #a0aeac;
+}
+.cf7-khoa-hoc .wpcf7-text:focus,
+.cf7-khoa-hoc .wpcf7-email:focus,
+.cf7-khoa-hoc .wpcf7-tel:focus,
+.cf7-workshop .wpcf7-text:focus,
+.cf7-workshop .wpcf7-email:focus,
+.cf7-workshop .wpcf7-tel:focus {
+  border-color: var(--color-pri);
+}
+.cf7-khoa-hoc .wpcf7-submit,
+.cf7-workshop .wpcf7-submit {
+  width: 100%;
+  padding: 16px;
+  background: var(--color-pri);
+  border: 1px solid var(--color-pri);
+  border-radius: 2px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.cf7-khoa-hoc .wpcf7-submit:hover,
+.cf7-workshop .wpcf7-submit:hover {
+  background: #fff;
+  color: var(--color-pri);
+}
+.cf7-khoa-hoc .wpcf7-spinner,
+.cf7-workshop .wpcf7-spinner {
+  display: none;
+}
+
+/* ── Dịch Vụ form ─────────────────────────────────────────────────── */
+.cf7-dich-vu .wpcf7-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.cf7-dich-vu .wpcf7-form > p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cf7-dich-vu .wpcf7-form > p > label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #4e635a;
+}
+.cf7-dich-vu .wpcf7-text,
+.cf7-dich-vu .wpcf7-email,
+.cf7-dich-vu .wpcf7-tel {
+  width: 100%;
+  padding: 14px 16px;
+  background: #fbf9f4;
+  border: 1px solid #c0c8c6;
+  border-radius: 2px;
+  font-size: 16px;
+  color: var(--color-sec);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.cf7-dich-vu .wpcf7-text::placeholder,
+.cf7-dich-vu .wpcf7-email::placeholder,
+.cf7-dich-vu .wpcf7-tel::placeholder {
+  color: #a0aeac;
+}
+.cf7-dich-vu .wpcf7-text:focus,
+.cf7-dich-vu .wpcf7-email:focus,
+.cf7-dich-vu .wpcf7-tel:focus {
+  border-color: var(--color-pri);
+}
+.cf7-dich-vu .wpcf7-date {
+  width: 100%;
+  padding: 14px 16px;
+  background: #fbf9f4;
+  border: 1px solid #c0c8c6;
+  border-radius: 2px;
+  font-size: 16px;
+  color: var(--color-sec);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.cf7-dich-vu .wpcf7-date:focus {
+  border-color: var(--color-pri);
+}
+.cf7-dich-vu .wpcf7-date::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+  cursor: pointer;
+  filter: invert(22%) sepia(27%) saturate(564%) hue-rotate(116deg)
+    brightness(95%) contrast(92%);
+}
+.cf7-dich-vu .wpcf7-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: #fbf9f4;
+  border: 1px solid #c0c8c6;
+  border-radius: 2px;
+  font-size: 16px;
+  color: var(--color-sec);
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+  line-height: 1.55;
+}
+.cf7-dich-vu .wpcf7-textarea::placeholder {
+  color: #a0aeac;
+}
+.cf7-dich-vu .wpcf7-textarea:focus {
+  border-color: var(--color-pri);
+}
+.cf7-dich-vu .wpcf7-submit {
+  width: 100%;
+  padding: 16px;
+  background: var(--color-pri);
+  border: 1px solid var(--color-pri);
+  border-radius: 2px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.cf7-dich-vu .wpcf7-submit:hover {
+  background: #fff;
+  color: var(--color-pri);
+}
+.cf7-dich-vu .wpcf7-spinner {
+  display: none;
+}

@@ -1,0 +1,57 @@
+# WordPress core files
+wp-admin/
+wp-includes/
+index.php
+wp-*.php
+xmlrpc.php
+license.txt
+readme.html
+
+# WordPress config (chứa thông tin nhạy cảm)
+wp-config.php
+wp-config-sample.php
+
+# WordPress uploads & cache
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backup*/
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+wp-content/db.php
+
+# WordPress plugins (không track, cài qua composer/manual)
+wp-content/plugins/
+wp-content/mu-plugins/
+
+# Các theme mặc định của WordPress
+wp-content/themes/twentytwentyfour/
+wp-content/themes/twentytwentyfive/
+wp-content/themes/twentytwentyfour-vi.*
+wp-content/themes/twentytwentyfive-vi.*
+wp-content/themes/index.php
+
+# Chỉ track theme custom của dự án
+!wp-content/themes/thesoundhealing/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+*.min.css
+*.min.js
+
+# Environment
+.env
+.env.local

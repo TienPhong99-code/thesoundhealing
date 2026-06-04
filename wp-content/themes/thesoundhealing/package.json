@@ -1,0 +1,17 @@
+{
+  "name": "monatheme",
+  "version": "1.0.0",
+  "main": "index.js",
+"scripts": {
+  "dev": "npx @tailwindcss/cli -i ./assets/css/tailwind.css -o ./assets/css/tailwind.output.css --watch",
+  "build": "npx @tailwindcss/cli -i ./assets/css/tailwind.css -o ./assets/css/tailwind.output.css --minify"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "tailwindcss": "^4.2.2"
+  }
+}
