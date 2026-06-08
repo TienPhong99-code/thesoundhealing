@@ -64,7 +64,7 @@ $data = [
 
                         <div class="col-span-7 flex flex-col gap-2 self-center">
                             <span class="text-[#4e635a] text-[12px] font-semibold tracking-[1.2px] uppercase"><?php echo esc_html($pillar['number'] ?? $default_number); ?></span>
-                            <h3 class="font-title text-pri text-[24px] font-normal leading-[32px] max-md:text-[18px]">
+                            <h3 class="text-pri text-[18px] font-normal leading-[32px] max-md:text-[18px]">
                                 <?php echo wp_kses_post($pillar['title']); ?>
                                 <?php echo wp_kses_post($pillar['title']); ?>
                             </h3>
@@ -77,7 +77,7 @@ $data = [
 
                         <div class="col-span-7 flex flex-col gap-2 self-center">
                             <span class="text-[#4e635a] text-[12px] font-semibold tracking-[1.2px] uppercase"><?php echo esc_html($pillar['number'] ?? $default_number); ?></span>
-                            <h3 class="font-title text-pri text-[24px] font-normal leading-[32px]">
+                            <h3 class=" text-pri text-[24px] font-normal leading-[32px]">
                                 <?php echo wp_kses_post($pillar['title']); ?>
                             </h3>
                             <p class="text-[#414847] text-[16px] leading-[24px] pt-2">

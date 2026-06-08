@@ -5,7 +5,7 @@ $page_id = MONA_PAGE_HOME;
 
 $sample = [
     'label'   => 'SỰ KIỆN SẮP TỚI',
-    'heading' => 'Workshop & Trải Nghiệm',
+    'heading' => 'Các sự kiện nổi bật',
     'link'    => ['url' => home_url('/workshop'), 'title' => 'XEM TẤT CẢ', 'target' => ''],
     'items'   => [
         [
@@ -89,12 +89,12 @@ $data = [
 ];
 ?>
 
-<section class="sec-home-workshop relative py-(--pd-sc)">
-    <span class="absolute inset-0 bg-[#fbf9f4] z-[-1]"></span>
+<section class="sec-home-workshop relative section-pd-t">
+    <span class="absolute inset-0 z-[-1]"></span>
 
     <div class="container">
         <!-- Header -->
-        <div class="flex items-end justify-between mb-12 max-md:flex-col max-md:items-center max-md:text-center gap-4">
+        <div class="flex items-end justify-between mb-8 max-md:flex-col max-md:items-center max-md:text-center gap-4">
             <div>
                 <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px] mb-4">
                     <?php echo esc_html($data['label']); ?>
@@ -118,19 +118,12 @@ $data = [
         </div>
 
         <!-- Cards -->
-        <div class="swiper-workshop relative slideSw">
-            <div class="swiper-container">
-                <div class="swiper row">
-                    <div class="swiper-wrapper">
-                        <?php foreach ($data['items'] as $item) : ?>
-                            <div class="swiper-slide col col-4 max-lg:!w-1/2 max-md:!w-3/4">
-                                <?php get_template_part('partials/components/card-workshop', null, ['item' => $item]); ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+        <div class="row">
+            <?php foreach ($data['items'] as $item) : ?>
+                <div class="col col-2 max-lg:!w-1/2 max-md:!w-full">
+                    <?php get_template_part('partials/components/card-workshop', null, ['item' => $item]); ?>
                 </div>
-            </div>
-            <div class="swiper-pagination mt-6"></div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

@@ -13,31 +13,76 @@ $query = new WP_Query([
 
 $sample = [
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Hoà âm 7 chuông pha lê'],
-        'level'    => 'FOUNDATION',
-        'term'     => 'Bộ Môn Âm Thanh',
-        'title'    => 'Hoà âm 7 chuông pha lê',
-        'desc'     => 'Nắm vững kỹ thuật chơi và hoà âm 7 luân xa với chuông pha lê, mang lại sự cân bằng sâu sắc cho cơ thể và tâm trí.',
-        'price'    => '12.000.000 VNĐ',
-        'url'      => '#',
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Hoà âm 7 chuông pha lê'],
+        'level'      => 'Foundation',
+        'term'       => 'Bộ Môn Âm Thanh',
+        'title'      => 'Hoà âm 7 chuông pha lê',
+        'desc'       => 'Nắm vững kỹ thuật chơi và hoà âm 7 luân xa với chuông pha lê, mang lại sự cân bằng sâu sắc cho cơ thể và tâm trí.',
+        'start_date' => '15 THÁNG 2, 2025',
+        'duration'   => '4 tuần · Cuối tuần',
+        'instructor' => 'Linh Tâm',
+        'price'      => '12.000.000 VNĐ',
+        'url'        => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Liệu pháp chuông đồng'],
-        'level'    => 'MASTERY',
-        'term'     => 'Bộ Môn Âm Thanh',
-        'title'    => 'Liệu pháp chuông đồng',
-        'desc'     => 'Khám phá nghệ thuật chữa lành cổ xưa qua rung động vật lý của chuông đồng nguyên bản Himalaya.',
-        'price'    => '15.000.000 VNĐ',
-        'url'      => '#',
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Liệu pháp chuông đồng'],
+        'level'      => 'Mastery',
+        'term'       => 'Bộ Môn Âm Thanh',
+        'title'      => 'Liệu pháp chuông đồng',
+        'desc'       => 'Khám phá nghệ thuật chữa lành cổ xưa qua rung động vật lý của chuông đồng nguyên bản Himalaya.',
+        'start_date' => '01 THÁNG 3, 2025',
+        'duration'   => '2 ngày · Cuối tuần',
+        'instructor' => 'Linh Tâm',
+        'price'      => '15.000.000 VNĐ',
+        'url'        => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Liệu pháp Sound Bath'],
-        'level'    => 'ADVANCED',
-        'term'     => 'Bộ Môn Âm Thanh',
-        'title'    => 'Liệu pháp Sound Bath',
-        'desc'     => 'Đào tạo chuyên sâu kỹ năng tổ chức và dẫn dắt các buổi tắm âm thanh trị liệu chuyên nghiệp.',
-        'price'    => '20.000.000 VNĐ',
-        'url'      => '#',
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Liệu pháp Sound Bath'],
+        'level'      => 'Chuyên sâu',
+        'term'       => 'Bộ Môn Âm Thanh',
+        'title'      => 'Liệu pháp Sound Bath',
+        'desc'       => 'Đào tạo chuyên sâu kỹ năng tổ chức và dẫn dắt các buổi tắm âm thanh trị liệu chuyên nghiệp.',
+        'start_date' => '15 THÁNG 3, 2025',
+        'duration'   => '6 tuần · Cuối tuần',
+        'instructor' => 'Linh Tâm',
+        'price'      => '20.000.000 VNĐ',
+        'url'        => '#',
+    ],
+    [
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Năng Lượng Usui Reiki Level 2'],
+        'level'      => 'Nâng cao',
+        'term'       => 'Bộ Môn Năng Lượng',
+        'title'      => 'Năng Lượng Usui Reiki Level 2',
+        'desc'       => 'Mở rộng khả năng trị liệu cho người khác, kết nối sâu hơn với nguồn năng lượng vũ trụ.',
+        'start_date' => '05 THÁNG 4, 2025',
+        'duration'   => '2 ngày · Cuối tuần',
+        'instructor' => 'Linh Tâm',
+        'price'      => '5.500.000 VNĐ',
+        'url'        => '#',
+    ],
+    [
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Thiền Định Nâng Cao'],
+        'level'      => 'Intermediate',
+        'term'       => 'Bộ Môn Thiền Định',
+        'title'      => 'Thiền Định Nâng Cao',
+        'desc'       => 'Khóa học thiền sâu kết hợp âm thanh và hơi thở, giúp làm chủ trạng thái tâm trí trong cuộc sống.',
+        'start_date' => '19 THÁNG 4, 2025',
+        'duration'   => '3 tuần · Thứ 3, 5, 7',
+        'instructor' => 'Linh Tâm',
+        'price'      => '6.800.000 VNĐ',
+        'url'        => '#',
+    ],
+    [
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Hòa Âm Trống Shaman'],
+        'level'      => 'Foundation',
+        'term'       => 'Bộ Môn Âm Thanh',
+        'title'      => 'Hòa Âm Trống Shaman',
+        'desc'       => 'Khám phá rung động nguyên thủy của trống Shaman — công cụ chữa lành linh thiêng từ ngàn năm.',
+        'start_date' => '10 THÁNG 5, 2025',
+        'duration'   => '2 ngày · Cuối tuần',
+        'instructor' => 'Linh Tâm',
+        'price'      => '8.000.000 VNĐ',
+        'url'        => '#',
     ],
 ];
 
@@ -56,20 +101,23 @@ if ($use_sample) {
         $term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
 
         $items[] = [
-            'image' => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
-            'level' => get_field('level', $post_id),
-            'term'  => $term_name,
-            'title' => get_the_title($post_id),
-            'desc'  => get_field('short_desc', $post_id),
-            'price' => get_field('price', $post_id),
-            'url'   => get_permalink($post_id),
+            'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
+            'level'      => get_field('level', $post_id),
+            'term'       => $term_name,
+            'title'      => get_the_title($post_id),
+            'desc'       => get_field('short_desc', $post_id),
+            'start_date' => get_field('start_date', $post_id),
+            'duration'   => get_field('duration', $post_id),
+            'instructor' => get_field('instructor_name', $post_id),
+            'price'      => get_field('price', $post_id),
+            'url'        => get_permalink($post_id),
         ];
     }
     wp_reset_postdata();
 }
 ?>
 
-<section class="sec-kh-list pt-0 pb-(--pd-sc) bg-[#fbf9f4]"
+<section class="sec-kh-list pt-0 pb-(--pd-sc)"
     <?php if (!$use_sample) : ?>
     data-total="<?php echo $total; ?>"
     data-ajaxurl="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"

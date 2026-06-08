@@ -31,7 +31,7 @@ add_filter('wpcf7_validate', function ($result) {
         $prop = $ref->getProperty('invalid_fields');
         $prop->setAccessible(true);
         $fields = (array) $prop->getValue($result);
-        unset($fields['dv-instructor'], $fields['dv-time']);
+        unset($fields['dv-instructor'], $fields['dv-time'], $fields['dv-branch']);
         $prop->setValue($result, $fields);
     } catch (\Throwable $e) {
         // Fail silently nếu CF7 thay đổi internal API
@@ -73,6 +73,23 @@ add_filter('wpcf7_form_elements', function ($html) {
         $html = preg_replace(
             '/(<select[^>]*\bname="dv-instructor"[^>]*>)([\s\S]*?)(<\/select>)/i',
             '$1' . $build_options('Chọn người hướng dẫn', $ins_values) . '$3',
+            $html
+        );
+    }
+
+    // ── dv-branch ────────────────────────────────────────────────────
+    $branch_values = [];
+    $rows          = get_field('dv_branches', $post_id);
+    if (!empty($rows)) {
+        foreach ($rows as $row) {
+            $branch = trim($row['dv_branch_name'] ?? '');
+            if ($branch) $branch_values[] = $branch;
+        }
+    }
+    if ($branch_values) {
+        $html = preg_replace(
+            '/(<select[^>]*\bname="dv-branch"[^>]*>)([\s\S]*?)(<\/select>)/i',
+            '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
             $html
         );
     }

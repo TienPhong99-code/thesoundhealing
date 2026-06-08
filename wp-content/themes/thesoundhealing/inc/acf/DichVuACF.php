@@ -40,6 +40,12 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Hạn chế ăn no 2 tiếng trước giờ trị liệu')
                 ->rows(2),
 
+            Text::make('Ngày hoạt động', 'dv_available_days')
+                ->helperText('Ngày trong tuần nhận đặt lịch. Ví dụ: Thứ 2 – Chủ nhật · Thứ 4, 6, 7'),
+
+            Text::make('Chi nhánh', 'dv_branch')
+                ->helperText('Hiển thị trên card. Ví dụ: Thảo Điền · Quận 1'),
+
             Textarea::make('Mô tả ngắn', 'dv_short_desc')
                 ->helperText('Hiển thị trên card và hero trang chi tiết.')
                 ->rows(3),
@@ -135,6 +141,14 @@ add_action('acf/init', function () {
 
             // ─── TAB: KHUNG GIỜ ──────────────────────────────────────────
             Tab::make('Khung giờ')->placement('left'),
+
+            Repeater::make('Danh sách chi nhánh (form đặt lịch)', 'dv_branches')
+                ->helperText('Các lựa chọn hiển thị trong dropdown "Chi nhánh" của form đặt lịch.')
+                ->layout('table')
+                ->fields([
+                    Text::make('Chi nhánh', 'dv_branch_name')->required()
+                        ->helperText('Ví dụ: Thảo Điền'),
+                ]),
 
             Repeater::make('Khung giờ đặt lịch', 'dv_time_slots')
                 ->helperText('Để trống sẽ dùng khung giờ mặc định: 09:00-10:30, 10:30-12:00, 14:00-15:30, 15:30-17:00, 17:00-18:30.')

@@ -22,7 +22,7 @@ $data = [
 ];
 ?>
 
-<section class="sec-partner bg-white section-pd">
+<section class="sec-partner bg-white py-20">
     <div class="container flex flex-col gap-[48px]">
 
         <div class="w-full flex flex-col items-center gap-4 text-center">

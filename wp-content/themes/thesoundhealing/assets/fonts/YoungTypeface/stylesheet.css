@@ -1,0 +1,19 @@
+@font-face {
+  font-family: "Young";
+  src:
+    url("Young-Regular.woff2") format("woff2"),
+    url("Young-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Young Display";
+  src:
+    url("YoungDisplayBold-Bold.woff2") format("woff2"),
+    url("YoungDisplayBold-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}

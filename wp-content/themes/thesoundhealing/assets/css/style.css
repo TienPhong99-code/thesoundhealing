@@ -2,6 +2,7 @@
 @import url("../fonts/Monsterrat/stylesheet.css");
 @import url("../fonts/iCiel/stylesheet.css");
 @import url("../fonts/BeautiqueDisplay/stylesheet.css");
+@import url("../fonts/YoungTypeface/stylesheet.css");
 
 :root {
   /* Colors — KienA System Design */
@@ -11,23 +12,24 @@
   --color-white: #fff;
   --color-black: #000;
   --cl-border: #d9d9d9;
-  --font-body: "Monsterrat", serif;
-  --font-title: "Beautique Display", serif;
+  --font-body: "Young", serif;
+  --font-title: "Young Display", serif;
+  --font-second: "Young", serif;
   /* Layout */
   --size-hd: 80px;
-  --pd-sc: 80px;
+  --pd-sc: 40px;
   --rs: 16px;
 }
 
 @theme {
   --color-pri: #133a35;
   --color-sec: #1b1c19;
-  --font-body: "Monsterrat", serif;
-  --font-title: "Beautique Display", serif;
-  --font-second: "iCiel Beatrice Display", serif;
+  --font-body: "Young", serif;
+  --font-title: "Young Display", serif;
+  --font-second: "Young", serif;
 }
 .font-second {
-  font-family: "iCiel Beatrice Display", serif;
+  font-family: "Young", serif;
 }
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
@@ -47,7 +49,6 @@
 
 @media (max-width: 1200px) {
   :root {
-    --pd-sc: 40px;
     --size-hd: 60px;
     --rs: 8px;
   }
@@ -59,7 +60,7 @@
 }
 
 body {
-  font-family: "Montserrat";
+  font-family: "Young", serif;
   font-size: 16px;
   line-height: 1.55;
   font-weight: 400;
@@ -73,12 +74,10 @@ body {
   z-index: 1;
   padding-top: var(--size-hd);
 }
-.main.page-home {
-  padding-top: 0;
-}
+
 .container {
   width: 100%;
-  max-width: 1245px;
+  max-width: 1445px;
   margin: 0 auto;
   padding: 0 15px;
 }
@@ -113,7 +112,9 @@ iframe {
     --rg: 12px;
   }
 }
-
+.section-pd-t {
+  padding-top: var(--pd-sc);
+}
 .rows {
   --cg: 24px;
   --rg: 24px;
@@ -339,16 +340,11 @@ iframe {
   transition: all 0.3s;
   white-space: nowrap;
   text-decoration: none;
+  color: var(--color-pri);
 }
 
 /* Button trên nền sáng — bg primary, text trắng */
-.btn-pri {
-  padding: 8px 16px;
-  border: 1px solid var(--color-pri);
-  border-radius: 4px;
-  background-color: var(--color-pri);
-  color: #fff;
-}
+
 .btn-second {
   padding: 8px 16px;
   border: 1px solid var(--color-sec);
@@ -1303,7 +1299,7 @@ form .wpcf7-not-valid-tip {
 
 /* Nav link – desktop */
 .hd-nav-link {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--color-sec);
   text-transform: uppercase;
@@ -1335,7 +1331,7 @@ form .wpcf7-not-valid-tip {
 
 /* Language switcher */
 .hd-lang a {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--color-sec);
   transition: color 0.2s ease;
@@ -1382,7 +1378,7 @@ form .wpcf7-not-valid-tip {
 
 /* Mobile nav items */
 .hd-nav-item {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
   color: var(--color-sec);
@@ -1397,7 +1393,7 @@ form .wpcf7-not-valid-tip {
 }
 
 .main {
-  background: #fbf9f4;
+  background: #fff;
 }
 .section-pd {
   padding: var(--pd-sc) 0;

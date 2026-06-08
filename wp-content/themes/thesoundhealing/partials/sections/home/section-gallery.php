@@ -41,7 +41,7 @@ $data = [
 ];
 ?>
 
-<section class="sec-gallery relative py-(--pd-sc)">
+<section class="sec-gallery relative py-20">
     <div class="container">
 
         <div class="flex flex-col items-center gap-4 text-center max-w-[768px] mx-auto mb-16">
@@ -67,7 +67,7 @@ $data = [
                             $img_alt = is_array($item['image']) ? ($item['image']['alt'] ?? '') : '';
                             $has_overlay = !empty($item['quote']);
                         ?>
-                            <div class="swiper-slide col col-4 max-lg:!w-1/2 max-md:!w-3/4">
+                            <div class="swiper-slide col col-3 max-lg:!w-1/2 max-md:!w-3/4">
                                 <div class="group relative overflow-hidden rounded-[2px] bg-[#f0eee9]">
                                     <div class="aspect-[3/4] w-full overflow-hidden">
                                         <img src="<?php echo esc_url($img_url); ?>"

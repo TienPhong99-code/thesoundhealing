@@ -13,46 +13,64 @@ $query = new WP_Query([
 
 $sample = [
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tam-am-ngu-ngon-nhom.jpg', 'alt' => 'Tắm Âm Ngủ Ngon (Nhóm)'],
-        'category' => 'SOUND HEALING',
-        'title'    => 'Tắm Âm Ngủ Ngon (Nhóm)',
-        'desc'     => 'Trải nghiệm sóng âm thư giãn cùng nhóm để cải thiện chất lượng giấc ngủ và giảm căng thẳng tích tụ.',
-        'url'      => '#',
+        'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tam-am-ngu-ngon-nhom.jpg', 'alt' => 'Tắm Âm Ngủ Ngon (Nhóm)'],
+        'category'       => 'SOUND HEALING',
+        'title'          => 'Tắm Âm Ngủ Ngon (Nhóm)',
+        'desc'           => 'Trải nghiệm sóng âm thư giãn cùng nhóm để cải thiện chất lượng giấc ngủ và giảm căng thẳng tích tụ.',
+        'available_days' => 'Thứ 6, 7, Chủ nhật',
+        'duration'       => '60 - 90 phút mỗi phiên',
+        'price'          => '500.000 VNĐ',
+        'url'            => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tam-am-ngu-ngon-rieng-tu.jpg', 'alt' => 'Tắm Âm Ngủ Ngon (Riêng Tư)'],
-        'category' => 'PRIVATE EXPERIENCE',
-        'title'    => 'Tắm Âm Ngủ Ngon (Riêng Tư)',
-        'desc'     => 'Không gian trị liệu âm thanh dành riêng cho bạn, tập trung vào nhu cầu phục hồi sâu sắc của cá nhân.',
-        'url'      => '#',
+        'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tam-am-ngu-ngon-rieng-tu.jpg', 'alt' => 'Tắm Âm Ngủ Ngon (Riêng Tư)'],
+        'category'       => 'PRIVATE EXPERIENCE',
+        'title'          => 'Tắm Âm Ngủ Ngon (Riêng Tư)',
+        'desc'           => 'Không gian trị liệu âm thanh dành riêng cho bạn, tập trung vào nhu cầu phục hồi sâu sắc của cá nhân.',
+        'available_days' => 'Thứ 2 – Chủ nhật',
+        'duration'       => '90 phút mỗi phiên',
+        'price'          => '1.200.000 VNĐ',
+        'url'            => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tri-lieu-chuong-do-rieng-tu.jpg', 'alt' => 'Trị Liệu Chuông Đồ (Riêng Tư)'],
-        'category' => 'VIBRATIONAL THERAPY',
-        'title'    => 'Trị Liệu Chuông Đồ (Riêng Tư)',
-        'desc'     => 'Kỹ thuật đặt chuông trực tiếp lên cơ thể để các rung động tác động sâu vào từng tế bào và huyệt đạo.',
-        'url'      => '#',
+        'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tri-lieu-chuong-do-rieng-tu.jpg', 'alt' => 'Trị Liệu Chuông Đồ (Riêng Tư)'],
+        'category'       => 'VIBRATIONAL THERAPY',
+        'title'          => 'Trị Liệu Chuông Đồ (Riêng Tư)',
+        'desc'           => 'Kỹ thuật đặt chuông trực tiếp lên cơ thể để các rung động tác động sâu vào từng tế bào và huyệt đạo.',
+        'available_days' => 'Thứ 2 – Thứ 6',
+        'duration'       => '60 phút mỗi phiên',
+        'price'          => '800.000 VNĐ',
+        'url'            => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-nhom.jpg', 'alt' => 'Chữa Lành Usui Reiki (Group)'],
-        'category' => 'ENERGY HEALING',
-        'title'    => 'Chữa Lành Usui Reiki (Group)',
-        'desc'     => 'Kết nối năng lượng vũ trụ trong không gian cộng hưởng nhóm để thanh tẩy và cân bằng tâm trí.',
-        'url'      => '#',
+        'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-nhom.jpg', 'alt' => 'Chữa Lành Usui Reiki (Group)'],
+        'category'       => 'ENERGY HEALING',
+        'title'          => 'Chữa Lành Usui Reiki (Group)',
+        'desc'           => 'Kết nối năng lượng vũ trụ trong không gian cộng hưởng nhóm để thanh tẩy và cân bằng tâm trí.',
+        'available_days' => 'Thứ 7, Chủ nhật',
+        'duration'       => '60 - 90 phút mỗi phiên',
+        'price'          => '600.000 VNĐ',
+        'url'            => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-rieng-tu.jpg', 'alt' => 'Chữa Lành Usui Reiki (Riêng Tư)'],
-        'category' => 'ENERGY HEALING',
-        'title'    => 'Chữa Lành Usui Reiki (Riêng Tư)',
-        'desc'     => 'Phiên trị liệu năng lượng chuyên sâu 1-1 giúp giải quyết các tắc nghẽn cảm xúc và thể chất cụ thể.',
-        'url'      => '#',
+        'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-rieng-tu.jpg', 'alt' => 'Chữa Lành Usui Reiki (Riêng Tư)'],
+        'category'       => 'ENERGY HEALING',
+        'title'          => 'Chữa Lành Usui Reiki (Riêng Tư)',
+        'desc'           => 'Phiên trị liệu năng lượng chuyên sâu 1-1 giúp giải quyết các tắc nghẽn cảm xúc và thể chất cụ thể.',
+        'available_days' => 'Thứ 2 – Thứ 6',
+        'duration'       => '90 phút mỗi phiên',
+        'price'          => '1.500.000 VNĐ',
+        'url'            => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-khai-van-huyen-hoc.jpg', 'alt' => 'Khai Vấn Dự Đoán Huyền Học'],
-        'category' => 'INTUITIVE ARTS',
-        'title'    => 'Khai Vấn Dự Đoán Huyền Học',
-        'desc'     => 'Sử dụng Soul Mirror Cards để soi chiếu nội tâm và tìm kiếm những chỉ dẫn trực giác cho hành trình sống.',
-        'url'      => '#',
+        'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-khai-van-huyen-hoc.jpg', 'alt' => 'Khai Vấn Dự Đoán Huyền Học'],
+        'category'       => 'INTUITIVE ARTS',
+        'title'          => 'Khai Vấn Dự Đoán Huyền Học',
+        'desc'           => 'Sử dụng Soul Mirror Cards để soi chiếu nội tâm và tìm kiếm những chỉ dẫn trực giác cho hành trình sống.',
+        'available_days' => 'Thứ 3, 5, 7',
+        'duration'       => '60 phút mỗi phiên',
+        'price'          => '700.000 VNĐ',
+        'url'            => '#',
     ],
 ];
 
@@ -71,18 +89,22 @@ if ($use_sample) {
         $term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
 
         $items[] = [
-            'image'    => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
-            'category' => $term_name,
-            'title'    => get_the_title($post_id),
-            'desc'     => get_field('dv_short_desc', $post_id),
-            'url'      => get_permalink($post_id),
+            'image'          => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
+            'category'       => $term_name,
+            'title'          => get_the_title($post_id),
+            'desc'           => get_field('dv_short_desc', $post_id),
+            'available_days' => get_field('dv_available_days', $post_id),
+            'duration'       => get_field('dv_duration', $post_id),
+            'branch'         => get_field('dv_branch', $post_id),
+            'price'          => get_field('dv_price', $post_id),
+            'url'            => get_permalink($post_id),
         ];
     }
     wp_reset_postdata();
 }
 ?>
 
-<section class="sec-dv-list pt-0 pb-(--pd-sc) bg-[#fbf9f4]"
+<section class="sec-dv-list pt-0 pb-(--pd-sc)"
     <?php if (!$use_sample) : ?>
     data-total="<?php echo $total; ?>"
     data-ajaxurl="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"
@@ -90,7 +112,7 @@ if ($use_sample) {
     <div class="container">
         <div class="row js-dv-list-grid">
             <?php foreach ($items as $item) : ?>
-                <div class="col col-4 max-lg:!w-1/2 max-sm:!w-full">
+                <div class="col col-2 max-lg:!w-1/2 max-sm:!w-full">
                     <?php get_template_part('partials/components/card-dich-vu', null, ['item' => $item]); ?>
                 </div>
             <?php endforeach; ?>

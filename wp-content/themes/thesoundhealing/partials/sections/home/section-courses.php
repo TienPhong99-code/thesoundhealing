@@ -9,28 +9,40 @@ $sample = [
     'link'    => ['url' => home_url('/khoa-hoc'), 'title' => 'XEM TẤT CẢ', 'target' => ''],
     'items'   => [
         [
-            'image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Hoà Âm 7 Chuông Pha Lê'],
-            'term'  => 'Bộ Môn Âm Thanh',
-            'title' => 'Hoà Âm 7 Chuông Pha Lê',
-            'desc'  => 'Nắm vững kỹ thuật chơi và hoà âm 7 luân xa với chuông pha lê, mang lại sự cân bằng sâu sắc cho cơ thể và tâm trí.',
-            'price' => '12.000.000 VNĐ',
-            'url'   => '#',
+            'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Hoà Âm 7 Chuông Pha Lê'],
+            'term'       => 'Bộ Môn Âm Thanh',
+            'level'      => 'Foundation',
+            'title'      => 'Hoà Âm 7 Chuông Pha Lê',
+            'desc'       => 'Nắm vững kỹ thuật chơi và hoà âm 7 luân xa với chuông pha lê, mang lại sự cân bằng sâu sắc cho cơ thể và tâm trí.',
+            'start_date' => '15 THÁNG 2, 2025',
+            'duration'   => '4 tuần · Cuối tuần',
+            'instructor' => 'Linh Tâm',
+            'price'      => '12.000.000 VNĐ',
+            'url'        => '#',
         ],
         [
-            'image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Năng Lượng Usui Reiki Level 1'],
-            'term'  => 'Bộ Môn Năng Lượng',
-            'title' => 'Năng Lượng Usui Reiki Level 1',
-            'desc'  => 'Khởi đầu hành trình chữa lành bằng năng lượng vũ trụ. Học cách tự trị liệu và cân bằng các luân xa cơ bản.',
-            'price' => '3.800.000 VNĐ',
-            'url'   => '#',
+            'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Năng Lượng Usui Reiki Level 1'],
+            'term'       => 'Bộ Môn Năng Lượng',
+            'level'      => 'Cơ bản',
+            'title'      => 'Năng Lượng Usui Reiki Level 1',
+            'desc'       => 'Khởi đầu hành trình chữa lành bằng năng lượng vũ trụ. Học cách tự trị liệu và cân bằng các luân xa cơ bản.',
+            'start_date' => '01 THÁNG 3, 2025',
+            'duration'   => '2 ngày · Cuối tuần',
+            'instructor' => 'Linh Tâm',
+            'price'      => '3.800.000 VNĐ',
+            'url'        => '#',
         ],
         [
-            'image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Liệu Pháp Sound Bath'],
-            'term'  => 'Bộ Môn Âm Thanh',
-            'title' => 'Liệu Pháp Sound Bath',
-            'desc'  => 'Đào tạo chuyên sâu kỹ năng tổ chức và dẫn dắt các buổi tắm âm thanh trị liệu chuyên nghiệp.',
-            'price' => '20.000.000 VNĐ',
-            'url'   => '#',
+            'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Liệu Pháp Sound Bath'],
+            'term'       => 'Bộ Môn Âm Thanh',
+            'level'      => 'Chuyên sâu',
+            'title'      => 'Liệu Pháp Sound Bath',
+            'desc'       => 'Đào tạo chuyên sâu kỹ năng tổ chức và dẫn dắt các buổi tắm âm thanh trị liệu chuyên nghiệp.',
+            'start_date' => '15 THÁNG 3, 2025',
+            'duration'   => '6 tuần · Cuối tuần',
+            'instructor' => 'Linh Tâm',
+            'price'      => '20.000.000 VNĐ',
+            'url'        => '#',
         ],
     ],
 ];
@@ -58,12 +70,16 @@ foreach ($raw_objects as $post) {
     $term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
 
     $acf_items[] = [
-        'image'    => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
-        'term'     => $term_name,
-        'title'    => $post->post_title,
-        'desc'     => get_field('short_desc', $post->ID),
-        'price'    => get_field('price', $post->ID),
-        'url'      => get_permalink($post->ID),
+        'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
+        'term'       => $term_name,
+        'level'      => get_field('level', $post->ID),
+        'title'      => $post->post_title,
+        'desc'       => get_field('short_desc', $post->ID),
+        'start_date' => get_field('start_date', $post->ID),
+        'duration'   => get_field('duration', $post->ID),
+        'instructor' => get_field('instructor_name', $post->ID),
+        'price'      => get_field('price', $post->ID),
+        'url'        => get_permalink($post->ID),
     ];
 }
 
@@ -75,8 +91,8 @@ $data = [
 ];
 ?>
 
-<section class="sec-courses relative py-(--pd-sc)">
-    <span class="absolute inset-0 bg-[#fbf9f4] z-[-1]"></span>
+<section class="sec-courses relative section-pd-t">
+    <span class="absolute inset-0 z-[-1]"></span>
 
     <div class="container">
         <!-- Header -->
@@ -104,19 +120,12 @@ $data = [
         </div>
 
         <!-- Cards -->
-        <div class="swiper-courses relative slideSw">
-            <div class="swiper-container">
-                <div class="swiper row">
-                    <div class="swiper-wrapper">
-                        <?php foreach ($data['items'] as $item) : ?>
-                            <div class="swiper-slide col col-4 max-lg:!w-1/2 max-md:!w-3/4">
-                                <?php get_template_part('partials/components/card-khoa-hoc', null, ['item' => $item]); ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+        <div class="row">
+            <?php foreach ($data['items'] as $item) : ?>
+                <div class="col col-2 max-lg:!w-1/2 max-md:!w-full">
+                    <?php get_template_part('partials/components/card-khoa-hoc', null, ['item' => $item]); ?>
                 </div>
-            </div>
-            <div class="swiper-pagination mt-6"></div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

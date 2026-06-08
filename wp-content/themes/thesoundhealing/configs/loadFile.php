@@ -63,6 +63,7 @@ return [
     MONA_THEME_INC_PATH . '/acf/KhoaHocPageACF.php',
     MONA_THEME_INC_PATH . '/acf/WorkshopACF.php',
     MONA_THEME_INC_PATH . '/acf/WorkshopPageACF.php',
+    MONA_THEME_INC_PATH . '/acf/KhoaHocWorkshopPageACF.php',
     MONA_THEME_INC_PATH . '/acf/DichVuACF.php',
     MONA_THEME_INC_PATH . '/acf/DichVuPageACF.php',
 ];

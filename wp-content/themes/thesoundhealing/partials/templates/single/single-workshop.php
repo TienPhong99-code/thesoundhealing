@@ -138,7 +138,7 @@ get_header();
                                     <?php echo esc_html($ws_price); ?>
                                 </span>
                             <?php endif; ?>
-                            <a href="#form-dang-ky" class="btn btn-pri shadow-[0px_10px_20px_rgba(44,81,76,0.15)]">
+                            <a href="#form-dang-ky" class="btn btn-pri">
                                 ĐĂNG KÝ NGAY
                             </a>
                         </div>
@@ -276,7 +276,7 @@ get_header();
                                         <svg class="size-4 shrink-0 text-[#4e635a]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                                         </svg>
-                                        <span class="text-[#414847] text-[14px]"><?php echo esc_html($ws_date); ?></span>
+                                        <span class="text-[#414847]"><?php echo esc_html($ws_date); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($ws_time) : ?>
@@ -284,7 +284,7 @@ get_header();
                                         <svg class="size-4 shrink-0 text-[#4e635a]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        <span class="text-[#414847] text-[14px]"><?php echo esc_html($ws_time); ?></span>
+                                        <span class="text-[#414847]"><?php echo esc_html($ws_time); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($ws_location) : ?>
@@ -293,7 +293,7 @@ get_header();
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                                         </svg>
-                                        <span class="text-[#414847] text-[14px]"><?php echo esc_html($ws_location); ?></span>
+                                        <span class="text-[#414847]"><?php echo esc_html($ws_location); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($ws_price) : ?>

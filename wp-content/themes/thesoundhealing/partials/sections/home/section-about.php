@@ -75,7 +75,7 @@ $data = [
                                         <h3 class="font-title text-sec text-[24px] max-md:text-[18px] font-normal">
                                             <?php echo esc_html($item['title']); ?>
                                         </h3>
-                                        <p class="text-[#414847] text-[14px]">
+                                        <p class="text-[#414847]">
                                             <?php echo esc_html($item['desc']); ?>
                                         </p>
                                     </div>

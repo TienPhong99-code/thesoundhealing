@@ -18,75 +18,75 @@ $status_key  = $item['status'] ?? 'open';
 $status_info = $status_map[$status_key] ?? $status_map['open'];
 ?>
 
-<div class="relative flex flex-col rounded-[12px] overflow-hidden group h-full">
+<div class="relative flex flex-col overflow-hidden group h-full">
 
     <!-- Thumbnail -->
-    <div class="relative overflow-hidden bg-[#e4e2dd] aspect-[4/3] shrink-0">
+    <div class="relative overflow-hidden rounded-2xl bg-[#e4e2dd] aspect-square shrink-0">
         <?php if (!empty($img_url)) : ?>
             <img src="<?php echo esc_url($img_url); ?>"
                 alt="<?php echo esc_attr($img_alt); ?>"
                 class="block w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
         <?php endif; ?>
 
-        <!-- Loại workshop badge (top-left) -->
-        <?php if (!empty($item['type'])) : ?>
-            <div class="absolute top-4 left-4">
-                <span class="bg-[rgba(251,249,244,0.9)] backdrop-blur-[2px] text-pri text-[10px] font-semibold uppercase tracking-[1.2px] px-2 py-1 rounded-[2px]">
-                    <?php echo esc_html($item['type']); ?>
-                </span>
-            </div>
-        <?php endif; ?>
-
+        <?php /* status badge ẩn tạm
+        <span class="absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-[1.2px] px-2 py-1 rounded-[2px] <?php echo esc_attr($status_info['class']); ?>">
+            <?php echo esc_html($status_info['label']); ?>
+        </span>
+        */ ?>
     </div>
 
     <!-- Content -->
-    <div class="flex flex-col flex-1 justify-between py-6 max-md:py-4">
-        <div class="flex flex-col gap-3 mb-6">
+    <div class="flex flex-col flex-1 justify-between py-4 gap-3">
 
-            <!-- Date -->
-            <?php if (!empty($item['date'])) : ?>
-                <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px]">
-                    <?php echo esc_html($item['date']); ?>
-                    <?php if (!empty($item['time'])) : ?>
-                        <span class="text-[#717977] font-normal normal-case tracking-normal ml-1">· <?php echo esc_html($item['time']); ?></span>
-                    <?php endif; ?>
-                </p>
+        <div class="flex flex-col gap-2">
+
+            <?php if (!empty($item['type'])) : ?>
+                <span class="text-[rgba(19,58,53,0.5)] text-[11px] font-semibold uppercase tracking-[1.2px]">
+                    <?php echo esc_html($item['type']); ?>
+                </span>
             <?php endif; ?>
 
-            <!-- Title -->
-            <h3 class="font-title text-pri text-[24px] font-normal leading-[32px] max-md:text-[18px]">
+            <h3 class="text-pri text-[18px] font-normal leading-[28px] line-clamp-2 max-md:text-[16px]">
                 <?php echo esc_html($item['title']); ?>
             </h3>
 
-            <!-- Location -->
-            <?php if (!empty($item['location'])) : ?>
-                <p class="text-[#717977] text-[13px] leading-[20px]">
-                    📍 <?php echo esc_html($item['location']); ?>
-                </p>
-            <?php endif; ?>
+            <div class="flex flex-col gap-1">
+                <?php if (!empty($item['date'])) : ?>
+                    <p class="text-[#414847] text-[13px] leading-[18px]">
+                        <?php echo esc_html($item['date']); ?>
+                        <?php if (!empty($item['time'])) : ?>
+                            <span class="text-[rgba(19,58,53,0.45)]"> · <?php echo esc_html($item['time']); ?></span>
+                        <?php endif; ?>
+                    </p>
+                <?php endif; ?>
 
-            <!-- Description -->
-            <?php if (!empty($item['desc'])) : ?>
-                <p class="text-[#414847] text-[16px] leading-[24px]">
-                    <?php echo esc_html($item['desc']); ?>
-                </p>
-            <?php endif; ?>
-        </div>
-
-        <div class="flex max-md:flex-col md:items-end md:justify-between gap-4">
-            <div class="flex flex-col gap-1 w-full">
-                <span class="text-[#717977] text-[12px] font-semibold uppercase tracking-[1.2px]">HỌC PHÍ</span>
-                <?php if (!empty($item['price'])) : ?>
-                    <span class="text-pri text-[16px] font-semibold leading-[24px]">
-                        <?php echo esc_html($item['price']); ?>
-                    </span>
+                <?php if (!empty($item['location'])) : ?>
+                    <p class="text-[rgba(19,58,53,0.45)] text-[12px] leading-[18px] line-clamp-1">
+                        <?php echo esc_html($item['location']); ?>
+                    </p>
                 <?php endif; ?>
             </div>
-            <a href="<?php echo esc_url($card_url); ?>"
-                class="btn btn-pri relative z-[2] shrink-0 <?php echo $status_key === 'closed' ? 'opacity-50 pointer-events-none' : ''; ?>">
-                <?php echo $status_key === 'closed' ? 'HẾT CHỖ' : 'XEM CHI TIẾT'; ?>
-            </a>
+
         </div>
+
+        <div class="flex items-center justify-between gap-2 pt-2 border-t border-[rgba(192,200,198,0.3)]">
+            <?php if (!empty($item['price'])) : ?>
+                <span class="font-title text-pri text-[18px] leading-[24px] font-normal">
+                    <?php echo esc_html($item['price']); ?>
+                </span>
+            <?php endif; ?>
+            <?php if ($status_key !== 'closed') : ?>
+                <span class="text-pri text-[11px] font-semibold uppercase tracking-[1.2px] ml-auto flex items-center gap-1">
+                    Đăng ký
+                    <svg class="w-[8px] h-[8px] shrink-0" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 4h6M4 1l3 3-3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+            <?php else : ?>
+                <span class="text-[#842029] text-[11px] font-semibold uppercase tracking-[1.2px] ml-auto">Hết chỗ</span>
+            <?php endif; ?>
+        </div>
+
     </div>
 
     <?php if ($status_key !== 'closed') : ?>

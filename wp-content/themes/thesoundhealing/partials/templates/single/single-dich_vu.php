@@ -181,7 +181,7 @@ get_header();
                                 <h4 class="font-title text-[#133a35] text-[20px] leading-[28px] font-normal">
                                     <?php echo esc_html($dv_f1_title); ?>
                                 </h4>
-                                <p class="text-[#414847] text-[14px] leading-[20px]">
+                                <p class="text-[#414847] leading-[20px]">
                                     <?php echo esc_html($dv_f1_desc); ?>
                                 </p>
                             </div>
@@ -197,7 +197,7 @@ get_header();
                                 <h4 class="font-title text-[#133a35] text-[20px] leading-[28px] font-normal">
                                     <?php echo esc_html($dv_f2_title); ?>
                                 </h4>
-                                <p class="text-[#414847] text-[14px] leading-[20px]">
+                                <p class="text-[#414847] leading-[20px]">
                                     <?php echo esc_html($dv_f2_desc); ?>
                                 </p>
                             </div>
@@ -249,7 +249,7 @@ get_header();
                         <?php endif; ?>
 
                         <!-- Info grid: Thời lượng / Trang phục / Địa điểm / Chuẩn bị -->
-                        <div class="bg-[#fbf9f4] border border-[rgba(192,200,198,0.3)] rounded-[4px] p-10 max-md:p-6">
+                        <div class="border border-[rgba(192,200,198,0.3)] rounded-[4px] p-10 max-md:p-6">
                             <h3 class="font-title text-[#133a35] text-[24px] leading-[32px] font-normal mb-8">
                                 Thông tin cần lưu ý
                             </h3>
@@ -312,7 +312,7 @@ get_header();
                             <h3 class="font-title text-[#133a35] text-[24px] leading-[32px] font-normal">
                                 Đặt lịch trải nghiệm ngay
                             </h3>
-                            <p class="text-[#414847] text-[14px] leading-[20px]">
+                            <p class="text-[#414847] leading-[20px]">
                                 Hãy chọn thời gian phù hợp để bắt đầu hành trình hồi phục.
                             </p>
                             <?php if ($dv_price) : ?>
@@ -358,7 +358,7 @@ get_header();
     </section>
 
     <!-- ── CTA ───────────────────────────────────────────────────────── -->
-    <section class="sec-dv-cta py-(--pd-sc) relative overflow-hidden" style="background:#133a35;">
+    <!-- <section class="sec-dv-cta py-(--pd-sc) relative overflow-hidden" style="background:#133a35;">
         <div class="absolute inset-0 opacity-10"
             style="background-image:radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);"></div>
         <div class="container relative">
@@ -374,7 +374,7 @@ get_header();
                 </a>
             </div>
         </div>
-    </section>
+    </section> -->
 
 </div>
 

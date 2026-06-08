@@ -129,7 +129,7 @@ get_header();
                                     <?php echo esc_html($price); ?>
                                 </span>
                             <?php endif; ?>
-                            <a href="#form-dang-ky" class="btn btn-pri shadow-[0px_10px_20px_rgba(44,81,76,0.15)]">
+                            <a href="#form-dang-ky" class="btn btn-pri">
                                 ĐĂNG KÝ NGAY
                             </a>
                         </div>
@@ -348,7 +348,7 @@ get_header();
     </section>
 
     <!-- ── CTA ───────────────────────────────────────────────────────── -->
-    <section class="sec-kh-cta py-(--pd-sc) relative overflow-hidden" style="background:#133a35;">
+    <!-- <section class="sec-kh-cta py-(--pd-sc) relative overflow-hidden" style="background:#133a35;">
         <div class="absolute inset-0 opacity-10"
             style="background-image:radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);"></div>
         <div class="container relative">
@@ -364,7 +364,7 @@ get_header();
                 </a>
             </div>
         </div>
-    </section>
+    </section> -->
 
 </div>
 

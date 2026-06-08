@@ -48,6 +48,42 @@ $sample = [
         'price'    => '1.200.000 VNĐ',
         'url'      => '#',
     ],
+    [
+        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Kết Nối Thần Số Học'],
+        'type'     => 'Workshop Huyền Học',
+        'status'   => 'open',
+        'date'     => '22 THÁNG 2, 2025',
+        'time'     => '09:00 – 12:00',
+        'title'    => 'Kết Nối Thần Số Học',
+        'location' => 'Aetheria Studio — Quận 1, TP.HCM',
+        'desc'     => 'Giải mã những con số đằng sau tên và ngày sinh để hiểu sứ mệnh và hành trình cuộc đời bạn.',
+        'price'    => '950.000 VNĐ',
+        'url'      => '#',
+    ],
+    [
+        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Tắm Âm Chủ Đề Ngủ Ngon'],
+        'type'     => 'Workshop Âm Thanh',
+        'status'   => 'limited',
+        'date'     => '1 THÁNG 3, 2025',
+        'time'     => '20:00 – 22:00',
+        'title'    => 'Tắm Âm Chủ Đề: Ngủ Ngon',
+        'location' => 'Aetheria Studio — Quận 1, TP.HCM',
+        'desc'     => 'Buổi tắm âm đặc biệt thiết kế để đưa sóng não về trạng thái Delta, hỗ trợ ngủ sâu và ngon giấc.',
+        'price'    => '750.000 VNĐ',
+        'url'      => '#',
+    ],
+    [
+        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Cân Bằng Chakra Nhóm'],
+        'type'     => 'Workshop Năng Lượng',
+        'status'   => 'open',
+        'date'     => '15 THÁNG 3, 2025',
+        'time'     => '14:00 – 17:00',
+        'title'    => 'Cân Bằng Chakra Nhóm',
+        'location' => 'Aetheria Studio — Quận 1, TP.HCM',
+        'desc'     => 'Trải nghiệm phiên cân bằng 7 luân xa trong không gian nhóm với âm thanh và thiền định kết hợp.',
+        'price'    => '1.100.000 VNĐ',
+        'url'      => '#',
+    ],
 ];
 
 $use_sample = !$query->have_posts();
@@ -81,7 +117,7 @@ if ($use_sample) {
 }
 ?>
 
-<section class="sec-ws-list pt-0 pb-(--pd-sc) bg-[#fbf9f4]"
+<section class="sec-ws-list pt-0 pb-(--pd-sc)"
     <?php if (!$use_sample) : ?>
     data-total="<?php echo $total; ?>"
     data-ajaxurl="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"

@@ -14,7 +14,7 @@ $data = [
 ];
 ?>
 
-<section class="sec-dv-hero py-(--pd-sc) bg-[#fbf9f4]">
+<section class="sec-dv-hero py-(--pd-sc)">
     <div class="container">
         <div class="flex flex-col items-center text-center gap-6 max-w-[768px] mx-auto">
             <h1 class="font-title max-md:text-[40px] text-pri text-[56px] font-normal tracking-[-1.12px] leading-[64px]">

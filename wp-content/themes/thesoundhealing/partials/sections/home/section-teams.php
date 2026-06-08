@@ -38,7 +38,7 @@ $data = [
 ?>
 
 <section class="sec-teams relative py-(--pd-sc)">
-    <span class="absolute inset-0 bg-[#fbf9f4] z-[-1]"></span>
+    <span class="absolute inset-0 z-[-1]"></span>
 
     <div class="container">
         <!-- Header -->

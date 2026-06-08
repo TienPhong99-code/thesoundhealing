@@ -114,7 +114,7 @@ $tuyen_dung_page = get_page_by_path('tuyen-dung');
 
                 <!-- Header: badge + title -->
                 <div class="flex flex-col">
-                    <span class="inline-block self-start px-3 rounded-sm py-1 text-[14px] font-bold text-white <?php echo $data['status'] === 'open' ? 'bg-[#f14950]' : 'bg-[#808080]'; ?>">
+                    <span class="inline-block self-start px-3 rounded-sm py-1  font-bold text-white <?php echo $data['status'] === 'open' ? 'bg-[#f14950]' : 'bg-[#808080]'; ?>">
                         <?php echo $data['status'] === 'open' ? esc_html__('ĐANG TUYỂN', 'monamedia') : esc_html__('ĐÃ TUYỂN', 'monamedia'); ?>
                     </span>
                     <h1 class="text-[40px] max-lg:text-[28px] max-md:text-[22px] font-bold text-pri uppercase leading-normal">
@@ -141,7 +141,7 @@ $tuyen_dung_page = get_page_by_path('tuyen-dung');
                                     class="w-5 h-5 max-sm:w-4 max-sm:h-4 brightness-0 invert" alt="">
                             </div>
                             <div class="flex flex-col gap-0.5">
-                                <span class="text-[14px] text-[#818181]"><?php esc_html_e('Mức lương:', 'monamedia'); ?></span>
+                                <span class=" text-[#818181]"><?php esc_html_e('Mức lương:', 'monamedia'); ?></span>
                                 <span class="text-[16px] font-semibold text-pri"><?php echo esc_html($data['salary']); ?></span>
                             </div>
                         </div>
@@ -153,7 +153,7 @@ $tuyen_dung_page = get_page_by_path('tuyen-dung');
                                     class="w-5 h-5 max-sm:w-4 max-sm:h-4 brightness-0 invert" alt="">
                             </div>
                             <div class="flex flex-col gap-0.5">
-                                <span class="text-[14px] text-[#818181]"><?php esc_html_e('Loại hình công việc:', 'monamedia'); ?></span>
+                                <span class=" text-[#818181]"><?php esc_html_e('Loại hình công việc:', 'monamedia'); ?></span>
                                 <span class="text-[16px] font-semibold text-pri"><?php echo esc_html($data['work_type']); ?></span>
                             </div>
                         </div>
@@ -165,7 +165,7 @@ $tuyen_dung_page = get_page_by_path('tuyen-dung');
                                     class="w-5 h-5 max-sm:w-4 max-sm:h-4 brightness-0 invert" alt="">
                             </div>
                             <div class="flex flex-col gap-0.5">
-                                <span class="text-[14px] text-[#818181]"><?php esc_html_e('Ngày đăng:', 'monamedia'); ?></span>
+                                <span class=" text-[#818181]"><?php esc_html_e('Ngày đăng:', 'monamedia'); ?></span>
                                 <span class="text-[16px] font-semibold text-pri"><?php echo esc_html($data['posted']); ?></span>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ $tuyen_dung_page = get_page_by_path('tuyen-dung');
                                     class="w-5 h-5 max-sm:w-4 max-sm:h-4 brightness-0 invert" alt="">
                             </div>
                             <div class="flex flex-col gap-0.5">
-                                <span class="text-[14px] text-[#818181]"><?php esc_html_e('Địa chỉ:', 'monamedia'); ?></span>
+                                <span class=" text-[#818181]"><?php esc_html_e('Địa chỉ:', 'monamedia'); ?></span>
                                 <span class="text-[16px] font-semibold text-pri leading-normal"><?php echo esc_html($data['location']); ?></span>
                             </div>
                         </div>

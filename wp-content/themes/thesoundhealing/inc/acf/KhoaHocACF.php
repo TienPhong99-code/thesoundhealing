@@ -25,6 +25,9 @@ add_action('acf/init', function () {
             Text::make('Cấp độ', 'level')
                 ->helperText('Ví dụ: KHOÁ HỌC CHUYÊN SÂU, CƠ BẢN, CẤP ĐỘ 1'),
 
+            Text::make('Ngày khai giảng', 'start_date')
+                ->helperText('Ví dụ: 15 THÁNG 1, 2025'),
+
             Text::make('Thời lượng', 'duration')
                 ->helperText('Ví dụ: 4 TUẦN, 2 NGÀY, CUỐI TUẦN'),
 

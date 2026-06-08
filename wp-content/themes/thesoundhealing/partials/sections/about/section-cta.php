@@ -24,7 +24,7 @@ $data = [
 ];
 ?>
 
-<section class="sec-ab-cta bg-[#fbf9f4] py-24">
+<section class="sec-ab-cta py-24">
     <div class="container">
         <div class="flex flex-col items-center text-center max-w-[672px] mx-auto gap-6">
             <h2 class="font-title text-pri max-md:text-[24px] text-[32px] font-normal leading-[40px]">
