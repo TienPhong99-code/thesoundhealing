@@ -39,11 +39,11 @@ $data = [
             <div class="flex flex-col gap-6">
 
                <!-- Logo -->
-               <a href="<?php echo esc_url(home_url('/')); ?>" class="block">
+               <a href="<?php echo esc_url(home_url('/')); ?>" class="block w-fit max-md:mx-auto">
                   <?php if (!empty($data['logo'])) : ?>
-                     <?php echo mona_get_image_by_id($data['logo'], 'full', false, ['class' => 'block h-8 w-auto', 'alt' => get_bloginfo('name')]); ?>
+                     <?php echo mona_get_image_by_id($data['logo'], 'full', false, ['class' => 'block w-[240px]  inline-block', 'alt' => get_bloginfo('name')]); ?>
                   <?php else : ?>
-                     <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/logo.svg'); ?>"
+                     <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/logo2.png'); ?>"
                         class="block h-8 w-auto"
                         alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
                   <?php endif; ?>
@@ -51,14 +51,14 @@ $data = [
 
                <!-- Tagline -->
                <?php if (!empty($data['tagline'])) : ?>
-                  <p class="text-[#414847] text-[16px] leading-[24px] max-w-[384px]">
+                  <p class="text-[#414847] max-md:text-center text-[16px] leading-[24px] max-w-[384px]">
                      <?php echo wp_kses_post($data['tagline']); ?>
                   </p>
                <?php endif; ?>
 
                <!-- Social Links -->
                <?php if (!empty($data['socials'])) : ?>
-                  <div class="flex gap-6 pt-2">
+                  <div class="flex gap-6 pt-2 max-md:justify-center">
                      <?php foreach ($data['socials'] as $social) : ?>
                         <a href="<?php echo esc_url($social['url'] ?? '#'); ?>"
                            class="text-[#133a35] text-[16px] leading-[24px] hover:opacity-70 transition-opacity">
@@ -72,7 +72,7 @@ $data = [
          </div>
 
          <!-- Col 2: Quick Links -->
-         <div class="col col-3 max-md:col-6 max-sm:w-full!">
+         <div class="col col-3 max-md:col-6 max-sm:w-1/2!">
             <div class="flex flex-col gap-6">
                <p class="text-[#133a35] text-[16px] leading-[24px] uppercase tracking-wider">
                   <?php esc_html_e('MENU', 'monamedia'); ?>
@@ -89,7 +89,7 @@ $data = [
          </div>
 
          <!-- Col 3: Contact -->
-         <div class="col col-3 max-md:col-6 max-sm:w-full!">
+         <div class="col col-3 max-md:col-6 max-sm:w-1/2!">
             <div class="flex flex-col gap-6">
                <p class="text-[#133a35] text-[16px] leading-[24px] uppercase tracking-wider">
                   <?php esc_html_e('LIÊN HỆ', 'monamedia'); ?>

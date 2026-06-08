@@ -1,6 +1,6 @@
 /* ── Montserrat self-hosted ── */
 @import url("../fonts/Monsterrat/stylesheet.css");
-/* @import url("../fonts/PlayfairDisplay/stylesheet.css"); */
+@import url("../fonts/iCiel/stylesheet.css");
 @import url("../fonts/BeautiqueDisplay/stylesheet.css");
 
 :root {
@@ -24,8 +24,11 @@
   --color-sec: #1b1c19;
   --font-body: "Monsterrat", serif;
   --font-title: "Beautique Display", serif;
+  --font-second: "iCiel Beatrice Display", serif;
 }
-
+.font-second {
+  font-family: "iCiel Beatrice Display", serif;
+}
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 6px;
@@ -1282,11 +1285,11 @@ form .wpcf7-not-valid-tip {
   height: 100%;
 }
 .hd-logo {
-  width: 140px;
+  width: 160px;
 }
 @media screen and (max-width: 1280px) {
   .hd-logo {
-    width: 110px;
+    width: 140px;
   }
 }
 @media screen and (max-width: 768px) {
@@ -1294,7 +1297,7 @@ form .wpcf7-not-valid-tip {
     height: 64px;
   }
   .hd-logo {
-    width: 90px;
+    width: 100px;
   }
 }
 
@@ -1588,3 +1591,48 @@ form .wpcf7-not-valid-tip {
 .cf7-dich-vu .wpcf7-spinner {
   display: none;
 }
+
+/* ── Select: người hướng dẫn & khung giờ ─────────────────────────── */
+.cf7-dich-vu .wpcf7-form-control-wrap:has(.wpcf7-select) {
+  display: block;
+  position: relative;
+}
+.cf7-dich-vu .wpcf7-form-control-wrap:has(.wpcf7-select)::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23133a35' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.cf7-dich-vu .wpcf7-select {
+  width: 100%;
+  padding: 14px 40px 14px 16px;
+  background: #fbf9f4;
+  border: 1px solid #c0c8c6;
+  border-radius: 2px;
+  font-size: 16px;
+  color: var(--color-sec);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.cf7-dich-vu .wpcf7-select:focus {
+  border-color: var(--color-pri);
+}
+.cf7-dich-vu .wpcf7-select option[value=""] {
+  color: #a0aeac;
+}
+.cf7-dich-vu .wpcf7-select.wpcf7-not-valid {
+  border-color: #e53935;
+}
+
+/* Validation tip */

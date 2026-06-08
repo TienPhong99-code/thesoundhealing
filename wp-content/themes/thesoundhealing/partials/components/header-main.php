@@ -24,7 +24,7 @@ $lang_en = '#';
             $custom_logo_id = get_theme_mod('custom_logo');
             $logo_url = $custom_logo_id
                ? wp_get_attachment_image_url($custom_logo_id, 'full')
-               : MONA_THEME_PATH_URI . '/assets/images/logo.svg';
+               : MONA_THEME_PATH_URI . '/assets/images/logo2.png';
             ?>
             <img src="<?php echo esc_url($logo_url); ?>"
                class="block w-full object-contain" alt="<?php echo esc_attr(get_bloginfo('name')); ?>">

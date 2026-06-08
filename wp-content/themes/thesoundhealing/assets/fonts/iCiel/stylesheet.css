@@ -1,0 +1,144 @@
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-Bold.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-BoldItalic.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-DemiBold.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-DemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display Light It';
+    src: url('iCielBeatriceDisplay-LightItalic.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-Medium.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-MediumItalic.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-Regular.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-RegularItalic.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-RegularItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-Thin.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display';
+    src: url('iCielBeatriceDisplay-ThinItalic.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-ThinItalic.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Beatrice Display UltraBd';
+    src: url('iCielBeatriceDisplay-UltraBold.woff2') format('woff2'),
+        url('iCielBeatriceDisplay-UltraBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Union';
+    src: url('iCielUnion-Bold.woff2') format('woff2'),
+        url('iCielUnion-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Union';
+    src: url('iCielUnion-BoldItalic.woff2') format('woff2'),
+        url('iCielUnion-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Union';
+    src: url('iCielUnion-Regular.woff2') format('woff2'),
+        url('iCielUnion-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'iCiel Union';
+    src: url('iCielUnion-RegularItalic.woff2') format('woff2'),
+        url('iCielUnion-RegularItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Myriad Pro';
+    src: url('MyriadPro-Regular.woff2') format('woff2'),
+        url('MyriadPro-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

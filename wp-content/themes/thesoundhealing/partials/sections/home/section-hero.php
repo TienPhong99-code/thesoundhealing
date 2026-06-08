@@ -33,7 +33,7 @@ $data = [
 
     <div class="container relative flex flex-col items-center justify-center min-h-[819px] py-20">
         <div class="flex flex-col items-center text-center max-w-[1000px]">
-            <h1 class="font-title text-[#133a35] text-[56px] font-normal mb-6 max-sm:text-[8vw] max-md:text-[40px]">
+            <h1 class="font-second text-[#133a35] text-[56px] font-normal mb-6 max-sm:text-[8vw] max-md:text-[40px]">
                 <?php echo wp_kses_post($data['heading']); ?>
             </h1>
             <p class="text-[#414847] text-[18px] mb-10 max-w-[672px]">

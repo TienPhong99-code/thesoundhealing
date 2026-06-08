@@ -124,6 +124,26 @@ add_action('acf/init', function () {
             Textarea::make('Giới thiệu', 'dv_instructor_bio')
                 ->rows(3),
 
+            Repeater::make('Danh sách người hướng dẫn (form đặt lịch)', 'dv_instructors')
+                ->helperText('Các lựa chọn hiển thị trong dropdown "Người hướng dẫn" của form đặt lịch.')
+                ->layout('table')
+                ->collapsed('dv_instructor_name')
+                ->fields([
+                    Text::make('Tên', 'dv_instructor_name')->required()
+                        ->helperText('Ví dụ: Linh Tâm'),
+                ]),
+
+            // ─── TAB: KHUNG GIỜ ──────────────────────────────────────────
+            Tab::make('Khung giờ')->placement('left'),
+
+            Repeater::make('Khung giờ đặt lịch', 'dv_time_slots')
+                ->helperText('Để trống sẽ dùng khung giờ mặc định: 09:00-10:30, 10:30-12:00, 14:00-15:30, 15:30-17:00, 17:00-18:30.')
+                ->layout('table')
+                ->fields([
+                    Text::make('Khung giờ', 'dv_time_slot')->required()
+                        ->helperText('Ví dụ: 09:00 - 10:30'),
+                ]),
+
             // ─── TAB: CTA ────────────────────────────────────────────────
             Tab::make('CTA')->placement('left'),
 

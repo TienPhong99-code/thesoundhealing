@@ -25,6 +25,7 @@ return [
     MONA_THEME_INC_PATH . '/hooks/PostHook.php',
     MONA_THEME_INC_PATH . '/hooks/AjaxHook.php',
     MONA_THEME_INC_PATH . '/hooks/ShortcodeHook.php',
+    MONA_THEME_INC_PATH . '/hooks/CF7Hook.php',
 
     // Caches
     MONA_THEME_INC_PATH . '/caches/MenuCache.php',

@@ -325,12 +325,31 @@ get_header();
                         <?php
                         $dv_cf7_id = defined('DV_CF7_FORM_ID') ? DV_CF7_FORM_ID : (defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '');
                         if ($dv_cf7_id) : ?>
+                            <style>
+                                /* Ẩn lỗi validation cho đến khi form thực sự được submit */
+                                .cf7-dich-vu .wpcf7-form:not(.invalid):not(.failed) .wpcf7-not-valid-tip {
+                                    display: none;
+                                }
+
+                                .cf7-dich-vu .wpcf7-form:not(.invalid):not(.failed) .wpcf7-form-control.wpcf7-not-valid {
+                                    border-color: inherit;
+                                }
+                            </style>
                             <div class="cf7-dich-vu">
                                 <?php echo do_shortcode('[contact-form-7 id="' . esc_attr($dv_cf7_id) . '"]'); ?>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        var dateInput = document.querySelector('.cf7-dich-vu input[type="date"]');
+                                        if (!dateInput) return;
+                                        dateInput.addEventListener('click', function() {
+                                            try {
+                                                this.showPicker();
+                                            } catch (e) {}
+                                        });
+                                    });
+                                </script>
                             </div>
                         <?php endif; ?>
-
-
                     </div>
                 </div>
 
