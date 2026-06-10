@@ -1,0 +1,168 @@
+(function () {
+    'use strict';
+
+    var sb = document.getElementById('search-booking');
+    if (!sb) return;
+
+    var guestCounts = {
+        adult:  parseInt((document.getElementById('sb-input-adult')  || {}).value) || 0,
+        child:  parseInt((document.getElementById('sb-input-child')  || {}).value) || 0,
+        infant: parseInt((document.getElementById('sb-input-infant') || {}).value) || 0,
+    };
+
+    var guestInputMap = {
+        adult:  'sb-input-adult',
+        child:  'sb-input-child',
+        infant: 'sb-input-infant',
+    };
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+    function closeAllPanels() {
+        sb.querySelectorAll('.sb-field.is-open').forEach(function (f) {
+            f.classList.remove('is-open');
+            var btn = f.querySelector('[data-sb-toggle]');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+            var panel = f.querySelector('.sb-panel');
+            if (panel) panel.setAttribute('aria-hidden', 'true');
+        });
+    }
+
+    // ── Panel toggles ─────────────────────────────────────────────────────
+    sb.querySelectorAll('[data-sb-toggle]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var field   = this.closest('.sb-field');
+            var isOpen  = field.classList.contains('is-open');
+            var panelId = 'sb-panel-' + this.dataset.sbToggle;
+
+            closeAllPanels();
+
+            if (!isOpen) {
+                field.classList.add('is-open');
+                this.setAttribute('aria-expanded', 'true');
+                var panel = document.getElementById(panelId);
+                if (panel) panel.setAttribute('aria-hidden', 'false');
+            }
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!sb.contains(e.target)) closeAllPanels();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAllPanels();
+    });
+
+    // ── Loại hình — delegation (có child spans) ───────────────────────────
+    var typePanel = document.getElementById('sb-panel-type');
+    if (typePanel) {
+        typePanel.addEventListener('click', function (e) {
+            var opt = e.target.closest('.sb-option');
+            if (!opt) return;
+
+            var val   = opt.dataset.value;
+            var labelEl = opt.querySelector('.sb-option__label');
+            var label = labelEl ? labelEl.textContent.trim() : (opt.dataset.label || val);
+            var input = document.getElementById(opt.dataset.targetInput);
+            var valEl = document.getElementById(opt.dataset.targetVal);
+
+            if (input) input.value = val;
+            if (valEl) valEl.textContent = label;
+
+            typePanel.querySelectorAll('.sb-option').forEach(function (o) { o.classList.remove('is-active'); });
+            opt.classList.add('is-active');
+
+            closeAllPanels();
+        });
+    }
+
+    // ── Time pills — individual listeners (không có child elements) ───────
+    sb.querySelectorAll('.sb-time-pill').forEach(function (pill) {
+        pill.addEventListener('click', function (e) {
+            e.stopPropagation();
+
+            var val       = this.dataset.value;
+            var label     = this.textContent.trim();
+            var input     = document.getElementById('sb-input-time');
+            var dateInput = document.getElementById('sb-input-date');
+            var valEl     = document.getElementById('sb-val-time');
+
+            if (input)     input.value      = val;
+            if (dateInput) dateInput.value  = '';
+            if (valEl)     valEl.textContent = label;
+
+            sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
+            this.classList.add('is-active');
+
+            if (window._sbFlatpickr) window._sbFlatpickr.clear();
+
+            closeAllPanels();
+        });
+    });
+
+    // ── Guest counters — delegation ───────────────────────────────────────
+    var guestPanel = document.getElementById('sb-panel-guest');
+    if (guestPanel) {
+        guestPanel.addEventListener('click', function (e) {
+            var btn = e.target.closest('.sb-counter-btn');
+            if (!btn) return;
+
+            var target  = btn.dataset.target;
+            var isMinus = btn.classList.contains('sb-counter-minus');
+            var current = guestCounts[target] || 0;
+
+            current = isMinus ? Math.max(0, current - 1) : Math.min(10, current + 1);
+            guestCounts[target] = current;
+
+            var countEl  = document.getElementById('sb-count-' + target);
+            if (countEl) countEl.textContent = current;
+
+            var minusBtn = btn.closest('.sb-guest-counter').querySelector('.sb-counter-minus');
+            if (minusBtn) minusBtn.disabled = (current === 0);
+
+            var hiddenInput = document.getElementById(guestInputMap[target]);
+            if (hiddenInput) hiddenInput.value = current;
+
+            updateGuestSummary();
+        });
+    }
+
+    function updateGuestSummary() {
+        var parts = [];
+        if (guestCounts.adult  > 0) parts.push(guestCounts.adult  + ' người lớn');
+        if (guestCounts.child  > 0) parts.push(guestCounts.child  + ' trẻ em');
+        if (guestCounts.infant > 0) parts.push(guestCounts.infant + ' em bé');
+        var valEl = document.getElementById('sb-val-guest');
+        if (valEl) valEl.textContent = parts.length > 0 ? parts.join(', ') : 'Thêm khách';
+    }
+
+    // ── Flatpickr — init cuối cùng, wrap try-catch để không break script ──
+    try {
+        var fpTrigger = document.getElementById('sb-flatpickr-trigger');
+        if (fpTrigger && typeof flatpickr === 'function') {
+            window._sbFlatpickr = flatpickr(fpTrigger, {
+                inline:  true,
+                minDate: 'today',
+                locale: { firstDayOfWeek: 1 },
+                onChange: function (selectedDates, dateStr) {
+                    var timeInput = document.getElementById('sb-input-time');
+                    var dateInput = document.getElementById('sb-input-date');
+                    var valEl     = document.getElementById('sb-val-time');
+
+                    if (timeInput) timeInput.value = '';
+                    if (dateInput) dateInput.value = dateStr;
+
+                    if (valEl && selectedDates[0]) {
+                        valEl.textContent = selectedDates[0].toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    }
+
+                    sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
+                },
+            });
+        }
+    } catch (err) {
+        // flatpickr init failed — date picker falls back to hidden input only
+    }
+
+})();

@@ -7,12 +7,23 @@ if (empty($item)) return;
 $img_url  = $item['image']['url'] ?? '';
 $img_alt  = $item['image']['alt'] ?? '';
 $card_url = $item['url']          ?? '#';
-$category       = $item['category']        ?? '';
+$category       = $item['category']       ?? '';
 $available_days = $item['available_days'] ?? '';
 $duration       = $item['duration']       ?? '';
 $branch         = $item['branch']         ?? '';
+$location       = $item['location']       ?? '';
+$instructor     = $item['instructor']     ?? '';
 $price          = $item['price']          ?? '';
 $spots          = isset($item['spots']) && $item['spots'] !== '' && $item['spots'] !== null ? (int) $item['spots'] : null;
+
+$status_map = [
+    'open'     => ['label' => 'Hoạt động',   'class' => 'bg-[#d4edda] text-[#1a6630]'],
+    'limited'  => ['label' => 'Sắp hết chỗ', 'class' => 'bg-[#fff3cd] text-[#856404]'],
+    'closed'   => ['label' => 'Tạm ngưng',   'class' => 'bg-[#f8d7da] text-[#842029]'],
+    'upcoming' => ['label' => 'Sắp mở',      'class' => 'bg-[#eae8e3] text-pri'],
+];
+$status_key  = $item['status'] ?? '';
+$status_info = $status_key ? ($status_map[$status_key] ?? null) : null;
 ?>
 
 <div class="relative flex flex-col overflow-hidden group h-full">
@@ -34,6 +45,11 @@ $spots          = isset($item['spots']) && $item['spots'] !== '' && $item['spots
                     Còn <?php echo $spots; ?> chỗ
                 </span>
             <?php endif; ?>
+        <?php endif; ?>
+        <?php if ($status_info) : ?>
+            <span class="absolute top-3 right-3 z-[2] text-[10px] font-semibold uppercase tracking-[1.2px] px-2 py-1 rounded-[2px] <?php echo esc_attr($status_info['class']); ?>">
+                <?php echo esc_html($status_info['label']); ?>
+            </span>
         <?php endif; ?>
     </div>
 
@@ -64,6 +80,16 @@ $spots          = isset($item['spots']) && $item['spots'] !== '' && $item['spots
                 <?php if (!empty($branch)) : ?>
                     <p class="text-[14px] leading-[18px]">
                         <?php echo esc_html($branch); ?>
+                    </p>
+                <?php endif; ?>
+                <?php if (!empty($location)) : ?>
+                    <p class="text-[14px] leading-[18px] line-clamp-1">
+                        <?php echo esc_html($location); ?>
+                    </p>
+                <?php endif; ?>
+                <?php if (!empty($instructor)) : ?>
+                    <p class="text-[14px] leading-[18px]">
+                        <?php echo esc_html($instructor); ?>
                     </p>
                 <?php endif; ?>
             </div>

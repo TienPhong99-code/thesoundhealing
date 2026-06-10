@@ -7,6 +7,18 @@ if (empty($item)) return;
 $img_url  = $item['image']['url'] ?? '';
 $img_alt  = $item['image']['alt'] ?? '';
 $card_url = $item['url']          ?? '#';
+$location   = $item['location']   ?? '';
+$branch     = $item['branch']     ?? '';
+$spots      = isset($item['spots']) && $item['spots'] !== '' && $item['spots'] !== null ? (int) $item['spots'] : null;
+
+$status_map = [
+    'open'     => ['label' => 'Đang tuyển sinh', 'class' => 'bg-[#d4edda] text-[#1a6630]'],
+    'ongoing'  => ['label' => 'Đang diễn ra',    'class' => 'bg-[#cce5ff] text-[#004085]'],
+    'closed'   => ['label' => 'Đã kết thúc',     'class' => 'bg-[#f8d7da] text-[#842029]'],
+    'upcoming' => ['label' => 'Sắp khai giảng',  'class' => 'bg-[#eae8e3] text-pri'],
+];
+$status_key  = $item['status'] ?? '';
+$status_info = $status_key ? ($status_map[$status_key] ?? null) : null;
 ?>
 
 <div class="relative flex flex-col overflow-hidden group h-full">
@@ -19,13 +31,23 @@ $card_url = $item['url']          ?? '#';
                 class="block w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
         <?php endif; ?>
 
-        <?php /* level badge ẩn tạm
-        <?php if (!empty($item['level'])) : ?>
-            <span class="absolute top-3 right-3 bg-[#eae8e3] text-pri text-[10px] font-semibold uppercase tracking-[1.2px] px-2 py-1 rounded-[2px]">
-                <?php echo esc_html($item['level']); ?>
+        <?php if ($spots !== null) : ?>
+            <?php if ($spots === 0) : ?>
+                <span class="absolute top-3 left-3 z-[2] bg-[#1b1c19] text-white text-[11px] font-semibold uppercase tracking-[1px] px-2.5 py-1 rounded-full">
+                    Hết chỗ
+                </span>
+            <?php else : ?>
+                <span class="absolute top-3 left-3 z-[2] bg-[#4e635a] text-white text-[11px] font-semibold uppercase tracking-[1px] px-2.5 py-1 rounded-full">
+                    Còn <?php echo $spots; ?> chỗ
+                </span>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <?php if ($status_info) : ?>
+            <span class="absolute top-3 right-3 z-[2] text-[10px] font-semibold uppercase tracking-[1.2px] px-2 py-1 rounded-[2px] <?php echo esc_attr($status_info['class']); ?>">
+                <?php echo esc_html($status_info['label']); ?>
             </span>
         <?php endif; ?>
-        */ ?>
     </div>
 
     <!-- Content -->
@@ -55,6 +77,16 @@ $card_url = $item['url']          ?? '#';
                 <?php if (!empty($item['instructor'])) : ?>
                     <p class="text-[14px] leading-[18px]">
                         <?php echo esc_html($item['instructor']); ?>
+                    </p>
+                <?php endif; ?>
+                <?php if (!empty($location)) : ?>
+                    <p class="text-[14px] leading-[18px] line-clamp-1">
+                        <?php echo esc_html($location); ?>
+                    </p>
+                <?php endif; ?>
+                <?php if (!empty($branch)) : ?>
+                    <p class="text-[14px] leading-[18px]">
+                        <?php echo esc_html($branch); ?>
                     </p>
                 <?php endif; ?>
             </div>

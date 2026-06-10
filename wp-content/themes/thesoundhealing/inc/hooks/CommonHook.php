@@ -77,6 +77,7 @@ add_action('wp_enqueue_scripts', function () {
    // CSS thư viện — nằm trên để theme CSS đè lại
    wp_enqueue_style('mona-swiper',    MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.css',   [], MONA_THEME_VERSION);
    wp_enqueue_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css',          [], MONA_THEME_VERSION);
+   wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css',   [], MONA_THEME_VERSION);
 
    // CSS theme
    if (is_404()) {
@@ -119,8 +120,10 @@ add_action('wp_enqueue_scripts', function () {
    // ]);
    // wp_localize_script('mona-backend', 'mona_params', $params);
 
-   wp_enqueue_script('mona-modal',  MONA_THEME_PATH_URI . '/assets/scripts/modules/common/modal.js',  array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/modal.js'),  array('in_footer' => true));
-   wp_enqueue_script('mona-header', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/header.js', array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/header.js'), array('in_footer' => true));
+   wp_enqueue_script('mona-modal',          MONA_THEME_PATH_URI . '/assets/scripts/modules/common/modal.js',          array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/modal.js'),          array('in_footer' => true));
+   wp_enqueue_script('mona-header',         MONA_THEME_PATH_URI . '/assets/scripts/modules/common/header.js',         array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/header.js'),         array('in_footer' => true));
+   wp_enqueue_script('mona-flatpickr',      MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js',                                                               array(), MONA_THEME_VERSION,                                                                                          array('in_footer' => true));
+   wp_enqueue_script('mona-search-booking', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/search-booking.js', array('mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/search-booking.js'), array('in_footer' => true));
    wp_enqueue_script('mona-main', MONA_THEME_PATH_URI . '/assets/scripts/main.js', array('jquery', 'mona-swiper', 'mona-lenis', 'mona-modal', 'mona-header'), filemtime(MONA_THEME_PATH . '/assets/scripts/main.js'), array('in_footer' => true));
 
    if (is_front_page()) {

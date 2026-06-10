@@ -72,13 +72,17 @@ foreach ($raw_objects as $post) {
     $acf_items[] = [
         'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
         'term'       => $term_name,
-        'level'      => get_field('level', $post->ID),
+        'level'      => get_field('level',           $post->ID),
         'title'      => $post->post_title,
-        'desc'       => get_field('short_desc', $post->ID),
-        'start_date' => get_field('start_date', $post->ID),
-        'duration'   => get_field('duration', $post->ID),
+        'desc'       => get_field('short_desc',      $post->ID),
+        'start_date' => get_field('start_date',      $post->ID),
+        'duration'   => get_field('duration',        $post->ID),
         'instructor' => get_field('instructor_name', $post->ID),
-        'price'      => get_field('price', $post->ID),
+        'location'   => get_field('location',        $post->ID),
+        'branch'     => get_field('kh_branch',       $post->ID),
+        'status'     => get_field('kh_status',       $post->ID) ?: '',
+        'price'      => get_field('price',           $post->ID),
+        'spots'      => get_field('kh_spots',        $post->ID),
         'url'        => get_permalink($post->ID),
     ];
 }

@@ -1,7 +1,9 @@
 <?php
 
 use Extended\ACF\Fields\Image;
+use Extended\ACF\Fields\Number;
 use Extended\ACF\Fields\Repeater;
+use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
@@ -37,6 +39,25 @@ add_action('acf/init', function () {
 
             Text::make('Học phí', 'price')
                 ->helperText('Ví dụ: 8.500.000 VNĐ'),
+
+            Text::make('Địa điểm', 'location')
+                ->helperText('Ví dụ: Aetheria Studio — Quận 1, TP.HCM'),
+
+            Number::make('Số chỗ còn lại', 'kh_spots')
+                ->helperText('Nhập số chỗ còn trống. 0 = Hết chỗ. Để trống = không hiển thị badge. Dùng cho bộ lọc tìm kiếm.')
+                ->min(0),
+
+            Text::make('Chi nhánh', 'kh_branch')
+                ->helperText('Hiển thị trên card. Ví dụ: Thảo Điền · Quận 1'),
+
+            Select::make('Trạng thái', 'kh_status')
+                ->choices([
+                    'open'     => 'Đang tuyển sinh',
+                    'ongoing'  => 'Đang diễn ra',
+                    'closed'   => 'Đã kết thúc',
+                    'upcoming' => 'Sắp khai giảng',
+                ])
+                ->default('open'),
 
             // ─── TAB: TRẢI NGHIỆM ────────────────────────────────────────
             Tab::make('Trải nghiệm')->placement('left'),

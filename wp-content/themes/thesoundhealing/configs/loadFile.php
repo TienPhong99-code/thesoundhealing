@@ -20,6 +20,7 @@ return [
     MONA_THEME_INC_PATH . '/functions/ACFFunction.php',
 
     // Hooks
+    MONA_THEME_INC_PATH . '/hooks/SearchHook.php',
     MONA_THEME_INC_PATH . '/hooks/CommonHook.php',
     MONA_THEME_INC_PATH . '/hooks/ImageHook.php',
     MONA_THEME_INC_PATH . '/hooks/PostHook.php',

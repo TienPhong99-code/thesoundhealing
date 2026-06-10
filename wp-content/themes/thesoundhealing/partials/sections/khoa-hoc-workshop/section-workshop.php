@@ -64,14 +64,17 @@ if ($use_sample) {
         $items[] = [
             'image'    => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
             'type'     => $type_name,
-            'status'   => get_field('ws_status', $post_id) ?: 'open',
-            'date'     => get_field('ws_date', $post_id),
-            'time'     => get_field('ws_time', $post_id),
-            'title'    => get_the_title($post_id),
-            'location' => get_field('ws_location', $post_id),
-            'desc'     => get_field('ws_short_desc', $post_id),
-            'price'    => get_field('ws_price', $post_id),
-            'url'      => get_permalink($post_id),
+            'status'     => get_field('ws_status',        $post_id) ?: 'open',
+            'date'       => get_field('ws_date',          $post_id),
+            'time'       => get_field('ws_time',          $post_id),
+            'duration'   => get_field('ws_duration',      $post_id),
+            'title'      => get_the_title($post_id),
+            'location'   => get_field('ws_location',      $post_id),
+            'instructor' => get_field('ws_instructor_name', $post_id),
+            'desc'       => get_field('ws_short_desc',    $post_id),
+            'price'      => get_field('ws_price',         $post_id),
+            'spots'      => get_field('ws_spots',         $post_id),
+            'url'        => get_permalink($post_id),
         ];
     }
     wp_reset_postdata();

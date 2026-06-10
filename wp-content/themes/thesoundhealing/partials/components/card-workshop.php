@@ -16,6 +16,9 @@ $status_map = [
 ];
 $status_key  = $item['status'] ?? 'open';
 $status_info = $status_map[$status_key] ?? $status_map['open'];
+$spots       = isset($item['spots']) && $item['spots'] !== '' && $item['spots'] !== null ? (int) $item['spots'] : null;
+$instructor  = $item['instructor'] ?? '';
+$duration    = $item['duration']   ?? '';
 ?>
 
 <div class="relative flex flex-col overflow-hidden group h-full">
@@ -26,6 +29,18 @@ $status_info = $status_map[$status_key] ?? $status_map['open'];
             <img src="<?php echo esc_url($img_url); ?>"
                 alt="<?php echo esc_attr($img_alt); ?>"
                 class="block w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        <?php endif; ?>
+
+        <?php if ($spots !== null) : ?>
+            <?php if ($spots === 0) : ?>
+                <span class="absolute top-3 left-3 z-[2] bg-[#1b1c19] text-white text-[11px] font-semibold uppercase tracking-[1px] px-2.5 py-1 rounded-full">
+                    Hết chỗ
+                </span>
+            <?php else : ?>
+                <span class="absolute top-3 left-3 z-[2] bg-[#4e635a] text-white text-[11px] font-semibold uppercase tracking-[1px] px-2.5 py-1 rounded-full">
+                    Còn <?php echo $spots; ?> chỗ
+                </span>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?php /* status badge ẩn tạm
@@ -59,8 +74,18 @@ $status_info = $status_map[$status_key] ?? $status_map['open'];
                 <?php endif; ?>
 
                 <?php if (!empty($item['location'])) : ?>
-                    <p class=" text-[14px] leading-[18px] line-clamp-1">
+                    <p class="text-[14px] leading-[18px] line-clamp-1">
                         <?php echo esc_html($item['location']); ?>
+                    </p>
+                <?php endif; ?>
+                <?php if (!empty($duration)) : ?>
+                    <p class="text-[14px] leading-[18px]">
+                        <?php echo esc_html($duration); ?>
+                    </p>
+                <?php endif; ?>
+                <?php if (!empty($instructor)) : ?>
+                    <p class="text-[14px] leading-[18px]">
+                        <?php echo esc_html($instructor); ?>
                     </p>
                 <?php endif; ?>
             </div>

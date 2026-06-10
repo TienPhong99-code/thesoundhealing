@@ -1,6 +1,7 @@
 <?php
 
 use Extended\ACF\Fields\Image;
+use Extended\ACF\Fields\Number;
 use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
@@ -29,6 +30,9 @@ add_action('acf/init', function () {
             Text::make('Thời gian', 'ws_time')
                 ->helperText('Ví dụ: 09:00 – 17:00'),
 
+            Text::make('Thời lượng', 'ws_duration')
+                ->helperText('Ví dụ: 1 ngày · 2 tiếng · Buổi sáng'),
+
             Text::make('Địa điểm', 'ws_location')
                 ->helperText('Ví dụ: Aetheria Studio — Quận 1, TP.HCM'),
 
@@ -39,8 +43,12 @@ add_action('acf/init', function () {
             Text::make('Học phí', 'ws_price')
                 ->helperText('Ví dụ: 1.200.000 VNĐ'),
 
-            Text::make('Số chỗ còn lại', 'ws_capacity')
+            Text::make('Mô tả chỗ còn lại', 'ws_capacity')
                 ->helperText('Ví dụ: Còn 8 chỗ · Chỉ còn 2 chỗ · Hết chỗ'),
+
+            Number::make('Số chỗ còn lại (số)', 'ws_spots')
+                ->helperText('Nhập số chỗ còn trống. 0 = Hết chỗ. Để trống = không hiển thị badge. Dùng cho bộ lọc tìm kiếm.')
+                ->min(0),
 
             Select::make('Trạng thái', 'ws_status')
                 ->choices([

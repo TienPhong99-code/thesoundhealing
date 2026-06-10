@@ -102,14 +102,18 @@ if ($use_sample) {
 
         $items[] = [
             'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
-            'level'      => get_field('level', $post_id),
+            'level'      => get_field('level',           $post_id),
             'term'       => $term_name,
             'title'      => get_the_title($post_id),
-            'desc'       => get_field('short_desc', $post_id),
-            'start_date' => get_field('start_date', $post_id),
-            'duration'   => get_field('duration', $post_id),
+            'desc'       => get_field('short_desc',      $post_id),
+            'start_date' => get_field('start_date',      $post_id),
+            'duration'   => get_field('duration',        $post_id),
             'instructor' => get_field('instructor_name', $post_id),
-            'price'      => get_field('price', $post_id),
+            'location'   => get_field('location',        $post_id),
+            'branch'     => get_field('kh_branch',       $post_id),
+            'status'     => get_field('kh_status',       $post_id) ?: '',
+            'price'      => get_field('price',           $post_id),
+            'spots'      => get_field('kh_spots',        $post_id),
             'url'        => get_permalink($post_id),
         ];
     }

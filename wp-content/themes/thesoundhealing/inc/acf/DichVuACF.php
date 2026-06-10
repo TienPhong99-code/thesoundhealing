@@ -3,6 +3,7 @@
 use Extended\ACF\Fields\Image;
 use Extended\ACF\Fields\Number;
 use Extended\ACF\Fields\Repeater;
+use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
@@ -57,6 +58,15 @@ add_action('acf/init', function () {
 
             Text::make('Giá dịch vụ', 'dv_price')
                 ->helperText('Ví dụ: 800.000 VNĐ'),
+
+            Select::make('Trạng thái', 'dv_status')
+                ->choices([
+                    'open'     => 'Hoạt động',
+                    'limited'  => 'Sắp hết chỗ',
+                    'closed'   => 'Tạm ngưng',
+                    'upcoming' => 'Sắp mở',
+                ])
+                ->default('open'),
 
             // ─── TAB: TRẢI NGHIỆM ────────────────────────────────────────
             Tab::make('Trải nghiệm')->placement('left'),
