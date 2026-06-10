@@ -61,7 +61,7 @@ $data = [
                   <div class="flex gap-6 pt-2 max-md:justify-center">
                      <?php foreach ($data['socials'] as $social) : ?>
                         <a href="<?php echo esc_url($social['url'] ?? '#'); ?>"
-                           class="text-[#133a35] text-[16px] leading-[24px] hover:opacity-70 transition-opacity">
+                           class="text-[#c2a056] text-[16px] leading-[24px] hover:opacity-70 transition-opacity">
                            <?php echo esc_html($social['label']); ?>
                         </a>
                      <?php endforeach; ?>
@@ -74,14 +74,14 @@ $data = [
          <!-- Col 2: Quick Links -->
          <div class="col col-3 max-md:col-6 max-sm:w-1/2!">
             <div class="flex flex-col gap-6">
-               <p class="text-[#133a35] text-[16px] leading-[24px] uppercase tracking-wider">
+               <p class="text-[#c2a056] text-[16px] leading-[24px] uppercase tracking-wider">
                   <?php esc_html_e('MENU', 'monamedia'); ?>
                </p>
                <?php wp_nav_menu([
                   'theme_location' => 'footer-menu',
                   'container'      => false,
                   'menu_class'     => 'flex flex-col gap-3 list-none m-0 p-0',
-                  'link_class'     => 'text-[#414847] text-[14px] leading-[20px] hover:text-[#133a35] transition-colors',
+                  'link_class'     => 'text-[#414847] hover:text-[#133a35] transition-colors',
                   'depth'          => 1,
                   'fallback_cb'    => false,
                ]); ?>
@@ -91,24 +91,24 @@ $data = [
          <!-- Col 3: Contact -->
          <div class="col col-3 max-md:col-6 max-sm:w-1/2!">
             <div class="flex flex-col gap-6">
-               <p class="text-[#133a35] text-[16px] leading-[24px] uppercase tracking-wider">
+               <p class="text-[#c2a056] text-[16px] leading-[24px] uppercase tracking-wider">
                   <?php esc_html_e('LIÊN HỆ', 'monamedia'); ?>
                </p>
                <div class="flex flex-col gap-3">
                   <?php if (!empty($data['address'])) : ?>
-                     <p class="text-[#414847] text-[14px] leading-[20px]">
+                     <p class="text-[#414847]">
                         <?php echo wp_kses_post($data['address']); ?>
                      </p>
                   <?php endif; ?>
                   <?php if (!empty($data['email'])) : ?>
                      <a href="mailto:<?php echo esc_attr($data['email']); ?>"
-                        class="text-[#414847] text-[14px] leading-[20px] hover:text-[#133a35] transition-colors">
+                        class="text-[#414847] hover:text-[#c2a056] transition-colors">
                         <?php echo esc_html($data['email']); ?>
                      </a>
                   <?php endif; ?>
                   <?php if (!empty($data['phone'])) : ?>
                      <a href="tel:<?php echo esc_attr(preg_replace('/\s+/', '', $data['phone'])); ?>"
-                        class="text-[#414847] text-[14px] leading-[20px] hover:text-[#133a35] transition-colors">
+                        class="text-[#414847] hover:text-[#c2a056] transition-colors">
                         <?php echo esc_html($data['phone']); ?>
                      </a>
                   <?php endif; ?>
@@ -120,7 +120,7 @@ $data = [
 
       <!-- Bottom Bar -->
       <div class="flex items-center justify-between pt-[33px] mt-20 border-t border-[rgba(192,200,198,0.3)]">
-         <p class="text-[#717977] text-[11px] leading-[24px] uppercase tracking-wider">
+         <p class="text-[#717977] text-[14px] leading-[24px] uppercase tracking-wider">
             <?php echo esc_html($data['copyright']); ?>
          </p>
 

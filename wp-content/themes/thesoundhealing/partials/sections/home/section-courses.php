@@ -98,7 +98,7 @@ $data = [
         <!-- Header -->
         <div class="flex max-md:flex-col gap-4 items-center max-md:text-center md:items-end md:justify-between mb-4 md:mb-12">
             <div>
-                <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px] mb-4">
+                <p class="text-pri text-[16px] font-semibold uppercase tracking-[1.2px] mb-4">
                     <?php echo esc_html($data['label']); ?>
                 </p>
                 <h2 class="font-title text-sec text-[32px] font-normal max-sm:text-[24px]">
@@ -109,12 +109,8 @@ $data = [
             <?php if (!empty($data['link']['url'])) : ?>
                 <a href="<?php echo esc_url($data['link']['url']); ?>"
                     target="<?php echo esc_attr($data['link']['target'] ?? ''); ?>"
-                    class="flex items-center gap-1 text-pri text-[12px] font-semibold uppercase tracking-[1.2px] shrink-0">
+                    class="flex items-center gap-1 text-pri text-[16px] font-semibold uppercase tracking-[1.2px] shrink-0">
                     <?php echo esc_html($data['link']['title'] ?: 'XEM TẤT CẢ'); ?>
-                    <div class="size-[10px] shrink-0">
-                        <img src="<?php echo MONA_THEME_PATH_URI; ?>/assets/images/ic-arrow-right.svg"
-                            class="block w-full h-full object-contain" alt="">
-                    </div>
                 </a>
             <?php endif; ?>
         </div>
@@ -122,7 +118,7 @@ $data = [
         <!-- Cards -->
         <div class="row">
             <?php foreach ($data['items'] as $item) : ?>
-                <div class="col col-2 max-lg:!w-1/2 max-md:!w-full">
+                <div class="col col-5i max-lg:!w-1/2">
                     <?php get_template_part('partials/components/card-khoa-hoc', null, ['item' => $item]); ?>
                 </div>
             <?php endforeach; ?>

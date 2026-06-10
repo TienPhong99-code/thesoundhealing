@@ -84,6 +84,21 @@ $(document).ready(function () {
    });
 
    // =============================================
+   // Feedback slider
+   // =============================================
+   functionSlider('.feedback-slider', {
+      speed: 800,
+      loop: true,
+      slidesPerView: 1,
+      spaceBetween: 24,
+      autoplay: { delay: 4000, disableOnInteraction: false },
+      breakpoints: {
+         768:  { slidesPerView: 2 },
+         1024: { slidesPerView: 3 },
+      },
+   });
+
+   // =============================================
    // CF7 lien-he — submit loading state
    // =============================================
    (function () {
@@ -110,4 +125,15 @@ $(document).ready(function () {
          }
       }).observe(form, { attributes: true, attributeFilter: ['class'] });
    })();
+
+   // =============================================
+   // Gallery trigger — mở Fancybox từ nút "Xem tất cả ảnh"
+   // =============================================
+   document.querySelectorAll('[data-gallery-trigger]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+         var id = btn.getAttribute('data-gallery-trigger');
+         var first = document.querySelector('[data-fancybox="' + id + '"]');
+         if (first) first.click();
+      });
+   });
 });

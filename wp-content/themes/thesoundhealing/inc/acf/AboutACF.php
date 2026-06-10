@@ -32,10 +32,14 @@ add_action('acf/init', function () {
                 ->helperText('1–3 câu hiển thị dưới tiêu đề.')
                 ->rows(3),
 
-            Image::make('Ảnh nền Hero', 'ab_hero_image')
-                ->helperText('Ảnh toàn chiều rộng phía sau heading. Tỉ lệ: 16/9 hoặc panoramic.')
+            Image::make('Ảnh minh họa Hero', 'ab_hero_image')
+                ->helperText('Ảnh cột bên phải. Tỉ lệ: 4/3 hoặc 1/1.')
                 ->format('array')
                 ->previewSize('medium'),
+
+            Textarea::make('Ghi chú nhỏ', 'ab_hero_note')
+                ->helperText('Dòng chú thích nhỏ hiển thị dưới mô tả.')
+                ->rows(2),
 
             // ─── TAB: HÀNH TRÌNH ──────────────────────────────────────────
             Tab::make('Hành Trình')->placement('left'),
@@ -59,38 +63,59 @@ add_action('acf/init', function () {
             URL::make('URL link', 'ab_journey_link_url')
                 ->helperText('Đường dẫn trang triết lý / philosophy.'),
 
-            Image::make('Ảnh minh họa', 'ab_journey_image')
-                ->helperText('Ảnh cột bên phải. Tỉ lệ: 3/4 (portrait).')
+            URL::make('URL Video', 'ab_journey_video_url')
+                ->helperText('Link YouTube hoặc Vimeo hiển thị cột bên trái.'),
+
+            Image::make('Ảnh thumbnail Video', 'ab_journey_image')
+                ->helperText('Ảnh hiển thị khi chưa có video URL. Tỉ lệ: 16/9.')
                 ->format('array')
                 ->previewSize('medium'),
 
             // ─── TAB: NỀN TẢNG CỐT LÕI ───────────────────────────────────
             Tab::make('Nền Tảng Cốt Lõi')->placement('left'),
 
-            Text::make('Tiêu đề section', 'ab_pillars_heading')
-                ->helperText('Ví dụ: Nền Tảng Cốt Lõi')
-                ->default('Nền Tảng Cốt Lõi'),
+            // Featured block (top)
+            Text::make('Badge nhãn nổi bật', 'ab_pillars_feat_badge')
+                ->helperText('Ví dụ: Ưu điểm nổi bật'),
 
-            Textarea::make('Mô tả section', 'ab_pillars_desc')
-                ->helperText('1 câu mô tả ngắn.')
-                ->rows(2),
+            Text::make('Tiêu đề nổi bật', 'ab_pillars_feat_heading')
+                ->helperText('Heading lớn cột phải.'),
 
-            Repeater::make('Danh sách cột lõi', 'ab_pillars_items')
-                ->helperText('Chính xác 2 mục. Mỗi mục hiển thị cạnh một ảnh.')
+            Textarea::make('Mô tả nổi bật', 'ab_pillars_feat_desc')
+                ->helperText('1–2 câu.')
+                ->rows(3),
+
+            Textarea::make('Danh sách checklist', 'ab_pillars_feat_list')
+                ->helperText('Mỗi dòng là một mục. Hiển thị trong khung màu.')
+                ->rows(5),
+
+            Image::make('Ảnh nổi bật', 'ab_pillars_feat_image')
+                ->helperText('Ảnh cột trái. Tỉ lệ: 4/5.')
+                ->format('array')
+                ->previewSize('medium'),
+
+            Text::make('Badge trên ảnh', 'ab_pillars_feat_img_badge')
+                ->helperText('Nhãn hiển thị góc dưới trái ảnh.'),
+
+            Text::make('Nhãn link', 'ab_pillars_feat_link_text')
+                ->helperText('Ví dụ: Xem tất cả ưu đãi'),
+
+            URL::make('URL link', 'ab_pillars_feat_link_url'),
+
+            // 3-column cards (bottom)
+            Repeater::make('Danh sách thẻ (3 cột)', 'ab_pillars_items')
+                ->helperText('Chính xác 3 thẻ hiển thị hàng dưới.')
                 ->layout('block')
-                ->minRows(2)
-                ->maxRows(2)
+                ->minRows(3)
+                ->maxRows(3)
                 ->collapsed('title')
-                ->button('+ Thêm cột lõi')
+                ->button('+ Thêm thẻ')
                 ->fields([
-                    Text::make('Số thứ tự', 'number')
-                        ->helperText('Ví dụ: 01')
-                        ->default('01'),
                     Text::make('Tiêu đề', 'title')->required(),
-                    Textarea::make('Mô tả', 'desc')->rows(3)->required(),
-                    Image::make('Ảnh minh họa', 'image')
-                        ->format('array')
-                        ->previewSize('medium'),
+                    Textarea::make('Mô tả', 'desc')->rows(2),
+                    Textarea::make('Checklist (mỗi dòng 1 mục)', 'list_items')
+                        ->helperText('Mỗi dòng là một mục trong danh sách.')
+                        ->rows(4),
                 ]),
 
             // ─── TAB: NGƯỜI SÁNG LẬP ─────────────────────────────────────
@@ -144,6 +169,28 @@ add_action('acf/init', function () {
                         ->format('array')
                         ->previewSize('medium')
                         ->required(),
+                ]),
+
+            // ─── TAB: ĐẶC ĐIỂM NỔI BẬT ───────────────────────────────────
+            Tab::make('Đặc Điểm Nổi Bật')->placement('left'),
+
+            Textarea::make('Tiêu đề (mỗi dòng 1 dòng)', 'ab_features_heading')
+                ->helperText('Dòng đầu sẽ in đậm. Ví dụ: Trải Nghiệm Chữa Lành\nToàn Diện')
+                ->rows(2),
+
+            Image::make('Ảnh minh họa', 'ab_features_image')
+                ->helperText('Ảnh cột trái bên dưới tiêu đề. Tỉ lệ: 4/3.')
+                ->format('array')
+                ->previewSize('medium'),
+
+            Repeater::make('Danh sách đặc điểm', 'ab_features_items')
+                ->helperText('Mỗi hàng là một đặc điểm hiển thị bên cột phải.')
+                ->layout('block')
+                ->collapsed('title')
+                ->button('+ Thêm đặc điểm')
+                ->fields([
+                    Text::make('Tiêu đề', 'title')->required(),
+                    Textarea::make('Mô tả', 'desc')->rows(2),
                 ]),
 
             // ─── TAB: CTA ─────────────────────────────────────────────────

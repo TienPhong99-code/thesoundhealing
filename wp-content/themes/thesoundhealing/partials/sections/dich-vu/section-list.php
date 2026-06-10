@@ -97,6 +97,7 @@ if ($use_sample) {
             'duration'       => get_field('dv_duration', $post_id),
             'branch'         => get_field('dv_branch', $post_id),
             'price'          => get_field('dv_price', $post_id),
+            'spots'          => get_field('dv_spots', $post_id),
             'url'            => get_permalink($post_id),
         ];
     }

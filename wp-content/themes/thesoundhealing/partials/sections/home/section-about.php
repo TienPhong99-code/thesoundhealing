@@ -47,10 +47,6 @@ $data = [
                 </div>
                 <div class="max-md:!w-full col col-7 ">
                     <div class="flex flex-col justify-center h-full">
-                        <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px] mb-4">
-                            <?php echo esc_html($data['label']); ?>
-                        </p>
-
                         <h2 class="font-title text-sec text-[32px] font-normal mb-6 max-sm:text-[24px]">
                             <?php echo wp_kses_post($data['heading']); ?>
                         </h2>

@@ -110,7 +110,7 @@ $tuyen_dung_page = get_page_by_path('tuyen-dung');
         <div class="flex gap-8 max-xl:flex-col">
 
             <!-- ── MAIN CONTENT ── -->
-            <div class="flex-1 min-w-0 flex flex-col gap-8">
+            <div class="flex-1 min-w-0 flex flex-col gap-8 mb-8">
 
                 <!-- Header: badge + title -->
                 <div class="flex flex-col">
@@ -187,7 +187,7 @@ $tuyen_dung_page = get_page_by_path('tuyen-dung');
                     <!-- CTA -->
                     <button type="button" data-modal-open="ung-tuyen"
                         data-vi-tri="<?php echo esc_attr($data['title']); ?>"
-                        class="btn btn-second text-center justify-center w-full">
+                        class="btn btn-white text-center justify-center w-full">
                         <span><?php esc_html_e('Ứng tuyển ngay', 'monamedia'); ?></span>
                     </button>
                 </div>

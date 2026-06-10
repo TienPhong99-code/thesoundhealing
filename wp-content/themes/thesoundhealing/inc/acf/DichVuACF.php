@@ -1,6 +1,7 @@
 <?php
 
 use Extended\ACF\Fields\Image;
+use Extended\ACF\Fields\Number;
 use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
@@ -46,6 +47,10 @@ add_action('acf/init', function () {
             Text::make('Chi nhánh', 'dv_branch')
                 ->helperText('Hiển thị trên card. Ví dụ: Thảo Điền · Quận 1'),
 
+            Number::make('Số chỗ còn lại', 'dv_spots')
+                ->helperText('Nhập số chỗ còn trống. 0 = Hết chỗ (Fully Booked). Để trống = không hiển thị badge.')
+                ->min(0),
+
             Textarea::make('Mô tả ngắn', 'dv_short_desc')
                 ->helperText('Hiển thị trên card và hero trang chi tiết.')
                 ->rows(3),
@@ -71,6 +76,11 @@ add_action('acf/init', function () {
 
             Image::make('Ảnh chi tiết (overlay)', 'dv_exp_image_2')
                 ->helperText('Ảnh nhỏ đè góc dưới phải. Kích thước đề xuất: 240×240px.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 5', 'dv_gallery_5')
+                ->helperText('Ảnh thứ 5 trong bộ gallery trang chi tiết. Kích thước đề xuất: 600×300px.')
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 
@@ -130,6 +140,18 @@ add_action('acf/init', function () {
             Textarea::make('Giới thiệu', 'dv_instructor_bio')
                 ->rows(3),
 
+            Text::make('Instagram', 'dv_instructor_instagram')
+                ->helperText('URL Instagram đầy đủ. Ví dụ: https://instagram.com/linhtam'),
+
+            Text::make('Facebook', 'dv_instructor_facebook')
+                ->helperText('URL Facebook đầy đủ. Ví dụ: https://facebook.com/linhtam'),
+
+            Text::make('WhatsApp', 'dv_instructor_whatsapp')
+                ->helperText('Số điện thoại hoặc link WhatsApp. Ví dụ: https://wa.me/84901234567'),
+
+            Text::make('Facebook Messenger', 'dv_instructor_messenger')
+                ->helperText('Link Messenger. Ví dụ: https://m.me/linhtam'),
+
             Repeater::make('Danh sách người hướng dẫn (form đặt lịch)', 'dv_instructors')
                 ->helperText('Các lựa chọn hiển thị trong dropdown "Người hướng dẫn" của form đặt lịch.')
                 ->layout('table')
@@ -156,6 +178,23 @@ add_action('acf/init', function () {
                 ->fields([
                     Text::make('Khung giờ', 'dv_time_slot')->required()
                         ->helperText('Ví dụ: 09:00 - 10:30'),
+                ]),
+
+            // ─── TAB: CẢM NHẬN ───────────────────────────────────────────
+            Tab::make('Cảm nhận')->placement('left'),
+
+            Text::make('Tiêu đề', 'dv_feedbacks_heading')
+                ->default('Khách hàng nói gì?'),
+
+            Repeater::make('Hình ảnh khách hàng', 'dv_feedbacks')
+                ->helperText('Thêm hình ảnh khách hàng trải nghiệm dịch vụ.')
+                ->layout('table')
+                ->fields([
+                    Image::make('Hình ảnh', 'dv_fb_image')
+                        ->required()
+                        ->helperText('Ảnh vuông, ví dụ 400×400px.')
+                        ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                        ->format('array'),
                 ]),
 
             // ─── TAB: CTA ────────────────────────────────────────────────

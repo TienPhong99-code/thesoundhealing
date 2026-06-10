@@ -6,6 +6,7 @@ $page_id = MONA_PAGE_HOME;
 $sample = [
     'label'   => 'ĐỐI TÁC ĐỒNG HÀNH',
     'heading' => 'Những Người Bạn Đồng Hành',
+    'desc'    => 'Chúng tôi hợp tác cùng các thương hiệu và tổ chức uy tín để mang đến những trải nghiệm chữa lành toàn diện nhất.',
     'items'   => [
         ['logo' => 'https://placehold.co/160x48/e8f5f0/133a35?text=ZenFlow',     'name' => 'ZenFlow',     'url' => '#'],
         ['logo' => 'https://placehold.co/160x48/e8f5f0/133a35?text=OrganicSoul', 'name' => 'OrganicSoul', 'url' => '#'],
@@ -18,6 +19,7 @@ $sample = [
 $data = [
     'label'   => get_field('partner_label',   $page_id) ?: $sample['label'],
     'heading' => get_field('partner_heading', $page_id) ?: $sample['heading'],
+    'desc'    => get_field('partner_desc',    $page_id) ?: $sample['desc'],
     'items'   => $sample['items'],
 ];
 ?>
@@ -25,13 +27,15 @@ $data = [
 <section class="sec-partner bg-white py-20">
     <div class="container flex flex-col gap-[48px]">
 
-        <div class="w-full flex flex-col items-center gap-4 text-center">
-            <p class="font-semibold text-[#133a35] text-[12px] uppercase tracking-[1.2px] leading-[16px]">
-                <?php echo esc_html($data['label']); ?>
-            </p>
+        <div class="w-full flex flex-col items-center gap-3 text-center">
             <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
                 <?php echo esc_html($data['heading']); ?>
             </h2>
+            <?php if (!empty($data['desc'])) : ?>
+                <p class="text-[#414847] text-[15px] max-w-[560px]">
+                    <?php echo wp_kses_post($data['desc']); ?>
+                </p>
+            <?php endif; ?>
         </div>
 
         <div class="swiper-partner slideSw relative opacity-50">

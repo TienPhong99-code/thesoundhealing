@@ -33,13 +33,11 @@ $card_url = $item['url']          ?? '#';
 
         <div class="flex flex-col gap-2">
 
-            <?php if (!empty($item['term'])) : ?>
-                <span class="text-[rgba(19,58,53,0.5)] text-[11px] font-semibold uppercase tracking-[1.2px]">
-                    <?php echo esc_html($item['term']); ?>
-                </span>
-            <?php endif; ?>
+            <span class="text-[12px] uppercase tracking-[1.2px]">
+                Khóa học
+            </span>
 
-            <h3 class="text-pri text-[18px] font-normal line-clamp-2 leading-[28px] max-md:text-[16px]">
+            <h3 class="text-[18px] font-normal line-clamp-2 leading-[28px] max-md:text-[16px]">
                 <?php echo esc_html($item['title']); ?>
             </h3>
 
@@ -50,12 +48,12 @@ $card_url = $item['url']          ?? '#';
                     </p>
                 <?php endif; ?>
                 <?php if (!empty($item['duration'])) : ?>
-                    <p class="text-[rgba(19,58,53,0.45)] text-[12px] leading-[18px]">
+                    <p class="text-[14px] leading-[18px]">
                         <?php echo esc_html($item['duration']); ?>
                     </p>
                 <?php endif; ?>
                 <?php if (!empty($item['instructor'])) : ?>
-                    <p class="text-[rgba(19,58,53,0.45)] text-[12px] leading-[18px]">
+                    <p class="text-[14px] leading-[18px]">
                         <?php echo esc_html($item['instructor']); ?>
                     </p>
                 <?php endif; ?>
@@ -69,12 +67,12 @@ $card_url = $item['url']          ?? '#';
                     <?php echo esc_html($item['price']); ?>
                 </span>
             <?php endif; ?>
-            <span class="text-pri text-[11px] font-semibold uppercase tracking-[1.2px] ml-auto flex items-center gap-1">
+            <!-- <span class="text-pri text-[11px] font-semibold uppercase tracking-[1.2px] ml-auto flex items-center gap-1">
                 Tìm hiểu
                 <svg class="w-[8px] h-[8px] shrink-0" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 4h6M4 1l3 3-3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-            </span>
+            </span> -->
         </div>
 
     </div>

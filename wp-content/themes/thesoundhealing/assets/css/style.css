@@ -1,20 +1,16 @@
 /* ── Montserrat self-hosted ── */
-@import url("../fonts/Monsterrat/stylesheet.css");
-@import url("../fonts/iCiel/stylesheet.css");
-@import url("../fonts/BeautiqueDisplay/stylesheet.css");
-@import url("../fonts/YoungTypeface/stylesheet.css");
+@import url("../fonts/Roboto/stylesheet.css");
 
 :root {
-  /* Colors — KienA System Design */
-  --color-pri: #133a35;
+  --color-pri: #c2a056;
   --color-sec: #1b1c19;
-  --color-text: #283377;
+  --color-text: #000;
   --color-white: #fff;
   --color-black: #000;
   --cl-border: #d9d9d9;
-  --font-body: "Young", serif;
-  --font-title: "Young Display", serif;
-  --font-second: "Young", serif;
+  --font-body: "Roboto", sans-serif;
+  --font-title: "Roboto", sans-serif;
+  --font-second: "Roboto", sans-serif;
   /* Layout */
   --size-hd: 80px;
   --pd-sc: 40px;
@@ -22,14 +18,14 @@
 }
 
 @theme {
-  --color-pri: #133a35;
+  --color-pri: #c2a056;
   --color-sec: #1b1c19;
-  --font-body: "Young", serif;
-  --font-title: "Young Display", serif;
-  --font-second: "Young", serif;
+  --font-body: "Roboto", sans-serif;
+  --font-title: "Roboto", sans-serif;
+  --font-second: "Roboto", sans-serif;
 }
 .font-second {
-  font-family: "Young", serif;
+  font-family: "Roboto", sans-serif;
 }
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
@@ -60,7 +56,7 @@
 }
 
 body {
-  font-family: "Young", serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   line-height: 1.55;
   font-weight: 400;
@@ -652,6 +648,7 @@ div#ez-toc-container ul li:not(:last-child) {
 .cf7-ung-tuyen .wpcf7-tel::placeholder,
 .cf7-ung-tuyen .wpcf7-textarea::placeholder {
   color: #bdbdbd;
+  font-weight: 400;
 }
 .cf7-ung-tuyen .wpcf7-text:focus,
 .cf7-ung-tuyen .wpcf7-email:focus,
@@ -850,6 +847,7 @@ div#ez-toc-container ul li:not(:last-child) {
 .cf7-lien-he .wpcf7-tel::placeholder,
 .cf7-lien-he .wpcf7-textarea::placeholder {
   color: #717977;
+  font-weight: 400;
 }
 .cf7-lien-he .wpcf7-text:focus,
 .cf7-lien-he .wpcf7-email:focus,
@@ -863,7 +861,6 @@ div#ez-toc-container ul li:not(:last-child) {
   padding: 16px 24px;
   background: var(--color-pri);
   color: #fff;
-  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -1271,7 +1268,7 @@ form .wpcf7-not-valid-tip {
   width: 100%;
   z-index: 50;
   height: 80px;
-  background: #fbf9f4;
+  background: #fff;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   transition:
     box-shadow 0.3s ease,
@@ -1302,7 +1299,6 @@ form .wpcf7-not-valid-tip {
   font-size: 16px;
   font-weight: 600;
   color: var(--color-sec);
-  text-transform: uppercase;
   letter-spacing: 0.04em;
   position: relative;
   padding-bottom: 2px;
@@ -1413,9 +1409,8 @@ form .wpcf7-not-valid-tip {
   flex-direction: column;
   gap: 8px;
 }
-.cf7-khoa-hoc .wpcf7-form > p > label,
-.cf7-workshop .wpcf7-form > p > label {
-  font-size: 12px;
+.cf7-khoa-hoc .wpcf7-form label,
+.cf7-workshop .wpcf7-form label {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -1431,7 +1426,7 @@ form .wpcf7-not-valid-tip {
   padding: 14px 16px;
   background: #fbf9f4;
   border: 1px solid #c0c8c6;
-  border-radius: 2px;
+  border-radius: 12px;
   font-size: 16px;
   color: var(--color-sec);
   outline: none;
@@ -1444,6 +1439,7 @@ form .wpcf7-not-valid-tip {
 .cf7-workshop .wpcf7-email::placeholder,
 .cf7-workshop .wpcf7-tel::placeholder {
   color: #a0aeac;
+  font-weight: 400;
 }
 .cf7-khoa-hoc .wpcf7-text:focus,
 .cf7-khoa-hoc .wpcf7-email:focus,
@@ -1459,9 +1455,8 @@ form .wpcf7-not-valid-tip {
   padding: 16px;
   background: var(--color-pri);
   border: 1px solid var(--color-pri);
-  border-radius: 2px;
+  border-radius: 12px;
   color: #fff;
-  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -1491,12 +1486,10 @@ form .wpcf7-not-valid-tip {
   flex-direction: column;
   gap: 8px;
 }
-.cf7-dich-vu .wpcf7-form > p > label {
-  font-size: 12px;
-  font-weight: 600;
+.cf7-dich-vu .wpcf7-form label {
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  color: #4e635a;
 }
 .cf7-dich-vu .wpcf7-text,
 .cf7-dich-vu .wpcf7-email,
@@ -1505,7 +1498,7 @@ form .wpcf7-not-valid-tip {
   padding: 14px 16px;
   background: #fbf9f4;
   border: 1px solid #c0c8c6;
-  border-radius: 2px;
+  border-radius: 12px;
   font-size: 16px;
   color: var(--color-sec);
   outline: none;
@@ -1515,6 +1508,7 @@ form .wpcf7-not-valid-tip {
 .cf7-dich-vu .wpcf7-email::placeholder,
 .cf7-dich-vu .wpcf7-tel::placeholder {
   color: #a0aeac;
+  font-weight: 400;
 }
 .cf7-dich-vu .wpcf7-text:focus,
 .cf7-dich-vu .wpcf7-email:focus,
@@ -1526,7 +1520,7 @@ form .wpcf7-not-valid-tip {
   padding: 14px 16px;
   background: #fbf9f4;
   border: 1px solid #c0c8c6;
-  border-radius: 2px;
+  border-radius: 12px;
   font-size: 16px;
   color: var(--color-sec);
   outline: none;
@@ -1544,12 +1538,35 @@ form .wpcf7-not-valid-tip {
   filter: invert(22%) sepia(27%) saturate(564%) hue-rotate(116deg)
     brightness(95%) contrast(92%);
 }
+.cf7-dich-vu .wpcf7-form-control-wrap:has(.wpcf7-date) {
+  position: relative;
+  display: block;
+}
+.cf7-dich-vu .wpcf7-date.flatpickr-input:not([type="hidden"]) {
+  padding-right: 44px;
+}
+.cf7-dich-vu .flatpickr-calendar-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: #4e635a;
+  cursor: pointer;
+  pointer-events: all;
+  line-height: 0;
+}
+.cf7-dich-vu .flatpickr-calendar-icon svg {
+  width: 18px;
+  height: 18px;
+}
 .cf7-dich-vu .wpcf7-textarea {
   width: 100%;
   padding: 14px 16px;
   background: #fbf9f4;
   border: 1px solid #c0c8c6;
-  border-radius: 2px;
+  border-radius: 12px;
   font-size: 16px;
   color: var(--color-sec);
   outline: none;
@@ -1561,6 +1578,7 @@ form .wpcf7-not-valid-tip {
 }
 .cf7-dich-vu .wpcf7-textarea::placeholder {
   color: #a0aeac;
+  font-weight: 400;
 }
 .cf7-dich-vu .wpcf7-textarea:focus {
   border-color: var(--color-pri);
@@ -1570,9 +1588,8 @@ form .wpcf7-not-valid-tip {
   padding: 16px;
   background: var(--color-pri);
   border: 1px solid var(--color-pri);
-  border-radius: 2px;
+  border-radius: 12px;
   color: #fff;
-  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -1611,7 +1628,7 @@ form .wpcf7-not-valid-tip {
   padding: 14px 40px 14px 16px;
   background: #fbf9f4;
   border: 1px solid #c0c8c6;
-  border-radius: 2px;
+  border-radius: 12px;
   font-size: 16px;
   color: var(--color-sec);
   outline: none;
@@ -1632,3 +1649,11 @@ form .wpcf7-not-valid-tip {
 }
 
 /* Validation tip */
+
+/* ── Feedback slider ───────────────────────────────────────────────── */
+.feedback-slider .swiper-wrapper {
+  align-items: stretch;
+}
+.feedback-slider .swiper-slide {
+  height: auto;
+}

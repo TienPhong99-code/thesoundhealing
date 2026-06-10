@@ -13,7 +13,9 @@ if (!defined('ABSPATH')) {
 ?>
 </main>
 
-<?php get_template_part('partials/sections/footer'); ?>
+<?php if (!is_singular(['khoa_hoc', 'workshop', 'dich_vu'])) : ?>
+    <?php get_template_part('partials/sections/footer'); ?>
+<?php endif; ?>
 
 <?php
 // Modals — render ở body level, trên mọi z-index

@@ -100,6 +100,7 @@ foreach ($raw_objects as $post) {
         'duration'       => get_field('dv_duration', $post->ID),
         'branch'         => get_field('dv_branch', $post->ID),
         'price'          => get_field('dv_price', $post->ID),
+        'spots'          => get_field('dv_spots', $post->ID),
         'url'            => get_permalink($post->ID),
     ];
 }
@@ -119,23 +120,21 @@ $data = [
         <!-- Header -->
         <div class="flex items-end justify-between mb-8 max-md:flex-col max-md:items-center max-md:text-center gap-4">
             <div>
-                <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px] mb-4">
-                    <?php echo esc_html($data['label']); ?>
-                </p>
-                <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
+                <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px] mb-3">
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
+                <?php if (!empty($data['desc'])) : ?>
+                    <p class="text-[#414847] max-w-[500px]">
+                        <?php echo wp_kses_post($data['desc']); ?>
+                    </p>
+                <?php endif; ?>
             </div>
 
             <?php if (!empty($data['link']['url'])) : ?>
                 <a href="<?php echo esc_url($data['link']['url']); ?>"
                     target="<?php echo esc_attr($data['link']['target'] ?? ''); ?>"
-                    class="flex items-center gap-1 text-pri text-[12px] font-semibold uppercase tracking-[1.2px] shrink-0">
+                    class="flex items-center gap-1 text-pri text-[16px] font-semibold uppercase tracking-[1.2px] shrink-0">
                     <?php echo esc_html($data['link']['title'] ?: 'XEM TẤT CẢ'); ?>
-                    <div class="size-[10px] shrink-0">
-                        <img src="<?php echo MONA_THEME_PATH_URI; ?>/assets/images/ic-arrow-right.svg"
-                            class="block w-full h-full object-contain" alt="">
-                    </div>
                 </a>
             <?php endif; ?>
         </div>
@@ -143,7 +142,7 @@ $data = [
         <!-- Cards -->
         <div class="row">
             <?php foreach ($data['items'] as $item) : ?>
-                <div class="col col-2 max-lg:!w-1/2 max-md:!w-full">
+                <div class="col col-5i max-lg:!w-1/2">
                     <?php get_template_part('partials/components/card-dich-vu', null, ['item' => $item]); ?>
                 </div>
             <?php endforeach; ?>

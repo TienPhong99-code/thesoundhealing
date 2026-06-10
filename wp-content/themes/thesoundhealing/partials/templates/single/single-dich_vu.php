@@ -8,15 +8,26 @@ $dv_duration    = get_field('dv_duration',    $post_id) ?: '60 - 90 phút mỗi 
 $dv_clothing    = get_field('dv_clothing',    $post_id) ?: 'Đồ tập hoặc quần áo thoải mái, nhẹ nhàng';
 $dv_location    = get_field('dv_location',    $post_id) ?: 'Aetheria Sanctuary, Level 4, Thảo Điền';
 $dv_preparation = get_field('dv_preparation', $post_id) ?: 'Hạn chế ăn no 2 tiếng trước giờ trị liệu';
+$dv_avail_days  = get_field('dv_available_days', $post_id);
+$dv_branch      = get_field('dv_branch',      $post_id);
 $dv_short_desc  = get_field('dv_short_desc',  $post_id);
 $dv_price       = get_field('dv_price',       $post_id);
+$dv_spots_raw   = get_field('dv_spots',       $post_id);
+$dv_spots       = ($dv_spots_raw !== '' && $dv_spots_raw !== null) ? (int) $dv_spots_raw : null;
 
-// ── Trải nghiệm ──
-$dv_exp_title  = get_field('dv_exp_title',   $post_id) ?: 'Hành trình Trải nghiệm';
-$dv_exp_desc   = get_field('dv_exp_desc',    $post_id) ?: 'Mỗi buổi Tắm Âm được thiết kế như một nghi lễ thanh tẩy. Bạn sẽ được nằm thoải mái trên thảm, hỗ trợ bởi gối lót và chăn ấm. Trong không gian tĩnh lặng, những rung động tinh khiết từ bộ chuông pha lê sẽ bao bọc cơ thể, giúp giải phóng các tắc nghẽn năng lượng.';
-$dv_exp_img_1  = get_field('dv_exp_image_1', $post_id);
-$dv_exp_img_2  = get_field('dv_exp_image_2', $post_id);
+// ── Gallery ──
+$thumb      = get_the_post_thumbnail_url($post_id, 'full');
+$thumb_alt  = get_the_title($post_id);
+$banner_img = get_field('dv_banner_image', $post_id);
+$gal_3      = get_field('dv_exp_image_1',  $post_id);
+$gal_4      = get_field('dv_exp_image_2',  $post_id);
+$gal_5      = get_field('dv_gallery_5',    $post_id);
 
+// ── Mô tả / Trải nghiệm ──
+$dv_exp_title = get_field('dv_exp_title', $post_id) ?: 'Hành trình Trải nghiệm';
+$dv_exp_desc  = get_field('dv_exp_desc',  $post_id) ?: 'Mỗi buổi Tắm Âm được thiết kế như một nghi lễ thanh tẩy. Bạn sẽ được nằm thoải mái trên thảm, hỗ trợ bởi gối lót và chăn ấm. Trong không gian tĩnh lặng, những rung động tinh khiết từ bộ chuông pha lê sẽ bao bọc cơ thể, giúp giải phóng các tắc nghẽn năng lượng.';
+
+// ── Feature cards ──
 $dv_f1_icon  = get_field('dv_feature_1_icon',  $post_id) ?: MONA_THEME_PATH_URI . '/assets/images/ic-dv-feature-1.svg';
 $dv_f1_title = get_field('dv_feature_1_title', $post_id) ?: 'Pha lê Alchemy';
 $dv_f1_desc  = get_field('dv_feature_1_desc',  $post_id) ?: 'Sử dụng các loại chuông pha lê quý hiếm cho tần số chữa lành cao nhất.';
@@ -27,355 +38,440 @@ $dv_f2_desc  = get_field('dv_feature_2_desc',  $post_id) ?: 'Không gian đượ
 // ── Lợi ích ──
 $dv_bn_heading = get_field('dv_benefits_heading', $post_id) ?: 'Lợi ích của liệu pháp';
 $dv_bn_items   = get_field('dv_benefits_items',   $post_id) ?: [
-    [
-        'dv_benefit_title' => 'CẢI THIỆN GIẤC NGỦ',
-        'dv_benefit_desc'  => 'Giúp đưa sóng não về trạng thái Delta và Theta, hỗ trợ ngủ sâu và ngon hơn.',
-    ],
-    [
-        'dv_benefit_title' => 'GIẢM STRESS & CĂNG THẲNG',
-        'dv_benefit_desc'  => 'Hạ mức cortisol trong máu, làm dịu hệ thống thần kinh thực vật sau những giờ làm việc mệt mỏi.',
-    ],
-    [
-        'dv_benefit_title' => 'MINH MẪN TÂM TRÍ',
-        'dv_benefit_desc'  => 'Giải phóng những suy nghĩ thừa thãi, giúp bạn tập trung và sáng tạo hơn.',
-    ],
+    ['dv_benefit_title' => 'CẢI THIỆN GIẤC NGỦ',      'dv_benefit_desc' => 'Giúp đưa sóng não về trạng thái Delta và Theta, hỗ trợ ngủ sâu và ngon hơn.'],
+    ['dv_benefit_title' => 'GIẢM STRESS & CĂNG THẲNG', 'dv_benefit_desc' => 'Hạ mức cortisol trong máu, làm dịu hệ thống thần kinh thực vật sau những giờ làm việc mệt mỏi.'],
+    ['dv_benefit_title' => 'MINH MẪN TÂM TRÍ',         'dv_benefit_desc' => 'Giải phóng những suy nghĩ thừa thãi, giúp bạn tập trung và sáng tạo hơn.'],
 ];
 
 // ── Người hướng dẫn ──
-$dv_ins_label = get_field('dv_instructor_label', $post_id) ?: 'NGƯỜI HƯỚNG DẪN';
-$dv_ins_image = get_field('dv_instructor_image', $post_id);
-$dv_ins_name  = get_field('dv_instructor_name',  $post_id) ?: 'Linh Tâm';
-$dv_ins_bio   = get_field('dv_instructor_bio',   $post_id) ?: 'Hơn 10 năm nghiên cứu và thực hành Sound Healing, Yoga & Thiền định. Được đào tạo tại Rishikesh (Ấn Độ) và các trung tâm trị liệu âm thanh tại Châu Á.';
+$dv_ins_label     = get_field('dv_instructor_label',     $post_id) ?: 'NGƯỜI HƯỚNG DẪN';
+$dv_ins_image     = get_field('dv_instructor_image',     $post_id);
+$dv_ins_name      = get_field('dv_instructor_name',      $post_id) ?: 'Linh Tâm';
+$dv_ins_bio       = get_field('dv_instructor_bio',       $post_id) ?: 'Hơn 10 năm nghiên cứu và thực hành Sound Healing, Yoga & Thiền định. Được đào tạo tại Rishikesh (Ấn Độ) và các trung tâm trị liệu âm thanh tại Châu Á.';
+$dv_ins_instagram = get_field('dv_instructor_instagram', $post_id);
+$dv_ins_facebook  = get_field('dv_instructor_facebook',  $post_id);
+$dv_ins_whatsapp  = get_field('dv_instructor_whatsapp',  $post_id);
+$dv_ins_messenger = get_field('dv_instructor_messenger', $post_id);
 
-// ── CTA ──
-$dv_cta_title = get_field('dv_cta_title', $post_id) ?: 'Bắt đầu hành trình chữa lành';
-$dv_cta_desc  = get_field('dv_cta_desc',  $post_id) ?: 'Mỗi buổi trị liệu là một bước tiến trên hành trình khám phá và chữa lành bản thân. Đặt lịch ngay hôm nay.';
-
-// ── Media ──
-$banner_img = get_field('dv_banner_image', $post_id);
-$banner_url = $banner_img['url'] ?? '';
-$banner_alt = $banner_img['alt'] ?? get_the_title($post_id);
-$thumb      = get_the_post_thumbnail_url($post_id, 'full');
-$thumb_alt  = get_the_title($post_id);
+// ── Terms ──
 $terms     = get_the_terms($post_id, 'loai_dich_vu');
 $term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : 'HEALING MODALITY';
 
 // ── Fallbacks ──
-$fallback_hero    = MONA_THEME_PATH_URI . '/assets/images/dv-hero-bg2.jpg';
-$fallback_exp1    = MONA_THEME_PATH_URI . '/assets/images/dv-exp-main.jpg';
-$fallback_exp2    = MONA_THEME_PATH_URI . '/assets/images/dv-exp-detail.jpg';
-$fallback_ins     = MONA_THEME_PATH_URI . '/assets/images/kh-instructor.jpg';
-$ic_check         = MONA_THEME_PATH_URI . '/assets/images/ic-check-pri.svg';
+$fb_main  = MONA_THEME_PATH_URI . '/assets/images/dv-hero-bg2.jpg';
+$fb_sub   = MONA_THEME_PATH_URI . '/assets/images/dv-exp-main.jpg';
+$fb_ins   = MONA_THEME_PATH_URI . '/assets/images/kh-instructor.jpg';
+$ic_check = MONA_THEME_PATH_URI . '/assets/images/ic-check-pri.svg';
 
 get_header();
 ?>
 
 <?php get_template_part('partials/components/breadcrumb', null, [
     'links' => [
-        ['title' => 'Trang chủ', 'url' => home_url('/'),          'is-active' => false],
-        ['title' => 'Dịch Vụ',   'url' => home_url('/dich-vu'),   'is-active' => false],
-        ['title' => get_the_title(), 'url' => '',                   'is-active' => true],
+        ['title' => 'Trang chủ', 'url' => home_url('/'),        'is-active' => false],
+        ['title' => 'Dịch Vụ',  'url' => home_url('/dich-vu'), 'is-active' => false],
+        ['title' => get_the_title(), 'url' => '',               'is-active' => true],
     ],
 ]); ?>
 
-<div class="page-dich-vu" style="background:#fbf9f4;">
+<div class="page-dich-vu section-pd">
 
-    <!-- ── HERO 100VH ────────────────────────────────────────────────── -->
-    <section class="sec-dv-hero relative h-screen min-h-[600px] overflow-hidden">
+    <!-- ── PAGE HEADER ──────────────────────────────────────────────────── -->
+    <div class="container">
+        <div class="flex flex-col gap-8 mb-8">
+            <div class="flex flex-col gap-2">
+                <p class="text-[12px] font-semibold uppercase mb-3">
+                    <?php echo esc_html($term_name); ?>
+                </p>
 
-        <!-- Background image -->
-        <div class="absolute inset-0">
-            <img src="<?php echo esc_url($banner_url ?: $fallback_hero); ?>"
-                class="block w-full h-full object-cover object-center"
-                alt="<?php echo esc_attr($banner_alt); ?>">
-        </div>
+                <h1 class="font-title text-pri font-semibold text-[48px] max-md:text-[32px]">
+                    <?php the_title(); ?>
+                </h1>
 
-        <!-- Gradient overlay: solid left → transparent right -->
-        <div class="absolute inset-0"
-            style="background: linear-gradient(90deg, #fbf9f4 0%, rgba(251,249,244,0.7) 40%, rgba(251,249,244,0.15) 70%, rgba(251,249,244,0) 100%);"></div>
-
-        <!-- Content: bottom-left -->
-        <div class="absolute inset-x-0 bottom-0 pb-[80px] max-md:pb-[48px]">
-            <div class="container">
-                <div class="flex flex-col gap-4 max-w-[900px]">
-
-                    <p class="text-[#133a35] text-[12px] font-semibold uppercase tracking-[2.4px]">
-                        <?php echo esc_html($term_name); ?>
+                <?php if ($dv_short_desc) : ?>
+                    <p class="text-[16px]  mt-3 max-w-[600px]">
+                        <?php echo wp_kses_post(nl2br(esc_html($dv_short_desc))); ?>
                     </p>
-
-                    <h1 class="font-title text-[#133a35] text-[56px] max-md:text-[36px] leading-[64px] max-md:leading-[44px] tracking-[-1.12px] font-normal">
-                        <?php the_title(); ?>
-                    </h1>
-
-                    <?php if ($dv_short_desc) : ?>
-                        <p class="text-[#414847] text-[18px] max-md:text-[16px] leading-[29px] max-w-[560px]">
-                            <?php echo wp_kses_post(nl2br(esc_html($dv_short_desc))); ?>
-                        </p>
+                <?php endif; ?>
+            </div>
+            <!-- Quick meta: branch + available days -->
+            <?php if ($dv_branch || $dv_avail_days) : ?>
+                <div class="flex flex-wrap gap-x-5 gap-y-1.5 mt-4 text-[#414847] text-[15px]">
+                    <?php if ($dv_branch) : ?>
+                        <div class="flex items-center gap-1.5">
+                            <svg class="size-4 text-[#4e635a] shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            <span><?php echo esc_html($dv_branch); ?></span>
+                        </div>
                     <?php endif; ?>
-
-                    <div class="flex items-center gap-4 pt-4">
-                        <a href="#form-dat-lich"
-                            class="bg-[#133a35] text-white text-[12px] font-semibold uppercase tracking-[1.2px] px-8 py-[17px] rounded-[4px] hover:bg-[#1d5047] transition-colors">
-                            ĐẶT LỊCH NGAY
-                        </a>
-                        <?php if ($dv_price) : ?>
-                            <span class="font-title text-[#133a35] text-[20px] leading-[28px] font-normal">
-                                <?php echo esc_html($dv_price); ?>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
+                    <?php if ($dv_avail_days) : ?>
+                        <div class="flex items-center gap-1.5">
+                            <svg class="size-4 text-[#4e635a] shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                            </svg>
+                            <span><?php echo esc_html($dv_avail_days); ?></span>
+                        </div>
+                    <?php endif; ?>
                 </div>
-            </div>
+            <?php endif; ?>
+
         </div>
-    </section>
 
-    <!-- ── EXPERIENCE ────────────────────────────────────────────────── -->
-    <section class="sec-dv-exp py-(--pd-sc)">
-        <div class="container">
-            <div class="row items-center gap-y-12">
+        <!-- ── GALLERY ───────────────────────────────────────────────────────── -->
+        <div class="relative pb-12">
+            <div class="relative flex gap-2 max-md:block overflow-hidden rounded-[12px] md:h-[480px]">
 
-                <!-- Left: images -->
-                <div class="col col-6 max-md:!w-full">
-                    <div class="relative">
-                        <!-- Main tall image -->
-                        <div class="overflow-hidden rounded-[4px] bg-[#eae8e3]" style="height:625px;">
-                            <img src="<?php echo esc_url($dv_exp_img_1['url'] ?? $fallback_exp1); ?>"
-                                class="block w-full h-full object-cover"
-                                alt="<?php echo esc_attr($dv_exp_img_1['alt'] ?? ''); ?>">
-                        </div>
-                        <!-- Detail overlay image: bottom-right -->
-                        <div class="absolute right-0 translate-x-[10%] bottom-[-48px] w-[40%] bg-[#f5f3ee] p-2 rounded-[2px] shadow-[0px_4px_20px_rgba(19,58,53,0.08)] max-md:hidden">
-                            <div class="overflow-hidden aspect-square grayscale">
-                                <img src="<?php echo esc_url($dv_exp_img_2['url'] ?? $fallback_exp2); ?>"
-                                    class="block w-full h-full object-cover"
-                                    alt="<?php echo esc_attr($dv_exp_img_2['alt'] ?? ''); ?>">
-                            </div>
-                        </div>
-                    </div>
+                <!-- Main image -->
+                <div class="flex-[1.3] overflow-hidden max-md:h-[260px] max-md:w-full">
+                    <a href="<?php echo esc_url($thumb ?: $fb_main); ?>"
+                        data-fancybox="gallery-dv"
+                        data-caption="<?php echo esc_attr($thumb_alt); ?>"
+                        class="block w-full h-full">
+                        <img src="<?php echo esc_url($thumb ?: $fb_main); ?>"
+                            class="block w-full h-full object-cover cursor-zoom-in"
+                            alt="<?php echo esc_attr($thumb_alt); ?>">
+                    </a>
                 </div>
 
-                <!-- Right: text + feature cards -->
-                <div class="col col-6 max-md:!w-full max-md:mt-0 mt-0">
-                    <div class="flex flex-col gap-8 max-md:pl-0 pl-[60px]">
-
-                        <h2 class="font-title text-[#133a35] text-[32px] max-md:text-[24px] leading-[40px] font-normal">
-                            <?php echo esc_html($dv_exp_title); ?>
-                        </h2>
-
-                        <p class="text-[#414847] text-[16px] leading-[26px]">
-                            <?php echo wp_kses_post(nl2br(esc_html($dv_exp_desc))); ?>
-                        </p>
-
-                        <!-- Feature cards 2-col -->
-                        <div class="grid grid-cols-2 gap-6">
-
-                            <!-- Feature 1 -->
-                            <div class="bg-[#f5f3ee] rounded-[4px] p-6 flex flex-col gap-2">
-                                <?php if ($dv_f1_icon) : ?>
-                                    <div class="size-5 shrink-0 mb-1">
-                                        <img src="<?php echo esc_url($dv_f1_icon); ?>"
-                                            class="block w-full h-full object-contain" alt="">
-                                    </div>
-                                <?php endif; ?>
-                                <h4 class="font-title text-[#133a35] text-[20px] leading-[28px] font-normal">
-                                    <?php echo esc_html($dv_f1_title); ?>
-                                </h4>
-                                <p class="text-[#414847] leading-[20px]">
-                                    <?php echo esc_html($dv_f1_desc); ?>
-                                </p>
-                            </div>
-
-                            <!-- Feature 2 -->
-                            <div class="bg-[#f5f3ee] rounded-[4px] p-6 flex flex-col gap-2">
-                                <?php if ($dv_f2_icon) : ?>
-                                    <div class="size-5 shrink-0 mb-1">
-                                        <img src="<?php echo esc_url($dv_f2_icon); ?>"
-                                            class="block w-full h-full object-contain" alt="">
-                                    </div>
-                                <?php endif; ?>
-                                <h4 class="font-title text-[#133a35] text-[20px] leading-[28px] font-normal">
-                                    <?php echo esc_html($dv_f2_title); ?>
-                                </h4>
-                                <p class="text-[#414847] leading-[20px]">
-                                    <?php echo esc_html($dv_f2_desc); ?>
-                                </p>
-                            </div>
-
-                        </div>
-                    </div>
+                <!-- 2×2 grid (desktop only) -->
+                <div class="flex-[0.7] grid grid-cols-2 grid-rows-2 gap-2 max-md:hidden">
+                    <a href="<?php echo esc_url($banner_img['url'] ?? $fb_sub); ?>"
+                        data-fancybox="gallery-dv"
+                        class="overflow-hidden block">
+                        <img src="<?php echo esc_url($banner_img['url'] ?? $fb_sub); ?>"
+                            class="block w-full h-full object-cover cursor-zoom-in"
+                            alt="<?php echo esc_attr($banner_img['alt'] ?? ''); ?>">
+                    </a>
+                    <a href="<?php echo esc_url($gal_3['url'] ?? $fb_sub); ?>"
+                        data-fancybox="gallery-dv"
+                        class="overflow-hidden block">
+                        <img src="<?php echo esc_url($gal_3['url'] ?? $fb_sub); ?>"
+                            class="block w-full h-full object-cover cursor-zoom-in"
+                            alt="<?php echo esc_attr($gal_3['alt'] ?? ''); ?>">
+                    </a>
+                    <a href="<?php echo esc_url($gal_4['url'] ?? $fb_sub); ?>"
+                        data-fancybox="gallery-dv"
+                        class="overflow-hidden block">
+                        <img src="<?php echo esc_url($gal_4['url'] ?? $fb_sub); ?>"
+                            class="block w-full h-full object-cover cursor-zoom-in"
+                            alt="<?php echo esc_attr($gal_4['alt'] ?? ''); ?>">
+                    </a>
+                    <a href="<?php echo esc_url($gal_5['url'] ?? $fb_sub); ?>"
+                        data-fancybox="gallery-dv"
+                        class="overflow-hidden block">
+                        <img src="<?php echo esc_url($gal_5['url'] ?? $fb_sub); ?>"
+                            class="block w-full h-full object-cover cursor-zoom-in"
+                            alt="<?php echo esc_attr($gal_5['alt'] ?? ''); ?>">
+                    </a>
                 </div>
+
+                <!-- Xem tất cả ảnh -->
+                <button data-gallery-trigger="gallery-dv"
+                    class="absolute bottom-4 right-4 flex items-center gap-2 bg-white text-[#1b1c19] text-[13px] font-semibold border border-[#1b1c19] rounded-[6px] px-4 py-2 hover:bg-[#f5f3ee] transition-colors shadow-sm">
+                    <svg class="size-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+                    Xem tất cả ảnh
+                </button>
 
             </div>
         </div>
-    </section>
 
-    <!-- ── CONTENT + ASIDE ───────────────────────────────────────────── -->
-    <section class="sec-dv-content py-(--pd-sc)">
-        <div class="container">
-            <div class="row">
+        <!-- ── CONTENT + ASIDE ───────────────────────────────────────────────── -->
+        <section class="sec-dv-content pb-(--pd-sc)">
+            <div class="relative">
+                <div class="row">
 
-                <!-- Left: Benefits + Info grid + Instructor -->
-                <div class="col col-7 max-md:!w-full">
-                    <div class="flex flex-col gap-[64px]">
+                    <!-- Left: long-form content -->
+                    <div class="col col-7 max-md:!w-full">
+                        <div class="flex flex-col divide-y divide-[#e4e2dd]">
 
-                        <!-- Benefits -->
-                        <?php if (!empty($dv_bn_items)) : ?>
-                            <div class="flex flex-col gap-8">
-                                <h2 class="font-title text-[#133a35] text-[32px] max-md:text-[24px] leading-[40px] font-normal">
-                                    <?php echo esc_html($dv_bn_heading); ?>
+                            <!-- Description + Feature cards -->
+                            <div class="pb-10">
+                                <h2 class="font-title text-pri text-[24px]  font-normal mb-4">
+                                    <?php echo esc_html($dv_exp_title); ?>
                                 </h2>
-                                <div class="flex flex-col gap-6">
-                                    <?php foreach ($dv_bn_items as $item) : ?>
-                                        <div class="flex gap-4 items-start">
-                                            <div class="size-5 shrink-0 mt-[3px]">
-                                                <img src="<?php echo esc_url($ic_check); ?>"
+                                <p class="text-[#414847] text-[16px]  mb-6">
+                                    <?php echo wp_kses_post(nl2br(esc_html($dv_exp_desc))); ?>
+                                </p>
+                                <!-- Feature cards 2-col -->
+                                <div class="grid grid-cols-2 max-md:grid-cols-1 gap-4">
+                                    <div class="bg-[#f5f3ee] rounded-[4px] p-5 flex flex-col gap-2">
+                                        <?php if ($dv_f1_icon) : ?>
+                                            <div class="size-5 shrink-0 mb-1">
+                                                <img src="<?php echo esc_url($dv_f1_icon); ?>"
                                                     class="block w-full h-full object-contain" alt="">
                                             </div>
-                                            <div class="flex flex-col gap-1">
-                                                <p class="text-[#1b1c19] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]">
-                                                    <?php echo esc_html($item['dv_benefit_title']); ?>
-                                                </p>
-                                                <?php if (!empty($item['dv_benefit_desc'])) : ?>
-                                                    <p class="text-[#414847] text-[16px] leading-[24px]">
-                                                        <?php echo wp_kses_post(nl2br(esc_html($item['dv_benefit_desc']))); ?>
-                                                    </p>
-                                                <?php endif; ?>
+                                        <?php endif; ?>
+                                        <h4 class="font-title text-pri text-[20px]  font-normal">
+                                            <?php echo esc_html($dv_f1_title); ?>
+                                        </h4>
+                                        <p class="text-[#414847] text-[16px] ">
+                                            <?php echo esc_html($dv_f1_desc); ?>
+                                        </p>
+                                    </div>
+                                    <div class="bg-[#f5f3ee] rounded-[4px] p-5 flex flex-col gap-2">
+                                        <?php if ($dv_f2_icon) : ?>
+                                            <div class="size-5 shrink-0 mb-1">
+                                                <img src="<?php echo esc_url($dv_f2_icon); ?>"
+                                                    class="block w-full h-full object-contain" alt="">
                                             </div>
+                                        <?php endif; ?>
+                                        <h4 class="font-title text-pri text-[20px]  font-normal">
+                                            <?php echo esc_html($dv_f2_title); ?>
+                                        </h4>
+                                        <p class="text-[#414847] text-[16px] ">
+                                            <?php echo esc_html($dv_f2_desc); ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Benefits -->
+                            <?php if (!empty($dv_bn_items)) : ?>
+                                <div class="py-10">
+                                    <h2 class="font-title text-pri text-[24px]  font-normal mb-6">
+                                        <?php echo esc_html($dv_bn_heading); ?>
+                                    </h2>
+                                    <div class="flex flex-col gap-5">
+                                        <?php foreach ($dv_bn_items as $item) : ?>
+                                            <div class="flex gap-4 items-start">
+                                                <div class="size-5 shrink-0 mt-[3px]">
+                                                    <img src="<?php echo esc_url($ic_check); ?>"
+                                                        class="block w-full h-full object-contain" alt="">
+                                                </div>
+                                                <div class="flex flex-col gap-1">
+                                                    <p class="text-pri text-[16px] font-semibold uppercase tracking-[1.2px]">
+                                                        <?php echo esc_html($item['dv_benefit_title']); ?>
+                                                    </p>
+                                                    <?php if (!empty($item['dv_benefit_desc'])) : ?>
+                                                        <p class="text-[#414847] text-[16px] ">
+                                                            <?php echo wp_kses_post(nl2br(esc_html($item['dv_benefit_desc']))); ?>
+                                                        </p>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Info grid: thời lượng / trang phục / địa điểm / chuẩn bị -->
+                            <div class="py-10">
+                                <h3 class="font-title text-pri text-[24px]  font-normal mb-6">
+                                    Thông tin cần lưu ý
+                                </h3>
+                                <div class="grid grid-cols-2 max-md:grid-cols-1 gap-x-8 gap-y-6">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px]">THỜI LƯỢNG</span>
+                                        <span class="text-[#1b1c19] text-[16px] "><?php echo esc_html($dv_duration); ?></span>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px]">TRANG PHỤC</span>
+                                        <span class="text-[#1b1c19] text-[16px] "><?php echo esc_html($dv_clothing); ?></span>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px]">ĐỊA ĐIỂM</span>
+                                        <span class="text-[#1b1c19] text-[16px] "><?php echo esc_html($dv_location); ?></span>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px]">CHUẨN BỊ</span>
+                                        <span class="text-[#1b1c19] text-[16px] "><?php echo esc_html($dv_preparation); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Instructor -->
+                            <?php if ($dv_ins_name) : ?>
+                                <div class="py-10">
+                                    <p class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px] mb-5">
+                                        <?php echo esc_html($dv_ins_label); ?>
+                                    </p>
+                                    <div class="flex gap-5 items-start">
+                                        <div class="size-16 rounded-full overflow-hidden shrink-0">
+                                            <img src="<?php echo esc_url($dv_ins_image['url'] ?? $fb_ins); ?>"
+                                                class="block w-full h-full object-cover"
+                                                alt="<?php echo esc_attr($dv_ins_image['alt'] ?? $dv_ins_name); ?>">
+                                        </div>
+                                        <div>
+                                            <h3 class="font-title text-pri text-[20px]  font-normal">
+                                                <?php echo esc_html($dv_ins_name); ?>
+                                            </h3>
+                                            <?php if ($dv_ins_bio) : ?>
+                                                <p class="text-[#414847] text-[16px] mt-2">
+                                                    <?php echo wp_kses_post(nl2br(esc_html($dv_ins_bio))); ?>
+                                                </p>
+                                            <?php endif; ?>
+                                            <?php if ($dv_ins_instagram || $dv_ins_facebook || $dv_ins_whatsapp || $dv_ins_messenger) : ?>
+                                                <div class="flex gap-2 mt-4">
+                                                    <?php if ($dv_ins_instagram) : ?>
+                                                        <a href="<?php echo esc_url($dv_ins_instagram); ?>" target="_blank" rel="noopener noreferrer"
+                                                            class="size-8 flex items-center justify-center rounded-full border border-[#e4e2dd] text-[#414847] hover:border-[#4e635a] hover:text-[#4e635a] transition-colors">
+                                                            <svg class="size-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                                                            </svg>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                    <?php if ($dv_ins_facebook) : ?>
+                                                        <a href="<?php echo esc_url($dv_ins_facebook); ?>" target="_blank" rel="noopener noreferrer"
+                                                            class="size-8 flex items-center justify-center rounded-full border border-[#e4e2dd] text-[#414847] hover:border-[#4e635a] hover:text-[#4e635a] transition-colors">
+                                                            <svg class="size-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                                            </svg>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                    <?php if ($dv_ins_whatsapp) : ?>
+                                                        <a href="<?php echo esc_url($dv_ins_whatsapp); ?>" target="_blank" rel="noopener noreferrer"
+                                                            class="size-8 flex items-center justify-center rounded-full border border-[#e4e2dd] text-[#414847] hover:border-[#4e635a] hover:text-[#4e635a] transition-colors">
+                                                            <svg class="size-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                                            </svg>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                    <?php if ($dv_ins_messenger) : ?>
+                                                        <a href="<?php echo esc_url($dv_ins_messenger); ?>" target="_blank" rel="noopener noreferrer"
+                                                            class="size-8 flex items-center justify-center rounded-full border border-[#e4e2dd] text-[#414847] hover:border-[#4e635a] hover:text-[#4e635a] transition-colors">
+                                                            <svg class="size-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path d="M12 0C5.373 0 0 4.974 0 11.111c0 3.498 1.744 6.614 4.469 8.652V24l4.088-2.242c1.092.3 2.246.464 3.443.464 6.627 0 12-4.975 12-11.111C24 4.974 18.627 0 12 0zm1.191 14.963l-3.055-3.26-5.963 3.26L10.732 8.1l3.131 3.26L19.752 8.1l-6.561 6.863z" />
+                                                            </svg>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Feedback photos -->
+                            <?php
+                            $fb_heading = get_field('dv_feedbacks_heading', $post_id) ?: 'Khách hàng nói gì?';
+                            $fb_items   = get_field('dv_feedbacks', $post_id) ?: [
+                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-exp-main.jpg',             'alt' => '']],
+                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-exp-detail.jpg',           'alt' => '']],
+                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-nhom.jpg', 'alt' => '']],
+                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-1.jpg',           'alt' => '']],
+                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-2.jpg',           'alt' => '']],
+                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/about-gallery-1.jpg',         'alt' => '']],
+                            ];
+                            if (!empty($fb_items)) : ?>
+                                <div class="py-10">
+                                    <h2 class="font-title text-pri text-[24px]  font-normal mb-6">
+                                        <?php echo esc_html($fb_heading); ?>
+                                    </h2>
+                                    <div class="grid grid-cols-3 max-md:grid-cols-2 gap-3">
+                                        <?php foreach ($fb_items as $item) :
+                                            $img_url = $item['dv_fb_image']['url'] ?? '';
+                                            $img_alt = $item['dv_fb_image']['alt'] ?? '';
+                                            if (!$img_url) continue;
+                                        ?>
+                                            <a href="<?php echo esc_url($img_url); ?>"
+                                                data-fancybox="gallery-fb-dv"
+                                                class="block aspect-square overflow-hidden rounded-[4px]">
+                                                <img src="<?php echo esc_url($img_url); ?>"
+                                                    class="block w-full h-full object-cover hover:scale-105 transition-transform duration-500 cursor-zoom-in"
+                                                    alt="<?php echo esc_attr($img_alt); ?>">
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                        </div>
+                    </div>
+
+                    <!-- Right: Booking widget -->
+                    <div class="col col-5 max-md:!w-full">
+                        <div id="form-dat-lich"
+                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)] p-6 flex flex-col gap-5">
+
+                            <!-- Price -->
+                            <?php if ($dv_price) : ?>
+                                <div class="flex items-baseline gap-1 justify-center">
+                                    <span class="font-title text-center inline-block text-pri text-[26px] font-semibold">
+                                        <?php echo esc_html($dv_price); ?>
+                                    </span>
+                                    <span class="text-[#717171] text-[14px]"> / khách</span>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Spots badge -->
+                            <?php if ($dv_spots !== null) : ?>
+                                <?php if ($dv_spots === 0) : ?>
+                                    <div class="flex items-center justify-center gap-1.5 bg-[#f5f3ee] rounded-[6px] px-3 py-2 text-[13px] font-semibold text-[#1b1c19]">
+                                        <svg class="size-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                        </svg>
+                                        Fully Booked · Hết chỗ
+                                    </div>
+                                <?php else : ?>
+                                    <div class="flex items-center justify-center gap-1.5 bg-[#f0f7f4] rounded-[6px] px-3 py-2 text-[13px] font-semibold text-[#4e635a]">
+                                        <svg class="size-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                                        </svg>
+                                        Còn <?php echo $dv_spots; ?> chỗ
+                                    </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
+                            <!-- Meta box -->
+                            <?php
+                            $meta_rows = [];
+                            if ($dv_duration)   $meta_rows[] = ['label' => 'THỜI LƯỢNG',   'value' => $dv_duration];
+                            if ($dv_avail_days) $meta_rows[] = ['label' => 'LỊCH',          'value' => $dv_avail_days];
+                            if ($dv_location)   $meta_rows[] = ['label' => 'ĐỊA ĐIỂM',      'value' => $dv_location];
+                            if ($dv_spots !== null) {
+                                $spots_val = $dv_spots === 0 ? 'Fully Booked · Hết chỗ' : 'Còn ' . $dv_spots . ' chỗ';
+                                $meta_rows[] = ['label' => 'SỐ CHỖ', 'value' => $spots_val];
+                            }
+                            if (!empty($meta_rows)) : ?>
+                                <div class="border border-[#b0b0b0] rounded-[8px] overflow-hidden text-[14px]">
+                                    <?php
+                                    $last = count($meta_rows) - 1;
+                                    foreach ($meta_rows as $i => $row) : ?>
+                                        <div class="p-3 <?php echo $i < $last ? 'border-b border-[#b0b0b0]' : ''; ?>">
+                                            <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#717171] mb-0.5">
+                                                <?php echo $row['label']; ?>
+                                            </p>
+                                            <p class="text-[#1b1c19] font-medium"><?php echo esc_html($row['value']); ?></p>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
-                            </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
 
-                        <!-- Info grid: Thời lượng / Trang phục / Địa điểm / Chuẩn bị -->
-                        <div class="border border-[rgba(192,200,198,0.3)] rounded-[4px] p-10 max-md:p-6">
-                            <h3 class="font-title text-[#133a35] text-[24px] leading-[32px] font-normal mb-8">
-                                Thông tin cần lưu ý
-                            </h3>
-                            <div class="grid grid-cols-2 gap-x-8 gap-y-8">
-
-                                <div class="flex flex-col gap-2">
-                                    <span class="text-[rgba(19,58,53,0.6)] text-[12px] font-semibold uppercase tracking-[1.2px]">THỜI LƯỢNG</span>
-                                    <span class="text-[#1b1c19] text-[16px] leading-[24px]"><?php echo esc_html($dv_duration); ?></span>
-                                </div>
-
-                                <div class="flex flex-col gap-2">
-                                    <span class="text-[rgba(19,58,53,0.6)] text-[12px] font-semibold uppercase tracking-[1.2px]">TRANG PHỤC</span>
-                                    <span class="text-[#1b1c19] text-[16px] leading-[24px]"><?php echo esc_html($dv_clothing); ?></span>
-                                </div>
-
-                                <div class="flex flex-col gap-2">
-                                    <span class="text-[rgba(19,58,53,0.6)] text-[12px] font-semibold uppercase tracking-[1.2px]">ĐỊA ĐIỂM</span>
-                                    <span class="text-[#1b1c19] text-[16px] leading-[24px]"><?php echo esc_html($dv_location); ?></span>
-                                </div>
-
-                                <div class="flex flex-col gap-2">
-                                    <span class="text-[rgba(19,58,53,0.6)] text-[12px] font-semibold uppercase tracking-[1.2px]">CHUẨN BỊ</span>
-                                    <span class="text-[#1b1c19] text-[16px] leading-[24px]"><?php echo esc_html($dv_preparation); ?></span>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- Instructor -->
-                        <?php if ($dv_ins_name) : ?>
-                            <div class="bg-[#f5f3ee] rounded-[4px] shadow-[0px_10px_20px_rgba(44,81,76,0.05)] max-md:p-4 p-8 flex flex-col gap-4">
-                                <p class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px]">
-                                    <?php echo esc_html($dv_ins_label); ?>
-                                </p>
-                                <div class="size-24 rounded-[12px] overflow-hidden shrink-0">
-                                    <img src="<?php echo esc_url($dv_ins_image['url'] ?? $fallback_ins); ?>"
-                                        class="block w-full h-full object-cover"
-                                        alt="<?php echo esc_attr($dv_ins_image['alt'] ?? $dv_ins_name); ?>">
-                                </div>
-                                <h3 class="font-title text-[#133a35] text-[24px] leading-[32px] font-normal pt-2">
-                                    <?php echo esc_html($dv_ins_name); ?>
+                            <!-- CF7 Form -->
+                            <div id="dv-form-inner" class="border-t border-[#e4e2dd] pt-5 flex flex-col gap-3">
+                                <h3 class="font-title text-pri text-[28px] text-center font-normal">
+                                    Đặt lịch trải nghiệm
                                 </h3>
-                                <?php if ($dv_ins_bio) : ?>
-                                    <p class="text-[#414847] text-[16px] leading-[24px]">
-                                        <?php echo wp_kses_post(nl2br(esc_html($dv_ins_bio))); ?>
-                                    </p>
+                                <?php
+                                $dv_cf7_id = defined('DV_CF7_FORM_ID') ? DV_CF7_FORM_ID : (defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '');
+                                if ($dv_cf7_id) : ?>
+                                    <style>
+                                        .cf7-dich-vu .wpcf7-form:not(.invalid):not(.failed) .wpcf7-not-valid-tip {
+                                            display: none;
+                                        }
+
+                                        .cf7-dich-vu .wpcf7-form:not(.invalid):not(.failed) .wpcf7-form-control.wpcf7-not-valid {
+                                            border-color: inherit;
+                                        }
+                                    </style>
+                                    <div class="cf7-dich-vu">
+                                        <?php echo do_shortcode('[contact-form-7 id="' . esc_attr($dv_cf7_id) . '"]'); ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
-                        <?php endif; ?>
 
-                    </div>
-                </div>
-
-                <!-- Right: Booking form aside -->
-                <div class="col col-5 max-md:!w-full">
-                    <div id="form-dat-lich"
-                        class="sticky top-[100px] backdrop-blur-[6px] bg-[rgba(251,249,244,0.85)] border border-[rgba(255,255,255,0.4)] rounded-[4px] shadow-[0px_10px_40px_0px_rgba(19,58,53,0.05)] max-md:p-6 p-8 flex flex-col gap-6">
-
-                        <div class="text-center flex flex-col gap-2 pb-6 border-b border-[rgba(192,200,198,0.3)]">
-                            <h3 class="font-title text-[#133a35] text-[24px] leading-[32px] font-normal">
-                                Đặt lịch trải nghiệm ngay
-                            </h3>
-                            <p class="text-[#414847] leading-[20px]">
-                                Hãy chọn thời gian phù hợp để bắt đầu hành trình hồi phục.
-                            </p>
-                            <?php if ($dv_price) : ?>
-                                <span class="font-title text-[#133a35] text-[20px] leading-[28px] font-normal mt-1">
-                                    <?php echo esc_html($dv_price); ?>
-                                </span>
-                            <?php endif; ?>
                         </div>
-
-                        <?php
-                        $dv_cf7_id = defined('DV_CF7_FORM_ID') ? DV_CF7_FORM_ID : (defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '');
-                        if ($dv_cf7_id) : ?>
-                            <style>
-                                /* Ẩn lỗi validation cho đến khi form thực sự được submit */
-                                .cf7-dich-vu .wpcf7-form:not(.invalid):not(.failed) .wpcf7-not-valid-tip {
-                                    display: none;
-                                }
-
-                                .cf7-dich-vu .wpcf7-form:not(.invalid):not(.failed) .wpcf7-form-control.wpcf7-not-valid {
-                                    border-color: inherit;
-                                }
-                            </style>
-                            <div class="cf7-dich-vu">
-                                <?php echo do_shortcode('[contact-form-7 id="' . esc_attr($dv_cf7_id) . '"]'); ?>
-                                <script>
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        var dateInput = document.querySelector('.cf7-dich-vu input[type="date"]');
-                                        if (!dateInput) return;
-                                        dateInput.addEventListener('click', function() {
-                                            try {
-                                                this.showPicker();
-                                            } catch (e) {}
-                                        });
-                                    });
-                                </script>
-                            </div>
-                        <?php endif; ?>
                     </div>
+
                 </div>
-
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ── CTA ───────────────────────────────────────────────────────── -->
-    <!-- <section class="sec-dv-cta py-(--pd-sc) relative overflow-hidden" style="background:#133a35;">
-        <div class="absolute inset-0 opacity-10"
-            style="background-image:radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);"></div>
-        <div class="container relative">
-            <div class="flex flex-col items-center text-center max-w-[768px] mx-auto gap-6">
-                <h2 class="font-title text-white text-[56px] max-md:text-[8vw] leading-[64px] max-md:leading-[50px] tracking-[-1.12px] font-normal">
-                    <?php echo esc_html($dv_cta_title); ?>
-                </h2>
-                <p class="text-[rgba(255,255,255,0.8)] text-[18px] leading-[28px]">
-                    <?php echo wp_kses_post(nl2br(esc_html($dv_cta_desc))); ?>
-                </p>
-                <a href="#form-dat-lich" class="bg-[#fbf9f4] text-[#133a35] text-[12px] font-semibold uppercase tracking-[1.2px] px-8 py-4 rounded-[4px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] hover:bg-white transition-colors mt-4">
-                    ĐẶT LỊCH NGAY
-                </a>
-            </div>
-        </div>
-    </section> -->
-
+    </div>
 </div>
 
 <?php get_footer(); ?>

@@ -59,6 +59,16 @@ add_action('acf/init', function () {
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 
+            Image::make('Ảnh gallery 4', 'gallery_4')
+                ->helperText('Ảnh thứ 4 trong bộ gallery trang chi tiết. Kích thước đề xuất: 600×300px.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 5', 'gallery_5')
+                ->helperText('Ảnh thứ 5 trong bộ gallery trang chi tiết. Kích thước đề xuất: 600×300px.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
             // ─── TAB: LỘ TRÌNH ───────────────────────────────────────────
             Tab::make('Lộ trình')->placement('left'),
 
@@ -103,6 +113,18 @@ add_action('acf/init', function () {
             Textarea::make('Giới thiệu', 'instructor_bio')
                 ->rows(3),
 
+            Text::make('Instagram', 'instructor_instagram')
+                ->helperText('URL Instagram đầy đủ. Ví dụ: https://instagram.com/linhtam'),
+
+            Text::make('Facebook', 'instructor_facebook')
+                ->helperText('URL Facebook đầy đủ. Ví dụ: https://facebook.com/linhtam'),
+
+            Text::make('WhatsApp', 'instructor_whatsapp')
+                ->helperText('Số điện thoại hoặc link WhatsApp. Ví dụ: https://wa.me/84901234567'),
+
+            Text::make('Facebook Messenger', 'instructor_messenger')
+                ->helperText('Link Messenger. Ví dụ: https://m.me/linhtam'),
+
             // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
             Tab::make('Lợi ích')->placement('left'),
 
@@ -115,6 +137,23 @@ add_action('acf/init', function () {
                 ->fields([
                     Text::make('Tiêu đề', 'benefit_title')->required(),
                     Textarea::make('Mô tả', 'benefit_desc')->rows(2),
+                ]),
+
+            // ─── TAB: CẢM NHẬN ───────────────────────────────────────────
+            Tab::make('Cảm nhận')->placement('left'),
+
+            Text::make('Tiêu đề', 'feedbacks_heading')
+                ->default('Cảm nhận của học viên'),
+
+            Repeater::make('Hình ảnh học viên', 'feedbacks')
+                ->helperText('Thêm hình ảnh học viên tham gia khóa học.')
+                ->layout('table')
+                ->fields([
+                    Image::make('Hình ảnh', 'fb_image')
+                        ->required()
+                        ->helperText('Ảnh vuông, ví dụ 400×400px.')
+                        ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                        ->format('array'),
                 ]),
 
             // ─── TAB: CTA ────────────────────────────────────────────────

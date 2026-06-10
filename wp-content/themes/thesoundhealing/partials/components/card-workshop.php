@@ -40,13 +40,11 @@ $status_info = $status_map[$status_key] ?? $status_map['open'];
 
         <div class="flex flex-col gap-2">
 
-            <?php if (!empty($item['type'])) : ?>
-                <span class="text-[rgba(19,58,53,0.5)] text-[11px] font-semibold uppercase tracking-[1.2px]">
-                    <?php echo esc_html($item['type']); ?>
-                </span>
-            <?php endif; ?>
+            <span class="text-[12px] uppercase tracking-[1.2px]">
+                Workshop
+            </span>
 
-            <h3 class="text-pri text-[18px] font-normal leading-[28px] line-clamp-2 max-md:text-[16px]">
+            <h3 class="text-[20px] font-normal line-clamp-2 max-md:text-[16px]">
                 <?php echo esc_html($item['title']); ?>
             </h3>
 
@@ -55,13 +53,13 @@ $status_info = $status_map[$status_key] ?? $status_map['open'];
                     <p class="text-[#414847] text-[13px] leading-[18px]">
                         <?php echo esc_html($item['date']); ?>
                         <?php if (!empty($item['time'])) : ?>
-                            <span class="text-[rgba(19,58,53,0.45)]"> · <?php echo esc_html($item['time']); ?></span>
+                            <span class=""> · <?php echo esc_html($item['time']); ?></span>
                         <?php endif; ?>
                     </p>
                 <?php endif; ?>
 
                 <?php if (!empty($item['location'])) : ?>
-                    <p class="text-[rgba(19,58,53,0.45)] text-[12px] leading-[18px] line-clamp-1">
+                    <p class=" text-[14px] leading-[18px] line-clamp-1">
                         <?php echo esc_html($item['location']); ?>
                     </p>
                 <?php endif; ?>
@@ -71,11 +69,11 @@ $status_info = $status_map[$status_key] ?? $status_map['open'];
 
         <div class="flex items-center justify-between gap-2 pt-2 border-t border-[rgba(192,200,198,0.3)]">
             <?php if (!empty($item['price'])) : ?>
-                <span class="font-title text-pri text-[18px] leading-[24px] font-normal">
+                <span class="font-title text-pri text-[18px] font-normal">
                     <?php echo esc_html($item['price']); ?>
                 </span>
             <?php endif; ?>
-            <?php if ($status_key !== 'closed') : ?>
+            <!-- <?php if ($status_key !== 'closed') : ?>
                 <span class="text-pri text-[11px] font-semibold uppercase tracking-[1.2px] ml-auto flex items-center gap-1">
                     Đăng ký
                     <svg class="w-[8px] h-[8px] shrink-0" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -84,7 +82,7 @@ $status_info = $status_map[$status_key] ?? $status_map['open'];
                 </span>
             <?php else : ?>
                 <span class="text-[#842029] text-[11px] font-semibold uppercase tracking-[1.2px] ml-auto">Hết chỗ</span>
-            <?php endif; ?>
+            <?php endif; ?> -->
         </div>
 
     </div>

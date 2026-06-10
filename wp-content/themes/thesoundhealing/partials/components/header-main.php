@@ -38,7 +38,7 @@ $lang_en = '#';
                <?php wp_nav_menu([
                   'theme_location' => 'header-menu-pc',
                   'container'      => 'nav',
-                  'container_class' => 'flex items-center gap-6',
+                  'container_class' => 'flex items-center gap-6 absolute left-1/2 translate-x-[-50%]',
                   'menu_class'     => 'menu-list flex items-center gap-6',
                   'link_class'     => 'hd-nav-link',
                   'depth'          => 2,
@@ -46,8 +46,6 @@ $lang_en = '#';
                   'walker'         => new Mona_Walker_Nav_Menu_Desktop(),
                ]); ?>
 
-               <!-- Divider -->
-               <span class="block w-px h-6 bg-[#d9d9d9] shrink-0"></span>
 
                <!-- Language switcher -->
                <div class="flex items-center gap-2 hd-lang">

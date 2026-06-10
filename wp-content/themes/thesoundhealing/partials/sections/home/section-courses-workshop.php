@@ -74,8 +74,8 @@ usort($all_items, function ($a, $b) {
 $data = [
     'label'           => get_field('cwlist_label', $page_id)   ?: 'ĐÀO TẠO & SỰ KIỆN',
     'heading'         => get_field('cwlist_heading', $page_id) ?: 'Khóa Học & Workshop',
-    'link_courses'    => get_field('cwlist_link_courses', $page_id)  ?: ['url' => home_url('/khoa-hoc'),  'title' => 'Khóa học', 'target' => ''],
-    'link_workshops'  => get_field('cwlist_link_workshops', $page_id) ?: ['url' => home_url('/workshop'), 'title' => 'Workshop', 'target' => ''],
+    'desc'            => get_field('cwlist_desc', $page_id)    ?: 'Tham gia các khóa học và workshop được thiết kế để dẫn dắt bạn qua từng giai đoạn chuyển hóa tâm thức sâu sắc.',
+    'link_all'        => get_field('cwlist_link_all', $page_id) ?: ['url' => home_url('/khoa-hoc-workshop'), 'title' => 'Xem tất cả', 'target' => ''],
     'items'           => $all_items,
 ];
 ?>
@@ -86,45 +86,29 @@ $data = [
         <!-- Header -->
         <div class="flex items-end justify-between mb-8 max-md:flex-col max-md:items-center max-md:text-center gap-4">
             <div>
-                <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px] mb-4">
-                    <?php echo esc_html($data['label']); ?>
-                </p>
-                <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
+                <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px] mb-3">
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
-            </div>
-
-            <div class="flex items-center gap-4 shrink-0">
-                <?php if (!empty($data['link_courses']['url'])) : ?>
-                    <a href="<?php echo esc_url($data['link_courses']['url']); ?>"
-                        target="<?php echo esc_attr($data['link_courses']['target'] ?? ''); ?>"
-                        class="flex items-center gap-1 text-pri text-[12px] font-semibold uppercase tracking-[1.2px]">
-                        <?php echo esc_html($data['link_courses']['title']); ?>
-                        <div class="size-[10px] shrink-0">
-                            <img src="<?php echo MONA_THEME_PATH_URI; ?>/assets/images/ic-arrow-right.svg"
-                                class="block w-full h-full object-contain" alt="">
-                        </div>
-                    </a>
-                <?php endif; ?>
-
-                <?php if (!empty($data['link_workshops']['url'])) : ?>
-                    <a href="<?php echo esc_url($data['link_workshops']['url']); ?>"
-                        target="<?php echo esc_attr($data['link_workshops']['target'] ?? ''); ?>"
-                        class="flex items-center gap-1 text-pri text-[12px] font-semibold uppercase tracking-[1.2px]">
-                        <?php echo esc_html($data['link_workshops']['title']); ?>
-                        <div class="size-[10px] shrink-0">
-                            <img src="<?php echo MONA_THEME_PATH_URI; ?>/assets/images/ic-arrow-right.svg"
-                                class="block w-full h-full object-contain" alt="">
-                        </div>
-                    </a>
+                <?php if (!empty($data['desc'])) : ?>
+                    <p class="text-[#414847] max-w-[500px]">
+                        <?php echo wp_kses_post($data['desc']); ?>
+                    </p>
                 <?php endif; ?>
             </div>
+
+            <?php if (!empty($data['link_all']['url'])) : ?>
+                <a href="<?php echo esc_url($data['link_all']['url']); ?>"
+                    target="<?php echo esc_attr($data['link_all']['target'] ?? ''); ?>"
+                    class="flex items-center gap-1 shrink-0 text-pri text-[16px] font-semibold uppercase tracking-[1.2px]">
+                    <?php echo esc_html($data['link_all']['title']); ?>
+                </a>
+            <?php endif; ?>
         </div>
 
         <!-- Cards -->
         <div class="row">
             <?php foreach ($data['items'] as $item) : ?>
-                <div class="col col-2 max-lg:!w-1/2 max-md:!w-full">
+                <div class="col col-5i max-lg:!w-1/2">
                     <?php if ($item['_type'] === 'workshop') : ?>
                         <?php get_template_part('partials/components/card-workshop', null, ['item' => $item]); ?>
                     <?php else : ?>

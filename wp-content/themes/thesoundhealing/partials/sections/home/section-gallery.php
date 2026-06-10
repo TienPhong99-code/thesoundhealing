@@ -44,11 +44,7 @@ $data = [
 <section class="sec-gallery relative py-20">
     <div class="container">
 
-        <div class="flex flex-col items-center gap-4 text-center max-w-[768px] mx-auto mb-16">
-            <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px]">
-                <?php echo esc_html($data['label']); ?>
-            </p>
-
+        <div class="flex flex-col items-center gap-3 text-center max-w-[768px] mx-auto mb-16">
             <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
                 <?php echo esc_html($data['heading']); ?>
             </h2>

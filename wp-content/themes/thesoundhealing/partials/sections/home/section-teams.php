@@ -6,6 +6,7 @@ $page_id = MONA_PAGE_HOME;
 $sample = [
     'label'   => 'NGƯỜI DẪN DẮT',
     'heading' => 'Đội Ngũ Chuyên Gia',
+    'desc'    => 'Đội ngũ chuyên gia giàu kinh nghiệm, được đào tạo bài bản, đồng hành cùng bạn trên hành trình chữa lành và phát triển bản thân.',
     'items'   => [
         [
             'image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/teams-img-1.png', 'alt' => 'Elena Vu'],
@@ -33,6 +34,7 @@ $raw_items = get_field('teams_items', $page_id);
 $data = [
     'label'   => get_field('teams_label', $page_id)   ?: $sample['label'],
     'heading' => get_field('teams_heading', $page_id) ?: $sample['heading'],
+    'desc'    => get_field('teams_desc', $page_id)    ?: $sample['desc'],
     'items'   => $raw_items                           ?: $sample['items'],
 ];
 ?>
@@ -43,12 +45,14 @@ $data = [
     <div class="container">
         <!-- Header -->
         <div class="flex flex-col items-center text-center mb-12 max-md:mb-8">
-            <p class="text-pri text-[12px] font-semibold uppercase tracking-[1.2px] mb-4">
-                <?php echo esc_html($data['label']); ?>
-            </p>
-            <h2 class="font-title text-sec text-[32px] font-normal max-sm:text-[24px]">
+            <h2 class="font-title text-sec text-[32px] font-normal max-sm:text-[24px] mb-3">
                 <?php echo esc_html($data['heading']); ?>
             </h2>
+            <?php if (!empty($data['desc'])) : ?>
+                <p class="text-[#414847] text-[15px] max-w-[560px]">
+                    <?php echo wp_kses_post($data['desc']); ?>
+                </p>
+            <?php endif; ?>
         </div>
 
         <!-- Experts Slider -->
@@ -82,7 +86,7 @@ $data = [
                                     </p>
 
                                     <!-- Description -->
-                                    <p class="text-[#414847] text-[14px] leading-[1.6]">
+                                    <p class="text-[#414847]">
                                         <?php echo esc_html($item['desc']); ?>
                                     </p>
                                 </div>
