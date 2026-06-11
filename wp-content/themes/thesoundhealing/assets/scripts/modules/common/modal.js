@@ -11,7 +11,6 @@
     if (!modal) return;
     modal.classList.add('is-active');
     document.body.classList.add('no-scroll');
-    if (window.lenis) window.lenis.stop();
   }
 
   function closeModal(target) {
@@ -26,7 +25,6 @@
     if (!modal || isSubmitting(modal)) return;
     modal.classList.remove('is-active');
     document.body.classList.remove('no-scroll');
-    if (window.lenis) window.lenis.start();
   }
 
   function unlockModal(modal) {

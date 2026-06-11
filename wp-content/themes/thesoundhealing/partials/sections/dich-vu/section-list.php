@@ -19,6 +19,11 @@ $sample = [
         'desc'           => 'Trải nghiệm sóng âm thư giãn cùng nhóm để cải thiện chất lượng giấc ngủ và giảm căng thẳng tích tụ.',
         'available_days' => 'Thứ 6, 7, Chủ nhật',
         'duration'       => '60 - 90 phút mỗi phiên',
+        'branch'         => 'Cơ sở Quận 1',
+        'location'       => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor'     => 'Linh Tâm',
+        'status'         => 'open',
+        'spots'          => 12,
         'price'          => '500.000 VNĐ',
         'url'            => '#',
     ],
@@ -29,6 +34,11 @@ $sample = [
         'desc'           => 'Không gian trị liệu âm thanh dành riêng cho bạn, tập trung vào nhu cầu phục hồi sâu sắc của cá nhân.',
         'available_days' => 'Thứ 2 – Chủ nhật',
         'duration'       => '90 phút mỗi phiên',
+        'branch'         => 'Cơ sở Quận 1',
+        'location'       => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor'     => 'Linh Tâm',
+        'status'         => 'open',
+        'spots'          => 2,
         'price'          => '1.200.000 VNĐ',
         'url'            => '#',
     ],
@@ -39,6 +49,11 @@ $sample = [
         'desc'           => 'Kỹ thuật đặt chuông trực tiếp lên cơ thể để các rung động tác động sâu vào từng tế bào và huyệt đạo.',
         'available_days' => 'Thứ 2 – Thứ 6',
         'duration'       => '60 phút mỗi phiên',
+        'branch'         => 'Cơ sở Quận 1',
+        'location'       => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor'     => 'Linh Tâm',
+        'status'         => 'open',
+        'spots'          => 1,
         'price'          => '800.000 VNĐ',
         'url'            => '#',
     ],
@@ -49,6 +64,11 @@ $sample = [
         'desc'           => 'Kết nối năng lượng vũ trụ trong không gian cộng hưởng nhóm để thanh tẩy và cân bằng tâm trí.',
         'available_days' => 'Thứ 7, Chủ nhật',
         'duration'       => '60 - 90 phút mỗi phiên',
+        'branch'         => 'Cơ sở Quận 1',
+        'location'       => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor'     => 'Linh Tâm',
+        'status'         => 'open',
+        'spots'          => 10,
         'price'          => '600.000 VNĐ',
         'url'            => '#',
     ],
@@ -59,6 +79,11 @@ $sample = [
         'desc'           => 'Phiên trị liệu năng lượng chuyên sâu 1-1 giúp giải quyết các tắc nghẽn cảm xúc và thể chất cụ thể.',
         'available_days' => 'Thứ 2 – Thứ 6',
         'duration'       => '90 phút mỗi phiên',
+        'branch'         => 'Cơ sở Quận 1',
+        'location'       => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor'     => 'Linh Tâm',
+        'status'         => 'limited',
+        'spots'          => 1,
         'price'          => '1.500.000 VNĐ',
         'url'            => '#',
     ],
@@ -69,6 +94,11 @@ $sample = [
         'desc'           => 'Sử dụng Soul Mirror Cards để soi chiếu nội tâm và tìm kiếm những chỉ dẫn trực giác cho hành trình sống.',
         'available_days' => 'Thứ 3, 5, 7',
         'duration'       => '60 phút mỗi phiên',
+        'branch'         => 'Cơ sở Quận 1',
+        'location'       => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor'     => 'Linh Tâm',
+        'status'         => 'open',
+        'spots'          => 1,
         'price'          => '700.000 VNĐ',
         'url'            => '#',
     ],
@@ -91,6 +121,7 @@ if ($use_sample) {
         $items[] = [
             'image'          => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
             'category'       => $term_name,
+            'format'         => get_field('dv_format',          $post_id) ?: 'Onsite',
             'title'          => get_the_title($post_id),
             'desc'           => get_field('dv_short_desc',      $post_id),
             'available_days' => get_field('dv_available_days',  $post_id),
@@ -108,15 +139,23 @@ if ($use_sample) {
 }
 ?>
 
-<section class="sec-dv-list pt-0 pb-(--pd-sc)"
+<?php
+$_dv_page_id      = get_queried_object_id();
+$_dv_list_heading = get_field('dv_page_heading', $_dv_page_id) ?: 'Dịch Vụ';
+?>
+
+<section class="sec-dv-list section-pd"
     <?php if (!$use_sample) : ?>
     data-total="<?php echo $total; ?>"
     data-ajaxurl="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"
     <?php endif; ?>>
     <div class="container">
+        <h2 class="font-title text-pri text-[40px] leading-[48px] font-normal tracking-[-0.8px] mb-10 max-md:text-[32px] max-md:leading-[40px] max-md:mb-8">
+            <?php echo wp_kses_post($_dv_list_heading); ?>
+        </h2>
         <div class="row js-dv-list-grid">
             <?php foreach ($items as $item) : ?>
-                <div class="col col-2 max-lg:!w-1/2 max-sm:!w-full">
+                <div class="col col-5i max-lg:!w-1/2 max-sm:!w-full">
                     <?php get_template_part('partials/components/card-dich-vu', null, ['item' => $item]); ?>
                 </div>
             <?php endforeach; ?>

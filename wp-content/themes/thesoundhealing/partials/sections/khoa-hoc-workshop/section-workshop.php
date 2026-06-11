@@ -11,40 +11,49 @@ $query = new WP_Query([
 
 $sample = [
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Sound Bath Buổi Tối'],
-        'type'     => 'Workshop Âm Thanh',
-        'status'   => 'open',
-        'date'     => '18 THÁNG 1, 2025',
-        'time'     => '19:00 – 21:00',
-        'title'    => 'Sound Bath Buổi Tối',
-        'location' => 'Aetheria Studio — Quận 1, TP.HCM',
-        'desc'     => 'Buổi tắm âm thanh thư giãn cuối tuần với bát pha lê và trống Himalaya, dành cho mọi trình độ.',
-        'price'    => '850.000 VNĐ',
-        'url'      => '#',
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Sound Bath Buổi Tối'],
+        'type'       => 'Workshop Âm Thanh',
+        'status'     => 'open',
+        'date'       => '18 THÁNG 1, 2025',
+        'time'       => '19:00 – 21:00',
+        'duration'   => '2 giờ',
+        'title'      => 'Sound Bath Buổi Tối',
+        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor' => 'Linh Tâm',
+        'desc'       => 'Buổi tắm âm thanh thư giãn cuối tuần với bát pha lê và trống Himalaya, dành cho mọi trình độ.',
+        'spots'      => 18,
+        'price'      => '850.000 VNĐ',
+        'url'        => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Nhập Môn Reiki'],
-        'type'     => 'Workshop Năng Lượng',
-        'status'   => 'limited',
-        'date'     => '25 THÁNG 1, 2025',
-        'time'     => '09:00 – 17:00',
-        'title'    => 'Nhập Môn Reiki',
-        'location' => 'Aetheria Studio — Quận 1, TP.HCM',
-        'desc'     => 'Trải nghiệm một ngày khám phá năng lượng Reiki cơ bản — phù hợp cho người chưa có kiến thức trước.',
-        'price'    => '1.500.000 VNĐ',
-        'url'      => '#',
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Nhập Môn Reiki'],
+        'type'       => 'Workshop Năng Lượng',
+        'status'     => 'limited',
+        'date'       => '25 THÁNG 1, 2025',
+        'time'       => '09:00 – 17:00',
+        'duration'   => '8 giờ',
+        'title'      => 'Nhập Môn Reiki',
+        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor' => 'Linh Tâm',
+        'desc'       => 'Trải nghiệm một ngày khám phá năng lượng Reiki cơ bản — phù hợp cho người chưa có kiến thức trước.',
+        'spots'      => 4,
+        'price'      => '1.500.000 VNĐ',
+        'url'        => '#',
     ],
     [
-        'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Hòa Âm Gong'],
-        'type'     => 'Workshop Âm Thanh',
-        'status'   => 'upcoming',
-        'date'     => '8 THÁNG 2, 2025',
-        'time'     => '18:00 – 20:30',
-        'title'    => 'Hòa Âm Gong Thiêng',
-        'location' => 'Aetheria Studio — Quận 1, TP.HCM',
-        'desc'     => 'Đắm chìm trong tần số nguyên thủy của trống gong — hành trình đi sâu vào trạng thái thiền sâu.',
-        'price'    => '1.200.000 VNĐ',
-        'url'      => '#',
+        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Hòa Âm Gong'],
+        'type'       => 'Workshop Âm Thanh',
+        'status'     => 'upcoming',
+        'date'       => '8 THÁNG 2, 2025',
+        'time'       => '18:00 – 20:30',
+        'duration'   => '2.5 giờ',
+        'title'      => 'Hòa Âm Gong Thiêng',
+        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
+        'instructor' => 'Linh Tâm',
+        'desc'       => 'Đắm chìm trong tần số nguyên thủy của trống gong — hành trình đi sâu vào trạng thái thiền sâu.',
+        'spots'      => 0,
+        'price'      => '1.200.000 VNĐ',
+        'url'        => '#',
     ],
 ];
 
@@ -62,8 +71,9 @@ if ($use_sample) {
         $type_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
 
         $items[] = [
-            'image'    => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
-            'type'     => $type_name,
+            'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
+            'type'       => $type_name,
+            'format'     => get_field('ws_format',        $post_id) ?: 'Onsite',
             'status'     => get_field('ws_status',        $post_id) ?: 'open',
             'date'       => get_field('ws_date',          $post_id),
             'time'       => get_field('ws_time',          $post_id),
@@ -88,7 +98,7 @@ if ($use_sample) {
         </h2>
         <div class="row">
             <?php foreach ($items as $item) : ?>
-                <div class="col col-2 max-md:!w-1/2 max-sm:!w-full">
+                <div class="col col-5i max-md:!w-1/2">
                     <?php get_template_part('partials/components/card-workshop', null, ['item' => $item]); ?>
                 </div>
             <?php endforeach; ?>

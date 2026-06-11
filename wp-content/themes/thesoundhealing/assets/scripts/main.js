@@ -1,18 +1,4 @@
-// =============================================
-// Lenis smooth scroll
-// =============================================
-const lenis = new Lenis({
-   duration: .8,
-   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-   smooth: true,
-});
-window.lenis = lenis;
-
 gsap.registerPlugin(ScrollTrigger);
-
-// Sync Lenis với ScrollTrigger qua gsap.ticker (tránh double RAF)
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add((time) => lenis.raf(time * 1000));
 gsap.ticker.lagSmoothing(0);
 
 $(document).ready(function () {

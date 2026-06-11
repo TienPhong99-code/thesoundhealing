@@ -23,7 +23,9 @@ get_header();
    </div>
 </section>
 
-<?php get_template_part('partials/sections/home/section', 'workshop'); ?>
+<?php get_template_part('partials/sections/home/section', 'featured'); ?>
+<?php // get_template_part('partials/sections/home/section', 'workshop'); 
+?>
 <?php get_template_part('partials/sections/home/section', 'service'); ?>
 <?php get_template_part('partials/sections/home/section', 'courses-workshop'); ?>
 <?php get_template_part('partials/sections/home/section', 'gallery'); ?>

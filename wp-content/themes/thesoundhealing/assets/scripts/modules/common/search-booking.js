@@ -25,6 +25,7 @@
             var panel = f.querySelector('.sb-panel');
             if (panel) panel.setAttribute('aria-hidden', 'true');
         });
+        document.body.classList.remove('no-scroll');
     }
 
     // ── Panel toggles ─────────────────────────────────────────────────────
@@ -42,6 +43,7 @@
                 this.setAttribute('aria-expanded', 'true');
                 var panel = document.getElementById(panelId);
                 if (panel) panel.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('no-scroll');
             }
         });
     });
@@ -54,26 +56,76 @@
         if (e.key === 'Escape') closeAllPanels();
     });
 
-    // ── Loại hình — delegation (có child spans) ───────────────────────────
+    // ── Loại hình — category pills + sub-terms ───────────────────────────
     var typePanel = document.getElementById('sb-panel-type');
     if (typePanel) {
+
+        var catLabels = { 'dich-vu': 'Dịch vụ', 'khoa-hoc': 'Khóa học', 'workshop': 'Workshop' };
+
+        function filterSubterms(catFilter) {
+            typePanel.querySelectorAll('.sb-subterm').forEach(function (s) {
+                if (!catFilter || s.dataset.cat === catFilter) {
+                    s.classList.remove('sb-subterm--hidden');
+                } else {
+                    s.classList.add('sb-subterm--hidden');
+                }
+            });
+        }
+
         typePanel.addEventListener('click', function (e) {
-            var opt = e.target.closest('.sb-option');
-            if (!opt) return;
 
-            var val   = opt.dataset.value;
-            var labelEl = opt.querySelector('.sb-option__label');
-            var label = labelEl ? labelEl.textContent.trim() : (opt.dataset.label || val);
-            var input = document.getElementById(opt.dataset.targetInput);
-            var valEl = document.getElementById(opt.dataset.targetVal);
+            // Category pill click — filter sub-terms, don't close panel
+            var catBtn = e.target.closest('.sb-type-cat');
+            if (catBtn) {
+                var catFilter = catBtn.dataset.catFilter;
+                var catLabel  = catBtn.dataset.catLabel;
 
-            if (input) input.value = val;
-            if (valEl) valEl.textContent = label;
+                typePanel.querySelectorAll('.sb-type-cat').forEach(function (p) { p.classList.remove('is-active'); });
+                catBtn.classList.add('is-active');
 
-            typePanel.querySelectorAll('.sb-option').forEach(function (o) { o.classList.remove('is-active'); });
-            opt.classList.add('is-active');
+                // Clear sub-term selection
+                var subtermInput = document.getElementById('sb-input-subterm');
+                if (subtermInput) subtermInput.value = '';
+                typePanel.querySelectorAll('.sb-subterm').forEach(function (s) { s.classList.remove('is-active'); });
 
-            closeAllPanels();
+                var typeInput = document.getElementById('sb-input-type');
+                if (typeInput) typeInput.value = catFilter;
+
+                var valEl = document.getElementById('sb-val-type');
+                if (valEl) valEl.textContent = catFilter ? catLabel : 'Chọn loại hình';
+
+                filterSubterms(catFilter);
+                return;
+            }
+
+            // Sub-term click — set both loai-hinh + chuyen-mon, close panel
+            var subterm = e.target.closest('.sb-subterm');
+            if (subterm) {
+                var val   = subterm.dataset.value;
+                var label = subterm.dataset.label;
+                var cat   = subterm.dataset.cat;
+
+                typePanel.querySelectorAll('.sb-subterm').forEach(function (s) { s.classList.remove('is-active'); });
+                subterm.classList.add('is-active');
+
+                // Sync category pill
+                typePanel.querySelectorAll('.sb-type-cat').forEach(function (p) { p.classList.remove('is-active'); });
+                var matchPill = typePanel.querySelector('[data-cat-filter="' + cat + '"]');
+                if (matchPill) matchPill.classList.add('is-active');
+
+                var typeInput    = document.getElementById('sb-input-type');
+                var subtermInput = document.getElementById('sb-input-subterm');
+                if (typeInput)    typeInput.value    = cat;
+                if (subtermInput) subtermInput.value = val;
+
+                var catDisplayLabel = catLabels[cat] || '';
+                var display = catDisplayLabel ? catDisplayLabel + ' · ' + label : label;
+                var valEl = document.getElementById('sb-val-type');
+                if (valEl) valEl.textContent = display;
+
+                filterSubterms(cat);
+                closeAllPanels();
+            }
         });
     }
 
@@ -83,7 +135,7 @@
             e.stopPropagation();
 
             var val       = this.dataset.value;
-            var label     = this.textContent.trim();
+            var label     = this.dataset.label || this.textContent.trim();
             var input     = document.getElementById('sb-input-time');
             var dateInput = document.getElementById('sb-input-date');
             var valEl     = document.getElementById('sb-val-time');

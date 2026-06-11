@@ -24,6 +24,14 @@ add_action('acf/init', function () {
             // ─── TAB: THÔNG TIN ───────────────────────────────────────────
             Tab::make('Thông tin')->placement('left'),
 
+            Select::make('Hình thức', 'ws_format')
+                ->helperText('Phân loại trực tiếp hay trực tuyến.')
+                ->choices([
+                    'Onsite' => 'Trực tiếp (Onsite)',
+                    'Online' => 'Trực tuyến (Online)',
+                ])
+                ->default('Onsite'),
+
             Text::make('Ngày tổ chức', 'ws_date')
                 ->helperText('Ví dụ: 15 THÁNG 1, 2025'),
 
@@ -45,6 +53,9 @@ add_action('acf/init', function () {
 
             Text::make('Mô tả chỗ còn lại', 'ws_capacity')
                 ->helperText('Ví dụ: Còn 8 chỗ · Chỉ còn 2 chỗ · Hết chỗ'),
+
+            Text::make('Chi nhánh', 'ws_branch')
+                ->helperText('Hiển thị trên card. Ví dụ: Thảo Điền · Quận 1'),
 
             Number::make('Số chỗ còn lại (số)', 'ws_spots')
                 ->helperText('Nhập số chỗ còn trống. 0 = Hết chỗ. Để trống = không hiển thị badge. Dùng cho bộ lọc tìm kiếm.')

@@ -6,9 +6,13 @@ $post_id = get_the_ID();
 // ── Thông tin ──
 $level       = get_field('level',      $post_id);
 $start_date  = get_field('start_date', $post_id);
+$kh_time     = get_field('kh_time',    $post_id);
 $duration    = get_field('duration',   $post_id);
 $short_desc  = get_field('short_desc', $post_id);
 $price       = get_field('price',      $post_id);
+$kh_location = get_field('location',   $post_id);
+$kh_spots_raw = get_field('kh_spots',  $post_id);
+$kh_spots    = ($kh_spots_raw !== '' && $kh_spots_raw !== null) ? (int) $kh_spots_raw : null;
 
 // ── Gallery ──
 $thumb     = get_the_post_thumbnail_url($post_id, 'full');
@@ -62,6 +66,14 @@ $bn_items   = get_field('benefits_items',   $post_id) ?: [
     ['benefit_title' => 'Xây dựng thực hành chăm sóc bản thân bền vững',   'benefit_desc' => 'Bộ công cụ thực tiễn để tự chăm sóc sức khỏe tâm – thân mỗi ngày, không phụ thuộc vào thời gian hay địa điểm.'],
 ];
 
+// ── Lợi ích nhận được ──
+$receive_items = get_field('receive_items', $post_id) ?: [
+    ['receive_title' => '70% Practices – 30% Theory | 70% Thực Hành – 30% Lý Thuyết',            'receive_desc' => 'A 70% practice – 30% theory approach gives you step-by-step instructions to select and arrange bowls, master striking/rimming techniques, harmonize 7 bowls, and apply confidently right after the course.'],
+    ['receive_title' => 'Relax your body, sleep deeper, stay focused | Thư giãn cơ thể, ngủ sâu hơn', 'receive_desc' => 'The vibrational tones of crystal singing bowls can help release tension, calm the mind, and support deeper sleep and better focus.'],
+    ['receive_title' => 'Flexible schedule, for busy learners | Lịch học da dạng, phù hợp',        'receive_desc' => 'Flexible schedules make it easier to fit learning into your lifestyle. Ideal for yoga teachers, therapists, or anyone who is interested in Sound Healing.'],
+    ['receive_title' => '15% off your next set or next course | Ưu đãi 15% khi bạn mua',           'receive_desc' => 'Enjoy 15% off when you purchase your bowl set or enroll in your next course — a practical way to reduce investment cost and continue your learning journey.'],
+];
+
 // ── Fallbacks ──
 $fb_main  = MONA_THEME_PATH_URI . '/assets/images/kh-hero.jpg';
 $fb_sub   = MONA_THEME_PATH_URI . '/assets/images/kh-exp-1.jpg';
@@ -105,7 +117,7 @@ get_header();
                     </div>
                 <?php endif; ?>
 
-                <h1 class="font-title text-pri text-[48px] max-md:text-[32px] leading-[56px] max-md:leading-[40px] tracking-[-0.96px] font-normal">
+                <h1 class="font-title text-pri text-[48px] max-md:text-[32px] leading-[56px] max-md:leading-[40px] tracking-[-0.96px] font-bold">
                     <?php the_title(); ?>
                 </h1>
 
@@ -192,10 +204,10 @@ get_header();
                     <div class="col col-7 max-md:!w-full">
                         <div class="flex flex-col divide-y divide-[#e4e2dd]">
 
-                            <!-- About / description -->
+                            <!-- 1. About the course -->
                             <div class="pb-10">
-                                <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-4">
-                                    <?php echo esc_html($exp_title); ?>
+                                <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-5">
+                                    Về khóa học
                                 </h2>
                                 <?php if ($short_desc) : ?>
                                     <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
@@ -209,24 +221,43 @@ get_header();
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Roadmap / Lộ trình -->
+                            <!-- 2. Benefits & Intentions -->
+                            <?php if (!empty($bn_items)) : ?>
+                                <div class="py-10">
+                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-6">
+                                        Mục tiêu &amp; Lợi ích
+                                    </h2>
+                                    <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
+                                        <?php foreach ($bn_items as $item) : ?>
+                                            <div class="bg-[#fbf9f4] p-5 border-l-[3px] border-[#133a35]">
+                                                <h4 class="text-pri text-[15px] font-semibold leading-[24px] mb-2">
+                                                    <?php echo esc_html($item['benefit_title']); ?>
+                                                </h4>
+                                                <?php if (!empty($item['benefit_desc'])) : ?>
+                                                    <p class="text-[#414847] text-[14px] leading-[22px]">
+                                                        <?php echo wp_kses_post(nl2br(esc_html($item['benefit_desc']))); ?>
+                                                    </p>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- 3. Healing journey -->
                             <?php if (!empty($rm_items)) : ?>
                                 <div class="py-10">
-                                    <p class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px] mb-2">
-                                        <?php echo esc_html($rm_label); ?>
-                                    </p>
-                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-10">
-                                        <?php echo esc_html($rm_heading); ?>
+                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-8">
+                                        Hành trình chữa lành
                                     </h2>
-                                    <div class="relative border-l border-[#e4e2dd] pl-8 md:pl-12 flex flex-col gap-12">
-                                        <?php foreach ($rm_items as $i => $item) :
-                                            $dot_bg = ($i === 0) ? '#133a35' : '#e4e2dd';
-                                        ?>
-                                            <div class="relative">
-                                                <div class="absolute -left-[41px] md:-left-[57px] top-[4px] size-4 rounded-full shadow-[0_0_0_4px_#fbf9f4]"
-                                                    style="background:<?php echo $dot_bg; ?>;"></div>
+                                    <div class="flex flex-col divide-y divide-[#e4e2dd]">
+                                        <?php foreach ($rm_items as $i => $item) : ?>
+                                            <div class="py-6 first:pt-0 flex gap-5 items-start">
+                                                <span class="font-title text-[#133a35] text-[18px] font-semibold shrink-0 min-w-[24px] leading-[28px] mt-[2px]">
+                                                    <?php echo $i + 1; ?>.
+                                                </span>
                                                 <div class="flex flex-col gap-2">
-                                                    <h3 class="font-title text-pri text-[20px] leading-[28px] font-normal">
+                                                    <h3 class="font-title text-pri text-[18px] leading-[26px] font-semibold">
                                                         <?php echo esc_html($item['week_title']); ?>
                                                     </h3>
                                                     <?php if (!empty($item['week_desc'])) : ?>
@@ -252,41 +283,35 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Benefits -->
-                            <?php if (!empty($bn_items)) : ?>
+                            <!-- 4. What You Will Receive -->
+                            <?php if (!empty($receive_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-6">
-                                        <?php echo esc_html($bn_heading); ?>
+                                        Lợi ích khóa học
                                     </h2>
-                                    <div class="flex flex-col gap-5">
-                                        <?php foreach ($bn_items as $item) : ?>
-                                            <div class="flex gap-4 items-start">
-                                                <div class="size-5 shrink-0 mt-[3px]">
-                                                    <img src="<?php echo esc_url($ic_check); ?>"
-                                                        class="block w-full h-full object-contain" alt="">
-                                                </div>
-                                                <div>
-                                                    <h4 class="text-pri text-[16px] font-semibold leading-[24px]">
-                                                        <?php echo esc_html($item['benefit_title']); ?>
-                                                    </h4>
-                                                    <?php if (!empty($item['benefit_desc'])) : ?>
-                                                        <p class="text-[#414847] text-[15px] leading-[23px] mt-1">
-                                                            <?php echo wp_kses_post(nl2br(esc_html($item['benefit_desc']))); ?>
-                                                        </p>
-                                                    <?php endif; ?>
-                                                </div>
+                                    <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
+                                        <?php foreach ($receive_items as $item) : ?>
+                                            <div class="bg-white p-5">
+                                                <h4 class="text-pri text-[15px] font-semibold leading-[24px] mb-2">
+                                                    <?php echo esc_html($item['receive_title']); ?>
+                                                </h4>
+                                                <?php if (!empty($item['receive_desc'])) : ?>
+                                                    <p class="text-[#414847] text-[14px] leading-[22px]">
+                                                        <?php echo wp_kses_post(nl2br(esc_html($item['receive_desc']))); ?>
+                                                    </p>
+                                                <?php endif; ?>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Instructor -->
+                            <!-- 5. About the Instructor -->
                             <?php if ($ins_name) : ?>
                                 <div class="py-10">
-                                    <p class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px] mb-5">
-                                        <?php echo esc_html($ins_label); ?>
-                                    </p>
+                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-6">
+                                        Về giảng viên
+                                    </h2>
                                     <div class="flex gap-5 items-start">
                                         <div class="size-16 rounded-full overflow-hidden shrink-0">
                                             <img src="<?php echo esc_url($ins_image['url'] ?? $fb_ins); ?>"
@@ -294,7 +319,7 @@ get_header();
                                                 alt="<?php echo esc_attr($ins_image['alt'] ?? $ins_name); ?>">
                                         </div>
                                         <div>
-                                            <h3 class="font-title text-pri text-[20px] leading-[28px] font-normal">
+                                            <h3 class="font-title text-pri text-[20px] leading-[28px] font-semibold">
                                                 <?php echo esc_html($ins_name); ?>
                                             </h3>
                                             <?php if ($ins_bio) : ?>
@@ -343,9 +368,9 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Feedback photos -->
+                            <!-- 6. Testimonials -->
                             <?php
-                            $fb_heading = get_field('feedbacks_heading', $post_id) ?: 'Cảm nhận của học viên';
+                            $fb_heading = get_field('feedbacks_heading', $post_id) ?: 'Testimonials';
                             $fb_items   = get_field('feedbacks', $post_id) ?: [
                                 ['fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-1.jpg', 'alt' => '']],
                                 ['fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-2.jpg', 'alt' => '']],
@@ -387,8 +412,8 @@ get_header();
 
                             <!-- Price -->
                             <?php if ($price) : ?>
-                                <div>
-                                    <span class="font-title text-pri text-[26px] leading-[34px] font-normal">
+                                <div class="flex items-baseline gap-1 justify-center">
+                                    <span class="font-title text-center inline-block text-pri text-[26px] font-semibold">
                                         <?php echo esc_html($price); ?>
                                     </span>
                                     <span class="text-[#717171] text-[14px]"> / khóa học</span>
@@ -398,29 +423,56 @@ get_header();
                             <!-- Meta box -->
                             <?php
                             $meta_rows = [];
-                            if ($level)      $meta_rows[] = ['label' => 'CẤP ĐỘ',       'value' => $level];
-                            if ($duration)   $meta_rows[] = ['label' => 'THỜI LƯỢNG',    'value' => $duration];
-                            if ($start_date) $meta_rows[] = ['label' => 'KHAI GIẢNG',    'value' => $start_date];
-                            if (!empty($meta_rows)) : ?>
+                            if ($start_date)  $meta_rows[] = ['label' => 'KHAI GIẢNG',   'value' => $start_date,  'type' => 'text'];
+                            if ($kh_time)     $meta_rows[] = ['label' => 'THỜI GIAN',     'value' => $kh_time,     'type' => 'text'];
+                            if ($duration)    $meta_rows[] = ['label' => 'THỜI LƯỢNG',    'value' => $duration,    'type' => 'text'];
+                            if ($kh_location) $meta_rows[] = ['label' => 'ĐỊA ĐIỂM',      'value' => $kh_location, 'type' => 'location'];
+                            $has_spots = $kh_spots !== null;
+                            if (!empty($meta_rows) || $has_spots) : ?>
                                 <div class="border border-[#b0b0b0] rounded-[8px] overflow-hidden text-[14px]">
-                                    <?php
-                                    $last = count($meta_rows) - 1;
-                                    foreach ($meta_rows as $i => $row) : ?>
-                                        <div class="p-3 <?php echo $i < $last ? 'border-b border-[#b0b0b0]' : ''; ?>">
+                                    <?php foreach ($meta_rows as $row) : ?>
+                                        <div class="p-3 border-b border-[#b0b0b0]">
                                             <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#717171] mb-0.5">
                                                 <?php echo $row['label']; ?>
                                             </p>
-                                            <p class="text-[#1b1c19] font-medium"><?php echo esc_html($row['value']); ?></p>
+                                            <?php if ($row['type'] === 'location') :
+                                                $lines = array_filter(array_map('trim', explode("\n", $row['value'])));
+                                                if (count($lines) > 1) : ?>
+                                                    <ul class="text-[#1b1c19] font-medium list-disc list-inside flex flex-col gap-0.5">
+                                                        <?php foreach ($lines as $line) : ?>
+                                                            <li><?php echo esc_html($line); ?></li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                <?php else : ?>
+                                                    <p class="text-[#1b1c19] font-medium"><?php echo esc_html($row['value']); ?></p>
+                                                <?php endif; ?>
+                                            <?php else : ?>
+                                                <p class="text-[#1b1c19] font-medium"><?php echo esc_html($row['value']); ?></p>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endforeach; ?>
+
+                                    <?php if ($has_spots) : ?>
+                                        <div class="p-3">
+                                            <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#717171] mb-1.5">THÊM</p>
+                                            <?php if ($kh_spots === 0) : ?>
+                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-3 py-1.5 rounded-[4px]">
+                                                    Fully Booked / Hết chỗ
+                                                </span>
+                                            <?php else : ?>
+                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-3 py-1.5 rounded-[4px]">
+                                                    Only <?php echo $kh_spots; ?> Spots Left / Còn <?php echo $kh_spots; ?> chỗ
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
 
-
                             <!-- CF7 Form -->
                             <div id="kh-form-inner" class="border-t border-[#e4e2dd] pt-5 flex flex-col gap-3">
-                                <h3 class="font-title text-pri text-center text-[18px] leading-[26px] font-normal">
-                                    Đăng ký tư vấn
+                                <h3 class="font-title text-pri text-center text-[28px] font-bold">
+                                    Đăng ký
                                 </h3>
                                 <?php
                                 $cf7_id = defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '';

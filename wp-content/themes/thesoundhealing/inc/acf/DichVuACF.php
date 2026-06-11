@@ -29,14 +29,23 @@ add_action('acf/init', function () {
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 
+            Select::make('Hình thức', 'dv_format')
+                ->helperText('Phân loại trực tiếp hay trực tuyến.')
+                ->choices([
+                    'Onsite' => 'Trực tiếp (Onsite)',
+                    'Online' => 'Trực tuyến (Online)',
+                ])
+                ->default('Onsite'),
+
             Text::make('Thời lượng', 'dv_duration')
                 ->helperText('Ví dụ: 60 - 90 phút mỗi phiên'),
 
             Text::make('Trang phục', 'dv_clothing')
                 ->helperText('Ví dụ: Đồ tập hoặc quần áo thoải mái, nhẹ nhàng'),
 
-            Text::make('Địa điểm', 'dv_location')
-                ->helperText('Ví dụ: Aetheria Sanctuary, Level 4, Thảo Điền'),
+            Textarea::make('Địa điểm', 'dv_location')
+                ->helperText('Nhập mỗi địa điểm trên một dòng. Ví dụ: 104/20 Mai Thị Lựu, Tân Định (Quận 1)')
+                ->rows(3),
 
             Textarea::make('Chuẩn bị', 'dv_preparation')
                 ->helperText('Ví dụ: Hạn chế ăn no 2 tiếng trước giờ trị liệu')
@@ -44,6 +53,9 @@ add_action('acf/init', function () {
 
             Text::make('Ngày hoạt động', 'dv_available_days')
                 ->helperText('Ngày trong tuần nhận đặt lịch. Ví dụ: Thứ 2 – Chủ nhật · Thứ 4, 6, 7'),
+
+            Text::make('Số khách / phiên', 'dv_guests')
+                ->helperText('Ví dụ: 1-2 khách / phiên · Tối đa 1 người'),
 
             Text::make('Chi nhánh', 'dv_branch')
                 ->helperText('Hiển thị trên card. Ví dụ: Thảo Điền · Quận 1'),

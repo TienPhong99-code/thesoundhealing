@@ -27,6 +27,17 @@ add_action('acf/init', function () {
             Text::make('Cấp độ', 'level')
                 ->helperText('Ví dụ: KHOÁ HỌC CHUYÊN SÂU, CƠ BẢN, CẤP ĐỘ 1'),
 
+            Select::make('Hình thức', 'kh_format')
+                ->helperText('Phân loại trực tiếp hay trực tuyến.')
+                ->choices([
+                    'Onsite' => 'Trực tiếp (Onsite)',
+                    'Online' => 'Trực tuyến (Online)',
+                ])
+                ->default('Onsite'),
+
+            Text::make('Thời gian học', 'kh_time')
+                ->helperText('Ví dụ: 09:00 – 17:00'),
+
             Text::make('Ngày khai giảng', 'start_date')
                 ->helperText('Ví dụ: 15 THÁNG 1, 2025'),
 
@@ -158,6 +169,18 @@ add_action('acf/init', function () {
                 ->fields([
                     Text::make('Tiêu đề', 'benefit_title')->required(),
                     Textarea::make('Mô tả', 'benefit_desc')->rows(2),
+                ]),
+
+            // ─── TAB: LỢI ÍCH NHẬN ĐƯỢC ─────────────────────────────────
+            Tab::make('Lợi ích nhận được')->placement('left'),
+
+            Repeater::make('Lợi ích sẽ nhận', 'receive_items')
+                ->helperText('Mỗi ô gồm tiêu đề và mô tả. Ví dụ: 70% Thực hành, Lịch học linh hoạt...')
+                ->layout('block')
+                ->collapsed('receive_title')
+                ->fields([
+                    Text::make('Tiêu đề', 'receive_title')->required(),
+                    Textarea::make('Mô tả', 'receive_desc')->rows(2),
                 ]),
 
             // ─── TAB: CẢM NHẬN ───────────────────────────────────────────

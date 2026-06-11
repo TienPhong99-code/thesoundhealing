@@ -11,9 +11,10 @@
 defined('ABSPATH') || exit;
 
 // ── Đọc params ────────────────────────────────────────────────────────────
-$loai_hinh = sanitize_text_field($_GET['loai-hinh'] ?? '');
-$thoi_gian = sanitize_text_field($_GET['thoi-gian'] ?? '');
-$ngay      = sanitize_text_field($_GET['ngay']      ?? '');
+$loai_hinh  = sanitize_text_field($_GET['loai-hinh']  ?? '');
+$chuyen_mon = sanitize_text_field($_GET['chuyen-mon'] ?? '');
+$thoi_gian  = sanitize_text_field($_GET['thoi-gian']  ?? '');
+$ngay       = sanitize_text_field($_GET['ngay']       ?? '');
 $nguoi_lon = max(0, (int) ($_GET['nguoi-lon'] ?? 0));
 $tre_em    = max(0, (int) ($_GET['tre-em']    ?? 0));
 $em_be     = max(0, (int) ($_GET['em-be']     ?? 0));
@@ -146,6 +147,23 @@ foreach ($post_types as $pt) {
         ];
     }
 
+    // Lọc theo taxonomy term (chuyen-mon)
+    if (!empty($chuyen_mon)) {
+        $tax_map = [
+            'dich_vu'  => 'loai_dich_vu',
+            'khoa_hoc' => 'bo_mon_khoa_hoc',
+            'workshop' => 'loai_workshop',
+        ];
+        if (isset($tax_map[$pt])) {
+            $tax_clause = ['taxonomy' => $tax_map[$pt], 'field' => 'slug', 'terms' => $chuyen_mon];
+            if (!empty($query_args['tax_query'])) {
+                $query_args['tax_query'][] = $tax_clause;
+            } else {
+                $query_args['tax_query'] = [$tax_clause];
+            }
+        }
+    }
+
     // Lọc theo số khách (dựa trên spots)
     if ($tong_khach > 0) {
         $spots_key = ($pt === 'dich_vu') ? 'dv_spots' : (($pt === 'khoa_hoc') ? 'kh_spots' : 'ws_spots');
@@ -179,8 +197,20 @@ foreach ($post_types as $pt) {
 }
 
 // ── Label hiển thị filter đã chọn ────────────────────────────────────────
-$label_map = ['dich-vu' => 'Dịch vụ', 'khoa-hoc' => 'Khóa học', 'workshop' => 'Workshop'];
-$time_label_map = ['today' => 'Hôm nay', 'tomorrow' => 'Ngày mai', 'weekend' => 'Cuối tuần này'];
+$label_map      = ['dich-vu' => 'Dịch vụ', 'khoa-hoc' => 'Khóa học', 'workshop' => 'Workshop'];
+$time_label_map = ['today'   => 'Hôm nay', 'tomorrow' => 'Ngày mai', 'weekend'  => 'Cuối tuần này'];
+
+// Lấy tên sub-term để hiển thị trong active tags
+$chuyen_mon_label = '';
+if (!empty($chuyen_mon)) {
+    foreach (['loai_dich_vu', 'bo_mon_khoa_hoc', 'loai_workshop'] as $_tax) {
+        $t = get_term_by('slug', $chuyen_mon, $_tax);
+        if ($t && !is_wp_error($t)) {
+            $chuyen_mon_label = $t->name;
+            break;
+        }
+    }
+}
 
 get_header();
 ?>
@@ -198,6 +228,8 @@ get_header();
         $active_tags = [];
         if (!empty($loai_hinh) && isset($label_map[$loai_hinh]))
             $active_tags[] = $label_map[$loai_hinh];
+        if (!empty($chuyen_mon_label))
+            $active_tags[] = $chuyen_mon_label;
         if (!empty($thoi_gian) && isset($time_label_map[$thoi_gian]))
             $active_tags[] = $time_label_map[$thoi_gian];
         elseif (!empty($ngay))

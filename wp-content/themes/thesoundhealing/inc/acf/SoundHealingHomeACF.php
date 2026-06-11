@@ -27,6 +27,26 @@ add_action('acf/init', function () {
         ],
         'fields' => [
 
+            // ─── TAB: SỰ KIỆN NỔI BẬT ────────────────────────────────────
+            Tab::make('Sự kiện nổi bật')->placement('left'),
+
+            Text::make('Nhãn nhỏ (label)', 'featured_label')
+                ->helperText('Ví dụ: SỰ KIỆN NỔI BẬT')
+                ->default('SỰ KIỆN NỔI BẬT'),
+
+            Text::make('Tiêu đề', 'featured_heading')
+                ->helperText('Ví dụ: Các Sự Kiện Nổi Bật')
+                ->default('Các Sự Kiện Nổi Bật'),
+
+            Link::make('Link "Xem tất cả"', 'featured_link')
+                ->helperText('Link dẫn đến trang tổng hợp sự kiện.'),
+
+            PostObject::make('Chọn sự kiện nổi bật', 'featured_items')
+                ->helperText('Chọn các dịch vụ, khóa học hoặc workshop muốn hiển thị. Kéo thả để sắp xếp thứ tự.')
+                ->postTypes(['dich_vu', 'khoa_hoc', 'workshop'])
+                ->multiple()
+                ->format('object'),
+
             // ─── TAB: HERO ────────────────────────────────────────────────
             Tab::make('Hero')->placement('left'),
 

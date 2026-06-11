@@ -6,11 +6,14 @@ $post_id = get_the_ID();
 // ── Thông tin ──
 $ws_date       = get_field('ws_date',       $post_id);
 $ws_time       = get_field('ws_time',       $post_id);
+$ws_duration   = get_field('ws_duration',   $post_id);
 $ws_location   = get_field('ws_location',   $post_id);
 $ws_short_desc = get_field('ws_short_desc', $post_id);
 $ws_price      = get_field('ws_price',      $post_id);
 $ws_capacity   = get_field('ws_capacity',   $post_id);
 $ws_status     = get_field('ws_status',     $post_id);
+$ws_spots_raw  = get_field('ws_spots',      $post_id);
+$ws_spots      = ($ws_spots_raw !== '' && $ws_spots_raw !== null) ? (int) $ws_spots_raw : null;
 
 // ── Gallery ──
 $thumb    = get_the_post_thumbnail_url($post_id, 'full');
@@ -341,50 +344,74 @@ get_header();
 
                             <!-- Price -->
                             <?php if ($ws_price) : ?>
-                                <div>
-                                    <span class="font-title text-pri text-[26px] leading-[34px] font-normal">
+                                <div class="flex items-baseline gap-1 justify-center">
+                                    <span class="font-title text-center inline-block text-pri text-[26px] font-semibold">
                                         <?php echo esc_html($ws_price); ?>
                                     </span>
                                     <span class="text-[#717171] text-[14px]"> / người</span>
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Meta box (Airbnb date-picker style) -->
-                            <?php if ($ws_date || $ws_time || $ws_location) : ?>
+                            <!-- Meta box -->
+                            <?php
+                            $meta_rows = [];
+                            if ($ws_date)     $meta_rows[] = ['label' => 'NGÀY',      'value' => $ws_date,     'type' => 'text'];
+                            if ($ws_time)     $meta_rows[] = ['label' => 'THỜI GIAN', 'value' => $ws_time,     'type' => 'text'];
+                            if ($ws_duration) $meta_rows[] = ['label' => 'THỜI LƯỢNG', 'value' => $ws_duration, 'type' => 'text'];
+                            if ($ws_location) $meta_rows[] = ['label' => 'ĐỊA ĐIỂM', 'value' => $ws_location, 'type' => 'location'];
+                            $has_spots = $ws_spots !== null || $ws_capacity;
+                            if (!empty($meta_rows) || $has_spots) : ?>
                                 <div class="border border-[#b0b0b0] rounded-[8px] overflow-hidden text-[14px]">
-                                    <?php
-                                    $meta_rows = [];
-                                    if ($ws_date)     $meta_rows[] = ['label' => 'NGÀY',     'value' => $ws_date];
-                                    if ($ws_time)     $meta_rows[] = ['label' => 'THỜI GIAN', 'value' => $ws_time];
-                                    if ($ws_location) $meta_rows[] = ['label' => 'ĐỊA ĐIỂM', 'value' => $ws_location];
-                                    $last = count($meta_rows) - 1;
-                                    foreach ($meta_rows as $i => $row) : ?>
-                                        <div class="p-3 <?php echo $i < $last ? 'border-b border-[#b0b0b0]' : ''; ?>">
+                                    <?php foreach ($meta_rows as $row) : ?>
+                                        <div class="p-3 border-b border-[#b0b0b0]">
                                             <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#717171] mb-0.5">
                                                 <?php echo $row['label']; ?>
                                             </p>
-                                            <p class="text-[#1b1c19] font-medium"><?php echo esc_html($row['value']); ?></p>
+                                            <?php if ($row['type'] === 'location') :
+                                                $lines = array_filter(array_map('trim', explode("\n", $row['value'])));
+                                                if (count($lines) > 1) : ?>
+                                                    <ul class="text-[#1b1c19] font-medium list-disc list-inside flex flex-col gap-0.5">
+                                                        <?php foreach ($lines as $line) : ?>
+                                                            <li><?php echo esc_html($line); ?></li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                <?php else : ?>
+                                                    <p class="text-[#1b1c19] font-medium"><?php echo esc_html($row['value']); ?></p>
+                                                <?php endif; ?>
+                                            <?php else : ?>
+                                                <p class="text-[#1b1c19] font-medium"><?php echo esc_html($row['value']); ?></p>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endforeach; ?>
+
+                                    <?php if ($has_spots) : ?>
+                                        <div class="p-3">
+                                            <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#717171] mb-1.5">THÊM</p>
+                                            <?php
+                                            if ($ws_spots !== null) :
+                                                if ($ws_spots === 0) : ?>
+                                                    <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-3 py-1.5 rounded-[4px]">
+                                                        Fully Booked / Hết chỗ
+                                                    </span>
+                                                <?php else : ?>
+                                                    <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-3 py-1.5 rounded-[4px]">
+                                                        Only <?php echo $ws_spots; ?> Spots Left / Còn <?php echo $ws_spots; ?> chỗ
+                                                    </span>
+                                                <?php endif;
+                                            elseif ($ws_capacity) : ?>
+                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-3 py-1.5 rounded-[4px]">
+                                                    <?php echo esc_html($ws_capacity); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
-
-                            <!-- Capacity badge -->
-                            <?php if ($ws_capacity && $status_info) : ?>
-                                <div class="flex items-center gap-2 rounded-[6px] px-3 py-2"
-                                    style="background:<?php echo esc_attr($status_info['bg']); ?>; color:<?php echo esc_attr($status_info['color']); ?>;">
-                                    <svg class="size-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                                    </svg>
-                                    <span class="text-[13px] font-semibold"><?php echo esc_html($ws_capacity); ?></span>
-                                </div>
-                            <?php endif; ?>
-
 
                             <!-- CF7 Form -->
                             <div id="ws-form-inner" class="border-t border-[#e4e2dd] pt-5 flex flex-col gap-3">
-                                <h3 class="font-title text-center text-pri text-[18px] leading-[26px] font-normal">
-                                    Đăng ký tham dự
+                                <h3 class="font-title text-center text-pri text-[28px] font-normal">
+                                    Đăng ký
                                 </h3>
                                 <?php
                                 $ws_cf7_id = defined('WS_CF7_FORM_ID') ? WS_CF7_FORM_ID : '';

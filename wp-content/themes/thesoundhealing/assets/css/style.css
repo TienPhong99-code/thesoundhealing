@@ -1396,6 +1396,7 @@ form .wpcf7-not-valid-tip {
 }
 
 /* ── CF7 form override cho trang chi tiết khóa học + workshop ── */
+/* ── Khóa Học / Workshop form ─────────────────────────────────────── */
 .cf7-khoa-hoc .wpcf7-form,
 .cf7-workshop .wpcf7-form {
   display: flex;
@@ -1411,11 +1412,12 @@ form .wpcf7-not-valid-tip {
 }
 .cf7-khoa-hoc .wpcf7-form label,
 .cf7-workshop .wpcf7-form label {
-  font-weight: 600;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  color: #4e635a;
 }
+
+/* Text / Email / Tel */
 .cf7-khoa-hoc .wpcf7-text,
 .cf7-khoa-hoc .wpcf7-email,
 .cf7-khoa-hoc .wpcf7-tel,
@@ -1449,6 +1451,112 @@ form .wpcf7-not-valid-tip {
 .cf7-workshop .wpcf7-tel:focus {
   border-color: var(--color-pri);
 }
+
+/* Date */
+.cf7-khoa-hoc .wpcf7-date,
+.cf7-workshop .wpcf7-date {
+  width: 100%;
+  padding: 14px 16px;
+  background: #fbf9f4;
+  border: 1px solid #c0c8c6;
+  border-radius: 12px;
+  font-size: 16px;
+  color: var(--color-sec);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.cf7-khoa-hoc .wpcf7-date:focus,
+.cf7-workshop .wpcf7-date:focus {
+  border-color: var(--color-pri);
+}
+.cf7-khoa-hoc .wpcf7-date::-webkit-calendar-picker-indicator,
+.cf7-workshop .wpcf7-date::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+  cursor: pointer;
+  filter: invert(22%) sepia(27%) saturate(564%) hue-rotate(116deg)
+    brightness(95%) contrast(92%);
+}
+.cf7-khoa-hoc .wpcf7-form-control-wrap:has(.wpcf7-date),
+.cf7-workshop .wpcf7-form-control-wrap:has(.wpcf7-date) {
+  position: relative;
+  display: block;
+}
+.cf7-khoa-hoc .wpcf7-date.flatpickr-input:not([type="hidden"]),
+.cf7-workshop .wpcf7-date.flatpickr-input:not([type="hidden"]) {
+  padding-right: 44px;
+}
+.cf7-khoa-hoc .flatpickr-calendar-icon,
+.cf7-workshop .flatpickr-calendar-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: #4e635a;
+  cursor: pointer;
+  pointer-events: all;
+  line-height: 0;
+}
+.cf7-khoa-hoc .flatpickr-calendar-icon svg,
+.cf7-workshop .flatpickr-calendar-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Select */
+.cf7-khoa-hoc .wpcf7-form-control-wrap:has(.wpcf7-select),
+.cf7-workshop .wpcf7-form-control-wrap:has(.wpcf7-select) {
+  display: block;
+  position: relative;
+}
+.cf7-khoa-hoc .wpcf7-form-control-wrap:has(.wpcf7-select)::after,
+.cf7-workshop .wpcf7-form-control-wrap:has(.wpcf7-select)::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23133a35' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.cf7-khoa-hoc .wpcf7-select,
+.cf7-workshop .wpcf7-select {
+  width: 100%;
+  padding: 14px 40px 14px 16px;
+  background: #fbf9f4;
+  border: 1px solid #c0c8c6;
+  border-radius: 12px;
+  font-size: 16px;
+  color: var(--color-sec);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.cf7-khoa-hoc .wpcf7-select:focus,
+.cf7-workshop .wpcf7-select:focus {
+  border-color: var(--color-pri);
+}
+.cf7-khoa-hoc .wpcf7-select option[value=""],
+.cf7-workshop .wpcf7-select option[value=""] {
+  color: #a0aeac;
+}
+.cf7-khoa-hoc .wpcf7-select.wpcf7-not-valid,
+.cf7-workshop .wpcf7-select.wpcf7-not-valid {
+  border-color: #e53935;
+}
+
+/* Submit */
 .cf7-khoa-hoc .wpcf7-submit,
 .cf7-workshop .wpcf7-submit {
   width: 100%;
@@ -1867,14 +1975,15 @@ form .wpcf7-not-valid-tip {
 }
 .sb-option {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
   width: 100%;
   background: transparent;
   border: none;
   text-align: left;
   cursor: pointer;
-  padding: 10px 14px;
+  padding: 10px 12px;
   border-radius: 12px;
   transition:
     background 0.15s,
@@ -1886,6 +1995,32 @@ form .wpcf7-not-valid-tip {
 }
 .sb-option.is-active {
   background: rgba(194, 160, 86, 0.1);
+}
+.sb-option__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #f0ede8;
+  color: var(--color-sec);
+  flex-shrink: 0;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.sb-option.is-active .sb-option__icon {
+  background: rgba(194, 160, 86, 0.15);
+  color: var(--color-pri);
+}
+.sb-option:hover .sb-option__icon {
+  background: #e8e4de;
+}
+.sb-option__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 .sb-option.is-active .sb-option__label {
   color: var(--color-pri);
@@ -1908,12 +2043,140 @@ form .wpcf7-not-valid-tip {
 
 /* Type panel */
 .sb-panel--type {
-  min-width: 260px;
+  min-width: 360px;
+}
+
+/* Category pills row */
+.sb-type-cats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+}
+.sb-type-cat {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1.5px solid #e0dbd3;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-sec);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.sb-type-cat:hover {
+  border-color: var(--color-sec);
+}
+.sb-type-cat.is-active {
+  background: var(--color-sec);
+  border-color: var(--color-sec);
+  color: #fff;
+}
+
+/* Divider */
+.sb-type-sep {
+  height: 1px;
+  background: #f0ede8;
+  margin: 0 0 8px;
+}
+
+/* Sub-terms scrollable list */
+.sb-subterms-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.sb-subterm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+.sb-subterm:hover {
+  background: #f4f2ef;
+}
+.sb-subterm.is-active {
+  background: rgba(194, 160, 86, 0.1);
+}
+.sb-subterm--hidden {
+  display: none;
+}
+.sb-subterm__img {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #e8e4de;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sb-subterm__img img,
+.sb-subterm__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.sb-subterm__placeholder {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.sb-subterm__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+.sb-subterm__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-sec);
+  line-height: 1.3;
+}
+.sb-subterm.is-active .sb-subterm__name {
+  color: var(--color-pri);
+}
+.sb-subterm__desc {
+  font-size: 12px;
+  color: #8d9b99;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.sb-subterms-empty {
+  font-size: 13px;
+  color: #8d9b99;
+  padding: 16px 10px;
+  text-align: center;
 }
 
 /* Time panel */
 .sb-panel--time {
-  min-width: 320px;
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  min-width: 520px;
+  overflow: hidden;
 }
 .sb-flatpickr-trigger {
   position: absolute;
@@ -1922,57 +2185,70 @@ form .wpcf7-not-valid-tip {
   opacity: 0;
   pointer-events: none;
 }
+.sb-time-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 12px;
+  min-width: 182px;
+  flex-shrink: 0;
+}
+.sb-time-sep-v {
+  width: 1px;
+  background: rgba(192, 200, 198, 0.4);
+  flex-shrink: 0;
+  margin: 14px 0;
+}
+.sb-time-right {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 4px 6px 0;
+  display: flex;
+  align-items: flex-start;
+}
+.sb-time-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid #e9e6e0;
+  border-radius: 14px;
+  padding: 11px 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition:
+    background 0.16s,
+    border-color 0.16s;
+}
+.sb-time-pill:hover {
+  background: #f4f2ef;
+  border-color: rgba(194, 160, 86, 0.35);
+}
+.sb-time-pill.is-active {
+  background: rgba(194, 160, 86, 0.08);
+  border-color: var(--color-pri);
+}
+.sb-time-pill__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-sec);
+  line-height: 1.3;
+}
+.sb-time-pill.is-active .sb-time-pill__label {
+  color: var(--color-pri);
+}
+.sb-time-pill__sub {
+  font-size: 12px;
+  color: #8d9b99;
+  margin-top: 2px;
+  line-height: 1.3;
+}
 .sb-panel--time .flatpickr-calendar.inline {
   width: 100%;
   box-shadow: none;
   border: none;
-  margin-top: 4px;
-}
-.sb-time-pills {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 14px;
-}
-.sb-time-pill {
-  display: block;
-  width: 100%;
-  background: #f4f2ef;
-  border: 1.5px solid transparent;
-  border-radius: 14px;
-  padding: 12px 16px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-sec);
-  text-align: left;
-  transition:
-    background 0.16s,
-    border-color 0.16s,
-    color 0.16s;
-  font-family: inherit;
-}
-.sb-time-pill:hover {
-  background: #eae8e3;
-  border-color: rgba(194, 160, 86, 0.3);
-}
-.sb-time-pill.is-active {
-  background: rgba(194, 160, 86, 0.1);
-  border-color: var(--color-pri);
-  color: var(--color-pri);
-}
-.sb-time-custom {
-  border-top: 1px solid rgba(192, 200, 198, 0.4);
-  padding-top: 14px;
-}
-.sb-time-custom__label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: #8d9b99;
-  margin-bottom: 8px;
 }
 .sb-date-input {
   width: 100%;

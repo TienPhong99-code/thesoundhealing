@@ -4,21 +4,11 @@ defined('ABSPATH') || exit;
 $item     = $args['item'] ?? [];
 if (empty($item)) return;
 
-$img_url  = $item['image']['url'] ?? '';
-$img_alt  = $item['image']['alt'] ?? '';
-$card_url = $item['url']          ?? '#';
-$location   = $item['location']   ?? '';
-$branch     = $item['branch']     ?? '';
-$spots      = isset($item['spots']) && $item['spots'] !== '' && $item['spots'] !== null ? (int) $item['spots'] : null;
-
-$status_map = [
-    'open'     => ['label' => 'Đang tuyển sinh', 'class' => 'bg-[#d4edda] text-[#1a6630]'],
-    'ongoing'  => ['label' => 'Đang diễn ra',    'class' => 'bg-[#cce5ff] text-[#004085]'],
-    'closed'   => ['label' => 'Đã kết thúc',     'class' => 'bg-[#f8d7da] text-[#842029]'],
-    'upcoming' => ['label' => 'Sắp khai giảng',  'class' => 'bg-[#eae8e3] text-pri'],
-];
-$status_key  = $item['status'] ?? '';
-$status_info = $status_key ? ($status_map[$status_key] ?? null) : null;
+$img_url    = $item['image']['url'] ?? '';
+$img_alt    = $item['image']['alt'] ?? '';
+$card_url   = $item['url']          ?? '#';
+$format     = $item['format']       ?? 'Onsite';
+$status_key = $item['status']       ?? 'open';
 ?>
 
 <div class="relative flex flex-col overflow-hidden group h-full">
@@ -30,81 +20,51 @@ $status_info = $status_key ? ($status_map[$status_key] ?? null) : null;
                 alt="<?php echo esc_attr($img_alt); ?>"
                 class="block w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
         <?php endif; ?>
+    </div>
 
-        <?php if ($spots !== null) : ?>
-            <?php if ($spots === 0) : ?>
-                <span class="absolute top-3 left-3 z-[2] bg-[#1b1c19] text-white text-[11px] font-semibold uppercase tracking-[1px] px-2.5 py-1 rounded-full">
-                    Hết chỗ
-                </span>
-            <?php else : ?>
-                <span class="absolute top-3 left-3 z-[2] bg-[#4e635a] text-white text-[11px] font-semibold uppercase tracking-[1px] px-2.5 py-1 rounded-full">
-                    Còn <?php echo $spots; ?> chỗ
-                </span>
-            <?php endif; ?>
-        <?php endif; ?>
-
-        <?php if ($status_info) : ?>
-            <span class="absolute top-3 right-3 z-[2] text-[10px] font-semibold uppercase tracking-[1.2px] px-2 py-1 rounded-[2px] <?php echo esc_attr($status_info['class']); ?>">
-                <?php echo esc_html($status_info['label']); ?>
+    <!-- Tags -->
+    <div class="flex items-center gap-2 mt-3">
+        <span class="text-[11px] font-medium uppercase tracking-[1px] px-3 py-1 rounded-full border border-[#c0c8c6] text-[#414847]">
+            Khóa học
+        </span>
+        <?php if (!empty($format)) : ?>
+            <span class="text-[11px] font-medium uppercase tracking-[1px] px-3 py-1 rounded-full bg-[#eae8e3] text-[#414847]">
+                <?php echo esc_html($format); ?>
             </span>
         <?php endif; ?>
     </div>
 
     <!-- Content -->
-    <div class="flex flex-col flex-1 justify-between py-4 gap-3">
+    <div class="flex flex-col flex-1 justify-between mt-2.5 gap-3">
 
-        <div class="flex flex-col gap-2">
-
-            <span class="text-[12px] uppercase tracking-[1.2px]">
-                Khóa học
-            </span>
-
-            <h3 class="text-[18px] font-normal line-clamp-2 leading-[28px] max-md:text-[16px]">
+        <div class="flex flex-col gap-1.5">
+            <h3 class="text-[18px] font-normal line-clamp-2 leading-[1.4] max-md:text-[16px]">
                 <?php echo esc_html($item['title']); ?>
             </h3>
 
-            <div class="flex flex-col gap-1">
-                <?php if (!empty($item['start_date'])) : ?>
-                    <p class="text-[#414847] text-[13px] leading-[18px]">
-                        Khai giảng: <strong class="font-semibold"><?php echo esc_html($item['start_date']); ?></strong>
-                    </p>
-                <?php endif; ?>
-                <?php if (!empty($item['duration'])) : ?>
-                    <p class="text-[14px] leading-[18px]">
-                        <?php echo esc_html($item['duration']); ?>
-                    </p>
-                <?php endif; ?>
-                <?php if (!empty($item['instructor'])) : ?>
-                    <p class="text-[14px] leading-[18px]">
-                        <?php echo esc_html($item['instructor']); ?>
-                    </p>
-                <?php endif; ?>
-                <?php if (!empty($location)) : ?>
-                    <p class="text-[14px] leading-[18px] line-clamp-1">
-                        <?php echo esc_html($location); ?>
-                    </p>
-                <?php endif; ?>
-                <?php if (!empty($branch)) : ?>
-                    <p class="text-[14px] leading-[18px]">
-                        <?php echo esc_html($branch); ?>
-                    </p>
-                <?php endif; ?>
-            </div>
-
+            <?php if (!empty($item['time']) || !empty($item['start_date'])) : ?>
+                <p class="text-[#414847] text-[13px] leading-[18px]">
+                    <?php if (!empty($item['time'])) echo esc_html($item['time']); ?>
+                    <?php if (!empty($item['time']) && !empty($item['start_date'])) echo ' · '; ?>
+                    <?php if (!empty($item['start_date'])) echo esc_html($item['start_date']); ?>
+                </p>
+            <?php endif; ?>
         </div>
 
-        <div class="flex items-center justify-between gap-2 pt-2 border-t border-[rgba(192,200,198,0.3)]">
+        <div class="flex items-center gap-2 pt-3 border-t border-[rgba(192,200,198,0.3)]">
             <?php if (!empty($item['price'])) : ?>
-                <span class="font-title text-pri text-[18px] leading-[24px] font-normal">
-                    <?php echo esc_html($item['price']); ?>
+                <span class="text-[#1b1c19] text-[15px] font-normal">
+                    <?php echo esc_html($item['price']); ?> / khách
                 </span>
             <?php endif; ?>
-            <!-- <span class="text-pri text-[11px] font-semibold uppercase tracking-[1.2px] ml-auto flex items-center gap-1">
-                Tìm hiểu
-                <svg class="w-[8px] h-[8px] shrink-0" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 4h6M4 1l3 3-3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-            </span> -->
+
+            <?php if ($status_key !== 'closed') : ?>
+                <a href="<?php echo esc_url($card_url); ?>"
+                    class="relative z-[2] ml-auto flex items-center justify-center px-4 py-2 bg-[#c2a056] text-white text-[12px] font-semibold uppercase tracking-[0.5px] rounded-full transition-opacity hover:opacity-85 whitespace-nowrap shrink-0">
+                    Đăng ký
+                </a>
+            <?php endif; ?>
+
         </div>
 
     </div>

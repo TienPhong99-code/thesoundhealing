@@ -93,7 +93,7 @@ add_action('wp_enqueue_scripts', function () {
    wp_add_inline_script('jquery-core', 'window.$=jQuery');
 
    // Mở lại khi cần — uncomment từng dòng
-   wp_enqueue_script('mona-lenis',            MONA_THEME_PATH_URI . '/assets/library/lenis/lenis.min.js',                             array(), filemtime(MONA_THEME_PATH . '/assets/library/lenis/lenis.min.js'), array('in_footer' => true));
+   // wp_enqueue_script('mona-lenis',            MONA_THEME_PATH_URI . '/assets/library/lenis/lenis.min.js',                             array(), filemtime(MONA_THEME_PATH . '/assets/library/lenis/lenis.min.js'), array('in_footer' => true));
    wp_enqueue_script('mona-swiper',           MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.js',                    array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-aos',              MONA_THEME_PATH_URI . '/assets/library/aos/aos.js',                                     array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-select2',          MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.js',                         array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
@@ -124,7 +124,7 @@ add_action('wp_enqueue_scripts', function () {
    wp_enqueue_script('mona-header',         MONA_THEME_PATH_URI . '/assets/scripts/modules/common/header.js',         array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/header.js'),         array('in_footer' => true));
    wp_enqueue_script('mona-flatpickr',      MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js',                                                               array(), MONA_THEME_VERSION,                                                                                          array('in_footer' => true));
    wp_enqueue_script('mona-search-booking', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/search-booking.js', array('mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/search-booking.js'), array('in_footer' => true));
-   wp_enqueue_script('mona-main', MONA_THEME_PATH_URI . '/assets/scripts/main.js', array('jquery', 'mona-swiper', 'mona-lenis', 'mona-modal', 'mona-header'), filemtime(MONA_THEME_PATH . '/assets/scripts/main.js'), array('in_footer' => true));
+   wp_enqueue_script('mona-main', MONA_THEME_PATH_URI . '/assets/scripts/main.js', array('jquery', 'mona-swiper', 'mona-modal', 'mona-header'), filemtime(MONA_THEME_PATH . '/assets/scripts/main.js'), array('in_footer' => true));
 
    if (is_front_page()) {
       wp_enqueue_script('mona-hero',    MONA_THEME_PATH_URI . '/assets/scripts/modules/home/hero.js',    array('mona-gsap', 'mona-MorphSVGPlugin', 'mona-SplitText'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/home/hero.js'),    array('in_footer' => true));
@@ -136,7 +136,9 @@ add_action('wp_enqueue_scripts', function () {
    }
 
    if (is_singular('khoa_hoc')) {
-      wp_enqueue_script('mona-khoa-hoc', MONA_THEME_PATH_URI . '/assets/scripts/khoa-hoc.js', array('jquery', 'contact-form-7', 'mona-fancybox'), filemtime(MONA_THEME_PATH . '/assets/scripts/khoa-hoc.js'), array('in_footer' => true));
+      wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
+      wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));
+      wp_enqueue_script('mona-khoa-hoc', MONA_THEME_PATH_URI . '/assets/scripts/khoa-hoc.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/khoa-hoc.js'), array('in_footer' => true));
       wp_localize_script('mona-khoa-hoc', 'kh_course', [
          'id'   => get_the_ID(),
          'name' => get_the_title(),
@@ -150,7 +152,9 @@ add_action('wp_enqueue_scripts', function () {
    }
 
    if (is_singular('workshop')) {
-      wp_enqueue_script('mona-ws', MONA_THEME_PATH_URI . '/assets/scripts/ws.js', array('jquery', 'contact-form-7', 'mona-fancybox'), filemtime(MONA_THEME_PATH . '/assets/scripts/ws.js'), array('in_footer' => true));
+      wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
+      wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));
+      wp_enqueue_script('mona-ws', MONA_THEME_PATH_URI . '/assets/scripts/ws.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/ws.js'), array('in_footer' => true));
       wp_localize_script('mona-ws', 'ws_data', [
          'id'   => get_the_ID(),
          'name' => get_the_title(),
