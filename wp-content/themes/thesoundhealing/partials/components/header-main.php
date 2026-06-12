@@ -19,7 +19,7 @@ $lang_en = '#';
       <div class="h-full flex items-center justify-between">
 
          <!-- Logo -->
-         <a href="<?php echo esc_url(home_url('/')); ?>" class="block relative z-1 shrink-0 hd-logo">
+         <a href="<?php echo esc_url(home_url('/')); ?>" class="block relative z-1 shrink-0 hd-logo max-sm:absolute max-sm:left-1/2 max-sm:translate-x-[-50%]">
             <?php
             $custom_logo_id = get_theme_mod('custom_logo');
             $logo_url = $custom_logo_id
@@ -58,7 +58,7 @@ $lang_en = '#';
          </div>
 
          <!-- Hamburger (mobile) -->
-         <button type="button" class="js-nav-open  max-xl:flex hidden items-center justify-center w-10 h-10 cursor-pointer" aria-label="<?php esc_attr_e('Mở menu', 'monamedia'); ?>">
+         <button type="button" class="js-nav-open max-sm:ml-auto max-xl:flex hidden items-center justify-center w-10 h-10 cursor-pointer" aria-label="<?php esc_attr_e('Mở menu', 'monamedia'); ?>">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                <line x1="3" y1="6" x2="21" y2="6" stroke="#283377" stroke-width="2" stroke-linecap="round" />
                <line x1="3" y1="12" x2="21" y2="12" stroke="#283377" stroke-width="2" stroke-linecap="round" />

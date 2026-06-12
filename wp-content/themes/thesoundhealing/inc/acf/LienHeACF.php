@@ -33,15 +33,28 @@ add_action('acf/init', function () {
             // ─── TAB: THÔNG TIN LIÊN HỆ ──────────────────────────────────
             Tab::make('Thông tin liên hệ')->placement('left'),
 
+            Text::make('Tên công ty', 'lh_company')
+                ->helperText('Ví dụ: HEALIVERSE HOLDINGS.,JSC')
+                ->default('HEALIVERSE HOLDINGS.,JSC'),
+
             Textarea::make('Địa chỉ', 'lh_address')
                 ->helperText('Địa chỉ cơ sở. Xuống dòng để tách 2 dòng hiển thị.')
                 ->rows(2),
 
-            Text::make('Điện thoại', 'lh_phone')
-                ->helperText('Ví dụ: +84 90 123 4567'),
+            Text::make('Số điện thoại 1', 'lh_phone')
+                ->helperText('Ví dụ: 0939 624 684'),
+
+            Text::make('Ghi chú số 1', 'lh_phone_label')
+                ->helperText('Ví dụ: Kennedy - English'),
+
+            Text::make('Số điện thoại 2', 'lh_phone_2')
+                ->helperText('Ví dụ: 0906 502 582'),
+
+            Text::make('Ghi chú số 2', 'lh_phone_2_label')
+                ->helperText('Ví dụ: Việt - tiếng Việt'),
 
             Text::make('Email', 'lh_email')
-                ->helperText('Ví dụ: connect@aetheria.vn'),
+                ->helperText('Ví dụ: khanh@thesoundhealing.vn'),
 
             Text::make('URL Instagram', 'lh_instagram_url')
                 ->helperText('Đường dẫn đến trang Instagram.'),
@@ -58,7 +71,7 @@ add_action('acf/init', function () {
             // ─── TAB: BẢN ĐỒ ─────────────────────────────────────────────
             Tab::make('Bản đồ')->placement('left'),
 
-            Text::make('Embed URL Google Maps', 'lh_map_embed')
+            Text::make('Embed URL Google Maps', 'lh_map_embed_url')
                 ->helperText('URL nhúng từ Google Maps: Share → Embed a map → lấy phần src="...".'),
 
             Text::make('Tiêu đề bản đồ (title)', 'lh_pin_label')

@@ -229,7 +229,7 @@ get_header();
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($bn_items as $item) : ?>
-                                            <div class="bg-[#fbf9f4] p-5 border-l-[3px] border-[#133a35]">
+                                            <div class="bg-[#fbf9f4] p-5 border-l-[1px] border-[#133a35]">
                                                 <h4 class="text-pri text-[15px] font-semibold leading-[24px] mb-2">
                                                     <?php echo esc_html($item['benefit_title']); ?>
                                                 </h4>
@@ -431,7 +431,7 @@ get_header();
                             if (!empty($meta_rows) || $has_spots) : ?>
                                 <div class="border border-[#b0b0b0] rounded-[8px] overflow-hidden text-[14px]">
                                     <?php foreach ($meta_rows as $row) : ?>
-                                        <div class="p-3 border-b border-[#b0b0b0]">
+                                        <div class="p-3 border-b border-[#b0b0b0] last:border-b-0">
                                             <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#717171] mb-0.5">
                                                 <?php echo $row['label']; ?>
                                             </p>

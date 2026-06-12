@@ -57,6 +57,16 @@ $data = [
 
         <!-- Experts Slider -->
         <div class="swiper-teams relative slideSw">
+            <button class="swiper-prev absolute top-1/2 -translate-y-1/2 -left-5 max-xl:hidden z-10 flex items-center justify-center w-10 h-10 rounded-full border border-[#c2a056] text-[#c2a056] hover:bg-[#c2a056] hover:text-white transition-colors duration-300 disabled:opacity-30">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+            </button>
+            <button class="swiper-next absolute top-1/2 -translate-y-1/2 -right-5 max-xl:hidden z-10 flex items-center justify-center w-10 h-10 rounded-full border border-[#c2a056] text-[#c2a056] hover:bg-[#c2a056] hover:text-white transition-colors duration-300 disabled:opacity-30">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6" />
+                </svg>
+            </button>
             <div class="swiper-container">
                 <div class="swiper row">
                     <div class="swiper-wrapper">
@@ -65,30 +75,26 @@ $data = [
                             $img_alt = is_array($item['image']) ? ($item['image']['alt'] ?? '') : '';
                         ?>
                             <div class="swiper-slide col col-4 max-lg:!w-1/2 max-md:!w-3/4">
-                                <div class="flex flex-col items-center text-center">
-                                    <!-- Photo -->
-                                    <div class="w-[192px] h-[192px] rounded-[12px] border border-[#e4e2dd] overflow-hidden mb-6 shrink-0">
-                                        <?php if ($img_url) : ?>
-                                            <img src="<?php echo esc_url($img_url); ?>"
-                                                class="block w-full h-full object-cover"
-                                                alt="<?php echo esc_attr($img_alt ?: $item['name']); ?>">
+                                <div class="group relative overflow-hidden rounded-[4px] aspect-[3/4]">
+                                    <img src="<?php echo esc_url($img_url); ?>"
+                                        class="block w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        alt="<?php echo esc_attr($img_alt ?: $item['name']); ?>">
+
+                                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[rgba(0,0,0,0.85)] to-transparent pointer-events-none"></div>
+
+                                    <div class="absolute inset-x-0 bottom-0 p-6 max-md:p-4">
+                                        <?php if (!empty($item['desc'])) : ?>
+                                            <p class="text-white/80 text-[16px] leading-[20px] mb-3 max-h-0 overflow-hidden opacity-0 group-hover:max-h-[80px] group-hover:opacity-100 transition-all duration-400">
+                                                <?php echo esc_html($item['desc']); ?>
+                                            </p>
                                         <?php endif; ?>
+                                        <h3 class="font-title text-white text-[22px] font-normal leading-snug max-md:text-[18px]">
+                                            <?php echo esc_html($item['name']); ?>
+                                        </h3>
+                                        <p class="text-[#c2a056] text-[10px] font-semibold uppercase tracking-[1.2px] mt-1">
+                                            <?php echo esc_html($item['role']); ?>
+                                        </p>
                                     </div>
-
-                                    <!-- Name -->
-                                    <h3 class="font-title text-sec text-[24px] font-normal mb-2 max-md:text-[20px]">
-                                        <?php echo esc_html($item['name']); ?>
-                                    </h3>
-
-                                    <!-- Role -->
-                                    <p class="text-pri text-[11px] font-semibold uppercase tracking-[1.2px] mb-4">
-                                        <?php echo esc_html($item['role']); ?>
-                                    </p>
-
-                                    <!-- Description -->
-                                    <p class="text-[#414847]">
-                                        <?php echo esc_html($item['desc']); ?>
-                                    </p>
                                 </div>
                             </div>
                         <?php endforeach; ?>

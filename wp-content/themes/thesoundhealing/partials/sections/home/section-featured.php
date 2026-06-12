@@ -9,8 +9,8 @@ $raw_objects = get_field('featured_items', $page_id);
 if (empty($raw_objects)) return;
 
 $data = [
-    'label'   => get_field('featured_label', $page_id)   ?: 'SỰ KIỆN NỔI BẬT',
     'heading' => get_field('featured_heading', $page_id) ?: 'Các Sự Kiện Nổi Bật',
+    'desc'    => get_field('featured_desc',    $page_id) ?: 'Khám phá các sự kiện âm thanh chữa lành đặc sắc, được thiết kế để mang lại sự cân bằng và bình yên cho tâm hồn bạn.',
     'link'    => $raw_link ?: null,
     'items'   => [],
 ];
@@ -87,12 +87,14 @@ if (empty($data['items'])) return;
         <!-- Header -->
         <div class="flex items-end justify-between mb-8 max-md:flex-col max-md:items-center max-md:text-center gap-4">
             <div>
-                <p class="text-pri text-[16px] font-semibold uppercase tracking-[1.2px] mb-4">
-                    <?php echo esc_html($data['label']); ?>
-                </p>
                 <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
+                <?php if (!empty($data['desc'])) : ?>
+                    <p class="text-[16px] text-sec mt-3">
+                        <?php echo esc_html($data['desc']); ?>
+                    </p>
+                <?php endif; ?>
             </div>
 
             <?php if (!empty($data['link']['url'])) : ?>
@@ -107,7 +109,7 @@ if (empty($data['items'])) return;
         <!-- Cards -->
         <div class="row">
             <?php foreach ($data['items'] as $item) : ?>
-                <div class="col col-5i max-lg:!w-1/2">
+                <div class="col col-5i max-lg:!w-1/2 max-sm:!w-full">
                     <?php
                     $card_type = $item['_card_type'];
                     unset($item['_card_type']);

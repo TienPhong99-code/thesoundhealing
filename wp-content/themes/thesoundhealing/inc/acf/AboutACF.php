@@ -71,6 +71,38 @@ add_action('acf/init', function () {
                 ->format('array')
                 ->previewSize('medium'),
 
+            // ─── TAB: HỆ SINH THÁI ────────────────────────────────────────
+            Tab::make('Hệ Sinh Thái')->placement('left'),
+
+            Text::make('Dòng tiêu đề trên', 'ab_eco_heading_top')
+                ->helperText('Ví dụ: Hệ sinh thái')
+                ->default('Hệ sinh thái'),
+
+            Text::make('Dòng tiêu đề dưới', 'ab_eco_heading_bottom')
+                ->helperText('Ví dụ: HEALIVERSE HOLISTIC CENTRE')
+                ->default('HEALIVERSE HOLISTIC CENTRE'),
+
+            Repeater::make('Danh sách thành viên hệ sinh thái', 'ab_eco_items')
+                ->helperText('Chính xác 3 mục.')
+                ->layout('block')
+                ->minRows(3)
+                ->maxRows(3)
+                ->collapsed('name')
+                ->button('+ Thêm')
+                ->fields([
+                    Image::make('Logo', 'logo')
+                        ->format('array')
+                        ->previewSize('medium'),
+                    Text::make('Tên domain', 'name')
+                        ->helperText('Ví dụ: HEALIVERSE.VN')
+                        ->required(),
+                    URL::make('URL', 'url')
+                        ->helperText('Đường dẫn website tương ứng.'),
+                    Textarea::make('Mô tả', 'desc')
+                        ->helperText('Có thể dùng thẻ <strong> để in đậm.')
+                        ->rows(3),
+                ]),
+
             // ─── TAB: NỀN TẢNG CỐT LÕI ───────────────────────────────────
             Tab::make('Nền Tảng Cốt Lõi')->placement('left'),
 

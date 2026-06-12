@@ -86,133 +86,139 @@ if (!empty($pre_chuyen_mon)) {
 <div class="search-booking" id="search-booking">
     <form class="sb-bar" method="GET" action="<?php echo esc_url($search_url); ?>" id="sb-form" novalidate>
 
-        <!-- Field: Loại hình -->
-        <div class="sb-field" id="sb-field-type">
-            <button type="button" class="sb-field__btn"
-                aria-expanded="false"
-                aria-controls="sb-panel-type"
-                data-sb-toggle="type">
-                <span class="sb-field__label">Loại hình</span>
-                <span class="sb-field__value" id="sb-val-type"><?php echo esc_html($display_type); ?></span>
-            </button>
-            <input type="hidden" name="loai-hinh" id="sb-input-type" value="<?php echo esc_attr($pre_loai_hinh); ?>">
-            <input type="hidden" name="chuyen-mon" id="sb-input-subterm" value="<?php echo esc_attr($pre_chuyen_mon); ?>">
+        <!-- Row: Loại hình + Thời gian (50/50 trên mobile) -->
+        <div class="sb-row-top">
 
-            <div class="sb-panel sb-panel--type" id="sb-panel-type" aria-hidden="true">
+            <!-- Field: Loại hình -->
+            <div class="sb-field" id="sb-field-type">
+                <button type="button" class="sb-field__btn"
+                    aria-expanded="false"
+                    aria-controls="sb-panel-type"
+                    data-sb-toggle="type">
+                    <span class="sb-field__label">Loại hình</span>
+                    <span class="sb-field__value" id="sb-val-type"><?php echo esc_html($display_type); ?></span>
+                </button>
+                <input type="hidden" name="loai-hinh" id="sb-input-type" value="<?php echo esc_attr($pre_loai_hinh); ?>">
+                <input type="hidden" name="chuyen-mon" id="sb-input-subterm" value="<?php echo esc_attr($pre_chuyen_mon); ?>">
 
-                <!-- Category pills -->
-                <div class="sb-type-cats">
-                    <button type="button"
-                        class="sb-type-cat<?php echo empty($pre_loai_hinh) ? ' is-active' : ''; ?>"
-                        data-cat-filter=""
-                        data-cat-label="Chọn loại hình">Tất cả</button>
-                    <?php foreach ($cat_label_map as $k => $v) : ?>
+                <div class="sb-panel sb-panel--type" id="sb-panel-type" aria-hidden="true">
+
+                    <!-- Category pills -->
+                    <div class="sb-type-cats">
                         <button type="button"
-                            class="sb-type-cat<?php echo $pre_loai_hinh === $k ? ' is-active' : ''; ?>"
-                            data-cat-filter="<?php echo esc_attr($k); ?>"
-                            data-cat-label="<?php echo esc_attr($v); ?>">
-                            <?php echo esc_html($v); ?>
-                        </button>
-                    <?php endforeach; ?>
-                </div>
-
-                <div class="sb-type-sep"></div>
-
-                <!-- Sub-terms scrollable list -->
-                <div class="sb-subterms-wrap">
-                    <?php
-                    $all_term_groups = [
-                        'dich-vu'  => $terms_dich_vu,
-                        'khoa-hoc' => $terms_khoa_hoc,
-                        'workshop' => $terms_workshop,
-                    ];
-                    $has_terms = false;
-                    foreach ($all_term_groups as $cat_key => $terms_group) :
-                        foreach ($terms_group as $term) :
-                            $has_terms  = true;
-                            $is_active  = $pre_chuyen_mon === $term->slug;
-                            $is_hidden  = !empty($pre_loai_hinh) && $pre_loai_hinh !== $cat_key;
-                            $thumb_id   = get_term_meta($term->term_id, 'thumbnail_id', true);
-                    ?>
+                            class="sb-type-cat<?php echo empty($pre_loai_hinh) ? ' is-active' : ''; ?>"
+                            data-cat-filter=""
+                            data-cat-label="Chọn loại hình">Tất cả</button>
+                        <?php foreach ($cat_label_map as $k => $v) : ?>
                             <button type="button"
-                                class="sb-subterm<?php echo $is_active ? ' is-active' : '';
-                                                    echo $is_hidden ? ' sb-subterm--hidden' : ''; ?>"
-                                data-cat="<?php echo esc_attr($cat_key); ?>"
-                                data-value="<?php echo esc_attr($term->slug); ?>"
-                                data-label="<?php echo esc_attr($term->name); ?>">
-                                <span class="sb-subterm__img">
-                                    <?php if ($thumb_id) : ?>
-                                        <?php echo wp_get_attachment_image($thumb_id, [48, 48], false, ['class' => 'sb-subterm__thumb']); ?>
-                                    <?php else : ?>
-                                        <span class="sb-subterm__placeholder"></span>
-                                    <?php endif; ?>
-                                </span>
-                                <span class="sb-subterm__text">
-                                    <span class="sb-subterm__name"><?php echo esc_html($term->name); ?></span>
-                                    <?php if (!empty($term->description)) : ?>
-                                        <span class="sb-subterm__desc"><?php echo esc_html($term->description); ?></span>
-                                    <?php endif; ?>
-                                </span>
+                                class="sb-type-cat<?php echo $pre_loai_hinh === $k ? ' is-active' : ''; ?>"
+                                data-cat-filter="<?php echo esc_attr($k); ?>"
+                                data-cat-label="<?php echo esc_attr($v); ?>">
+                                <?php echo esc_html($v); ?>
                             </button>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="sb-type-sep"></div>
+
+                    <!-- Sub-terms scrollable list -->
+                    <div class="sb-subterms-wrap">
                         <?php
-                        endforeach;
-                    endforeach;
-                    if (!$has_terms) :
+                        $all_term_groups = [
+                            'dich-vu'  => $terms_dich_vu,
+                            'khoa-hoc' => $terms_khoa_hoc,
+                            'workshop' => $terms_workshop,
+                        ];
+                        $has_terms = false;
+                        foreach ($all_term_groups as $cat_key => $terms_group) :
+                            foreach ($terms_group as $term) :
+                                $has_terms  = true;
+                                $is_active  = $pre_chuyen_mon === $term->slug;
+                                $is_hidden  = !empty($pre_loai_hinh) && $pre_loai_hinh !== $cat_key;
+                                $thumb_id   = get_term_meta($term->term_id, 'thumbnail_id', true);
                         ?>
-                        <p class="sb-subterms-empty">Chưa có danh mục nào.</p>
-                    <?php endif; ?>
-                </div>
+                                <button type="button"
+                                    class="sb-subterm<?php echo $is_active ? ' is-active' : '';
+                                                        echo $is_hidden ? ' sb-subterm--hidden' : ''; ?>"
+                                    data-cat="<?php echo esc_attr($cat_key); ?>"
+                                    data-value="<?php echo esc_attr($term->slug); ?>"
+                                    data-label="<?php echo esc_attr($term->name); ?>">
+                                    <span class="sb-subterm__img">
+                                        <?php if ($thumb_id) : ?>
+                                            <?php echo wp_get_attachment_image($thumb_id, [48, 48], false, ['class' => 'sb-subterm__thumb']); ?>
+                                        <?php else : ?>
+                                            <span class="sb-subterm__placeholder"></span>
+                                        <?php endif; ?>
+                                    </span>
+                                    <span class="sb-subterm__text">
+                                        <span class="sb-subterm__name"><?php echo esc_html($term->name); ?></span>
+                                        <?php if (!empty($term->description)) : ?>
+                                            <span class="sb-subterm__desc"><?php echo esc_html($term->description); ?></span>
+                                        <?php endif; ?>
+                                    </span>
+                                </button>
+                            <?php
+                            endforeach;
+                        endforeach;
+                        if (!$has_terms) :
+                            ?>
+                            <p class="sb-subterms-empty">Chưa có danh mục nào.</p>
+                        <?php endif; ?>
+                    </div>
 
+                </div>
             </div>
-        </div>
 
-        <span class="sb-sep" aria-hidden="true"></span>
+            <span class="sb-sep" aria-hidden="true"></span>
 
-        <!-- Field: Thời gian -->
-        <div class="sb-field" id="sb-field-time">
-            <button type="button" class="sb-field__btn"
-                aria-expanded="false"
-                aria-controls="sb-panel-time"
-                data-sb-toggle="time">
-                <span class="sb-field__label">Thời gian</span>
-                <span class="sb-field__value" id="sb-val-time">
-                    <?php
-                    if (!empty($pre_thoi_gian) && isset($time_opts[$pre_thoi_gian])) {
-                        echo esc_html($time_opts[$pre_thoi_gian]['label']);
-                    } elseif (!empty($pre_ngay)) {
-                        echo esc_html(date_i18n('j/m/Y', strtotime($pre_ngay)));
-                    } else {
-                        echo 'Thêm ngày';
-                    }
-                    ?>
-                </span>
-            </button>
-            <input type="hidden" name="thoi-gian" id="sb-input-time" value="<?php echo esc_attr($pre_thoi_gian); ?>">
-            <input type="hidden" name="ngay" id="sb-input-date" value="<?php echo esc_attr($pre_ngay); ?>">
-            <div class="sb-panel sb-panel--time" id="sb-panel-time" aria-hidden="true">
+            <!-- Field: Thời gian -->
 
-                <!-- Quick options -->
-                <div class="sb-time-left">
-                    <?php foreach ($time_opts as $val => $opt) : ?>
-                        <button type="button"
-                            class="sb-time-pill<?php echo $pre_thoi_gian === $val ? ' is-active' : ''; ?>"
-                            data-value="<?php echo esc_attr($val); ?>"
-                            data-label="<?php echo esc_attr($opt['label']); ?>">
-                            <span class="sb-time-pill__label"><?php echo esc_html($opt['label']); ?></span>
-                            <span class="sb-time-pill__sub"><?php echo esc_html($opt['sub']); ?></span>
-                        </button>
-                    <?php endforeach; ?>
+            <div class="sb-field" id="sb-field-time">
+                <button type="button" class="sb-field__btn"
+                    aria-expanded="false"
+                    aria-controls="sb-panel-time"
+                    data-sb-toggle="time">
+                    <span class="sb-field__label">Thời gian</span>
+                    <span class="sb-field__value" id="sb-val-time">
+                        <?php
+                        if (!empty($pre_thoi_gian) && isset($time_opts[$pre_thoi_gian])) {
+                            echo esc_html($time_opts[$pre_thoi_gian]['label']);
+                        } elseif (!empty($pre_ngay)) {
+                            echo esc_html(date_i18n('j/m/Y', strtotime($pre_ngay)));
+                        } else {
+                            echo 'Thêm ngày';
+                        }
+                        ?>
+                    </span>
+                </button>
+                <input type="hidden" name="thoi-gian" id="sb-input-time" value="<?php echo esc_attr($pre_thoi_gian); ?>">
+                <input type="hidden" name="ngay" id="sb-input-date" value="<?php echo esc_attr($pre_ngay); ?>">
+                <div class="sb-panel sb-panel--time max-sm:!flex-col" id="sb-panel-time" aria-hidden="true">
+
+                    <!-- Quick options -->
+                    <div class="sb-time-left">
+                        <?php foreach ($time_opts as $val => $opt) : ?>
+                            <button type="button"
+                                class="sb-time-pill<?php echo $pre_thoi_gian === $val ? ' is-active' : ''; ?>"
+                                data-value="<?php echo esc_attr($val); ?>"
+                                data-label="<?php echo esc_attr($opt['label']); ?>">
+                                <span class="sb-time-pill__label"><?php echo esc_html($opt['label']); ?></span>
+                                <span class="sb-time-pill__sub"><?php echo esc_html($opt['sub']); ?></span>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="sb-time-sep-v max-sm:!hidden"></div>
+
+                    <!-- Inline calendar -->
+                    <div class="sb-time-right">
+                        <input type="text" id="sb-flatpickr-trigger" class="sb-flatpickr-trigger" readonly>
+                    </div>
+
                 </div>
-
-                <div class="sb-time-sep-v"></div>
-
-                <!-- Inline calendar -->
-                <div class="sb-time-right">
-                    <input type="text" id="sb-flatpickr-trigger" class="sb-flatpickr-trigger" readonly>
-                </div>
-
             </div>
-        </div>
+
+        </div><!-- /.sb-row-top -->
 
         <span class="sb-sep" aria-hidden="true"></span>
 

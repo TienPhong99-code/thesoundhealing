@@ -347,7 +347,7 @@ get_header();
                             if (!empty($meta_rows) || $has_spots) : ?>
                                 <div class="border border-[#b0b0b0] rounded-[8px] overflow-hidden text-[14px]">
                                     <?php foreach ($meta_rows as $row) : ?>
-                                        <div class="p-3 border-b border-[#b0b0b0]">
+                                        <div class="p-3 border-b border-[#b0b0b0] last:border-b-0">
                                             <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#717171] mb-0.5">
                                                 <?php echo $row['label']; ?>
                                             </p>

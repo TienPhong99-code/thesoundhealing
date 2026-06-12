@@ -139,7 +139,7 @@ $data = [
         <!-- Cards -->
         <div class="row">
             <?php foreach ($data['items'] as $item) : ?>
-                <div class="col col-5i max-lg:!w-1/2">
+                <div class="col col-5i max-lg:!w-1/2 max-sm:!w-full">
                     <?php get_template_part('partials/components/card-khoa-hoc', null, ['item' => $item]); ?>
                 </div>
             <?php endforeach; ?>

@@ -115,7 +115,7 @@ $data = [
         <!-- Cards -->
         <div class="row">
             <?php foreach ($data['items'] as $item) : ?>
-                <div class="col col-5i max-lg:!w-1/2">
+                <div class="col col-5i max-lg:!w-1/2 max-sm:!w-full">
                     <?php if ($item['_type'] === 'workshop') : ?>
                         <?php get_template_part('partials/components/card-workshop', null, ['item' => $item]); ?>
                     <?php else : ?>

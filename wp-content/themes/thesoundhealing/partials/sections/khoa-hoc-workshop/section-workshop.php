@@ -98,7 +98,7 @@ if ($use_sample) {
         </h2>
         <div class="row">
             <?php foreach ($items as $item) : ?>
-                <div class="col col-5i max-md:!w-1/2">
+                <div class="col col-5i max-md:!w-1/2 max-sm:!w-full">
                     <?php get_template_part('partials/components/card-workshop', null, ['item' => $item]); ?>
                 </div>
             <?php endforeach; ?>

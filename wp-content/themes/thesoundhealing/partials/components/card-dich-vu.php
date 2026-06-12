@@ -56,7 +56,7 @@ $status_key     = $item['status']        ?? 'open';
 
         <div class="flex items-center gap-2 pt-3 border-t border-[rgba(192,200,198,0.3)]">
             <?php if (!empty($price)) : ?>
-                <span class="text-[#1b1c19] text-[15px] font-normal">
+                <span class="text-[#1b1c19] text-[15px] font-semibold">
                     <?php echo esc_html($price); ?> / khách
                 </span>
             <?php endif; ?>
