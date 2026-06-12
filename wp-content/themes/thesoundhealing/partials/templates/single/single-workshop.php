@@ -27,6 +27,27 @@ $ws_gal_5 = get_field('ws_gallery_5',   $post_id);
 $ws_exp_title = get_field('ws_exp_title', $post_id) ?: 'Không gian chữa lành qua âm thanh';
 $ws_exp_desc  = get_field('ws_exp_desc',  $post_id);
 
+// ── Lộ trình ──
+$ws_rm_label   = get_field('ws_roadmap_label',   $post_id) ?: 'LỘ TRÌNH TRẢI NGHIỆM';
+$ws_rm_heading = get_field('ws_roadmap_heading', $post_id) ?: 'Hành trình';
+$ws_rm_items   = get_field('ws_roadmap_items',   $post_id) ?: [
+    [
+        'ws_week_title' => 'Phần 1 – Kết nối với hơi thở',
+        'ws_week_desc'  => 'Khởi đầu buổi workshop bằng các kỹ thuật thở có chủ đích, giúp thư giãn hệ thần kinh và đưa cơ thể về trạng thái cân bằng.',
+        'ws_week_tags'  => 'Thở có ý thức, Pranayama cơ bản, Thư giãn hệ thần kinh',
+    ],
+    [
+        'ws_week_title' => 'Phần 2 – Đắm mình trong Sound Bath',
+        'ws_week_desc'  => 'Trải nghiệm tắm âm toàn thân với singing bowl và các nhạc cụ trị liệu, cảm nhận sóng âm lan toả qua từng tế bào.',
+        'ws_week_tags'  => 'Singing Bowl, Sound Bath, Âm điều trị',
+    ],
+    [
+        'ws_week_title' => 'Phần 3 – Thiền định & Tích hợp',
+        'ws_week_desc'  => 'Kết hợp âm thanh và hơi thở vào thiền định, chia sẻ trải nghiệm và nhận hướng dẫn thực hành tại nhà.',
+        'ws_week_tags'  => 'Thiền định, Tích hợp thực hành, Chăm sóc bản thân',
+    ],
+];
+
 // ── Người hướng dẫn ──
 $ws_ins_label     = get_field('ws_instructor_label',     $post_id) ?: 'NGƯỜI HƯỚNG DẪN';
 $ws_ins_image     = get_field('ws_instructor_image',     $post_id);
@@ -43,6 +64,14 @@ $ws_bn_items   = get_field('ws_benefits_items',   $post_id) ?: [
     ['ws_benefit_title' => 'Thư giãn sâu & giải phóng căng thẳng',    'ws_benefit_desc' => 'Âm thanh từ singing bowl và nhạc cụ trị liệu giúp hệ thần kinh đi vào trạng thái thư giãn sâu chỉ trong vài phút.'],
     ['ws_benefit_title' => 'Trải nghiệm Sound Bath toàn thân',          'ws_benefit_desc' => 'Cảm nhận sóng âm lan toả qua từng tế bào cơ thể, tạo cảm giác nhẹ nhàng và kết nối sâu với bản thân.'],
     ['ws_benefit_title' => 'Không gian thiền định được hướng dẫn',      'ws_benefit_desc' => 'Người hướng dẫn sẽ đồng hành cùng bạn trong suốt buổi, phù hợp cho cả người mới bắt đầu.'],
+];
+
+// ── Lợi ích nhận được ──
+$ws_receive_items = get_field('ws_receive_items', $post_id) ?: [
+    ['ws_receive_title' => '100% Trải nghiệm thực tế | 100% Hands-on Experience',          'ws_receive_desc' => 'Toàn bộ thời lượng workshop là trải nghiệm trực tiếp với singing bowl và các nhạc cụ trị liệu, không lý thuyết khô khan.'],
+    ['ws_receive_title' => 'Thư giãn cơ thể, ngủ sâu hơn | Relax your body, sleep deeper', 'ws_receive_desc' => 'Rung động từ chuông pha lê giúp giải phóng căng thẳng, làm dịu tâm trí và hỗ trợ giấc ngủ sâu, sự tập trung tốt hơn.'],
+    ['ws_receive_title' => 'Phù hợp cho người mới bắt đầu | Beginner friendly',            'ws_receive_desc' => 'Không cần kinh nghiệm trước đó. Người hướng dẫn đồng hành trong suốt buổi, phù hợp với mọi đối tượng tham dự.'],
+    ['ws_receive_title' => 'Ưu đãi 15% cho khóa học tiếp theo | 15% off your next course', 'ws_receive_desc' => 'Nhận ưu đãi 15% khi đăng ký khóa học chuyên sâu sau workshop — tiếp tục hành trình chữa lành của bạn với chi phí tốt hơn.'],
 ];
 
 // ── Fallbacks ──
@@ -89,7 +118,7 @@ get_header();
                     </div>
                 <?php endif; ?>
 
-                <h1 class="font-title text-pri text-[48px] max-md:text-[32px] leading-[56px] max-md:leading-[40px] tracking-[-0.96px] font-normal ">
+                <h1 class="font-title text-pri text-[48px] max-md:text-[32px] leading-[56px] max-md:leading-[40px] tracking-[-0.96px] font-bold">
                     <?php the_title(); ?>
                 </h1>
             </div>
@@ -192,10 +221,10 @@ get_header();
                     <div class="col col-7 max-md:!w-full">
                         <div class="flex flex-col divide-y divide-[#e4e2dd]">
 
-                            <!-- About / description -->
+                            <!-- 1. About the workshop -->
                             <div class="pb-10">
-                                <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-4">
-                                    <?php echo esc_html($ws_exp_title); ?>
+                                <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-5">
+                                    Về workshop
                                 </h2>
                                 <?php if ($ws_short_desc) : ?>
                                     <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
@@ -209,27 +238,60 @@ get_header();
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Benefits -->
+                            <!-- 2. Benefits & Intentions -->
                             <?php if (!empty($ws_bn_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-6">
-                                        <?php echo esc_html($ws_bn_heading); ?>
+                                        Mục tiêu &amp; Lợi ích
                                     </h2>
-                                    <div class="flex flex-col gap-5">
+                                    <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($ws_bn_items as $item) : ?>
-                                            <div class="flex gap-4 items-start">
-                                                <div class="size-5 shrink-0 mt-[3px]">
-                                                    <img src="<?php echo esc_url($ic_check); ?>"
-                                                        class="block w-full h-full object-contain" alt="">
-                                                </div>
-                                                <div>
-                                                    <h4 class="text-pri text-[16px] font-semibold leading-[24px]">
-                                                        <?php echo esc_html($item['ws_benefit_title']); ?>
-                                                    </h4>
-                                                    <?php if (!empty($item['ws_benefit_desc'])) : ?>
-                                                        <p class="text-[#414847] text-[15px] leading-[23px] mt-1">
-                                                            <?php echo wp_kses_post(nl2br(esc_html($item['ws_benefit_desc']))); ?>
+                                            <div class="bg-[#fbf9f4] p-5 border-l-[1px] border-[#133a35]">
+                                                <h4 class="text-pri text-[15px] font-semibold leading-[24px] mb-2">
+                                                    <?php echo esc_html($item['ws_benefit_title']); ?>
+                                                </h4>
+                                                <?php if (!empty($item['ws_benefit_desc'])) : ?>
+                                                    <p class="text-[#414847] text-[14px] leading-[22px]">
+                                                        <?php echo wp_kses_post(nl2br(esc_html($item['ws_benefit_desc']))); ?>
+                                                    </p>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- 3. Healing journey -->
+                            <?php if (!empty($ws_rm_items)) : ?>
+                                <div class="py-10">
+                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-8">
+                                        Hành trình chữa lành
+                                    </h2>
+                                    <div class="flex flex-col divide-y divide-[#e4e2dd]">
+                                        <?php foreach ($ws_rm_items as $i => $item) : ?>
+                                            <div class="py-6 first:pt-0 flex gap-5 items-start">
+                                                <span class="font-title text-[#133a35] text-[18px] font-semibold shrink-0 min-w-[24px] leading-[28px] mt-[2px]">
+                                                    <?php echo $i + 1; ?>.
+                                                </span>
+                                                <div class="flex flex-col gap-2">
+                                                    <h3 class="font-title text-pri text-[18px] leading-[26px] font-semibold">
+                                                        <?php echo esc_html($item['ws_week_title']); ?>
+                                                    </h3>
+                                                    <?php if (!empty($item['ws_week_desc'])) : ?>
+                                                        <p class="text-[#414847] text-[15px] leading-[23px]">
+                                                            <?php echo wp_kses_post(nl2br(esc_html($item['ws_week_desc']))); ?>
                                                         </p>
+                                                    <?php endif; ?>
+                                                    <?php if (!empty($item['ws_week_tags'])) :
+                                                        $tags = array_map('trim', explode(',', $item['ws_week_tags']));
+                                                    ?>
+                                                        <div class="flex gap-2 flex-wrap pt-1">
+                                                            <?php foreach ($tags as $tag) : ?>
+                                                                <span class="bg-[#f0eee9] text-[#414847] text-[12px] tracking-[1px] px-3 py-1 rounded-[2px]">
+                                                                    <?php echo esc_html($tag); ?>
+                                                                </span>
+                                                            <?php endforeach; ?>
+                                                        </div>
                                                     <?php endif; ?>
                                                 </div>
                                             </div>
@@ -238,12 +300,35 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Instructor -->
+                            <!-- 4. What You Will Receive -->
+                            <?php if (!empty($ws_receive_items)) : ?>
+                                <div class="py-10">
+                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-6">
+                                        Lợi ích workshop
+                                    </h2>
+                                    <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
+                                        <?php foreach ($ws_receive_items as $item) : ?>
+                                            <div class="bg-white p-5">
+                                                <h4 class="text-pri text-[15px] font-semibold leading-[24px] mb-2">
+                                                    <?php echo esc_html($item['ws_receive_title']); ?>
+                                                </h4>
+                                                <?php if (!empty($item['ws_receive_desc'])) : ?>
+                                                    <p class="text-[#414847] text-[14px] leading-[22px]">
+                                                        <?php echo wp_kses_post(nl2br(esc_html($item['ws_receive_desc']))); ?>
+                                                    </p>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- 5. About the Instructor -->
                             <?php if ($ws_ins_name) : ?>
                                 <div class="py-10">
-                                    <p class="text-[#4e635a] text-[12px] font-semibold uppercase tracking-[1.2px] mb-5">
-                                        <?php echo esc_html($ws_ins_label); ?>
-                                    </p>
+                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-normal mb-6">
+                                        Về giảng viên
+                                    </h2>
                                     <div class="flex gap-5 items-start">
                                         <div class="size-16 rounded-full overflow-hidden shrink-0">
                                             <img src="<?php echo esc_url($ws_ins_image['url'] ?? $fb_ins); ?>"
@@ -251,7 +336,7 @@ get_header();
                                                 alt="<?php echo esc_attr($ws_ins_image['alt'] ?? $ws_ins_name); ?>">
                                         </div>
                                         <div>
-                                            <h3 class="font-title text-pri text-[20px] leading-[28px] font-normal">
+                                            <h3 class="font-title text-pri text-[20px] leading-[28px] font-semibold">
                                                 <?php echo esc_html($ws_ins_name); ?>
                                             </h3>
                                             <?php if ($ws_ins_bio) : ?>
@@ -300,9 +385,9 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Feedback photos -->
+                            <!-- 6. Testimonials -->
                             <?php
-                            $fb_heading = get_field('ws_feedbacks_heading', $post_id) ?: 'Cảm nhận của học viên';
+                            $fb_heading = get_field('ws_feedbacks_heading', $post_id) ?: 'Testimonials';
                             $fb_items   = get_field('ws_feedbacks', $post_id) ?: [
                                 ['ws_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-1.jpg', 'alt' => '']],
                                 ['ws_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-2.jpg', 'alt' => '']],
@@ -410,7 +495,7 @@ get_header();
 
                             <!-- CF7 Form -->
                             <div id="ws-form-inner" class="border-t border-[#e4e2dd] pt-5 flex flex-col gap-3">
-                                <h3 class="font-title text-center text-pri text-[28px] font-normal">
+                                <h3 class="font-title text-pri text-center text-[28px] font-bold">
                                     Đăng ký
                                 </h3>
                                 <?php

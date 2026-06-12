@@ -41,8 +41,9 @@ add_action('acf/init', function () {
             Text::make('Thời lượng', 'ws_duration')
                 ->helperText('Ví dụ: 1 ngày · 2 tiếng · Buổi sáng'),
 
-            Text::make('Địa điểm', 'ws_location')
-                ->helperText('Ví dụ: Aetheria Studio — Quận 1, TP.HCM'),
+            Textarea::make('Địa điểm', 'ws_location')
+                ->helperText('Nhập mỗi địa điểm trên một dòng. Ví dụ: Aetheria Studio — Quận 1, TP.HCM')
+                ->rows(3),
 
             Textarea::make('Mô tả ngắn', 'ws_short_desc')
                 ->helperText('Hiển thị trên card và hero trang chi tiết.')
@@ -101,6 +102,33 @@ add_action('acf/init', function () {
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 
+            // ─── TAB: LỘ TRÌNH ───────────────────────────────────────────
+            Tab::make('Lộ trình')->placement('left'),
+
+            Text::make('Nhãn lộ trình', 'ws_roadmap_label')
+                ->helperText('Ví dụ: LỘ TRÌNH TRẢI NGHIỆM')
+                ->default('LỘ TRÌNH TRẢI NGHIỆM'),
+
+            Text::make('Tiêu đề lộ trình', 'ws_roadmap_heading')
+                ->helperText('Ví dụ: Hành trình chữa lành')
+                ->default('Hành trình chữa lành'),
+
+            Repeater::make('Các giai đoạn', 'ws_roadmap_items')
+                ->helperText('Mỗi giai đoạn gồm tiêu đề, mô tả và tag.')
+                ->layout('block')
+                ->collapsed('ws_week_title')
+                ->fields([
+                    Text::make('Tiêu đề giai đoạn', 'ws_week_title')
+                        ->helperText('Ví dụ: Phần 1 – Kết nối với hơi thở')
+                        ->required(),
+
+                    Textarea::make('Mô tả', 'ws_week_desc')
+                        ->rows(3),
+
+                    Text::make('Tags', 'ws_week_tags')
+                        ->helperText('Các tag cách nhau bởi dấu phẩy. Ví dụ: Sound Bath, Thiền định'),
+                ]),
+
             // ─── TAB: NGƯỜI HƯỚNG DẪN ────────────────────────────────────
             Tab::make('Người hướng dẫn')->placement('left'),
 
@@ -142,6 +170,18 @@ add_action('acf/init', function () {
                 ->fields([
                     Text::make('Tiêu đề', 'ws_benefit_title')->required(),
                     Textarea::make('Mô tả', 'ws_benefit_desc')->rows(2),
+                ]),
+
+            // ─── TAB: LỢI ÍCH NHẬN ĐƯỢC ─────────────────────────────────
+            Tab::make('Lợi ích nhận được')->placement('left'),
+
+            Repeater::make('Lợi ích sẽ nhận', 'ws_receive_items')
+                ->helperText('Mỗi ô gồm tiêu đề và mô tả. Ví dụ: 70% Thực hành, Trải nghiệm trọn vẹn...')
+                ->layout('block')
+                ->collapsed('ws_receive_title')
+                ->fields([
+                    Text::make('Tiêu đề', 'ws_receive_title')->required(),
+                    Textarea::make('Mô tả', 'ws_receive_desc')->rows(2),
                 ]),
 
             // ─── TAB: CẢM NHẬN ───────────────────────────────────────────

@@ -51,8 +51,9 @@ add_action('acf/init', function () {
             Text::make('Học phí', 'price')
                 ->helperText('Ví dụ: 8.500.000 VNĐ'),
 
-            Text::make('Địa điểm', 'location')
-                ->helperText('Ví dụ: Aetheria Studio — Quận 1, TP.HCM'),
+            Textarea::make('Địa điểm', 'location')
+                ->helperText('Nhập mỗi địa điểm trên một dòng. Ví dụ: Aetheria Studio — Quận 1, TP.HCM')
+                ->rows(3),
 
             Number::make('Số chỗ còn lại', 'kh_spots')
                 ->helperText('Nhập số chỗ còn trống. 0 = Hết chỗ. Để trống = không hiển thị badge. Dùng cho bộ lọc tìm kiếm.')

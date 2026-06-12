@@ -40,16 +40,9 @@ add_action('acf/init', function () {
             Text::make('Thời lượng', 'dv_duration')
                 ->helperText('Ví dụ: 60 - 90 phút mỗi phiên'),
 
-            Text::make('Trang phục', 'dv_clothing')
-                ->helperText('Ví dụ: Đồ tập hoặc quần áo thoải mái, nhẹ nhàng'),
-
             Textarea::make('Địa điểm', 'dv_location')
                 ->helperText('Nhập mỗi địa điểm trên một dòng. Ví dụ: 104/20 Mai Thị Lựu, Tân Định (Quận 1)')
                 ->rows(3),
-
-            Textarea::make('Chuẩn bị', 'dv_preparation')
-                ->helperText('Ví dụ: Hạn chế ăn no 2 tiếng trước giờ trị liệu')
-                ->rows(2),
 
             Text::make('Ngày hoạt động', 'dv_available_days')
                 ->helperText('Ngày trong tuần nhận đặt lịch. Ví dụ: Thứ 2 – Chủ nhật · Thứ 4, 6, 7'),
@@ -106,29 +99,32 @@ add_action('acf/init', function () {
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 
-            // ─── Feature card 1 ──
-            Image::make('Feature 1 – Icon', 'dv_feature_1_icon')
-                ->helperText('Icon SVG/PNG ~20px.')
-                ->acceptedFileTypes(['svg', 'png', 'jpg'])
-                ->format('url'),
+            // ─── TAB: LỘ TRÌNH ───────────────────────────────────────────
+            Tab::make('Lộ trình')->placement('left'),
 
-            Text::make('Feature 1 – Tiêu đề', 'dv_feature_1_title')
-                ->helperText('Ví dụ: Pha lê Alchemy'),
+            Text::make('Nhãn lộ trình', 'dv_roadmap_label')
+                ->helperText('Ví dụ: LỘ TRÌNH TRỊ LIỆU')
+                ->default('LỘ TRÌNH TRỊ LIỆU'),
 
-            Textarea::make('Feature 1 – Mô tả', 'dv_feature_1_desc')
-                ->rows(2),
+            Text::make('Tiêu đề lộ trình', 'dv_roadmap_heading')
+                ->helperText('Ví dụ: Hành trình chữa lành')
+                ->default('Hành trình chữa lành'),
 
-            // ─── Feature card 2 ──
-            Image::make('Feature 2 – Icon', 'dv_feature_2_icon')
-                ->helperText('Icon SVG/PNG ~20px.')
-                ->acceptedFileTypes(['svg', 'png', 'jpg'])
-                ->format('url'),
+            Repeater::make('Các giai đoạn', 'dv_roadmap_items')
+                ->helperText('Mỗi giai đoạn gồm tiêu đề, mô tả và tag.')
+                ->layout('block')
+                ->collapsed('dv_week_title')
+                ->fields([
+                    Text::make('Tiêu đề giai đoạn', 'dv_week_title')
+                        ->helperText('Ví dụ: Bước 1 – Kết nối với hơi thở')
+                        ->required(),
 
-            Text::make('Feature 2 – Tiêu đề', 'dv_feature_2_title')
-                ->helperText('Ví dụ: Tĩnh lặng tuyệt đối'),
+                    Textarea::make('Mô tả', 'dv_week_desc')
+                        ->rows(3),
 
-            Textarea::make('Feature 2 – Mô tả', 'dv_feature_2_desc')
-                ->rows(2),
+                    Text::make('Tags', 'dv_week_tags')
+                        ->helperText('Các tag cách nhau bởi dấu phẩy. Ví dụ: Sound Bath, Thiền định'),
+                ]),
 
             // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
             Tab::make('Lợi ích')->placement('left'),
@@ -143,6 +139,18 @@ add_action('acf/init', function () {
                     Text::make('Nhãn (uppercase)', 'dv_benefit_title')->required()
                         ->helperText('Ví dụ: CẢI THIỆN GIẤC NGỦ'),
                     Textarea::make('Mô tả', 'dv_benefit_desc')->rows(2),
+                ]),
+
+            // ─── TAB: LỢI ÍCH NHẬN ĐƯỢC ─────────────────────────────────
+            Tab::make('Lợi ích nhận được')->placement('left'),
+
+            Repeater::make('Lợi ích sẽ nhận', 'dv_receive_items')
+                ->helperText('Mỗi ô gồm tiêu đề và mô tả. Ví dụ: Thư giãn sâu, Ưu đãi khách hàng thân thiết...')
+                ->layout('block')
+                ->collapsed('dv_receive_title')
+                ->fields([
+                    Text::make('Tiêu đề', 'dv_receive_title')->required(),
+                    Textarea::make('Mô tả', 'dv_receive_desc')->rows(2),
                 ]),
 
             // ─── TAB: NGƯỜI HƯỚNG DẪN ────────────────────────────────────
