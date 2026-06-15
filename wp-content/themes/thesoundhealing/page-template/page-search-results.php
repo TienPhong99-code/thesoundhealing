@@ -215,7 +215,7 @@ if (!empty($chuyen_mon)) {
 get_header();
 ?>
 
-<section class="sec-search-results section-pd-t section-pd-b">
+<section class="sec-search-results section-pd">
     <div class="container">
 
         <!-- Search bar (pre-filled) -->
@@ -245,7 +245,7 @@ get_header();
 
         <!-- Results -->
         <?php if (!empty($results)) : ?>
-            <div class="row sr-grid">
+            <div class="row">
                 <?php foreach ($results as $r) : ?>
                     <div class="col col-5i max-lg:!w-1/2 max-sm:!w-full">
                         <?php
