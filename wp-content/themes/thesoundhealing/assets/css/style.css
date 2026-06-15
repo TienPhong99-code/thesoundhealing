@@ -2672,7 +2672,9 @@ form .wpcf7-not-valid-tip {
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  transition: background 0.16s, border-color 0.16s;
+  transition:
+    background 0.16s,
+    border-color 0.16s;
 }
 .cf7-date-pill:hover {
   background: #f4f2ef;
