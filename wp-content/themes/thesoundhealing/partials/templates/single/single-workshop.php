@@ -495,7 +495,7 @@ get_header();
                     <!-- Right: Booking widget -->
                     <div class="col col-5 max-md:hidden">
                         <div id="form-dang-ky"
-                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)] p-6 max-md:p-4 flex flex-col gap-2 md:max-h-[calc(100vh-100px)] overflow-y-auto">
+                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)]  flex flex-col md:max-h-[calc(100vh-100px)]">
 
                             <!-- Meta box -->
                             <?php
@@ -507,11 +507,11 @@ get_header();
                             if ($ws_location) $meta_rows[] = ['label' => 'ĐỊA ĐIỂM',        'value' => $ws_location, 'type' => 'location', 'icon' => 'location'];
                             $has_spots = $ws_spots !== null || $ws_capacity;
                             if ($ws_price || !empty($meta_rows) || $has_spots) : ?>
-                                <div class="pb-5 border-b border-[#e4e2dd]">
+                                <div class="p-6 max-md:p-4 border-b border-[#e4e2dd]">
                                     <?php if ($ws_price) : ?>
                                         <div class="flex items-baseline gap-1 mb-4">
                                             <span class="font-title text-pri text-[28px] max-md:text-[20px] font-semibold"><?php echo esc_html($ws_price); ?></span>
-                                            <span class="text-[#717171] text-[14px]">/ người</span>
+                                            <?php if (strtolower(trim($ws_price)) !== 'liên hệ') : ?><span class="text-[#717171] text-[14px]">/ người</span><?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     <?php if (!empty($meta_rows) || $has_spots) : ?>
@@ -575,7 +575,7 @@ get_header();
                             <?php endif; ?>
 
                             <!-- CF7 Form -->
-                            <div id="ws-form-inner" class="flex flex-col gap-3">
+                            <div id="ws-form-inner" class="flex p-6 max-md:p-4 overflow-y-auto flex-col gap-3">
                                 <h3 class="font-title text-pri text-[28px] max-md:text-[20px] font-bold">
                                     Đăng ký
                                 </h3>

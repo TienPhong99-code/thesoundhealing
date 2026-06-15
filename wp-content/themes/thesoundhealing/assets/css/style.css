@@ -1900,7 +1900,6 @@ form .wpcf7-not-valid-tip {
   border: none;
   font-family: inherit;
   font-size: 13px;
-  background: #fbf9f4;
 }
 .flatpickr-months .flatpickr-month {
   color: var(--color-sec);
@@ -1926,21 +1925,21 @@ form .wpcf7-not-valid-tip {
 }
 .flatpickr-day.selected,
 .flatpickr-day.selected:hover {
-  background: var(--color-pri);
-  border-color: var(--color-pri);
+  background: var(--color-sec);
+  border-color: transparent;
   color: #fff;
 }
 .flatpickr-day.today:not(.selected) {
-  border-color: var(--color-pri);
+  border-color: transparent;
   color: var(--color-pri);
   font-weight: 600;
   background: transparent;
 }
-.flatpickr-day.flatpickr-disabled,
+/* .flatpickr-day.flatpickr-disabled,
 .flatpickr-day.prevMonthDay,
 .flatpickr-day.nextMonthDay {
-  opacity: 0.3;
-}
+  opacity: 0.45;
+} */
 .flatpickr-prev-month svg,
 .flatpickr-next-month svg {
   fill: var(--color-sec);

@@ -1,7 +1,8 @@
 <?php
 defined('ABSPATH') || exit;
 
-$page_id = get_queried_object_id();
+$lien_he_pages = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-template/page-lien-he.php']);
+$page_id = !empty($lien_he_pages) ? $lien_he_pages[0]->ID : get_queried_object_id();
 
 $sample = [
     'company'       => 'HEALIVERSE HOLDINGS.,JSC',
@@ -155,7 +156,7 @@ $data = [
                 <!-- Right: Contact Form -->
                 <div class="col col-4 max-md:!w-full">
                     <div class="flex flex-col justify-center h-full">
-                        <div class="bg-[#f5f3ee] rounded-[8px] drop-shadow-[0px_10px_20px_rgba(44,81,76,0.05)] p-4 md:p-6">
+                        <div class="bg-[#f5f3ee] rounded-[8px] drop-shadow-[0px_10px_20px_rgba(44,81,76,0.05)] p-4 md:p-4">
                             <div class="sec-lh-form__cf7 cf7-lien-he">
                                 <?php echo do_shortcode($data['cf7_shortcode']); ?>
                             </div>

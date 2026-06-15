@@ -104,12 +104,12 @@ if ($eco_raw_items) {
                 </div>
 
                 <div class="col col-6 max-md:!w-full">
-                    <div class="flex flex-col gap-6">
-                        <h2 class="font-title text-pri text-[32px] font-bold leading-[40px] max-md:text-[24px] max-md:leading-[32px]">
+                    <div class="flex flex-col gap-1">
+                        <h2 class="font-title text-pri text-[32px] font-bold  max-md:text-[24px]">
                             <?php echo wp_kses_post($data['heading']); ?>
                         </h2>
 
-                        <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-2">
                             <p class="text-[#414847] text-[16px] leading-[26px]">
                                 <?php echo wp_kses_post($data['desc_1']); ?>
                             </p>
