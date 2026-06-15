@@ -195,6 +195,15 @@ add_action('acf/init', function () {
             Text::make('Facebook Messenger', 'ws_instructor_messenger')
                 ->helperText('Link Messenger. Ví dụ: https://m.me/linhtam'),
 
+            Repeater::make('Danh sách người hướng dẫn (form đặt lịch)', 'ws_instructors')
+                ->helperText('Các lựa chọn hiển thị trong dropdown "Người hướng dẫn" của form đặt lịch.')
+                ->layout('table')
+                ->collapsed('ws_instructor_name')
+                ->fields([
+                    Text::make('Tên', 'ws_instructor_name')->required()
+                        ->helperText('Ví dụ: Linh Tâm'),
+                ]),
+
             // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
             Tab::make('Lợi ích')->placement('left'),
 

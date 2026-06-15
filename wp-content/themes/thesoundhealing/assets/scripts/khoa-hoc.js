@@ -88,6 +88,7 @@
                             p.date.getDate()     === sel.getDate()) { p.btn.classList.add('is-active'); }
                     });
                 }
+                setTimeout(closePanel, 200);
             },
         });
 

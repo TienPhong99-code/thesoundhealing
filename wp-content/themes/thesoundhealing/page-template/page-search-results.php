@@ -260,14 +260,12 @@ get_header();
                 <?php endforeach; ?>
             </div>
         <?php else : ?>
-            <div class="sr-empty">
+            <div class="sr-empty justify-center min-h-[60vh]">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
                     <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3" />
                 </svg>
                 <p class="sr-empty__title">Không tìm thấy kết quả</p>
-                <p class="sr-empty__desc">Hãy thử thay đổi bộ lọc hoặc xem tất cả dịch vụ của chúng tôi.</p>
-                <a href="<?php echo esc_url(get_permalink()); ?>" class="btn btn-pri">Xem tất cả</a>
             </div>
         <?php endif; ?>
 

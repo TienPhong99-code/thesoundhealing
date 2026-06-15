@@ -24,7 +24,7 @@ $data = [
 ];
 ?>
 
-<section class="sec-partner bg-white py-20">
+<section class="sec-partner bg-white pb-20">
     <div class="container flex flex-col gap-[48px]">
 
         <div class="w-full flex flex-col items-center gap-3 text-center">

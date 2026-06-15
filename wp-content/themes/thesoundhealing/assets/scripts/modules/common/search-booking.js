@@ -41,6 +41,18 @@
         document.body.classList.remove('no-scroll');
     }
 
+    function openPanel(name) {
+        closeAllPanels();
+        var field = document.getElementById('sb-field-' + name);
+        var panel = document.getElementById('sb-panel-' + name);
+        if (!field || !panel) return;
+        var btn = field.querySelector('[data-sb-toggle]');
+        field.classList.add('is-open');
+        if (btn) btn.setAttribute('aria-expanded', 'true');
+        panel.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('no-scroll');
+    }
+
     // ── Panel toggles ─────────────────────────────────────────────────────
     sb.querySelectorAll('[data-sb-toggle]').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
@@ -137,7 +149,7 @@
                 if (valEl) valEl.textContent = display;
 
                 filterSubterms(cat);
-                closeAllPanels();
+                openPanel('time');
             }
         });
     }
@@ -162,7 +174,7 @@
 
             if (window._sbFlatpickr) window._sbFlatpickr.clear();
 
-            closeAllPanels();
+            openPanel('guest');
         });
     });
 
@@ -202,6 +214,44 @@
         if (valEl) valEl.textContent = parts.length > 0 ? parts.join(', ') : 'Thêm khách';
     }
 
+    // ── Submit validation — toast nếu chưa chọn bất kỳ bước nào ────────────
+    var toastEl = null;
+    var toastTimer = null;
+
+    function showToast(msg) {
+        if (!toastEl) {
+            toastEl = document.createElement('div');
+            toastEl.className = 'sb-toast';
+            toastEl.setAttribute('role', 'status');
+            toastEl.setAttribute('aria-live', 'polite');
+            toastEl.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span></span>';
+            document.body.appendChild(toastEl);
+        }
+        toastEl.querySelector('span').textContent = msg;
+        toastEl.classList.add('is-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+            toastEl.classList.remove('is-visible');
+        }, 3000);
+    }
+
+    var sbForm = document.getElementById('sb-form');
+    if (sbForm) {
+        sbForm.addEventListener('submit', function (e) {
+            var hasType  = !!(document.getElementById('sb-input-type')    || {}).value ||
+                           !!(document.getElementById('sb-input-subterm') || {}).value;
+            var hasTime  = !!(document.getElementById('sb-input-time')    || {}).value ||
+                           !!(document.getElementById('sb-input-date')    || {}).value;
+            var hasGuest = (guestCounts.adult + guestCounts.child + guestCounts.infant) > 0;
+
+            if (!hasType && !hasTime && !hasGuest) {
+                e.preventDefault();
+                showToast('Vui lòng chọn ít nhất một tiêu chí tìm kiếm');
+                return;
+            }
+        });
+    }
+
     // ── Flatpickr — init cuối cùng, wrap try-catch để không break script ──
     try {
         var fpTrigger = document.getElementById('sb-flatpickr-trigger');
@@ -223,6 +273,8 @@
                     }
 
                     sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
+
+                    setTimeout(function () { openPanel('guest'); }, 300);
                 },
             });
         }

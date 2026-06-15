@@ -186,7 +186,7 @@ if (!empty($pre_chuyen_mon)) {
                         } elseif (!empty($pre_ngay)) {
                             echo esc_html(date_i18n('j/m/Y', strtotime($pre_ngay)));
                         } else {
-                            echo 'Thêm ngày';
+                            echo 'Ngày đặt lịch';
                         }
                         ?>
                     </span>
@@ -239,7 +239,7 @@ if (!empty($pre_chuyen_mon)) {
                         if ($pre_em_be     > 0) $parts[] = $pre_em_be     . ' em bé';
                         echo esc_html(implode(', ', $parts));
                     } else {
-                        echo 'Thêm khách';
+                        echo 'Số lượng khách';
                     }
                     ?>
                 </span>

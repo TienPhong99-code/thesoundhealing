@@ -50,7 +50,7 @@ $location   = $item['location']     ?? '';
     </div>
 
     <!-- Content -->
-    <div class="flex flex-col flex-1 justify-between mt-2.5 gap-3">
+    <div class="flex flex-col flex-1 justify-between mt-2.5 gap-1">
 
         <div class="flex flex-col gap-1.5">
             <h3 class="text-[18px] font-normal line-clamp-2 leading-[1.4] max-md:text-[16px]">
