@@ -137,8 +137,10 @@ add_action('wp_enqueue_scripts', function () {
 
    if (is_singular('khoa_hoc')) {
       wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
+      wp_enqueue_style('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));
-      wp_enqueue_script('mona-khoa-hoc', MONA_THEME_PATH_URI . '/assets/scripts/khoa-hoc.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/khoa-hoc.js'), array('in_footer' => true));
+      wp_enqueue_script('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+      wp_enqueue_script('mona-khoa-hoc', MONA_THEME_PATH_URI . '/assets/scripts/khoa-hoc.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr', 'mona-select2'), filemtime(MONA_THEME_PATH . '/assets/scripts/khoa-hoc.js'), array('in_footer' => true));
       wp_localize_script('mona-khoa-hoc', 'kh_course', [
          'id'   => get_the_ID(),
          'name' => get_the_title(),
@@ -147,14 +149,18 @@ add_action('wp_enqueue_scripts', function () {
 
    if (is_singular('dich_vu')) {
       wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
+      wp_enqueue_style('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));
-      wp_enqueue_script('mona-dich-vu', MONA_THEME_PATH_URI . '/assets/scripts/dich-vu.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/dich-vu.js'), array('in_footer' => true));
+      wp_enqueue_script('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+      wp_enqueue_script('mona-dich-vu', MONA_THEME_PATH_URI . '/assets/scripts/dich-vu.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr', 'mona-select2'), filemtime(MONA_THEME_PATH . '/assets/scripts/dich-vu.js'), array('in_footer' => true));
    }
 
    if (is_singular('workshop')) {
       wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
+      wp_enqueue_style('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));
-      wp_enqueue_script('mona-ws', MONA_THEME_PATH_URI . '/assets/scripts/ws.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/ws.js'), array('in_footer' => true));
+      wp_enqueue_script('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+      wp_enqueue_script('mona-ws', MONA_THEME_PATH_URI . '/assets/scripts/ws.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr', 'mona-select2'), filemtime(MONA_THEME_PATH . '/assets/scripts/ws.js'), array('in_footer' => true));
       wp_localize_script('mona-ws', 'ws_data', [
          'id'   => get_the_ID(),
          'name' => get_the_title(),

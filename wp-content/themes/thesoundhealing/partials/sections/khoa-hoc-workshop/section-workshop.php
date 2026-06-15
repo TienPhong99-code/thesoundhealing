@@ -13,6 +13,7 @@ $sample = [
     [
         'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Sound Bath Buổi Tối'],
         'type'       => 'Workshop Âm Thanh',
+        'format'     => 'Onsite',
         'status'     => 'open',
         'date'       => '18 THÁNG 1, 2025',
         'time'       => '19:00 – 21:00',
@@ -28,6 +29,7 @@ $sample = [
     [
         'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Nhập Môn Reiki'],
         'type'       => 'Workshop Năng Lượng',
+        'format'     => 'Onsite',
         'status'     => 'limited',
         'date'       => '25 THÁNG 1, 2025',
         'time'       => '09:00 – 17:00',
@@ -43,6 +45,7 @@ $sample = [
     [
         'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Hòa Âm Gong'],
         'type'       => 'Workshop Âm Thanh',
+        'format'     => 'Onsite',
         'status'     => 'upcoming',
         'date'       => '8 THÁNG 2, 2025',
         'time'       => '18:00 – 20:30',
@@ -75,14 +78,14 @@ if ($use_sample) {
             'type'       => $type_name,
             'format'     => get_field('ws_format',        $post_id) ?: 'Onsite',
             'status'     => get_field('ws_status',        $post_id) ?: 'open',
-            'date'       => get_field('ws_date',          $post_id),
-            'time'       => get_field('ws_time',          $post_id),
-            'duration'   => get_field('ws_duration',      $post_id),
+            'date'       => get_field('ws_date',          $post_id) ?: 'Sắp diễn ra',
+            'time'       => get_field('ws_time',          $post_id) ?: '09:00 – 12:00',
+            'duration'   => get_field('ws_duration',      $post_id) ?: '3 giờ',
             'title'      => get_the_title($post_id),
             'location'   => get_field('ws_location',      $post_id),
             'instructor' => get_field('ws_instructor_name', $post_id),
             'desc'       => get_field('ws_short_desc',    $post_id),
-            'price'      => get_field('ws_price',         $post_id),
+            'price'      => get_field('ws_price',         $post_id) ?: 'Liên hệ',
             'spots'      => get_field('ws_spots',         $post_id),
             'url'        => get_permalink($post_id),
         ];
@@ -93,7 +96,7 @@ if ($use_sample) {
 
 <section class="sec-khws-ws-list pt-0 pb-(--pd-sc)">
     <div class="container">
-        <h2 class="font-title text-pri text-[40px] font-normal tracking-[-0.8px] leading-[48px] mb-10 max-md:text-[28px] max-md:mb-6">
+        <h2 class="font-title text-pri text-[40px] font-bold tracking-[-0.8px] leading-[48px] mb-10 max-md:text-[28px] max-md:mb-6">
             Workshop
         </h2>
         <div class="row">

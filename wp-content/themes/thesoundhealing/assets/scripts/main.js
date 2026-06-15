@@ -1,3 +1,74 @@
+// =============================================
+// Share modal
+// =============================================
+(function () {
+    function updateShareModal(url, title) {
+        var modal = document.querySelector('[data-modal="share"]');
+        if (!modal) return;
+        var enc = encodeURIComponent;
+        var fb = modal.querySelector('.share-fb-link');
+        var xLink = modal.querySelector('.share-x-link');
+        var li = modal.querySelector('.share-li-link');
+        var copyBtn = modal.querySelector('.share-copy-btn');
+        var qrBtn = modal.querySelector('.share-qr-btn');
+        if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + enc(url);
+        if (xLink) xLink.href = 'https://twitter.com/intent/tweet?url=' + enc(url) + '&text=' + enc(title);
+        if (li) li.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + enc(url);
+        if (copyBtn) copyBtn.setAttribute('data-copy-url', url);
+        if (qrBtn) qrBtn.setAttribute('data-qr-url', url);
+    }
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-share-url]');
+        if (!btn) return;
+        updateShareModal(
+            btn.getAttribute('data-share-url') || window.location.href,
+            btn.getAttribute('data-share-title') || document.title
+        );
+    });
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.share-copy-btn');
+        if (!btn) return;
+        var url = btn.getAttribute('data-copy-url') || window.location.href;
+        var orig = btn.textContent;
+        function showCopied() {
+            btn.textContent = 'Đã sao chép!';
+            setTimeout(function () { btn.textContent = orig; }, 2000);
+        }
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(showCopied).catch(showCopied);
+        } else {
+            var ta = document.createElement('textarea');
+            ta.value = url;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showCopied();
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.share-qr-btn');
+        if (!btn) return;
+        var url = btn.getAttribute('data-qr-url') || window.location.href;
+        var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(url);
+        fetch(qrUrl)
+            .then(function (r) { return r.blob(); })
+            .then(function (blob) {
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'qr-code.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(a.href);
+            })
+            .catch(function () { window.open(qrUrl, '_blank'); });
+    });
+})();
+
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
 

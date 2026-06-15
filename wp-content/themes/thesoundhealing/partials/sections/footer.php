@@ -28,103 +28,60 @@ $data = [
 ];
 ?>
 
-<footer class="site-footer bg-[#f5f3ee] section-pd">
+<footer class="site-footer bg-[#f5f3ee] py-5 border-t border-[rgba(192,200,198,0.25)]">
    <div class="container">
-      <div class="relative">
-         <!-- Top: 3 cột -->
-         <div class="row">
+      <div class="flex items-center justify-between gap-8 max-lg:flex-col max-lg:items-start max-lg:gap-5">
 
-            <!-- Col 1: Brand Identity -->
-            <div class="col col-6 max-md:w-full!">
-               <div class="flex flex-col gap-6">
-
-                  <!-- Logo -->
-                  <a href="<?php echo esc_url(home_url('/')); ?>" class="block w-fit max-md:mx-auto">
-                     <?php if (!empty($data['logo'])) : ?>
-                        <?php echo mona_get_image_by_id($data['logo'], 'full', false, ['class' => 'block w-[240px]  inline-block', 'alt' => get_bloginfo('name')]); ?>
-                     <?php else : ?>
-                        <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/logo2.png'); ?>"
-                           class="block h-8 w-auto"
-                           alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
-                     <?php endif; ?>
-                  </a>
-
-                  <!-- Tagline -->
-                  <?php if (!empty($data['tagline'])) : ?>
-                     <p class="text-[#414847] max-md:text-center text-[16px] leading-[24px] max-w-[384px]">
-                        <?php echo wp_kses_post($data['tagline']); ?>
-                     </p>
-                  <?php endif; ?>
-
-                  <!-- Social Links -->
-                  <?php if (!empty($data['socials'])) : ?>
-                     <div class="flex gap-6 pt-2 max-md:justify-center">
-                        <?php foreach ($data['socials'] as $social) : ?>
-                           <a href="<?php echo esc_url($social['url'] ?? '#'); ?>"
-                              class="text-[#c2a056] text-[16px] leading-[24px] hover:opacity-70 transition-opacity">
-                              <?php echo esc_html($social['label']); ?>
-                           </a>
-                        <?php endforeach; ?>
-                     </div>
-                  <?php endif; ?>
-
+         <!-- Logo + Socials -->
+         <div class="flex items-center gap-6 shrink-0">
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="block">
+               <?php if (!empty($data['logo'])) : ?>
+                  <?php echo mona_get_image_by_id($data['logo'], 'full', false, ['class' => 'block h-8 w-auto', 'alt' => get_bloginfo('name')]); ?>
+               <?php else : ?>
+                  <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/logo2.png'); ?>"
+                     class="block h-8 w-auto"
+                     alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
+               <?php endif; ?>
+            </a>
+            <?php if (!empty($data['socials'])) : ?>
+               <div class="flex gap-4">
+                  <?php foreach ($data['socials'] as $social) : ?>
+                     <a href="<?php echo esc_url($social['url'] ?? '#'); ?>"
+                        class="text-[#c2a056] text-[13px] hover:opacity-70 transition-opacity">
+                        <?php echo esc_html($social['label']); ?>
+                     </a>
+                  <?php endforeach; ?>
                </div>
-            </div>
-
-            <!-- Col 2: Quick Links -->
-            <div class="col col-3 max-md:col-6 max-sm:w-1/2!">
-               <div class="flex flex-col gap-6">
-                  <p class="text-[#c2a056] text-[16px] leading-[24px] uppercase tracking-wider">
-                     <?php esc_html_e('MENU', 'monamedia'); ?>
-                  </p>
-                  <?php wp_nav_menu([
-                     'theme_location' => 'footer-menu',
-                     'container'      => false,
-                     'menu_class'     => 'flex flex-col gap-3 list-none m-0 p-0',
-                     'link_class'     => 'text-[#414847] hover:text-[#133a35] transition-colors',
-                     'depth'          => 1,
-                     'fallback_cb'    => false,
-                  ]); ?>
-               </div>
-            </div>
-
-            <!-- Col 3: Contact -->
-            <div class="col col-3 max-md:col-6 max-sm:w-1/2!">
-               <div class="flex flex-col gap-6">
-                  <p class="text-[#c2a056] text-[16px] leading-[24px] uppercase tracking-wider">
-                     <?php esc_html_e('LIÊN HỆ', 'monamedia'); ?>
-                  </p>
-                  <div class="flex flex-col gap-3">
-                     <?php if (!empty($data['address'])) : ?>
-                        <p class="text-[#414847]">
-                           <?php echo wp_kses_post($data['address']); ?>
-                        </p>
-                     <?php endif; ?>
-                     <?php if (!empty($data['email'])) : ?>
-                        <a href="mailto:<?php echo esc_attr($data['email']); ?>"
-                           class="text-[#414847] hover:text-[#c2a056] transition-colors">
-                           <?php echo esc_html($data['email']); ?>
-                        </a>
-                     <?php endif; ?>
-                     <?php if (!empty($data['phone'])) : ?>
-                        <a href="tel:<?php echo esc_attr(preg_replace('/\s+/', '', $data['phone'])); ?>"
-                           class="text-[#414847] hover:text-[#c2a056] transition-colors">
-                           <?php echo esc_html($data['phone']); ?>
-                        </a>
-                     <?php endif; ?>
-                  </div>
-               </div>
-            </div>
-
+            <?php endif; ?>
          </div>
+
+         <!-- Nav Links -->
+         <?php wp_nav_menu([
+            'theme_location' => 'footer-menu',
+            'container'      => false,
+            'menu_class'     => 'flex flex-wrap gap-x-6 gap-y-2 list-none m-0 p-0 items-center',
+            'depth'          => 1,
+            'fallback_cb'    => false,
+            'link_before'    => '<span class="text-[#414847] text-[13px] hover:text-[#c2a056] transition-colors">',
+            'link_after'     => '</span>',
+         ]); ?>
+
+         <!-- Contact -->
+         <div class="flex items-center gap-6 shrink-0 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+            <?php if (!empty($data['email'])) : ?>
+               <a href="mailto:<?php echo esc_attr($data['email']); ?>"
+                  class="text-[#414847] text-[13px] hover:text-[#c2a056] transition-colors">
+                  <?php echo esc_html($data['email']); ?>
+               </a>
+            <?php endif; ?>
+            <?php if (!empty($data['phone'])) : ?>
+               <a href="tel:<?php echo esc_attr(preg_replace('/\s+/', '', $data['phone'])); ?>"
+                  class="text-[#414847] text-[13px] hover:text-[#c2a056] transition-colors">
+                  <?php echo esc_html($data['phone']); ?>
+               </a>
+            <?php endif; ?>
+         </div>
+
       </div>
-      <!-- Bottom Bar -->
-      <!-- <div class="flex items-center justify-between pt-[33px] mt-20 border-t border-[rgba(192,200,198,0.3)]">
-         <p class="text-[#717977] text-[14px] leading-[24px] uppercase tracking-wider">
-            <?php echo esc_html($data['copyright']); ?>
-         </p>
-
-      </div> -->
-
    </div>
 </footer>

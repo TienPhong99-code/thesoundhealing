@@ -13,6 +13,20 @@ defined('ABSPATH') || exit;
 
 add_action('acf/init', function () {
     mona_regist_acf_field_group([
+        'title'    => 'Mô tả Workshop',
+        'style'    => 'seamless',
+        'position' => 'acf_after_title',
+        'location' => [
+            Location::where('post_type', '==', 'workshop'),
+        ],
+        'fields' => [
+            Textarea::make('Mô tả', 'ws_description')
+                ->helperText('Mô tả hiển thị ngay dưới tiêu đề trên trang chi tiết workshop.')
+                ->rows(3),
+        ],
+    ]);
+
+    mona_regist_acf_field_group([
         'title'    => 'Chi tiết Workshop',
         'style'    => 'default',
         'position' => 'normal',
@@ -44,6 +58,9 @@ add_action('acf/init', function () {
             Textarea::make('Địa điểm', 'ws_location')
                 ->helperText('Nhập mỗi địa điểm trên một dòng. Ví dụ: Aetheria Studio — Quận 1, TP.HCM')
                 ->rows(3),
+
+            Text::make('Số lượng khách', 'ws_guests')
+                ->helperText('Ví dụ: 20 người · Tối đa 15 khách'),
 
             Textarea::make('Mô tả ngắn', 'ws_short_desc')
                 ->helperText('Hiển thị trên card và hero trang chi tiết.')
@@ -99,6 +116,26 @@ add_action('acf/init', function () {
 
             Image::make('Ảnh gallery 5', 'ws_gallery_5')
                 ->helperText('Ảnh thứ 5 trong bộ gallery trang chi tiết. Kích thước đề xuất: 600×300px.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 6', 'ws_gallery_6')
+                ->helperText('Ảnh thứ 6 trong bộ gallery trang chi tiết.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 7', 'ws_gallery_7')
+                ->helperText('Ảnh thứ 7 trong bộ gallery trang chi tiết.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 8', 'ws_gallery_8')
+                ->helperText('Ảnh thứ 8 trong bộ gallery trang chi tiết.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 9', 'ws_gallery_9')
+                ->helperText('Ảnh thứ 9 trong bộ gallery trang chi tiết.')
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 

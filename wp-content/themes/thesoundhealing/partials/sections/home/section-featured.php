@@ -85,9 +85,9 @@ if (empty($data['items'])) return;
     <div class="container">
 
         <!-- Header -->
-        <div class="flex items-end justify-between mb-8 max-md:flex-col max-md:items-center max-md:text-center gap-4">
+        <div class="flex md:items-end justify-between mb-8 max-md:flex-col gap-4">
             <div>
-                <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
+                <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
                 <?php if (!empty($data['desc'])) : ?>

@@ -45,7 +45,7 @@ $data = [
     <div class="container">
 
         <div class="flex flex-col items-center gap-3 text-center max-w-[768px] mx-auto mb-16">
-            <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
+            <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
                 <?php echo esc_html($data['heading']); ?>
             </h2>
 
@@ -55,16 +55,18 @@ $data = [
         </div>
 
         <div class="swiper-gallery relative slideSw">
-            <button class="swiper-prev absolute top-1/2 -translate-y-1/2 -left-5 max-xl:hidden z-10 flex items-center justify-center w-10 h-10 rounded-full border border-[#c2a056] text-[#c2a056] hover:bg-[#c2a056] hover:text-white transition-colors duration-300 disabled:opacity-30">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6" />
-                </svg>
-            </button>
-            <button class="swiper-next absolute top-1/2 -translate-y-1/2 -right-5 max-xl:hidden z-10 flex items-center justify-center w-10 h-10 rounded-full border border-[#c2a056] text-[#c2a056] hover:bg-[#c2a056] hover:text-white transition-colors duration-300 disabled:opacity-30">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 18 15 12 9 6" />
-                </svg>
-            </button>
+            <div class="flex justify-center gap-4 mb-4">
+                <button class="swiper-prev w-[36px] h-[36px] bg-pri/90 rounded-full flex items-center justify-center shadow-sm cursor-pointer hover:bg-pri transition-colors">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </button>
+                <button class="swiper-next w-[36px] h-[36px] bg-pri/90 rounded-full flex items-center justify-center shadow-sm cursor-pointer hover:bg-pri transition-colors">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
+            </div>
             <div class="swiper-container">
                 <div class="swiper row overflow-hidden">
                     <div class="swiper-wrapper">

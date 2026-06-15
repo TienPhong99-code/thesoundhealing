@@ -26,7 +26,7 @@ $data = [
             <div class="row">
 
                 <div class="col col-7 max-md:!w-full flex flex-col gap-6">
-                    <h1 class="font-title text-pri text-[56px] font-normal max-lg:text-[44px] max-md:text-[24px]">
+                    <h1 class="font-title text-pri text-[56px] font-bold max-lg:text-[44px] max-md:text-[24px]">
                         <?php echo wp_kses_post($data['heading']); ?>
                     </h1>
                     <p class="text-[#414847] text-[18px] leading-[28px] max-w-[540px] max-md:text-[16px] max-md:leading-[26px]">

@@ -19,6 +19,7 @@ if (!defined('ABSPATH')) {
 
 <?php
 // Modals — render ở body level, trên mọi z-index
+get_template_part('partials/modals/modal-share');
 if (is_singular('tuyen_dung')) {
     get_template_part('partials/modals/modal-ung-tuyen');
 }

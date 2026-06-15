@@ -85,7 +85,7 @@ $feat_list_items = array_filter(array_map('trim', explode("\n", $feat['list'])))
                         </div>
                     <?php endif; ?>
 
-                    <h2 class="font-title text-pri text-[40px] font-normal leading-[48px] max-md:text-[24px] max-md:leading-[32px]">
+                    <h2 class="font-title text-pri text-[40px] font-bold leading-[48px] max-md:text-[24px] max-md:leading-[32px]">
                         <?php echo wp_kses_post($feat['heading']); ?>
                     </h2>
 
@@ -93,7 +93,7 @@ $feat_list_items = array_filter(array_map('trim', explode("\n", $feat['list'])))
                         <?php echo wp_kses_post($feat['desc']); ?>
                     </p>
 
-                    <?php if ($feat_list_items) : ?>
+                    <!-- <?php if ($feat_list_items) : ?>
                         <div class="bg-white rounded-[8px] p-6">
                             <ul class="flex flex-col gap-3">
                                 <?php foreach ($feat_list_items as $item) : ?>
@@ -107,7 +107,7 @@ $feat_list_items = array_filter(array_map('trim', explode("\n", $feat['list'])))
                                 <?php endforeach; ?>
                             </ul>
                         </div>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
                 </div>
 
             </div>

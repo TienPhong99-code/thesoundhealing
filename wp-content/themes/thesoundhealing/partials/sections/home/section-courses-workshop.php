@@ -23,15 +23,17 @@ foreach ($course_posts as $post) {
         'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
         'term'       => $term_name,
         'level'      => get_field('level',           $post->ID),
+        'format'     => get_field('kh_format',       $post->ID) ?: 'Onsite',
         'title'      => $post->post_title,
         'desc'       => get_field('short_desc',      $post->ID),
-        'start_date' => get_field('start_date',      $post->ID),
-        'duration'   => get_field('duration',        $post->ID),
+        'time'       => get_field('kh_time',         $post->ID) ?: '09:00 – 17:00',
+        'start_date' => get_field('start_date',      $post->ID) ?: 'Sắp khai giảng',
+        'duration'   => get_field('duration',        $post->ID) ?: 'Cuối tuần',
         'instructor' => get_field('instructor_name', $post->ID),
         'location'   => get_field('location',        $post->ID),
         'branch'     => get_field('kh_branch',       $post->ID),
-        'status'     => get_field('kh_status',       $post->ID) ?: '',
-        'price'      => get_field('price',           $post->ID),
+        'status'     => get_field('kh_status',       $post->ID) ?: 'open',
+        'price'      => get_field('price',           $post->ID) ?: 'Liên hệ',
         'spots'      => get_field('kh_spots',        $post->ID),
         'url'        => get_permalink($post->ID),
         '_date_sort' => get_field('start_date', $post->ID) ?: $post->post_date,
@@ -57,15 +59,16 @@ foreach ($workshop_posts as $post) {
         '_type'      => 'workshop',
         'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
         'type'       => $type_name,
+        'format'     => get_field('ws_format',        $post->ID) ?: 'Onsite',
         'status'     => get_field('ws_status',        $post->ID) ?: 'open',
-        'date'       => get_field('ws_date',          $post->ID),
-        'time'       => get_field('ws_time',          $post->ID),
-        'duration'   => get_field('ws_duration',      $post->ID),
+        'date'       => get_field('ws_date',          $post->ID) ?: 'Sắp diễn ra',
+        'time'       => get_field('ws_time',          $post->ID) ?: '09:00 – 12:00',
+        'duration'   => get_field('ws_duration',      $post->ID) ?: '3 giờ',
         'title'      => $post->post_title,
         'location'   => get_field('ws_location',      $post->ID),
         'instructor' => get_field('ws_instructor_name', $post->ID),
         'desc'       => get_field('ws_short_desc',    $post->ID),
-        'price'      => get_field('ws_price',         $post->ID),
+        'price'      => get_field('ws_price',         $post->ID) ?: 'Liên hệ',
         'spots'      => get_field('ws_spots',         $post->ID),
         'url'        => get_permalink($post->ID),
         '_date_sort' => get_field('ws_date', $post->ID) ?: $post->post_date,
@@ -91,9 +94,9 @@ $data = [
     <div class="container">
 
         <!-- Header -->
-        <div class="flex items-end justify-between mb-8 max-md:flex-col max-md:items-center max-md:text-center gap-4">
+        <div class="flex md:items-end justify-between mb-8 max-md:flex-col gap-4">
             <div>
-                <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px] mb-3">
+                <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px] mb-3">
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
                 <?php if (!empty($data['desc'])) : ?>

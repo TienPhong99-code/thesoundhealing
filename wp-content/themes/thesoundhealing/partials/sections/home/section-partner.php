@@ -28,7 +28,7 @@ $data = [
     <div class="container flex flex-col gap-[48px]">
 
         <div class="w-full flex flex-col items-center gap-3 text-center">
-            <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
+            <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
                 <?php echo esc_html($data['heading']); ?>
             </h2>
             <?php if (!empty($data['desc'])) : ?>

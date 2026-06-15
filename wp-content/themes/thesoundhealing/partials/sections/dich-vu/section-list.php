@@ -15,6 +15,7 @@ $sample = [
     [
         'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tam-am-ngu-ngon-nhom.jpg', 'alt' => 'Tắm Âm Ngủ Ngon (Nhóm)'],
         'category'       => 'SOUND HEALING',
+        'format'         => 'Onsite',
         'title'          => 'Tắm Âm Ngủ Ngon (Nhóm)',
         'desc'           => 'Trải nghiệm sóng âm thư giãn cùng nhóm để cải thiện chất lượng giấc ngủ và giảm căng thẳng tích tụ.',
         'available_days' => 'Thứ 6, 7, Chủ nhật',
@@ -30,6 +31,7 @@ $sample = [
     [
         'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tam-am-ngu-ngon-rieng-tu.jpg', 'alt' => 'Tắm Âm Ngủ Ngon (Riêng Tư)'],
         'category'       => 'PRIVATE EXPERIENCE',
+        'format'         => 'Onsite',
         'title'          => 'Tắm Âm Ngủ Ngon (Riêng Tư)',
         'desc'           => 'Không gian trị liệu âm thanh dành riêng cho bạn, tập trung vào nhu cầu phục hồi sâu sắc của cá nhân.',
         'available_days' => 'Thứ 2 – Chủ nhật',
@@ -45,6 +47,7 @@ $sample = [
     [
         'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tri-lieu-chuong-do-rieng-tu.jpg', 'alt' => 'Trị Liệu Chuông Đồ (Riêng Tư)'],
         'category'       => 'VIBRATIONAL THERAPY',
+        'format'         => 'Onsite',
         'title'          => 'Trị Liệu Chuông Đồ (Riêng Tư)',
         'desc'           => 'Kỹ thuật đặt chuông trực tiếp lên cơ thể để các rung động tác động sâu vào từng tế bào và huyệt đạo.',
         'available_days' => 'Thứ 2 – Thứ 6',
@@ -60,6 +63,7 @@ $sample = [
     [
         'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-nhom.jpg', 'alt' => 'Chữa Lành Usui Reiki (Group)'],
         'category'       => 'ENERGY HEALING',
+        'format'         => 'Onsite',
         'title'          => 'Chữa Lành Usui Reiki (Group)',
         'desc'           => 'Kết nối năng lượng vũ trụ trong không gian cộng hưởng nhóm để thanh tẩy và cân bằng tâm trí.',
         'available_days' => 'Thứ 7, Chủ nhật',
@@ -75,6 +79,7 @@ $sample = [
     [
         'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-rieng-tu.jpg', 'alt' => 'Chữa Lành Usui Reiki (Riêng Tư)'],
         'category'       => 'ENERGY HEALING',
+        'format'         => 'Onsite',
         'title'          => 'Chữa Lành Usui Reiki (Riêng Tư)',
         'desc'           => 'Phiên trị liệu năng lượng chuyên sâu 1-1 giúp giải quyết các tắc nghẽn cảm xúc và thể chất cụ thể.',
         'available_days' => 'Thứ 2 – Thứ 6',
@@ -90,6 +95,7 @@ $sample = [
     [
         'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-khai-van-huyen-hoc.jpg', 'alt' => 'Khai Vấn Dự Đoán Huyền Học'],
         'category'       => 'INTUITIVE ARTS',
+        'format'         => 'Onsite',
         'title'          => 'Khai Vấn Dự Đoán Huyền Học',
         'desc'           => 'Sử dụng Soul Mirror Cards để soi chiếu nội tâm và tìm kiếm những chỉ dẫn trực giác cho hành trình sống.',
         'available_days' => 'Thứ 3, 5, 7',
@@ -124,13 +130,13 @@ if ($use_sample) {
             'format'         => get_field('dv_format',          $post_id) ?: 'Onsite',
             'title'          => get_the_title($post_id),
             'desc'           => get_field('dv_short_desc',      $post_id),
-            'available_days' => get_field('dv_available_days',  $post_id),
-            'duration'       => get_field('dv_duration',        $post_id),
+            'available_days' => get_field('dv_available_days',  $post_id) ?: 'Thứ 2 – Chủ nhật',
+            'duration'       => get_field('dv_duration',        $post_id) ?: '60 - 90 phút mỗi phiên',
             'branch'         => get_field('dv_branch',          $post_id),
             'location'       => get_field('dv_location',        $post_id),
             'instructor'     => get_field('dv_instructor_name', $post_id),
-            'status'         => get_field('dv_status',          $post_id) ?: '',
-            'price'          => get_field('dv_price',           $post_id),
+            'status'         => get_field('dv_status',          $post_id) ?: 'open',
+            'price'          => get_field('dv_price',           $post_id) ?: 'Liên hệ',
             'spots'          => get_field('dv_spots',           $post_id),
             'url'            => get_permalink($post_id),
         ];
@@ -150,7 +156,7 @@ $_dv_list_heading = get_field('dv_page_heading', $_dv_page_id) ?: 'Dịch Vụ';
     data-ajaxurl="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"
     <?php endif; ?>>
     <div class="container">
-        <h2 class="font-title text-pri text-[40px] leading-[48px] font-normal tracking-[-0.8px] mb-10 max-md:text-[32px] max-md:leading-[40px] max-md:mb-8">
+        <h2 class="font-title text-pri text-[40px] leading-[48px] font-bold tracking-[-0.8px] mb-10 max-md:text-[32px] max-md:leading-[40px] max-md:mb-8">
             <?php echo wp_kses_post($_dv_list_heading); ?>
         </h2>
         <div class="row js-dv-list-grid">

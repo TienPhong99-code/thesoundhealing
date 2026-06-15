@@ -6,6 +6,7 @@ use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
 use Extended\ACF\Fields\URL;
+use Extended\ACF\Fields\WYSIWYGEditor;
 use Extended\ACF\Location;
 
 defined('ABSPATH') || exit;
@@ -28,9 +29,11 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Bản Chất Của Sự Tĩnh Lặng')
                 ->default('Bản Chất Của Sự Tĩnh Lặng'),
 
-            Textarea::make('Mô tả Hero', 'ab_hero_desc')
+            WYSIWYGEditor::make('Mô tả Hero', 'ab_hero_desc')
                 ->helperText('1–3 câu hiển thị dưới tiêu đề.')
-                ->rows(3),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
             Image::make('Ảnh minh họa Hero', 'ab_hero_image')
                 ->helperText('Ảnh cột bên phải. Tỉ lệ: 4/3 hoặc 1/1.')
@@ -48,13 +51,17 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Hành Trình Của Chúng Tôi')
                 ->default('Hành Trình Của Chúng Tôi'),
 
-            Textarea::make('Đoạn 1', 'ab_journey_desc_1')
+            WYSIWYGEditor::make('Đoạn 1', 'ab_journey_desc_1')
                 ->helperText('Đoạn văn đầu tiên.')
-                ->rows(4),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
-            Textarea::make('Đoạn 2', 'ab_journey_desc_2')
+            WYSIWYGEditor::make('Đoạn 2', 'ab_journey_desc_2')
                 ->helperText('Đoạn văn thứ hai.')
-                ->rows(4),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
             Text::make('Nhãn link', 'ab_journey_link_text')
                 ->helperText('Ví dụ: Khám Phá Triết Lý')
@@ -98,9 +105,11 @@ add_action('acf/init', function () {
                         ->required(),
                     URL::make('URL', 'url')
                         ->helperText('Đường dẫn website tương ứng.'),
-                    Textarea::make('Mô tả', 'desc')
+                    WYSIWYGEditor::make('Mô tả', 'desc')
                         ->helperText('Có thể dùng thẻ <strong> để in đậm.')
-                        ->rows(3),
+                        ->tabs('visual')
+                        ->toolbar('basic')
+                        ->disableMediaUpload(),
                 ]),
 
             // ─── TAB: NỀN TẢNG CỐT LÕI ───────────────────────────────────
@@ -113,9 +122,11 @@ add_action('acf/init', function () {
             Text::make('Tiêu đề nổi bật', 'ab_pillars_feat_heading')
                 ->helperText('Heading lớn cột phải.'),
 
-            Textarea::make('Mô tả nổi bật', 'ab_pillars_feat_desc')
+            WYSIWYGEditor::make('Mô tả nổi bật', 'ab_pillars_feat_desc')
                 ->helperText('1–2 câu.')
-                ->rows(3),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
             Textarea::make('Danh sách checklist', 'ab_pillars_feat_list')
                 ->helperText('Mỗi dòng là một mục. Hiển thị trong khung màu.')
@@ -144,7 +155,10 @@ add_action('acf/init', function () {
                 ->button('+ Thêm thẻ')
                 ->fields([
                     Text::make('Tiêu đề', 'title')->required(),
-                    Textarea::make('Mô tả', 'desc')->rows(2),
+                    WYSIWYGEditor::make('Mô tả', 'desc')
+                        ->tabs('visual')
+                        ->toolbar('basic')
+                        ->disableMediaUpload(),
                     Textarea::make('Checklist (mỗi dòng 1 mục)', 'list_items')
                         ->helperText('Mỗi dòng là một mục trong danh sách.')
                         ->rows(4),
@@ -161,13 +175,17 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Elias Thorne')
                 ->default('Elias Thorne'),
 
-            Textarea::make('Trích dẫn', 'ab_visionary_quote')
+            WYSIWYGEditor::make('Trích dẫn', 'ab_visionary_quote')
                 ->helperText('Quote lớn hiển thị nổi bật. Nên có dấu ngoặc kép.')
-                ->rows(4),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
-            Textarea::make('Tiểu sử', 'ab_visionary_bio')
+            WYSIWYGEditor::make('Tiểu sử', 'ab_visionary_bio')
                 ->helperText('Đoạn mô tả ngắn về người sáng lập.')
-                ->rows(4),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
             Image::make('Ảnh chân dung', 'ab_visionary_image')
                 ->helperText('Portrait, tỉ lệ 3/4.')
@@ -186,9 +204,11 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Sống Trọn Vẹn')
                 ->default('Sống Trọn Vẹn'),
 
-            Textarea::make('Mô tả Gallery', 'ab_gallery_desc')
+            WYSIWYGEditor::make('Mô tả Gallery', 'ab_gallery_desc')
                 ->helperText('1 câu mô tả ngắn.')
-                ->rows(2),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
             Repeater::make('Ảnh Gallery', 'ab_gallery_images')
                 ->helperText('Đúng 4 ảnh. Ảnh đầu tiên sẽ hiển thị lớn (chiếm 2 hàng).')
@@ -222,7 +242,10 @@ add_action('acf/init', function () {
                 ->button('+ Thêm đặc điểm')
                 ->fields([
                     Text::make('Tiêu đề', 'title')->required(),
-                    Textarea::make('Mô tả', 'desc')->rows(2),
+                    WYSIWYGEditor::make('Mô tả', 'desc')
+                        ->tabs('visual')
+                        ->toolbar('basic')
+                        ->disableMediaUpload(),
                 ]),
 
             // ─── TAB: CTA ─────────────────────────────────────────────────
@@ -232,9 +255,11 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Bắt Đầu Hành Trình Của Bạn')
                 ->default('Bắt Đầu Hành Trình Của Bạn'),
 
-            Textarea::make('Mô tả CTA', 'ab_cta_desc')
+            WYSIWYGEditor::make('Mô tả CTA', 'ab_cta_desc')
                 ->helperText('1–2 câu.')
-                ->rows(2),
+                ->tabs('visual')
+                ->toolbar('basic')
+                ->disableMediaUpload(),
 
             Text::make('Nút chính — nhãn', 'ab_cta_btn_primary_text')
                 ->default('Đặt Lịch Trải Nghiệm'),

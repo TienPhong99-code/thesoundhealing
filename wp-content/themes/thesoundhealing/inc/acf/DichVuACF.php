@@ -13,6 +13,20 @@ defined('ABSPATH') || exit;
 
 add_action('acf/init', function () {
     mona_regist_acf_field_group([
+        'title'    => 'Mô tả Dịch Vụ',
+        'style'    => 'seamless',
+        'position' => 'acf_after_title',
+        'location' => [
+            Location::where('post_type', '==', 'dich_vu'),
+        ],
+        'fields' => [
+            Textarea::make('Mô tả', 'dv_description')
+                ->helperText('Mô tả hiển thị ngay dưới tiêu đề trên trang chi tiết dịch vụ.')
+                ->rows(3),
+        ],
+    ]);
+
+    mona_regist_acf_field_group([
         'title'    => 'Chi tiết Dịch Vụ',
         'style'    => 'default',
         'position' => 'normal',
@@ -96,6 +110,26 @@ add_action('acf/init', function () {
 
             Image::make('Ảnh gallery 5', 'dv_gallery_5')
                 ->helperText('Ảnh thứ 5 trong bộ gallery trang chi tiết. Kích thước đề xuất: 600×300px.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 6', 'dv_gallery_6')
+                ->helperText('Ảnh thứ 6 trong bộ gallery trang chi tiết.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 7', 'dv_gallery_7')
+                ->helperText('Ảnh thứ 7 trong bộ gallery trang chi tiết.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 8', 'dv_gallery_8')
+                ->helperText('Ảnh thứ 8 trong bộ gallery trang chi tiết.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->format('array'),
+
+            Image::make('Ảnh gallery 9', 'dv_gallery_9')
+                ->helperText('Ảnh thứ 9 trong bộ gallery trang chi tiết.')
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 

@@ -11,7 +11,11 @@ if (!defined('ABSPATH')) {
 get_header();
 ?>
 
-<?php get_template_part('partials/sections/khoa-hoc-workshop/section', 'hero'); ?>
+<section class="sec-search-home section-pd-t">
+    <div class="container">
+        <?php get_template_part('partials/components/search-booking'); ?>
+    </div>
+</section>
 
 <div id="khoa-hoc" class="khws-anchor"></div>
 <?php get_template_part('partials/sections/khoa-hoc-workshop/section', 'khoa-hoc'); ?>

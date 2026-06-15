@@ -11,6 +11,7 @@ $sample = [
         [
             'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Sound Bath Buổi Tối'],
             'type'       => 'Workshop Âm Thanh',
+            'format'     => 'Onsite',
             'status'     => 'open',
             'date'       => '18 THÁNG 1, 2025',
             'time'       => '19:00 – 21:00',
@@ -26,6 +27,7 @@ $sample = [
         [
             'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Nhập Môn Reiki'],
             'type'       => 'Workshop Năng Lượng',
+            'format'     => 'Onsite',
             'status'     => 'limited',
             'date'       => '25 THÁNG 1, 2025',
             'time'       => '09:00 – 17:00',
@@ -41,6 +43,7 @@ $sample = [
         [
             'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Hòa Âm Gong Thiêng'],
             'type'       => 'Workshop Âm Thanh',
+            'format'     => 'Onsite',
             'status'     => 'upcoming',
             'date'       => '8 THÁNG 2, 2025',
             'time'       => '18:00 – 20:30',
@@ -81,14 +84,14 @@ foreach ($raw_objects as $post) {
         'type'       => $type_name,
         'format'     => get_field('ws_format',       $post->ID) ?: 'Onsite',
         'status'     => get_field('ws_status',       $post->ID) ?: 'open',
-        'date'       => get_field('ws_date',         $post->ID),
-        'time'       => get_field('ws_time',         $post->ID),
-        'duration'   => get_field('ws_duration',     $post->ID),
+        'date'       => get_field('ws_date',         $post->ID) ?: 'Sắp diễn ra',
+        'time'       => get_field('ws_time',         $post->ID) ?: '09:00 – 12:00',
+        'duration'   => get_field('ws_duration',     $post->ID) ?: '3 giờ',
         'title'      => $post->post_title,
         'location'   => get_field('ws_location',     $post->ID),
         'instructor' => get_field('ws_instructor_name', $post->ID),
         'desc'       => get_field('ws_short_desc',   $post->ID),
-        'price'      => get_field('ws_price',        $post->ID),
+        'price'      => get_field('ws_price',        $post->ID) ?: 'Liên hệ',
         'spots'      => get_field('ws_spots',        $post->ID),
         'url'        => get_permalink($post->ID),
     ];
@@ -109,10 +112,10 @@ $data = [
         <!-- Header -->
         <div class="flex items-end justify-between mb-8 max-md:flex-col max-md:items-center max-md:text-center gap-4">
             <div>
-                <p class="text-pri text-[16px] font-semibold uppercase tracking-[1.2px] mb-4">
+                <p class="text-pri text-[16px] font-semibold  tracking-[1.2px] mb-4">
                     <?php echo esc_html($data['label']); ?>
                 </p>
-                <h2 class="font-title text-sec text-[32px] font-normal max-md:text-[24px]">
+                <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
             </div>

@@ -36,6 +36,7 @@ if ($data['video_url']) {
 }
 
 $eco_sample = [
+    'heading_top'    => 'Hệ sinh thái',
     'heading_bottom' => 'HEALIVERSE HOLISTIC CENTRE',
     'items'          => [
         [
@@ -104,7 +105,7 @@ if ($eco_raw_items) {
 
                 <div class="col col-6 max-md:!w-full">
                     <div class="flex flex-col gap-6">
-                        <h2 class="font-title text-pri text-[32px] font-normal leading-[40px] max-md:text-[24px] max-md:leading-[32px]">
+                        <h2 class="font-title text-pri text-[32px] font-bold leading-[40px] max-md:text-[24px] max-md:leading-[32px]">
                             <?php echo wp_kses_post($data['heading']); ?>
                         </h2>
 
@@ -128,6 +129,11 @@ if ($eco_raw_items) {
 <section class="sec-ab-ecosystem section-pd">
     <div class="container">
         <div class="text-center mb-10">
+            <?php if ($eco_heading_top) : ?>
+                <p class="font-title text-pri text-[28px] font-bold leading-[36px] tracking-wider max-md:text-[20px] max-md:leading-[28px]">
+                    <?php echo esc_html($eco_heading_top); ?>
+                </p>
+            <?php endif; ?>
             <h2 class="font-title text-pri text-[28px] font-bold leading-[36px] tracking-wider max-md:text-[20px] max-md:leading-[28px]">
                 <?php echo esc_html($eco_heading_bottom); ?>
             </h2>

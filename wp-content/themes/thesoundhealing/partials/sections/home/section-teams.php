@@ -45,7 +45,7 @@ $data = [
     <div class="container">
         <!-- Header -->
         <div class="flex flex-col items-center text-center mb-12 max-md:mb-8">
-            <h2 class="font-title text-sec text-[32px] font-normal max-sm:text-[24px] mb-3">
+            <h2 class="font-title text-pri text-[32px] font-bold max-sm:text-[24px] mb-3">
                 <?php echo esc_html($data['heading']); ?>
             </h2>
             <?php if (!empty($data['desc'])) : ?>
