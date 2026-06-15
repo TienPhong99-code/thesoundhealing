@@ -260,7 +260,7 @@ get_header();
                 <?php endforeach; ?>
             </div>
         <?php else : ?>
-            <div class="sr-empty min-h-screen">
+            <div class="sr-empty justify-center min-h-[60vh]">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
                     <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3" />
