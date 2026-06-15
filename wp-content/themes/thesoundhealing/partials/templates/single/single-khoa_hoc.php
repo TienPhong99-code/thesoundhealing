@@ -97,12 +97,12 @@ get_header();
     ],
 ]); ?>
 
-<div class="page-khoa-hoc section-pd">
+<div class="page-khoa-hoc section-pd-t max-md:!pt-4">
 
     <div class="container">
 
         <!-- ── CONTENT + ASIDE ──────────────────────────────────────────── -->
-        <section class="sec-kh-content pb-(--pd-sc)">
+        <section class="sec-kh-content">
             <div class="relative">
                 <div class="row">
 
@@ -191,7 +191,7 @@ get_header();
                                 <a href="<?php echo esc_url($thumb ?: $fb_main); ?>"
                                     data-fancybox="gallery-kh"
                                     data-caption="<?php echo esc_attr($thumb_alt); ?>"
-                                    class="block md:h-[420px] max-md:h-[240px] overflow-hidden">
+                                    class="block 2xl:h-[420px] lg:h-[300px] h-[240px] overflow-hidden">
                                     <img src="<?php echo esc_url($thumb ?: $fb_main); ?>"
                                         class="block w-full h-full object-cover cursor-zoom-in"
                                         alt="<?php echo esc_attr($thumb_alt); ?>">
@@ -490,7 +490,7 @@ get_header();
                     <!-- Right: Booking widget -->
                     <div class="col col-5 max-md:hidden">
                         <div id="form-dang-ky"
-                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)] p-6 max-md:p-4 flex flex-col gap-2">
+                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)] p-6 max-md:p-4 flex flex-col gap-2 md:max-h-[calc(100vh-100px)] overflow-y-auto">
 
                             <!-- Meta box -->
                             <?php

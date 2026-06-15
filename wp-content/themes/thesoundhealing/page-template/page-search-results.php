@@ -266,8 +266,6 @@ get_header();
                     <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3" />
                 </svg>
                 <p class="sr-empty__title">Không tìm thấy kết quả</p>
-                <p class="sr-empty__desc">Hãy thử thay đổi bộ lọc hoặc xem tất cả dịch vụ của chúng tôi.</p>
-                <a href="<?php echo esc_url(get_permalink()); ?>" class="btn btn-pri">Xem tất cả</a>
             </div>
         <?php endif; ?>
 
