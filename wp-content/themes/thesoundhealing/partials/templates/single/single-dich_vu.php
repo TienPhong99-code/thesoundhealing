@@ -487,7 +487,7 @@ get_header();
                     <!-- Right: Booking widget -->
                     <div class="col col-5 max-md:hidden">
                         <div id="form-dat-lich"
-                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)] p-6 max-md:p-4 flex flex-col gap-2">
+                            class="sticky top-[100px] md:max-h-[calc(100vh-100px)] overflow-y-auto bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)] p-6 max-md:p-4 flex flex-col gap-2">
 
                             <!-- Meta box -->
                             <?php
