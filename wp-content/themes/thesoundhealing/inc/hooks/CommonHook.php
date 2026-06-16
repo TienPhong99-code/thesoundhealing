@@ -120,6 +120,7 @@ add_action('wp_enqueue_scripts', function () {
    // ]);
    // wp_localize_script('mona-backend', 'mona_params', $params);
 
+   wp_enqueue_script('mona-header-autohide', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/header-autohide.js', array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/header-autohide.js'), array('in_footer' => true));
    wp_enqueue_script('mona-modal',          MONA_THEME_PATH_URI . '/assets/scripts/modules/common/modal.js',          array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/modal.js'),          array('in_footer' => true));
    wp_enqueue_script('mona-header',         MONA_THEME_PATH_URI . '/assets/scripts/modules/common/header.js',         array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/header.js'),         array('in_footer' => true));
    wp_enqueue_script('mona-flatpickr',      MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js',                                                               array(), MONA_THEME_VERSION,                                                                                          array('in_footer' => true));

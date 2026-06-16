@@ -1283,7 +1283,13 @@ form .wpcf7-not-valid-tip {
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   transition:
     box-shadow 0.3s ease,
-    background 0.3s ease;
+    background 0.3s ease,
+    opacity 0.3s ease;
+}
+/* Auto-hide khi cuộn xuống (toggle bằng header-autohide.js) */
+.hd.is-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 .hd > .container {
   height: 100%;
@@ -2821,3 +2827,6 @@ form .wpcf7-not-valid-tip {
     padding: 4px 8px 8px;
   }
 }
+/* .hd {
+  background: red !important;
+} */
