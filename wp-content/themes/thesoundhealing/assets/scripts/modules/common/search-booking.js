@@ -79,76 +79,26 @@
         if (e.key === 'Escape') closeAllPanels();
     });
 
-    // ── Loại hình — category pills + sub-terms ───────────────────────────
+    // ── Loại hình — option list ───────────────────────────────────────────
     var typePanel = document.getElementById('sb-panel-type');
     if (typePanel) {
-
-        var catLabels = { 'dich-vu': 'Dịch vụ', 'khoa-hoc': 'Khóa học', 'workshop': 'Workshop' };
-
-        function filterSubterms(catFilter) {
-            typePanel.querySelectorAll('.sb-subterm').forEach(function (s) {
-                if (!catFilter || s.dataset.cat === catFilter) {
-                    s.classList.remove('sb-subterm--hidden');
-                } else {
-                    s.classList.add('sb-subterm--hidden');
-                }
-            });
-        }
-
         typePanel.addEventListener('click', function (e) {
+            var item = e.target.closest('.sb-type-item');
+            if (!item) return;
 
-            // Category pill click — filter sub-terms, don't close panel
-            var catBtn = e.target.closest('.sb-type-cat');
-            if (catBtn) {
-                var catFilter = catBtn.dataset.catFilter;
-                var catLabel  = catBtn.dataset.catLabel;
+            var val   = item.dataset.value;
+            var label = item.dataset.label;
 
-                typePanel.querySelectorAll('.sb-type-cat').forEach(function (p) { p.classList.remove('is-active'); });
-                catBtn.classList.add('is-active');
+            typePanel.querySelectorAll('.sb-type-item').forEach(function (i) { i.classList.remove('is-active'); });
+            item.classList.add('is-active');
 
-                // Clear sub-term selection
-                var subtermInput = document.getElementById('sb-input-subterm');
-                if (subtermInput) subtermInput.value = '';
-                typePanel.querySelectorAll('.sb-subterm').forEach(function (s) { s.classList.remove('is-active'); });
+            var typeInput = document.getElementById('sb-input-type');
+            if (typeInput) typeInput.value = val;
 
-                var typeInput = document.getElementById('sb-input-type');
-                if (typeInput) typeInput.value = catFilter;
+            var valEl = document.getElementById('sb-val-type');
+            if (valEl) valEl.textContent = label;
 
-                var valEl = document.getElementById('sb-val-type');
-                if (valEl) valEl.textContent = catFilter ? catLabel : 'Chọn loại hình';
-
-                filterSubterms(catFilter);
-                return;
-            }
-
-            // Sub-term click — set both loai-hinh + chuyen-mon, close panel
-            var subterm = e.target.closest('.sb-subterm');
-            if (subterm) {
-                var val   = subterm.dataset.value;
-                var label = subterm.dataset.label;
-                var cat   = subterm.dataset.cat;
-
-                typePanel.querySelectorAll('.sb-subterm').forEach(function (s) { s.classList.remove('is-active'); });
-                subterm.classList.add('is-active');
-
-                // Sync category pill
-                typePanel.querySelectorAll('.sb-type-cat').forEach(function (p) { p.classList.remove('is-active'); });
-                var matchPill = typePanel.querySelector('[data-cat-filter="' + cat + '"]');
-                if (matchPill) matchPill.classList.add('is-active');
-
-                var typeInput    = document.getElementById('sb-input-type');
-                var subtermInput = document.getElementById('sb-input-subterm');
-                if (typeInput)    typeInput.value    = cat;
-                if (subtermInput) subtermInput.value = val;
-
-                var catDisplayLabel = catLabels[cat] || '';
-                var display = catDisplayLabel ? catDisplayLabel + ' · ' + label : label;
-                var valEl = document.getElementById('sb-val-type');
-                if (valEl) valEl.textContent = display;
-
-                filterSubterms(cat);
-                openPanel('time');
-            }
+            openPanel('time');
         });
     }
 
@@ -209,6 +159,32 @@
         if (guestCounts.child > 0) parts.push(guestCounts.child + ' trẻ em');
         var valEl = document.getElementById('sb-val-guest');
         if (valEl) valEl.textContent = parts.length > 0 ? parts.join(', ') : 'Thêm khách';
+    }
+
+    // ── Guest footer: Clear all + Apply (mobile) ──────────────────────────
+    var clearBtn = document.getElementById('sb-guest-clear');
+    var applyBtn = document.getElementById('sb-guest-apply');
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            ['adult', 'child'].forEach(function (key) {
+                guestCounts[key] = 0;
+                var countEl = document.getElementById('sb-count-' + key);
+                if (countEl) countEl.textContent = '0';
+                var minusBtn = guestPanel.querySelector('[data-target="' + key + '"].sb-counter-minus');
+                if (minusBtn) minusBtn.disabled = true;
+                var hiddenInput = document.getElementById(guestInputMap[key]);
+                if (hiddenInput) hiddenInput.value = 0;
+            });
+            updateGuestSummary();
+        });
+    }
+
+    if (applyBtn) {
+        applyBtn.addEventListener('click', function () {
+            closeAllPanels();
+            if (sbForm) sbForm.requestSubmit();
+        });
     }
 
     // ── Submit validation — toast nếu chưa chọn bất kỳ bước nào ────────────

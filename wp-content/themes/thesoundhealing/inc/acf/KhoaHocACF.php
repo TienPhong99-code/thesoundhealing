@@ -219,6 +219,17 @@ add_action('acf/init', function () {
                         ->helperText('Ví dụ: Linh Tâm'),
                 ]),
 
+            // ─── TAB: KHUNG GIỜ ──────────────────────────────────────────
+            Tab::make('Khung giờ')->placement('left'),
+
+            Repeater::make('Danh sách chi nhánh (form đặt lịch)', 'kh_branches')
+                ->helperText('Các lựa chọn hiển thị trong dropdown "Chi nhánh" của form đặt lịch.')
+                ->layout('table')
+                ->fields([
+                    Text::make('Chi nhánh', 'kh_branch_name')->required()
+                        ->helperText('Ví dụ: Thảo Điền'),
+                ]),
+
             Repeater::make('Khung giờ đặt lịch', 'kh_time_slots')
                 ->helperText('Để trống sẽ dùng khung giờ mặc định: 07:00-09:00, 09:00-11:00, 14:00-16:00, 16:00-18:00.')
                 ->layout('table')

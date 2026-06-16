@@ -1567,6 +1567,58 @@ form .wpcf7-not-valid-tip {
   border-color: #e53935;
 }
 
+/* Radio (Có trẻ em tham gia?) */
+.wpcf7-radio,
+.wpcf7-radio {
+  display: flex;
+  gap: 8px;
+}
+.wpcf7-list-item,
+.wpcf7-list-item {
+  margin: 0;
+}
+.wpcf7-list-item .wpcf7-list-item-label,
+.wpcf7-list-item .wpcf7-list-item-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: #fbf9f4;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--color-sec);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
+  letter-spacing: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+.wpcf7-list-item {
+  position: relative;
+}
+.wpcf7-list-item input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.wpcf7-list-item:has(input:checked) .wpcf7-list-item-label {
+  border-color: var(--color-pri);
+  background: #faf6ed;
+  color: var(--color-pri);
+  font-weight: 600;
+}
+.wpcf7-list-item .wpcf7-list-item-label:hover {
+  border-color: var(--color-pri);
+}
+
 /* Submit */
 .cf7-khoa-hoc .wpcf7-submit,
 .cf7-workshop .wpcf7-submit {
@@ -2068,7 +2120,7 @@ form .wpcf7-not-valid-tip {
 /* Panel (dropdown) */
 .sb-panel {
   position: absolute;
-  top: calc(100% + 14px);
+  top: calc(100% + 3px);
   left: 0;
   min-width: 280px;
   background: #fff;
@@ -2178,59 +2230,20 @@ form .wpcf7-not-valid-tip {
 
 /* Type panel */
 .sb-panel--type {
-  min-width: 360px;
+  min-width: 320px;
 }
 
-/* Category pills row */
-.sb-type-cats {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding-bottom: 10px;
-}
-.sb-type-cat {
-  padding: 6px 16px;
-  border-radius: 999px;
-  border: 1.5px solid #e0dbd3;
-  background: transparent;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-sec);
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.sb-type-cat:hover {
-  border-color: var(--color-sec);
-}
-.sb-type-cat.is-active {
-  background: var(--color-sec);
-  border-color: var(--color-sec);
-  color: #fff;
-}
-
-/* Divider */
-.sb-type-sep {
-  height: 1px;
-  background: #f0ede8;
-  margin: 0 0 8px;
-}
-
-/* Sub-terms scrollable list */
-.sb-subterms-wrap {
+/* Option list */
+.sb-type-list {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  max-height: 260px;
-  overflow-y: auto;
-  padding-right: 2px;
 }
-.sb-subterm {
+.sb-type-item {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
   background: transparent;
   border: none;
@@ -2241,68 +2254,46 @@ form .wpcf7-not-valid-tip {
   transition: background 0.15s;
   font-family: inherit;
 }
-.sb-subterm:hover {
+.sb-type-item:hover {
   background: #f4f2ef;
 }
-.sb-subterm.is-active {
+.sb-type-item.is-active {
   background: rgba(194, 160, 86, 0.1);
 }
-.sb-subterm--hidden {
-  display: none;
-}
-.sb-subterm__img {
-  width: 52px;
-  height: 52px;
+.sb-type-item__img {
+  width: 56px;
+  height: 56px;
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
   background: #e8e4de;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-.sb-subterm__img img,
-.sb-subterm__thumb {
+.sb-type-item__img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
-.sb-subterm__placeholder {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.sb-subterm__text {
+.sb-type-item__text {
   display: flex;
   flex-direction: column;
   gap: 3px;
   flex: 1;
   min-width: 0;
 }
-.sb-subterm__name {
+.sb-type-item__name {
   font-size: 14px;
   font-weight: 600;
   color: var(--color-sec);
   line-height: 1.3;
 }
-.sb-subterm.is-active .sb-subterm__name {
+.sb-type-item.is-active .sb-type-item__name {
   color: var(--color-pri);
 }
-.sb-subterm__desc {
+.sb-type-item__desc {
   font-size: 12px;
   color: #8d9b99;
   line-height: 1.4;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-.sb-subterms-empty {
-  font-size: 13px;
-  color: #8d9b99;
-  padding: 16px 10px;
-  text-align: center;
 }
 
 /* Time panel */
@@ -2481,6 +2472,11 @@ form .wpcf7-not-valid-tip {
   line-height: 1;
 }
 
+/* Guest panel footer (mobile only) */
+.sb-guest-footer {
+  display: none;
+}
+
 /* Submit button */
 .sb-submit {
   display: flex;
@@ -2611,6 +2607,44 @@ form .wpcf7-not-valid-tip {
   }
   .sb-time-right {
     padding: 4px 8px 8px;
+  }
+  .sb-guest-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(192, 200, 198, 0.3);
+  }
+  .sb-guest-clear {
+    font-size: 13px;
+    font-weight: 500;
+    color: #8d9b99;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .sb-guest-apply {
+    flex: 1;
+    background: var(--color-pri);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    transition: opacity 0.16s;
+  }
+  .sb-guest-apply:hover {
+    opacity: 0.85;
   }
 }
 

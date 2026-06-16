@@ -49,6 +49,7 @@ return [
     // MONA_THEME_INC_PATH . '/seeders/WorkshopSeeder.php',
     // MONA_THEME_INC_PATH . '/seeders/WorkshopV2Seeder.php',
     // MONA_THEME_INC_PATH . '/seeders/DichVuSeeder.php',
+    // MONA_THEME_INC_PATH . '/seeders/UsuiReikiSeeder.php',
 
     // ACF
     MONA_THEME_INC_PATH . '/acf/FooterACF.php',

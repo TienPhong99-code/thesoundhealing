@@ -3,27 +3,13 @@ defined('ABSPATH') || exit;
 
 $search_url = home_url('/tim-kiem/');
 
+$_img_base = get_template_directory_uri() . '/assets/images/';
 $loai_hinh_opts = [
-    '' => [
-        'label' => 'Tất cả',
-        'desc'  => 'Dịch vụ, Khóa học & Workshop',
-        'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>',
-    ],
-    'dich-vu' => [
-        'label' => 'Dịch vụ',
-        'desc'  => 'Liệu pháp âm thanh cá nhân',
-        'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/></svg>',
-    ],
-    'khoa-hoc' => [
-        'label' => 'Khóa học',
-        'desc'  => 'Chương trình đào tạo chuyên sâu',
-        'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    ],
-    'workshop' => [
-        'label' => 'Workshop',
-        'desc'  => 'Sự kiện trải nghiệm ngắn hạn',
-        'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="2" stroke="currentColor" stroke-width="1.8"/></svg>',
-    ],
+    'best-seller'   => ['label' => 'Best Seller',   'desc' => 'Được yêu thích nhất',              'image' => $_img_base . 'dv-exp-main.jpg'],
+    'sound-healing' => ['label' => 'Sound Healing', 'desc' => 'Liệu pháp âm thanh chữa lành',    'image' => $_img_base . 'dv-tam-am-ngu-ngon-rieng-tu.jpg'],
+    'usui-reiki'    => ['label' => 'Usui Reiki',    'desc' => 'Năng lượng chữa lành Reiki',       'image' => $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg'],
+    'khoa-hoc'      => ['label' => 'Khoá Học',      'desc' => 'Chương trình đào tạo chuyên sâu',  'image' => $_img_base . 'kh-hero.jpg'],
+    'workshop'      => ['label' => 'Workshop',      'desc' => 'Sự kiện trải nghiệm ngắn hạn',     'image' => $_img_base . 'gallery-img-1.jpg'],
 ];
 
 $_td  = new DateTime();
@@ -52,32 +38,10 @@ $pre_ngay       = sanitize_text_field($_GET['ngay']       ?? '');
 $pre_nguoi_lon  = (int) ($_GET['nguoi-lon'] ?? 0);
 $pre_tre_em     = (int) ($_GET['tre-em']    ?? 0);
 
-// Taxonomy terms grouped by post type
-$terms_dich_vu  = get_terms(['taxonomy' => 'loai_dich_vu',    'hide_empty' => false]);
-$terms_khoa_hoc = get_terms(['taxonomy' => 'bo_mon_khoa_hoc', 'hide_empty' => false]);
-$terms_workshop = get_terms(['taxonomy' => 'loai_workshop',   'hide_empty' => false]);
-if (is_wp_error($terms_dich_vu))  $terms_dich_vu  = [];
-if (is_wp_error($terms_khoa_hoc)) $terms_khoa_hoc = [];
-if (is_wp_error($terms_workshop)) $terms_workshop = [];
-
 // Display value cho field Loại hình
-$cat_label_map = ['dich-vu' => 'Dịch vụ', 'khoa-hoc' => 'Khóa học', 'workshop' => 'Workshop'];
-$display_type  = 'Chọn loại hình';
-if (!empty($pre_chuyen_mon)) {
-    $found_term = null;
-    foreach (['loai_dich_vu', 'bo_mon_khoa_hoc', 'loai_workshop'] as $_tax) {
-        $t = get_term_by('slug', $pre_chuyen_mon, $_tax);
-        if ($t && !is_wp_error($t)) {
-            $found_term = $t;
-            break;
-        }
-    }
-    if ($found_term) {
-        $cl = $cat_label_map[$pre_loai_hinh] ?? '';
-        $display_type = $cl ? $cl . ' · ' . $found_term->name : $found_term->name;
-    }
-} elseif (!empty($pre_loai_hinh) && isset($cat_label_map[$pre_loai_hinh])) {
-    $display_type = $cat_label_map[$pre_loai_hinh];
+$display_type = 'Chọn loại hình';
+if (!empty($pre_loai_hinh) && isset($loai_hinh_opts[$pre_loai_hinh])) {
+    $display_type = $loai_hinh_opts[$pre_loai_hinh]['label'];
 }
 ?>
 
@@ -100,70 +64,22 @@ if (!empty($pre_chuyen_mon)) {
                 <input type="hidden" name="chuyen-mon" id="sb-input-subterm" value="<?php echo esc_attr($pre_chuyen_mon); ?>">
 
                 <div class="sb-panel sb-panel--type" id="sb-panel-type" aria-hidden="true">
-
-                    <!-- Category pills -->
-                    <div class="sb-type-cats">
-                        <button type="button"
-                            class="sb-type-cat<?php echo empty($pre_loai_hinh) ? ' is-active' : ''; ?>"
-                            data-cat-filter=""
-                            data-cat-label="Chọn loại hình">Tất cả</button>
-                        <?php foreach ($cat_label_map as $k => $v) : ?>
+                    <div class="sb-type-list">
+                        <?php foreach ($loai_hinh_opts as $k => $opt) : ?>
                             <button type="button"
-                                class="sb-type-cat<?php echo $pre_loai_hinh === $k ? ' is-active' : ''; ?>"
-                                data-cat-filter="<?php echo esc_attr($k); ?>"
-                                data-cat-label="<?php echo esc_attr($v); ?>">
-                                <?php echo esc_html($v); ?>
+                                class="sb-type-item<?php echo $pre_loai_hinh === $k ? ' is-active' : ''; ?>"
+                                data-value="<?php echo esc_attr($k); ?>"
+                                data-label="<?php echo esc_attr($opt['label']); ?>">
+                                <span class="sb-type-item__img">
+                                    <img src="<?php echo esc_url($opt['image']); ?>" alt="<?php echo esc_attr($opt['label']); ?>" loading="lazy">
+                                </span>
+                                <span class="sb-type-item__text">
+                                    <span class="sb-type-item__name"><?php echo esc_html($opt['label']); ?></span>
+                                    <span class="sb-type-item__desc"><?php echo esc_html($opt['desc']); ?></span>
+                                </span>
                             </button>
                         <?php endforeach; ?>
                     </div>
-
-                    <div class="sb-type-sep"></div>
-
-                    <!-- Sub-terms scrollable list -->
-                    <div class="sb-subterms-wrap">
-                        <?php
-                        $all_term_groups = [
-                            'dich-vu'  => $terms_dich_vu,
-                            'khoa-hoc' => $terms_khoa_hoc,
-                            'workshop' => $terms_workshop,
-                        ];
-                        $has_terms = false;
-                        foreach ($all_term_groups as $cat_key => $terms_group) :
-                            foreach ($terms_group as $term) :
-                                $has_terms  = true;
-                                $is_active  = $pre_chuyen_mon === $term->slug;
-                                $is_hidden  = !empty($pre_loai_hinh) && $pre_loai_hinh !== $cat_key;
-                                $thumb_id   = get_term_meta($term->term_id, 'thumbnail_id', true);
-                        ?>
-                                <button type="button"
-                                    class="sb-subterm<?php echo $is_active ? ' is-active' : '';
-                                                        echo $is_hidden ? ' sb-subterm--hidden' : ''; ?>"
-                                    data-cat="<?php echo esc_attr($cat_key); ?>"
-                                    data-value="<?php echo esc_attr($term->slug); ?>"
-                                    data-label="<?php echo esc_attr($term->name); ?>">
-                                    <span class="sb-subterm__img">
-                                        <?php if ($thumb_id) : ?>
-                                            <?php echo wp_get_attachment_image($thumb_id, [48, 48], false, ['class' => 'sb-subterm__thumb']); ?>
-                                        <?php else : ?>
-                                            <span class="sb-subterm__placeholder"></span>
-                                        <?php endif; ?>
-                                    </span>
-                                    <span class="sb-subterm__text">
-                                        <span class="sb-subterm__name"><?php echo esc_html($term->name); ?></span>
-                                        <?php if (!empty($term->description)) : ?>
-                                            <span class="sb-subterm__desc"><?php echo esc_html($term->description); ?></span>
-                                        <?php endif; ?>
-                                    </span>
-                                </button>
-                            <?php
-                            endforeach;
-                        endforeach;
-                        if (!$has_terms) :
-                            ?>
-                            <p class="sb-subterms-empty">Chưa có danh mục nào.</p>
-                        <?php endif; ?>
-                    </div>
-
                 </div>
             </div>
 
@@ -268,6 +184,10 @@ if (!empty($pre_chuyen_mon)) {
                         </div>
                     </div>
                 <?php endforeach; ?>
+                <div class="sb-guest-footer">
+                    <button type="button" class="sb-guest-clear" id="sb-guest-clear">Xóa tất cả</button>
+                    <button type="button" class="sb-guest-apply" id="sb-guest-apply">Áp dụng</button>
+                </div>
             </div>
         </div>
 

@@ -19,15 +19,17 @@ $nguoi_lon = max(0, (int) ($_GET['nguoi-lon'] ?? 0));
 $tre_em    = max(0, (int) ($_GET['tre-em']    ?? 0));
 $tong_khach = $nguoi_lon + $tre_em;
 
-// ── Map loai-hinh → post_type ─────────────────────────────────────────────
+// ── Map loai-hinh → post_type(s) ─────────────────────────────────────────
 $pt_map = [
-    'dich-vu'  => 'dich_vu',
-    'khoa-hoc' => 'khoa_hoc',
-    'workshop' => 'workshop',
+    'best-seller'   => ['dich_vu', 'khoa_hoc', 'workshop'],
+    'sound-healing' => ['dich_vu'],
+    'usui-reiki'    => ['dich_vu'],
+    'khoa-hoc'      => ['khoa_hoc'],
+    'workshop'      => ['workshop'],
 ];
 
 $post_types = !empty($loai_hinh) && isset($pt_map[$loai_hinh])
-    ? [$pt_map[$loai_hinh]]
+    ? $pt_map[$loai_hinh]
     : ['dich_vu', 'khoa_hoc', 'workshop'];
 
 // ── Tính khoảng ngày từ thoi-gian ────────────────────────────────────────
@@ -149,15 +151,33 @@ foreach ($post_types as $pt) {
         ];
     }
 
+    // Lọc theo loai-hinh đặc biệt
+    $tax_map_pt = [
+        'dich_vu'  => 'loai_dich_vu',
+        'khoa_hoc' => 'bo_mon_khoa_hoc',
+        'workshop' => 'loai_workshop',
+    ];
+    if ($loai_hinh === 'best-seller') {
+        $bs_key = ($pt === 'dich_vu') ? 'dv_best_seller' : (($pt === 'khoa_hoc') ? 'kh_best_seller' : 'ws_best_seller');
+        $bs_clause = ['key' => $bs_key, 'value' => '1', 'compare' => '='];
+        if (!empty($query_args['meta_query'])) {
+            $query_args['meta_query'][] = $bs_clause;
+        } else {
+            $query_args['meta_query'] = [$bs_clause];
+        }
+    } elseif (in_array($loai_hinh, ['sound-healing', 'usui-reiki'], true) && isset($tax_map_pt[$pt])) {
+        $tax_clause = ['taxonomy' => $tax_map_pt[$pt], 'field' => 'slug', 'terms' => $loai_hinh];
+        if (!empty($query_args['tax_query'])) {
+            $query_args['tax_query'][] = $tax_clause;
+        } else {
+            $query_args['tax_query'] = [$tax_clause];
+        }
+    }
+
     // Lọc theo taxonomy term (chuyen-mon)
     if (!empty($chuyen_mon)) {
-        $tax_map = [
-            'dich_vu'  => 'loai_dich_vu',
-            'khoa_hoc' => 'bo_mon_khoa_hoc',
-            'workshop' => 'loai_workshop',
-        ];
-        if (isset($tax_map[$pt])) {
-            $tax_clause = ['taxonomy' => $tax_map[$pt], 'field' => 'slug', 'terms' => $chuyen_mon];
+        if (isset($tax_map_pt[$pt])) {
+            $tax_clause = ['taxonomy' => $tax_map_pt[$pt], 'field' => 'slug', 'terms' => $chuyen_mon];
             if (!empty($query_args['tax_query'])) {
                 $query_args['tax_query'][] = $tax_clause;
             } else {
@@ -199,7 +219,13 @@ foreach ($post_types as $pt) {
 }
 
 // ── Label hiển thị filter đã chọn ────────────────────────────────────────
-$label_map      = ['dich-vu' => 'Dịch vụ', 'khoa-hoc' => 'Khóa học', 'workshop' => 'Workshop'];
+$label_map = [
+    'best-seller'   => 'Best Seller',
+    'sound-healing' => 'Sound Healing',
+    'usui-reiki'    => 'Usui Reiki',
+    'khoa-hoc'      => 'Khoá Học',
+    'workshop'      => 'Workshop',
+];
 $time_label_map = ['today'   => 'Hôm nay', 'tomorrow' => 'Ngày mai', 'weekend'  => 'Cuối tuần này'];
 
 // Lấy tên sub-term để hiển thị trong active tags

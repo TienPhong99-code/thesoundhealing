@@ -31,7 +31,7 @@ add_filter('wpcf7_validate', function ($result) {
         $prop = $ref->getProperty('invalid_fields');
         $prop->setAccessible(true);
         $fields = (array) $prop->getValue($result);
-        unset($fields['dv-instructor'], $fields['dv-time'], $fields['dv-branch'], $fields['kh-instructor'], $fields['kh-time'], $fields['ws-instructor']);
+        unset($fields['dv-instructor'], $fields['dv-time'], $fields['dv-branch'], $fields['kh-instructor'], $fields['kh-time'], $fields['kh-branch'], $fields['ws-instructor'], $fields['ws-branch'], $fields['ws-time']);
         $prop->setValue($result, $fields);
     } catch (\Throwable $e) {
         // Fail silently nếu CF7 thay đổi internal API
@@ -136,6 +136,23 @@ add_filter('wpcf7_form_elements', function ($html) {
             );
         }
 
+        // ── kh-branch ────────────────────────────────────────────────────
+        $branch_values = [];
+        $rows          = get_field('kh_branches', $post_id);
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $branch = trim($row['kh_branch_name'] ?? '');
+                if ($branch) $branch_values[] = $branch;
+            }
+        }
+        if ($branch_values) {
+            $html = preg_replace(
+                '/(<select[^>]*\bname="kh-branch"[^>]*>)([\s\S]*?)(<\/select>)/i',
+                '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
+                $html
+            );
+        }
+
         // ── kh-time ───────────────────────────────────────────────────────
         $time_values = [];
         $rows        = get_field('kh_time_slots', $post_id);
@@ -174,6 +191,41 @@ add_filter('wpcf7_form_elements', function ($html) {
                 $html
             );
         }
+
+        // ── ws-branch ────────────────────────────────────────────────────
+        $branch_values = [];
+        $rows          = get_field('ws_branches', $post_id);
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $branch = trim($row['ws_branch_name'] ?? '');
+                if ($branch) $branch_values[] = $branch;
+            }
+        }
+        if ($branch_values) {
+            $html = preg_replace(
+                '/(<select[^>]*\bname="ws-branch"[^>]*>)([\s\S]*?)(<\/select>)/i',
+                '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
+                $html
+            );
+        }
+
+        // ── ws-time ───────────────────────────────────────────────────────
+        $time_values = [];
+        $rows        = get_field('ws_time_slots', $post_id);
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $slot = trim($row['ws_time_slot'] ?? '');
+                if ($slot) $time_values[] = $slot;
+            }
+        }
+        if (empty($time_values)) {
+            $time_values = ['09:00 - 10:30', '10:30 - 12:00', '14:00 - 15:30', '15:30 - 17:00'];
+        }
+        $html = preg_replace(
+            '/(<select[^>]*\bname="ws-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
+            '$1' . $build_options('Chọn khung giờ', $time_values) . '$3',
+            $html
+        );
     }
 
     return $html;
