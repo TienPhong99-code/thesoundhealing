@@ -31,7 +31,7 @@ add_filter('wpcf7_validate', function ($result) {
         $prop = $ref->getProperty('invalid_fields');
         $prop->setAccessible(true);
         $fields = (array) $prop->getValue($result);
-        unset($fields['dv-instructor'], $fields['dv-time'], $fields['dv-branch'], $fields['kh-instructor'], $fields['ws-instructor']);
+        unset($fields['dv-instructor'], $fields['dv-time'], $fields['dv-branch'], $fields['kh-instructor'], $fields['kh-time'], $fields['ws-instructor']);
         $prop->setValue($result, $fields);
     } catch (\Throwable $e) {
         // Fail silently nếu CF7 thay đổi internal API
@@ -135,6 +135,24 @@ add_filter('wpcf7_form_elements', function ($html) {
                 $html
             );
         }
+
+        // ── kh-time ───────────────────────────────────────────────────────
+        $time_values = [];
+        $rows        = get_field('kh_time_slots', $post_id);
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $slot = trim($row['kh_time_slot'] ?? '');
+                if ($slot) $time_values[] = $slot;
+            }
+        }
+        if (empty($time_values)) {
+            $time_values = ['07:00 - 09:00', '09:00 - 11:00', '14:00 - 16:00', '16:00 - 18:00'];
+        }
+        $html = preg_replace(
+            '/(<select[^>]*\bname="kh-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
+            '$1' . $build_options('Chọn khung giờ', $time_values) . '$3',
+            $html
+        );
     } elseif ($post_type === 'workshop') {
 
         // ── ws-instructor ─────────────────────────────────────────────────

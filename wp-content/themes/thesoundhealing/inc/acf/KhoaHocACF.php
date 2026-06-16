@@ -204,6 +204,14 @@ add_action('acf/init', function () {
                         ->helperText('Ví dụ: Linh Tâm'),
                 ]),
 
+            Repeater::make('Khung giờ đặt lịch', 'kh_time_slots')
+                ->helperText('Để trống sẽ dùng khung giờ mặc định: 07:00-09:00, 09:00-11:00, 14:00-16:00, 16:00-18:00.')
+                ->layout('table')
+                ->fields([
+                    Text::make('Khung giờ', 'kh_time_slot')->required()
+                        ->helperText('Ví dụ: 09:00 - 11:00'),
+                ]),
+
             // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
             Tab::make('Lợi ích')->placement('left'),
 

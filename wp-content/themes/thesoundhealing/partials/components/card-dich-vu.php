@@ -82,7 +82,7 @@ $location       = $item['location']      ?? '';
         <div class="flex items-center gap-2">
             <?php if (!empty($price)) : ?>
                 <span class="text-[#1b1c19] text-[15px] font-semibold">
-                    <?php echo esc_html($price); ?> / khách
+                    <?php echo esc_html($price); ?><?php if (strtolower(trim($price)) !== 'liên hệ') : ?> / khách<?php endif; ?>
                 </span>
             <?php endif; ?>
 

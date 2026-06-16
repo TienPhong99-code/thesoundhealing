@@ -30,13 +30,13 @@ $data = [
 
 <footer class="site-footer bg-[#f5f3ee] py-5 border-t border-[rgba(192,200,198,0.25)]">
    <div class="container">
-      <div class="flex items-center justify-between gap-8 max-lg:flex-col max-lg:items-start max-lg:gap-5">
+      <div class="flex items-center justify-between gap-4 max-lg:flex-col max-lg:items-start max-lg:gap-5">
 
          <!-- Logo + Socials -->
-         <div class="flex items-center gap-6 shrink-0">
+         <div class="flex items-center gap-2 shrink-0">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="block">
                <?php if (!empty($data['logo'])) : ?>
-                  <?php echo mona_get_image_by_id($data['logo'], 'full', false, ['class' => 'block h-8 w-auto', 'alt' => get_bloginfo('name')]); ?>
+                  <?php echo mona_get_image_by_id($data['logo'], 'full', false, ['class' => 'block h-12 w-auto', 'alt' => get_bloginfo('name')]); ?>
                <?php else : ?>
                   <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/logo2.png'); ?>"
                      class="block h-8 w-auto"

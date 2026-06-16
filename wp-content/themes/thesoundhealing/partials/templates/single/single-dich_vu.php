@@ -460,7 +460,7 @@ get_header();
                             ];
                             if (!empty($fb_items)) : ?>
                                 <div class="py-10">
-                                    <h2 class="font-title text-pri text-[24px]  font-normal mb-6">
+                                    <h2 class="font-title text-pri text-[24px]  font-bold mb-6">
                                         <?php echo esc_html($fb_heading); ?>
                                     </h2>
                                     <div class="grid grid-cols-3 max-md:grid-cols-2 gap-3">
@@ -487,7 +487,7 @@ get_header();
                     <!-- Right: Booking widget -->
                     <div class="col col-5 max-md:hidden">
                         <div id="form-dat-lich"
-                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)] p-6 max-md:p-4 flex flex-col gap-2 md:max-h-[calc(100vh-100px)] overflow-y-auto">
+                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)]  flex flex-col md:max-h-[calc(100vh-100px)]">
 
                             <!-- Meta box -->
                             <?php
@@ -498,11 +498,11 @@ get_header();
                             if ($dv_location)   $meta_rows[] = ['label' => 'ĐỊA ĐIỂM',         'value' => $dv_location,   'type' => 'location', 'icon' => 'location'];
                             $has_spots = $dv_spots !== null;
                             if ($dv_price || !empty($meta_rows) || $has_spots) : ?>
-                                <div class="pb-5 border-b border-[#e4e2dd]">
+                                <div class="p-6 max-md:p-4 border-b border-[#e4e2dd]">
                                     <?php if ($dv_price) : ?>
                                         <div class="flex items-baseline gap-1 mb-4">
                                             <span class="font-title text-pri text-[28px] max-md:text-[20px] font-semibold"><?php echo esc_html($dv_price); ?></span>
-                                            <span class="text-[#717171] text-[14px]">/ khách</span>
+                                            <?php if (strtolower(trim($dv_price)) !== 'liên hệ') : ?><span class="text-[#717171] text-[14px]">/ khách</span><?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     <?php if (!empty($meta_rows) || $has_spots) : ?>
@@ -562,7 +562,7 @@ get_header();
                             <?php endif; ?>
 
                             <!-- CF7 Form -->
-                            <div id="dv-form-inner" class="flex flex-col gap-3">
+                            <div id="dv-form-inner" class="flex p-6 max-md:p-4 overflow-y-auto flex-col gap-3">
                                 <h3 class="font-title text-pri text-[28px] max-md:text-[20px] font-bold">
                                     Đăng ký
                                 </h3>

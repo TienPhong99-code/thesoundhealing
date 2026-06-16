@@ -120,8 +120,8 @@ $feat_list_items = array_filter(array_map('trim', explode("\n", $feat['list'])))
                         $list     = array_filter(array_map('trim', explode("\n", $raw_list)));
                     ?>
                         <div class="col col-4 max-md:!w-full">
-                            <div class="flex flex-col gap-4 bg-white rounded-[12px] p-6 h-full shadow-[0px_4px_20px_0px_rgba(44,81,76,0.05)]">
-                                <h3 class="font-title text-pri text-[22px] font-normal leading-[30px] max-md:text-[18px]">
+                            <div class="gap-4 bg-white rounded-[12px] p-6 h-full shadow-[0px_4px_20px_0px_rgba(44,81,76,0.05)]">
+                                <h3 class="font-title text-pri text-[22px] md:h-[60px] md:line-clamp-2 font-bold leading-[30px] max-md:text-[18px]">
                                     <?php echo wp_kses_post($card['title']); ?>
                                 </h3>
                                 <?php if (!empty($card['desc'])) : ?>

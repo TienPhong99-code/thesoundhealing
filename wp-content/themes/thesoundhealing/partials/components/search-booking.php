@@ -208,7 +208,7 @@ if (!empty($pre_chuyen_mon)) {
                         <?php endforeach; ?>
                     </div>
 
-                    <div class="sb-time-sep-v max-sm:!hidden"></div>
+
 
                     <!-- Inline calendar -->
                     <div class="sb-time-right">
