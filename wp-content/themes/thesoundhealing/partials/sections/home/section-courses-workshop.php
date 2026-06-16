@@ -100,7 +100,7 @@ $data = [
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
                 <?php if (!empty($data['desc'])) : ?>
-                    <p class="text-[#414847] max-w-[500px]">
+                    <p class="text-[#414847]">
                         <?php echo wp_kses_post($data['desc']); ?>
                     </p>
                 <?php endif; ?>

@@ -141,6 +141,7 @@ foreach ($raw_objects as $post) {
         'status'         => get_field('dv_status',         $post->ID) ?: 'open',
         'price'          => get_field('dv_price',          $post->ID) ?: 'Liên hệ',
         'spots'          => get_field('dv_spots',          $post->ID),
+        'best_seller'    => get_field('dv_best_seller',    $post->ID),
         'url'            => get_permalink($post->ID),
     ];
 }
@@ -164,7 +165,7 @@ $data = [
                     <?php echo esc_html($data['heading']); ?>
                 </h2>
                 <?php if (!empty($data['desc'])) : ?>
-                    <p class="text-[#414847] max-w-[500px]">
+                    <p class="text-[#414847]">
                         <?php echo wp_kses_post($data['desc']); ?>
                     </p>
                 <?php endif; ?>

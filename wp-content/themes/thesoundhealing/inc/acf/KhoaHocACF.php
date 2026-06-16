@@ -7,11 +7,26 @@ use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
+use Extended\ACF\Fields\TrueFalse;
 use Extended\ACF\Location;
 
 defined('ABSPATH') || exit;
 
 add_action('acf/init', function () {
+    mona_regist_acf_field_group([
+        'title'    => 'Khóa học — Nổi bật',
+        'style'    => 'default',
+        'position' => 'side',
+        'location' => [
+            Location::where('post_type', '==', 'khoa_hoc'),
+        ],
+        'fields' => [
+            TrueFalse::make('Best Seller', 'kh_best_seller')
+                ->helperText('Hiển thị badge ⭐ Best Seller trên card.')
+                ->stylized(),
+        ],
+    ]);
+
     mona_regist_acf_field_group([
         'title'    => 'Mô tả Khóa Học',
         'style'    => 'seamless',

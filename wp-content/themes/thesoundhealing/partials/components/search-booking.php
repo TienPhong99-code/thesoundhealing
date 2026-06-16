@@ -40,9 +40,8 @@ $time_opts = [
 ];
 
 $guest_types = [
-    'adult'  => ['label' => 'Người lớn', 'desc' => 'Từ 18 tuổi trở lên'],
-    'child'  => ['label' => 'Trẻ em',    'desc' => 'Từ 2 – 17 tuổi'],
-    'infant' => ['label' => 'Em bé',      'desc' => 'Dưới 2 tuổi'],
+    'adult' => ['label' => 'Người lớn (13+)', 'desc' => ''],
+    'child' => ['label' => 'Trẻ em (6–12)',   'desc' => ''],
 ];
 
 // Pre-fill from GET if rendered on results page
@@ -52,7 +51,6 @@ $pre_thoi_gian  = sanitize_text_field($_GET['thoi-gian']  ?? '');
 $pre_ngay       = sanitize_text_field($_GET['ngay']       ?? '');
 $pre_nguoi_lon  = (int) ($_GET['nguoi-lon'] ?? 0);
 $pre_tre_em     = (int) ($_GET['tre-em']    ?? 0);
-$pre_em_be      = (int) ($_GET['em-be']     ?? 0);
 
 // Taxonomy terms grouped by post type
 $terms_dich_vu  = get_terms(['taxonomy' => 'loai_dich_vu',    'hide_empty' => false]);
@@ -231,12 +229,11 @@ if (!empty($pre_chuyen_mon)) {
                 <span class="sb-field__label">Khách</span>
                 <span class="sb-field__value" id="sb-val-guest">
                     <?php
-                    $tong = $pre_nguoi_lon + $pre_tre_em + $pre_em_be;
+                    $tong = $pre_nguoi_lon + $pre_tre_em;
                     if ($tong > 0) {
                         $parts = [];
                         if ($pre_nguoi_lon > 0) $parts[] = $pre_nguoi_lon . ' người lớn';
                         if ($pre_tre_em    > 0) $parts[] = $pre_tre_em    . ' trẻ em';
-                        if ($pre_em_be     > 0) $parts[] = $pre_em_be     . ' em bé';
                         echo esc_html(implode(', ', $parts));
                     } else {
                         echo 'Số lượng khách';
@@ -246,10 +243,9 @@ if (!empty($pre_chuyen_mon)) {
             </button>
             <input type="hidden" name="nguoi-lon" id="sb-input-adult" value="<?php echo esc_attr($pre_nguoi_lon); ?>">
             <input type="hidden" name="tre-em" id="sb-input-child" value="<?php echo esc_attr($pre_tre_em); ?>">
-            <input type="hidden" name="em-be" id="sb-input-infant" value="<?php echo esc_attr($pre_em_be); ?>">
             <div class="sb-panel sb-panel--guest" id="sb-panel-guest" aria-hidden="true">
                 <?php
-                $pre_counts = ['adult' => $pre_nguoi_lon, 'child' => $pre_tre_em, 'infant' => $pre_em_be];
+                $pre_counts = ['adult' => $pre_nguoi_lon, 'child' => $pre_tre_em];
                 foreach ($guest_types as $key => $g) :
                     $count = $pre_counts[$key] ?? 0;
                 ?>

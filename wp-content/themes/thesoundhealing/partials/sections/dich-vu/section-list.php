@@ -138,6 +138,7 @@ if ($use_sample) {
             'status'         => get_field('dv_status',          $post_id) ?: 'open',
             'price'          => get_field('dv_price',           $post_id) ?: 'Liên hệ',
             'spots'          => get_field('dv_spots',           $post_id),
+            'best_seller'    => get_field('dv_best_seller',     $post_id),
             'url'            => get_permalink($post_id),
         ];
     }

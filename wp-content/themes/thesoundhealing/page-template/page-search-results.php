@@ -17,8 +17,7 @@ $thoi_gian  = sanitize_text_field($_GET['thoi-gian']  ?? '');
 $ngay       = sanitize_text_field($_GET['ngay']       ?? '');
 $nguoi_lon = max(0, (int) ($_GET['nguoi-lon'] ?? 0));
 $tre_em    = max(0, (int) ($_GET['tre-em']    ?? 0));
-$em_be     = max(0, (int) ($_GET['em-be']     ?? 0));
-$tong_khach = $nguoi_lon + $tre_em + $em_be;
+$tong_khach = $nguoi_lon + $tre_em;
 
 // ── Map loai-hinh → post_type ─────────────────────────────────────────────
 $pt_map = [
@@ -77,6 +76,7 @@ function sr_build_dich_vu(WP_Post $post): array
         'status'         => get_field('dv_status',          $post->ID) ?: '',
         'price'          => get_field('dv_price',           $post->ID),
         'spots'          => get_field('dv_spots',           $post->ID),
+        'best_seller'    => get_field('dv_best_seller',     $post->ID),
         'url'            => get_permalink($post->ID),
     ];
 }
@@ -94,10 +94,11 @@ function sr_build_khoa_hoc(WP_Post $post): array
         'instructor' => get_field('instructor_name', $post->ID),
         'location'   => get_field('location',        $post->ID),
         'branch'     => get_field('kh_branch',       $post->ID),
-        'status'     => get_field('kh_status',       $post->ID) ?: '',
-        'price'      => get_field('price',           $post->ID),
-        'spots'      => get_field('kh_spots',        $post->ID),
-        'url'        => get_permalink($post->ID),
+        'status'      => get_field('kh_status',       $post->ID) ?: '',
+        'price'       => get_field('price',           $post->ID),
+        'spots'       => get_field('kh_spots',        $post->ID),
+        'best_seller' => get_field('kh_best_seller',  $post->ID),
+        'url'         => get_permalink($post->ID),
     ];
 }
 
@@ -109,16 +110,17 @@ function sr_build_workshop(WP_Post $post): array
         'image'    => ['url' => $thumb ?: '', 'alt' => $post->post_title],
         'title'    => $post->post_title,
         'type'     => (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '',
-        'status'   => get_field('ws_status',    $post->ID) ?: 'open',
-        'date'     => get_field('ws_date',      $post->ID),
-        'time'     => get_field('ws_time',      $post->ID),
-        'location'   => get_field('ws_location',     $post->ID),
-        'duration'   => get_field('ws_duration',     $post->ID),
-        'instructor' => get_field('ws_instructor_name', $post->ID),
-        'desc'       => get_field('ws_short_desc',   $post->ID),
-        'price'      => get_field('ws_price',        $post->ID),
-        'spots'      => get_field('ws_spots',        $post->ID),
-        'url'      => get_permalink($post->ID),
+        'status'      => get_field('ws_status',           $post->ID) ?: 'open',
+        'date'        => get_field('ws_date',             $post->ID),
+        'time'        => get_field('ws_time',             $post->ID),
+        'location'    => get_field('ws_location',         $post->ID),
+        'duration'    => get_field('ws_duration',         $post->ID),
+        'instructor'  => get_field('ws_instructor_name',  $post->ID),
+        'desc'        => get_field('ws_short_desc',       $post->ID),
+        'price'       => get_field('ws_price',            $post->ID),
+        'spots'       => get_field('ws_spots',            $post->ID),
+        'best_seller' => get_field('ws_best_seller',      $post->ID),
+        'url'         => get_permalink($post->ID),
     ];
 }
 

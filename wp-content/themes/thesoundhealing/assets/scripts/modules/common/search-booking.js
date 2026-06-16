@@ -18,15 +18,13 @@
     if (!sb) return;
 
     var guestCounts = {
-        adult:  parseInt((document.getElementById('sb-input-adult')  || {}).value) || 0,
-        child:  parseInt((document.getElementById('sb-input-child')  || {}).value) || 0,
-        infant: parseInt((document.getElementById('sb-input-infant') || {}).value) || 0,
+        adult: parseInt((document.getElementById('sb-input-adult') || {}).value) || 0,
+        child: parseInt((document.getElementById('sb-input-child') || {}).value) || 0,
     };
 
     var guestInputMap = {
-        adult:  'sb-input-adult',
-        child:  'sb-input-child',
-        infant: 'sb-input-infant',
+        adult: 'sb-input-adult',
+        child: 'sb-input-child',
     };
 
     // ── Helpers ───────────────────────────────────────────────────────────
@@ -207,9 +205,8 @@
 
     function updateGuestSummary() {
         var parts = [];
-        if (guestCounts.adult  > 0) parts.push(guestCounts.adult  + ' người lớn');
-        if (guestCounts.child  > 0) parts.push(guestCounts.child  + ' trẻ em');
-        if (guestCounts.infant > 0) parts.push(guestCounts.infant + ' em bé');
+        if (guestCounts.adult > 0) parts.push(guestCounts.adult + ' người lớn');
+        if (guestCounts.child > 0) parts.push(guestCounts.child + ' trẻ em');
         var valEl = document.getElementById('sb-val-guest');
         if (valEl) valEl.textContent = parts.length > 0 ? parts.join(', ') : 'Thêm khách';
     }
@@ -242,7 +239,7 @@
                            !!(document.getElementById('sb-input-subterm') || {}).value;
             var hasTime  = !!(document.getElementById('sb-input-time')    || {}).value ||
                            !!(document.getElementById('sb-input-date')    || {}).value;
-            var hasGuest = (guestCounts.adult + guestCounts.child + guestCounts.infant) > 0;
+            var hasGuest = (guestCounts.adult + guestCounts.child) > 0;
 
             if (!hasType && !hasTime && !hasGuest) {
                 e.preventDefault();

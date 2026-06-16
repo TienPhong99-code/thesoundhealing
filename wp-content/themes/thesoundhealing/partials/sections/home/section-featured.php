@@ -35,6 +35,7 @@ foreach ($raw_objects as $post) {
             'status'         => get_field('dv_status',          $post->ID) ?: 'open',
             'price'          => get_field('dv_price',           $post->ID),
             'spots'          => get_field('dv_spots',           $post->ID),
+            'best_seller'    => get_field('dv_best_seller',     $post->ID),
             'url'            => get_permalink($post->ID),
         ];
     } elseif ($post_type === 'khoa_hoc') {
@@ -51,10 +52,11 @@ foreach ($raw_objects as $post) {
             'instructor' => get_field('instructor_name', $post->ID),
             'location'   => get_field('location',        $post->ID),
             'branch'     => get_field('kh_branch',       $post->ID),
-            'status'     => get_field('kh_status',       $post->ID) ?: 'open',
-            'price'      => get_field('price',           $post->ID),
-            'spots'      => get_field('kh_spots',        $post->ID),
-            'url'        => get_permalink($post->ID),
+            'status'      => get_field('kh_status',       $post->ID) ?: 'open',
+            'price'       => get_field('price',           $post->ID),
+            'spots'       => get_field('kh_spots',        $post->ID),
+            'best_seller' => get_field('kh_best_seller',  $post->ID),
+            'url'         => get_permalink($post->ID),
         ];
     } elseif ($post_type === 'workshop') {
         $terms = get_the_terms($post->ID, 'loai_workshop');
@@ -71,9 +73,10 @@ foreach ($raw_objects as $post) {
             'location'   => get_field('ws_location',        $post->ID),
             'instructor' => get_field('ws_instructor_name', $post->ID),
             'desc'       => get_field('ws_short_desc',      $post->ID),
-            'price'      => get_field('ws_price',           $post->ID),
-            'spots'      => get_field('ws_spots',           $post->ID),
-            'url'        => get_permalink($post->ID),
+            'price'       => get_field('ws_price',           $post->ID),
+            'spots'       => get_field('ws_spots',           $post->ID),
+            'best_seller' => get_field('ws_best_seller',     $post->ID),
+            'url'         => get_permalink($post->ID),
         ];
     }
 }
