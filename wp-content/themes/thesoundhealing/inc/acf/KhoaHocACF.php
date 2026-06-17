@@ -68,7 +68,7 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: 09:00 – 17:00'),
 
             Text::make('Ngày khai giảng', 'start_date')
-                ->helperText('Ví dụ: 15 THÁNG 1, 2025'),
+                ->helperText('Nhập theo định dạng DD-MM-YYYY. Ví dụ: 20-07-2026. Lịch đặt chỗ trong form sẽ tự bắt đầu từ ngày này.'),
 
             Text::make('Thời lượng', 'duration')
                 ->helperText('Ví dụ: 4 TUẦN, 2 NGÀY, CUỐI TUẦN'),

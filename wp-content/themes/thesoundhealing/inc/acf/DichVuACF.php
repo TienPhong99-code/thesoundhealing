@@ -74,7 +74,7 @@ add_action('acf/init', function () {
                 ->rows(3),
 
             Text::make('Ngày hoạt động', 'dv_available_days')
-                ->helperText('Ngày trong tuần nhận đặt lịch. Ví dụ: Thứ 2 – Chủ nhật · Thứ 4, 6, 7'),
+                ->helperText('Nhập khoảng ngày trong tuần, dạng "Thứ X – Thứ Y". Ví dụ: Thứ 2 – Thứ 7 (thứ Hai đến thứ Bảy), Thứ 2 – Chủ nhật (cả tuần). Lịch đặt trên form sẽ tự xám các ngày ngoài khoảng này.'),
 
             Text::make('Số khách / phiên', 'dv_guests')
                 ->helperText('Ví dụ: 1-2 khách / phiên · Tối đa 1 người'),

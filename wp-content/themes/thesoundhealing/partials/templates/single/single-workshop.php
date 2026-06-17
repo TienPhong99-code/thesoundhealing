@@ -571,4 +571,22 @@ get_header();
         slot.appendChild(widget);
     })();
 </script>
+<?php
+$_ws_min_date = null;
+if ($ws_date) {
+    $_sd = trim($ws_date);
+    if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_sd, $_m)) {
+        $_ws_min_date = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_sd)) {
+        $_ws_min_date = $_sd;
+    } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_sd, $_m)) {
+        $_ws_min_date = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+    } elseif (($_ts = strtotime($_sd)) && $_ts > 0) {
+        $_ws_min_date = date('Y-m-d', $_ts);
+    }
+}
+?>
+<script>
+    window.wsSchedule = <?php echo json_encode(['availDate' => $_ws_min_date]); ?>;
+</script>
 <?php get_footer(); ?>

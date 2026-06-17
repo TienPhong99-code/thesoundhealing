@@ -16,6 +16,13 @@
         var dateInput = document.querySelector('.cf7-khoa-hoc input[type="date"]');
         if (!dateInput || typeof flatpickr === 'undefined') return;
 
+        var availDateStr = (window.khSchedule && window.khSchedule.availDate) ? window.khSchedule.availDate : null;
+        var availDateObj = null;
+        if (availDateStr) {
+            var _d = new Date(availDateStr + 'T00:00:00');
+            if (!isNaN(_d.getTime())) availDateObj = _d;
+        }
+
         var today    = new Date();
         var tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
         var dow      = today.getDay();
@@ -25,11 +32,20 @@
 
         function fmtDate(d) { return d.getDate() + ' thg ' + (d.getMonth() + 1); }
 
-        var quickOpts = [
-            { label: 'Hôm nay',       sub: fmtDate(today),    date: today },
-            { label: 'Ngày mai',      sub: fmtDate(tomorrow), date: tomorrow },
-            { label: 'Cuối tuần này', sub: sat.getDate() + ' – ' + sun.getDate() + ' thg ' + (sat.getMonth() + 1), date: sat },
-        ];
+        var quickOpts;
+        if (availDateObj) {
+            quickOpts = [{
+                label: availDateObj.toLocaleDateString('vi-VN', { day: 'numeric', month: 'long' }),
+                sub:   availDateObj.toLocaleDateString('vi-VN', { weekday: 'long' }),
+                date:  availDateObj,
+            }];
+        } else {
+            quickOpts = [
+                { label: 'Hôm nay',       sub: fmtDate(today),    date: today },
+                { label: 'Ngày mai',      sub: fmtDate(tomorrow), date: tomorrow },
+                { label: 'Cuối tuần này', sub: sat.getDate() + ' – ' + sun.getDate() + ' thg ' + (sat.getMonth() + 1), date: sat },
+            ];
+        }
 
         var field = document.createElement('div');
         field.className = 'cf7-date-field';
@@ -67,7 +83,7 @@
         if (cfWrap) { cfWrap.style.display = 'none'; cfWrap.parentNode.insertBefore(field, cfWrap); }
         else { dateInput.style.display = 'none'; dateInput.parentNode.insertBefore(field, dateInput); }
 
-        var fp = flatpickr(fpTrigger, {
+        var fpConfig = {
             inline: true,
             locale: viLocale,
             dateFormat: 'Y-m-d',
@@ -90,7 +106,18 @@
                 }
                 setTimeout(closePanel, 200);
             },
-        });
+        };
+
+        if (availDateStr) {
+            fpConfig.enable = [availDateStr];
+            delete fpConfig.minDate;
+        }
+
+        var fp = flatpickr(fpTrigger, fpConfig);
+
+        if (availDateStr) {
+            fp.setDate(availDateStr, true);
+        }
 
         function closePanel() { field.classList.remove('is-open'); panel.setAttribute('aria-hidden', 'true'); }
 

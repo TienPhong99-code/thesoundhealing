@@ -61,6 +61,43 @@ if (!empty($thoi_gian)) {
     }
 }
 
+// ── Parse bất kỳ định dạng ngày nào về timestamp ─────────────────────────
+function sr_parse_date_ts(?string $raw): ?int
+{
+    if (!$raw) return null;
+    $s = trim($raw);
+    // DD-MM-YYYY (định dạng admin nhập)
+    if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $s, $m)) {
+        $ts = mktime(0, 0, 0, (int)$m[2], (int)$m[1], (int)$m[3]);
+        return $ts ?: null;
+    }
+    // Ymd không dấu (20260720)
+    if (preg_match('/^(\d{4})(\d{2})(\d{2})$/', $s, $m)) {
+        $ts = mktime(0, 0, 0, (int)$m[2], (int)$m[3], (int)$m[1]);
+        return $ts ?: null;
+    }
+    // YYYY-MM-DD
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $s)) {
+        $ts = strtotime($s);
+        return ($ts && $ts > 0) ? $ts : null;
+    }
+    // "20 tháng 7, 2026"
+    if (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $s, $m)) {
+        $ts = mktime(0, 0, 0, (int)$m[2], (int)$m[1], (int)$m[3]);
+        return $ts ?: null;
+    }
+    $ts = strtotime($s);
+    return ($ts && $ts > 0) ? $ts : null;
+}
+
+// Chuyển $date_from/$date_to (Ymd) sang timestamp để so sánh phía PHP
+$date_from_ts = null;
+$date_to_ts   = null;
+if (!empty($date_from) && preg_match('/^(\d{4})(\d{2})(\d{2})$/', $date_from, $_dm)) {
+    $date_from_ts = mktime(0,  0,  0,  (int)$_dm[2], (int)$_dm[3], (int)$_dm[1]);
+    $date_to_ts   = mktime(23, 59, 59, (int)substr($date_to, 4, 2), (int)substr($date_to, 6, 2), (int)substr($date_to, 0, 4));
+}
+
 // ── Hàm build item data từ WP_Post ───────────────────────────────────────
 function sr_build_dich_vu(WP_Post $post): array
 {
@@ -138,19 +175,6 @@ foreach ($post_types as $pt) {
         'order'          => 'ASC',
     ];
 
-    // Lọc theo ngày (ACF lưu dạng Ymd)
-    if (!empty($date_from) && in_array($pt, ['workshop', 'khoa_hoc'], true)) {
-        $date_field = ($pt === 'workshop') ? 'ws_date' : 'start_date';
-        $query_args['meta_query'] = [
-            [
-                'key'     => $date_field,
-                'value'   => [$date_from, $date_to],
-                'compare' => 'BETWEEN',
-                'type'    => 'CHAR',
-            ],
-        ];
-    }
-
     // Lọc theo loai-hinh đặc biệt
     $tax_map_pt = [
         'dich_vu'  => 'loai_dich_vu',
@@ -207,6 +231,16 @@ foreach ($post_types as $pt) {
         while ($q->have_posts()) {
             $q->the_post();
             $post = get_post();
+
+            // Lọc theo ngày (PHP-side, hỗ trợ DD-MM-YYYY, Ymd, YYYY-MM-DD)
+            if ($date_from_ts !== null && in_array($pt, ['workshop', 'khoa_hoc'], true)) {
+                $date_field  = ($pt === 'workshop') ? 'ws_date' : 'start_date';
+                $post_date_ts = sr_parse_date_ts(get_field($date_field, $post->ID));
+                if ($post_date_ts === null || $post_date_ts < $date_from_ts || $post_date_ts > $date_to_ts) {
+                    continue;
+                }
+            }
+
             $item = match ($pt) {
                 'dich_vu'  => sr_build_dich_vu($post),
                 'khoa_hoc' => sr_build_khoa_hoc($post),
