@@ -206,6 +206,45 @@ add_action('acf/init', function () {
                         ->helperText('Ví dụ: — MAI LAN'),
                 ]),
 
+            // ─── TAB: TEAMS ───────────────────────────────────────────────
+            Tab::make('Đội ngũ chuyên gia')->placement('left'),
+
+            Text::make('Nhãn nhỏ (label)', 'teams_label')
+                ->helperText('Ví dụ: NGƯỜI DẪN DẮT')
+                ->default('NGƯỜI DẪN DẮT'),
+
+            Text::make('Tiêu đề', 'teams_heading')
+                ->helperText('Ví dụ: Đội Ngũ Chuyên Gia')
+                ->default('Đội Ngũ Chuyên Gia'),
+
+            Textarea::make('Mô tả', 'teams_desc')
+                ->helperText('1–2 câu giới thiệu đội ngũ, hiển thị dưới tiêu đề.')
+                ->rows(3),
+
+            Repeater::make('Danh sách chuyên gia', 'teams_items')
+                ->helperText('Mỗi chuyên gia gồm ảnh, tên, vai trò và mô tả ngắn.')
+                ->layout('block')
+                ->collapsed('name')
+                ->minRows(1)
+                ->fields([
+                    Image::make('Ảnh', 'image')
+                        ->helperText('Kích thước đề xuất: 400×533px (tỷ lệ 3:4).')
+                        ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                        ->format('array')
+                        ->required(),
+
+                    Text::make('Tên chuyên gia', 'name')
+                        ->helperText('Ví dụ: Elena Vu')
+                        ->required(),
+
+                    Text::make('Vai trò', 'role')
+                        ->helperText('Ví dụ: MASTER SOUND HEALER'),
+
+                    Textarea::make('Mô tả ngắn', 'desc')
+                        ->helperText('Hiện khi hover vào card. Khoảng 1–2 câu.')
+                        ->rows(3),
+                ]),
+
             // ─── TAB: PARTNER ─────────────────────────────────────────────
             Tab::make('Đối tác đồng hành')->placement('left'),
 

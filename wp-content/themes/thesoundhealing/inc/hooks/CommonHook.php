@@ -76,7 +76,7 @@ add_action('wp_head', function () {
 add_action('wp_enqueue_scripts', function () {
    // CSS thư viện — nằm trên để theme CSS đè lại
    wp_enqueue_style('mona-swiper',    MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.css',   [], MONA_THEME_VERSION);
-   wp_enqueue_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css',          [], MONA_THEME_VERSION);
+   wp_register_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css',          [], MONA_THEME_VERSION);
    wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css',   [], MONA_THEME_VERSION);
 
    // CSS theme
@@ -100,11 +100,11 @@ add_action('wp_enqueue_scripts', function () {
    // wp_enqueue_script('mona-flatpickr',        MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js',                         array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-SmoothScroll',     MONA_THEME_PATH_URI . '/assets/library/smoothscroll/SmoothScroll.min.js',                array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-splitting',        MONA_THEME_PATH_URI . '/assets/library/splitting/splitting.min.js',                     array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_enqueue_script('mona-fancybox',         MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.umd.js',                       array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_enqueue_script('mona-gsap',             MONA_THEME_PATH_URI . '/assets/library/gsap/gsap.min.js',                               array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_enqueue_script('mona-ScrollTrigger',    MONA_THEME_PATH_URI . '/assets/library/gsap/ScrollTrigger.min.js',                      array('mona-gsap'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_enqueue_script('mona-MorphSVGPlugin',   MONA_THEME_PATH_URI . '/assets/library/gsap/MorphSVGPlugin.min.js',                     array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/MorphSVGPlugin.min.js'), array('in_footer' => true));
-   wp_enqueue_script('mona-SplitText',        MONA_THEME_PATH_URI . '/assets/library/gsap/SplitText.min.js',                          array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/SplitText.min.js'),        array('in_footer' => true));
+   wp_register_script('mona-fancybox',         MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.umd.js',                       array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+   wp_register_script('mona-gsap',             MONA_THEME_PATH_URI . '/assets/library/gsap/gsap.min.js',                               array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+   wp_register_script('mona-ScrollTrigger',    MONA_THEME_PATH_URI . '/assets/library/gsap/ScrollTrigger.min.js',                      array('mona-gsap'), MONA_THEME_VERSION, array('in_footer' => true));
+   wp_register_script('mona-MorphSVGPlugin',   MONA_THEME_PATH_URI . '/assets/library/gsap/MorphSVGPlugin.min.js',                     array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/MorphSVGPlugin.min.js'), array('in_footer' => true));
+   wp_register_script('mona-SplitText',        MONA_THEME_PATH_URI . '/assets/library/gsap/SplitText.min.js',                          array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/SplitText.min.js'),        array('in_footer' => true));
    // wp_enqueue_script('mona-ukiyo',            MONA_THEME_PATH_URI . '/assets/library/ukiyo/ukiyo.min.js',                             array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-splide',           MONA_THEME_PATH_URI . '/assets/library/splide/splide.min.js',                           array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-splide-extension', MONA_THEME_PATH_URI . '/assets/library/splide/splide-extension-auto-scroll.min.js',     array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
@@ -136,6 +136,7 @@ add_action('wp_enqueue_scripts', function () {
    }
 
    if (is_singular('khoa_hoc')) {
+      wp_enqueue_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css', [], MONA_THEME_VERSION);
       wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_style('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));
@@ -148,6 +149,7 @@ add_action('wp_enqueue_scripts', function () {
    }
 
    if (is_singular('dich_vu')) {
+      wp_enqueue_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css', [], MONA_THEME_VERSION);
       wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_style('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));
@@ -156,6 +158,7 @@ add_action('wp_enqueue_scripts', function () {
    }
 
    if (is_singular('workshop')) {
+      wp_enqueue_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css', [], MONA_THEME_VERSION);
       wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_style('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.css', [], MONA_THEME_VERSION);
       wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', [], MONA_THEME_VERSION, array('in_footer' => true));

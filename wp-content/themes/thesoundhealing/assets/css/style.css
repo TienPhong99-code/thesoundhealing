@@ -1567,38 +1567,17 @@ form .wpcf7-not-valid-tip {
   border-color: #e53935;
 }
 
-/* Radio (Có trẻ em tham gia?) */
-.wpcf7-radio,
+/* Radio (Có trẻ em tham gia?) – checkbox style */
 .wpcf7-radio {
   display: flex;
-  gap: 8px;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
 }
-.wpcf7-list-item,
 .wpcf7-list-item {
   margin: 0;
-}
-.wpcf7-list-item .wpcf7-list-item-label,
-.wpcf7-list-item .wpcf7-list-item-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 20px;
-  background: #fbf9f4;
-  border: 1px solid #e8e8e8;
-  border-radius: 12px;
-  font-size: 14px;
-  color: var(--color-sec);
-  cursor: pointer;
-  transition:
-    border-color 0.2s,
-    background 0.2s,
-    color 0.2s;
-  letter-spacing: 0;
-  font-weight: 500;
-  cursor: pointer;
-}
-.wpcf7-list-item {
   position: relative;
+  display: inline-flex;
 }
 .wpcf7-list-item input[type="radio"] {
   position: absolute;
@@ -1608,15 +1587,56 @@ form .wpcf7-not-valid-tip {
   height: 100%;
   top: 0;
   left: 0;
+  cursor: pointer;
+}
+.wpcf7-list-item .wpcf7-list-item-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-sec);
+  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: 0;
+  user-select: none;
+  line-height: 1;
+}
+.wpcf7-list-item .wpcf7-list-item-label::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border: 1.5px solid #d1cfc9;
+  border-radius: 4px;
+  background: #fff;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 .wpcf7-list-item:has(input:checked) .wpcf7-list-item-label {
-  border-color: var(--color-pri);
-  background: #faf6ed;
   color: var(--color-pri);
   font-weight: 600;
 }
-.wpcf7-list-item .wpcf7-list-item-label:hover {
+.wpcf7-list-item:has(input:checked) .wpcf7-list-item-label::before {
   border-color: var(--color-pri);
+  background: var(--color-pri);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpolyline points='1.5,6 5,9.5 10.5,2.5' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.wpcf7-list-item .wpcf7-list-item-label:hover::before {
+  border-color: var(--color-pri);
+}
+.wpcf7-form-control-wrap:has(.wpcf7-radio) {
+  display: flex;
+  align-items: center;
+  background: #fbf9f4;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 10px 16px;
+  min-height: 47px;
 }
 
 /* Submit */
@@ -2405,13 +2425,11 @@ form .wpcf7-not-valid-tip {
   padding: 14px 0;
   border-bottom: 1px solid rgba(192, 200, 198, 0.28);
 }
-.sb-guest-row:last-child {
+.sb-guest-row:nth-last-child(2) {
   border-bottom: none;
-  padding-bottom: 4px;
+  padding-bottom: 0;
 }
-.sb-guest-row:first-child {
-  padding-top: 4px;
-}
+
 .sb-guest-info {
   display: flex;
   flex-direction: column;
@@ -2529,7 +2547,9 @@ form .wpcf7-not-valid-tip {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
-
+.flatpickr-innerContainer {
+  justify-content: center;
+}
 /* ── Mobile ───── */
 @media (max-width: 768px) {
   .sb-bar {
@@ -2645,6 +2665,271 @@ form .wpcf7-not-valid-tip {
   }
   .sb-guest-apply:hover {
     opacity: 0.85;
+  }
+}
+
+/* ── Mobile Popup (Airbnb-style trigger + fullscreen overlay) ────────── */
+.sb-mobile-trigger {
+  display: none;
+}
+.sb-popup-overlay {
+  /* transparent wrapper on desktop */
+}
+.sb-popup-footer {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Compact pill trigger */
+  .sb-mobile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.13);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+  }
+  .sb-mobile-trigger__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    background: var(--color-pri);
+    border-radius: 50%;
+    color: #fff;
+  }
+  .sb-mobile-trigger__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+  .sb-mobile-trigger__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-sec);
+    line-height: 1.2;
+  }
+  .sb-mobile-trigger__sub {
+    font-size: 12px;
+    color: #8d9b99;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  /* Fullscreen popup overlay: slides up from bottom */
+  .sb-popup-overlay {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: var(--size-hd);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    z-index: 500;
+    transform: translateY(100%);
+    transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow: hidden;
+  }
+  .search-booking.is-popup-open .sb-popup-overlay {
+    transform: translateY(0);
+  }
+
+  .sb-popup-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(192, 200, 198, 0.7);
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-sec);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .sb-popup-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  /* sb-bar inside popup: flat list, no card style */
+  .sb-popup-overlay .sb-bar {
+    flex-direction: column !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* row-top inside popup: stack vertically */
+  .sb-popup-overlay .sb-row-top {
+    display: contents !important;
+  }
+
+  /* Fields as Airbnb-style list rows */
+  .sb-popup-overlay .sb-field {
+    width: 100% !important;
+    position: relative !important;
+    flex: unset !important;
+  }
+  .sb-popup-overlay .sb-field__btn {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 20px 24px !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid rgba(192, 200, 198, 0.28) !important;
+    gap: 12px !important;
+    background: transparent !important;
+  }
+  .sb-popup-overlay .sb-field.is-open .sb-field__btn {
+    border-bottom-color: transparent !important;
+    background: rgba(194, 160, 86, 0.04) !important;
+  }
+  .sb-popup-overlay .sb-field__label {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    color: var(--color-sec) !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sb-popup-overlay .sb-field__value {
+    font-size: 14px !important;
+    color: #8d9b99 !important;
+    text-align: right !important;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Panels: inline expand (not absolute dropdown) */
+  .sb-popup-overlay .sb-panel {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    min-width: unset !important;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease !important;
+    pointer-events: none;
+    border-bottom: 1px solid rgba(192, 200, 198, 0.28);
+  }
+  .sb-popup-overlay .sb-field.is-open .sb-panel {
+    max-height: 900px;
+    pointer-events: auto;
+  }
+
+  /* Type panel in popup */
+  .sb-popup-overlay .sb-panel--type {
+    padding: 0 !important;
+  }
+
+  /* Time panel in popup: stacked */
+  .sb-popup-overlay .sb-panel--time {
+    flex-direction: column !important;
+    min-width: unset !important;
+    padding: 0 !important;
+  }
+  .sb-popup-overlay .sb-time-left {
+    padding: 14px 20px !important;
+    border-bottom: 1px solid rgba(192, 200, 198, 0.28);
+  }
+  .sb-popup-overlay .sb-time-right {
+    padding: 8px 12px !important;
+  }
+  .sb-popup-overlay .sb-time-sep-v {
+    display: none;
+  }
+
+  /* Guest panel in popup */
+  .sb-popup-overlay .sb-panel--guest {
+    padding: 0 20px !important;
+  }
+
+  /* Hide guest sub-footer inside popup (use main popup footer instead) */
+  .sb-popup-overlay .sb-guest-footer {
+    display: none !important;
+  }
+
+  /* Hide separators inside popup */
+  .sb-popup-overlay .sb-sep {
+    display: none !important;
+  }
+
+  /* Hide desktop submit inside popup */
+  .sb-popup-overlay .sb-submit {
+    display: none !important;
+  }
+
+  /* Popup footer: sticky at bottom */
+  .sb-popup-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+    border-top: 1px solid rgba(192, 200, 198, 0.3);
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  }
+  .sb-popup-clear-all {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-sec);
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+    padding: 4px 0;
+  }
+  .sb-popup-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+    background: var(--color-pri);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.16s;
+  }
+  .sb-popup-submit:hover {
+    opacity: 0.88;
   }
 }
 
@@ -2854,4 +3139,16 @@ form .wpcf7-not-valid-tip {
   .cf7-date-right {
     padding: 4px 8px 8px;
   }
+  .main {
+    overflow: hidden;
+  }
+}
+.gsb-buttons {
+  z-index: 50;
+  right: 20px !important;
+  bottom: 107px;
+}
+.zalo-chat-widget {
+  right: 20px !important;
+  z-index: 50 !important;
 }

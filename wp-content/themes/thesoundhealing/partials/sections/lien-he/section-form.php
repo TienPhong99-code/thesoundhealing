@@ -78,21 +78,31 @@ $data = [
                                     </div>
                                     <div class="flex flex-col gap-2">
                                         <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]">Booking | Đặt lịch · Hotline | Zalo | WhatsApp</span>
+                                        <?php
+                                        $phones = [
+                                            ['number' => $data['phone'],   'label' => $data['phone_label']],
+                                            ['number' => $data['phone_2'], 'label' => $data['phone_2_label']],
+                                        ];
+                                        ?>
                                         <div class="flex flex-col gap-1">
-                                            <div class="flex items-center gap-2">
-                                                <a href="tel:<?php echo esc_attr(preg_replace('/\s+/', '', $data['phone'])); ?>"
-                                                    class="text-[#1b1c19] text-[16px] leading-[24px] hover:text-pri transition-colors">
-                                                    <?php echo esc_html($data['phone']); ?>
-                                                </a>
-                                                <span class="text-[#414847] text-[13px] leading-[20px]">(<?php echo esc_html($data['phone_label']); ?>)</span>
-                                            </div>
-                                            <div class="flex items-center gap-2">
-                                                <a href="tel:<?php echo esc_attr(preg_replace('/\s+/', '', $data['phone_2'])); ?>"
-                                                    class="text-[#1b1c19] text-[16px] leading-[24px] hover:text-pri transition-colors">
-                                                    <?php echo esc_html($data['phone_2']); ?>
-                                                </a>
-                                                <span class="text-[#414847] text-[13px] leading-[20px]">(<?php echo esc_html($data['phone_2_label']); ?>)</span>
-                                            </div>
+                                            <?php foreach ($phones as $p) :
+                                                $clean = preg_replace('/\s+/', '', $p['number']);
+                                                $wa    = 'https://wa.me/' . (str_starts_with($clean, '0') ? '84' . substr($clean, 1) : $clean);
+                                            ?>
+                                                <div class="flex items-center gap-2">
+                                                    <a href="tel:<?php echo esc_attr($clean); ?>"
+                                                        class="text-[#1b1c19] text-[16px] leading-[24px] hover:text-pri transition-colors">
+                                                        <?php echo esc_html($p['number']); ?>
+                                                    </a>
+                                                    <a href="<?php echo esc_url($wa); ?>"
+                                                        class="flex items-center justify-center size-[20px] text-[#25D366] hover:opacity-75 transition-opacity shrink-0"
+                                                        target="_blank" rel="noopener noreferrer" title="Nhắn tin WhatsApp">
+                                                        <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/ic-whatsapp.svg'); ?>"
+                                                            class="block w-full h-full object-contain" alt="WhatsApp">
+                                                    </a>
+                                                    <span class="text-[#414847] text-[13px] leading-[20px]">(<?php echo esc_html($p['label']); ?>)</span>
+                                                </div>
+                                            <?php endforeach; ?>
                                         </div>
                                     </div>
                                 </div>

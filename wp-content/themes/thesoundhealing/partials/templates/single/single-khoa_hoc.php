@@ -191,7 +191,7 @@ get_header();
                                 <a href="<?php echo esc_url($thumb ?: $fb_main); ?>"
                                     data-fancybox="gallery-kh"
                                     data-caption="<?php echo esc_attr($thumb_alt); ?>"
-                                    class="block aspect-square overflow-hidden">
+                                    class="block aspect-video overflow-hidden">
                                     <img src="<?php echo esc_url($thumb ?: $fb_main); ?>"
                                         class="block w-full h-full object-cover cursor-zoom-in"
                                         alt="<?php echo esc_attr($thumb_alt); ?>">

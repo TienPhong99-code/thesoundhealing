@@ -43,162 +43,213 @@ $display_type = 'Chọn loại hình';
 if (!empty($pre_loai_hinh) && isset($loai_hinh_opts[$pre_loai_hinh])) {
     $display_type = $loai_hinh_opts[$pre_loai_hinh]['label'];
 }
+
+// Mobile summary sub-text
+$mobile_parts = [];
+if (!empty($pre_loai_hinh) && isset($loai_hinh_opts[$pre_loai_hinh])) {
+    $mobile_parts[] = $loai_hinh_opts[$pre_loai_hinh]['label'];
+}
+if (!empty($pre_thoi_gian) && isset($time_opts[$pre_thoi_gian])) {
+    $mobile_parts[] = $time_opts[$pre_thoi_gian]['label'];
+} elseif (!empty($pre_ngay)) {
+    $mobile_parts[] = date_i18n('j/m/Y', strtotime($pre_ngay));
+}
+$tong_guest = $pre_nguoi_lon + $pre_tre_em;
+if ($tong_guest > 0) {
+    $mobile_parts[] = $tong_guest . ' khách';
+}
+$mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : 'Loại hình · Thời gian · Khách';
 ?>
 
 <div class="search-booking" id="search-booking">
-    <form class="sb-bar" method="GET" action="<?php echo esc_url($search_url); ?>" id="sb-form" novalidate>
 
-        <!-- Row: Loại hình + Thời gian (50/50 trên mobile) -->
-        <div class="sb-row-top">
+    <!-- Mobile compact trigger (ẩn trên desktop) -->
+    <button class="sb-mobile-trigger" id="sb-mobile-trigger" type="button">
+        <span class="sb-mobile-trigger__icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2.2" />
+                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            </svg>
+        </span>
+        <span class="sb-mobile-trigger__body">
+            <span class="sb-mobile-trigger__title">Tìm kiếm</span>
+            <span class="sb-mobile-trigger__sub" id="sb-mobile-summary"><?php echo esc_html($mobile_summary); ?></span>
+        </span>
+    </button>
 
-            <!-- Field: Loại hình -->
-            <div class="sb-field" id="sb-field-type">
-                <button type="button" class="sb-field__btn"
-                    aria-expanded="false"
-                    aria-controls="sb-panel-type"
-                    data-sb-toggle="type">
-                    <span class="sb-field__label">Loại hình</span>
-                    <span class="sb-field__value" id="sb-val-type"><?php echo esc_html($display_type); ?></span>
-                </button>
-                <input type="hidden" name="loai-hinh" id="sb-input-type" value="<?php echo esc_attr($pre_loai_hinh); ?>">
-                <input type="hidden" name="chuyen-mon" id="sb-input-subterm" value="<?php echo esc_attr($pre_chuyen_mon); ?>">
+    <!-- Popup overlay (desktop: wrapper trong suốt; mobile: fullscreen slide-up) -->
+    <div class="sb-popup-overlay" id="sb-popup-overlay" aria-hidden="true">
 
-                <div class="sb-panel sb-panel--type" id="sb-panel-type" aria-hidden="true">
-                    <div class="sb-type-list">
-                        <?php foreach ($loai_hinh_opts as $k => $opt) : ?>
-                            <button type="button"
-                                class="sb-type-item<?php echo $pre_loai_hinh === $k ? ' is-active' : ''; ?>"
-                                data-value="<?php echo esc_attr($k); ?>"
-                                data-label="<?php echo esc_attr($opt['label']); ?>">
-                                <span class="sb-type-item__img">
-                                    <img src="<?php echo esc_url($opt['image']); ?>" alt="<?php echo esc_attr($opt['label']); ?>" loading="lazy">
-                                </span>
-                                <span class="sb-type-item__text">
-                                    <span class="sb-type-item__name"><?php echo esc_html($opt['label']); ?></span>
-                                    <span class="sb-type-item__desc"><?php echo esc_html($opt['desc']); ?></span>
-                                </span>
-                            </button>
-                        <?php endforeach; ?>
+        <form class="sb-bar" method="GET" action="<?php echo esc_url($search_url); ?>" id="sb-form" novalidate>
+
+            <!-- Row: Loại hình + Thời gian (50/50 trên mobile) -->
+            <div class="sb-row-top">
+
+                <!-- Field: Loại hình -->
+                <div class="sb-field" id="sb-field-type">
+                    <button type="button" class="sb-field__btn"
+                        aria-expanded="false"
+                        aria-controls="sb-panel-type"
+                        data-sb-toggle="type">
+                        <span class="sb-field__label">Loại hình</span>
+                        <span class="sb-field__value" id="sb-val-type"><?php echo esc_html($display_type); ?></span>
+                    </button>
+                    <input type="hidden" name="loai-hinh" id="sb-input-type" value="<?php echo esc_attr($pre_loai_hinh); ?>">
+                    <input type="hidden" name="chuyen-mon" id="sb-input-subterm" value="<?php echo esc_attr($pre_chuyen_mon); ?>">
+
+                    <div class="sb-panel sb-panel--type" id="sb-panel-type" aria-hidden="true">
+                        <div class="sb-type-list">
+                            <?php foreach ($loai_hinh_opts as $k => $opt) : ?>
+                                <button type="button"
+                                    class="sb-type-item<?php echo $pre_loai_hinh === $k ? ' is-active' : ''; ?>"
+                                    data-value="<?php echo esc_attr($k); ?>"
+                                    data-label="<?php echo esc_attr($opt['label']); ?>">
+                                    <span class="sb-type-item__img">
+                                        <img src="<?php echo esc_url($opt['image']); ?>" alt="<?php echo esc_attr($opt['label']); ?>" loading="lazy">
+                                    </span>
+                                    <span class="sb-type-item__text">
+                                        <span class="sb-type-item__name"><?php echo esc_html($opt['label']); ?></span>
+                                        <span class="sb-type-item__desc"><?php echo esc_html($opt['desc']); ?></span>
+                                    </span>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <span class="sb-sep" aria-hidden="true"></span>
+
+                <!-- Field: Thời gian -->
+                <div class="sb-field" id="sb-field-time">
+                    <button type="button" class="sb-field__btn"
+                        aria-expanded="false"
+                        aria-controls="sb-panel-time"
+                        data-sb-toggle="time">
+                        <span class="sb-field__label">Thời gian</span>
+                        <span class="sb-field__value" id="sb-val-time">
+                            <?php
+                            if (!empty($pre_thoi_gian) && isset($time_opts[$pre_thoi_gian])) {
+                                echo esc_html($time_opts[$pre_thoi_gian]['label']);
+                            } elseif (!empty($pre_ngay)) {
+                                echo esc_html(date_i18n('j/m/Y', strtotime($pre_ngay)));
+                            } else {
+                                echo 'Ngày đặt lịch';
+                            }
+                            ?>
+                        </span>
+                    </button>
+                    <input type="hidden" name="thoi-gian" id="sb-input-time" value="<?php echo esc_attr($pre_thoi_gian); ?>">
+                    <input type="hidden" name="ngay" id="sb-input-date" value="<?php echo esc_attr($pre_ngay); ?>">
+                    <div class="sb-panel sb-panel--time max-sm:!flex-col" id="sb-panel-time" aria-hidden="true">
+
+                        <!-- Quick options -->
+                        <div class="sb-time-left">
+                            <?php foreach ($time_opts as $val => $opt) : ?>
+                                <button type="button"
+                                    class="sb-time-pill<?php echo $pre_thoi_gian === $val ? ' is-active' : ''; ?>"
+                                    data-value="<?php echo esc_attr($val); ?>"
+                                    data-label="<?php echo esc_attr($opt['label']); ?>">
+                                    <span class="sb-time-pill__label"><?php echo esc_html($opt['label']); ?></span>
+                                    <span class="sb-time-pill__sub"><?php echo esc_html($opt['sub']); ?></span>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Inline calendar -->
+                        <div class="sb-time-right">
+                            <input type="text" id="sb-flatpickr-trigger" class="sb-flatpickr-trigger" readonly>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /.sb-row-top -->
 
             <span class="sb-sep" aria-hidden="true"></span>
 
-            <!-- Field: Thời gian -->
-
-            <div class="sb-field" id="sb-field-time">
+            <!-- Field: Khách -->
+            <div class="sb-field sb-field--last" id="sb-field-guest">
                 <button type="button" class="sb-field__btn"
                     aria-expanded="false"
-                    aria-controls="sb-panel-time"
-                    data-sb-toggle="time">
-                    <span class="sb-field__label">Thời gian</span>
-                    <span class="sb-field__value" id="sb-val-time">
+                    aria-controls="sb-panel-guest"
+                    data-sb-toggle="guest">
+                    <span class="sb-field__label">Khách</span>
+                    <span class="sb-field__value" id="sb-val-guest">
                         <?php
-                        if (!empty($pre_thoi_gian) && isset($time_opts[$pre_thoi_gian])) {
-                            echo esc_html($time_opts[$pre_thoi_gian]['label']);
-                        } elseif (!empty($pre_ngay)) {
-                            echo esc_html(date_i18n('j/m/Y', strtotime($pre_ngay)));
+                        $tong = $pre_nguoi_lon + $pre_tre_em;
+                        if ($tong > 0) {
+                            $parts = [];
+                            if ($pre_nguoi_lon > 0) $parts[] = $pre_nguoi_lon . ' người lớn';
+                            if ($pre_tre_em    > 0) $parts[] = $pre_tre_em    . ' trẻ em';
+                            echo esc_html(implode(', ', $parts));
                         } else {
-                            echo 'Ngày đặt lịch';
+                            echo 'Số lượng khách';
                         }
                         ?>
                     </span>
                 </button>
-                <input type="hidden" name="thoi-gian" id="sb-input-time" value="<?php echo esc_attr($pre_thoi_gian); ?>">
-                <input type="hidden" name="ngay" id="sb-input-date" value="<?php echo esc_attr($pre_ngay); ?>">
-                <div class="sb-panel sb-panel--time max-sm:!flex-col" id="sb-panel-time" aria-hidden="true">
-
-                    <!-- Quick options -->
-                    <div class="sb-time-left">
-                        <?php foreach ($time_opts as $val => $opt) : ?>
-                            <button type="button"
-                                class="sb-time-pill<?php echo $pre_thoi_gian === $val ? ' is-active' : ''; ?>"
-                                data-value="<?php echo esc_attr($val); ?>"
-                                data-label="<?php echo esc_attr($opt['label']); ?>">
-                                <span class="sb-time-pill__label"><?php echo esc_html($opt['label']); ?></span>
-                                <span class="sb-time-pill__sub"><?php echo esc_html($opt['sub']); ?></span>
-                            </button>
-                        <?php endforeach; ?>
-                    </div>
-
-
-
-                    <!-- Inline calendar -->
-                    <div class="sb-time-right">
-                        <input type="text" id="sb-flatpickr-trigger" class="sb-flatpickr-trigger" readonly>
-                    </div>
-
-                </div>
-            </div>
-
-        </div><!-- /.sb-row-top -->
-
-        <span class="sb-sep" aria-hidden="true"></span>
-
-        <!-- Field: Khách -->
-        <div class="sb-field sb-field--last" id="sb-field-guest">
-            <button type="button" class="sb-field__btn"
-                aria-expanded="false"
-                aria-controls="sb-panel-guest"
-                data-sb-toggle="guest">
-                <span class="sb-field__label">Khách</span>
-                <span class="sb-field__value" id="sb-val-guest">
+                <input type="hidden" name="nguoi-lon" id="sb-input-adult" value="<?php echo esc_attr($pre_nguoi_lon); ?>">
+                <input type="hidden" name="tre-em" id="sb-input-child" value="<?php echo esc_attr($pre_tre_em); ?>">
+                <div class="sb-panel sb-panel--guest" id="sb-panel-guest" aria-hidden="true">
                     <?php
-                    $tong = $pre_nguoi_lon + $pre_tre_em;
-                    if ($tong > 0) {
-                        $parts = [];
-                        if ($pre_nguoi_lon > 0) $parts[] = $pre_nguoi_lon . ' người lớn';
-                        if ($pre_tre_em    > 0) $parts[] = $pre_tre_em    . ' trẻ em';
-                        echo esc_html(implode(', ', $parts));
-                    } else {
-                        echo 'Số lượng khách';
-                    }
+                    $pre_counts = ['adult' => $pre_nguoi_lon, 'child' => $pre_tre_em];
+                    foreach ($guest_types as $key => $g) :
+                        $count = $pre_counts[$key] ?? 0;
                     ?>
-                </span>
-            </button>
-            <input type="hidden" name="nguoi-lon" id="sb-input-adult" value="<?php echo esc_attr($pre_nguoi_lon); ?>">
-            <input type="hidden" name="tre-em" id="sb-input-child" value="<?php echo esc_attr($pre_tre_em); ?>">
-            <div class="sb-panel sb-panel--guest" id="sb-panel-guest" aria-hidden="true">
-                <?php
-                $pre_counts = ['adult' => $pre_nguoi_lon, 'child' => $pre_tre_em];
-                foreach ($guest_types as $key => $g) :
-                    $count = $pre_counts[$key] ?? 0;
-                ?>
-                    <div class="sb-guest-row">
-                        <div class="sb-guest-info">
-                            <span class="sb-guest-name"><?php echo esc_html($g['label']); ?></span>
-                            <span class="sb-guest-desc"><?php echo esc_html($g['desc']); ?></span>
+                        <div class="sb-guest-row">
+                            <div class="sb-guest-info">
+                                <span class="sb-guest-name"><?php echo esc_html($g['label']); ?></span>
+                                <span class="sb-guest-desc"><?php echo esc_html($g['desc']); ?></span>
+                            </div>
+                            <div class="sb-guest-counter">
+                                <button type="button"
+                                    class="sb-counter-btn sb-counter-minus"
+                                    data-target="<?php echo esc_attr($key); ?>"
+                                    aria-label="Giảm số <?php echo esc_attr(mb_strtolower($g['label'])); ?>"
+                                    <?php echo $count === 0 ? 'disabled' : ''; ?>>−</button>
+                                <span class="sb-counter-val" id="sb-count-<?php echo esc_attr($key); ?>"><?php echo $count; ?></span>
+                                <button type="button"
+                                    class="sb-counter-btn sb-counter-plus"
+                                    data-target="<?php echo esc_attr($key); ?>"
+                                    aria-label="Tăng số <?php echo esc_attr(mb_strtolower($g['label'])); ?>">+</button>
+                            </div>
                         </div>
-                        <div class="sb-guest-counter">
-                            <button type="button"
-                                class="sb-counter-btn sb-counter-minus"
-                                data-target="<?php echo esc_attr($key); ?>"
-                                aria-label="Giảm số <?php echo esc_attr(mb_strtolower($g['label'])); ?>"
-                                <?php echo $count === 0 ? 'disabled' : ''; ?>>−</button>
-                            <span class="sb-counter-val" id="sb-count-<?php echo esc_attr($key); ?>"><?php echo $count; ?></span>
-                            <button type="button"
-                                class="sb-counter-btn sb-counter-plus"
-                                data-target="<?php echo esc_attr($key); ?>"
-                                aria-label="Tăng số <?php echo esc_attr(mb_strtolower($g['label'])); ?>">+</button>
-                        </div>
+                    <?php endforeach; ?>
+                    <div class="sb-guest-footer">
+                        <button type="button" class="sb-guest-clear" id="sb-guest-clear">Xóa tất cả</button>
+                        <button type="button" class="sb-guest-apply" id="sb-guest-apply">Áp dụng</button>
                     </div>
-                <?php endforeach; ?>
-                <div class="sb-guest-footer">
-                    <button type="button" class="sb-guest-clear" id="sb-guest-clear">Xóa tất cả</button>
-                    <button type="button" class="sb-guest-apply" id="sb-guest-apply">Áp dụng</button>
                 </div>
             </div>
+
+            <!-- Submit (desktop only — mobile dùng sb-popup-footer) -->
+            <button type="submit" class="sb-submit" aria-label="Tìm kiếm">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2.2" />
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+                </svg>
+                <span class="sb-submit__text">Tìm kiếm</span>
+            </button>
+
+        </form>
+
+        <!-- Popup footer (chỉ hiện trên mobile) -->
+        <div class="sb-popup-footer">
+            <button class="sb-popup-close" id="sb-popup-close" type="button" aria-label="Đóng">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button type="button" class="sb-popup-clear-all" id="sb-popup-clear-all">Xóa tất cả</button>
+            <button type="button" class="sb-popup-submit" id="sb-popup-submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2.2" />
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+                </svg>
+                Tìm kiếm
+            </button>
         </div>
 
-        <!-- Submit -->
-        <button type="submit" class="sb-submit" aria-label="Tìm kiếm">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2.2" />
-                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
-            </svg>
-            <span class="sb-submit__text">Tìm kiếm</span>
-        </button>
+    </div><!-- /.sb-popup-overlay -->
 
-    </form>
-</div>
+</div><!-- /.search-booking -->

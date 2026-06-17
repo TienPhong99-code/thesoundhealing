@@ -31,11 +31,11 @@ $data = [
             <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
                 <?php echo esc_html($data['heading']); ?>
             </h2>
-            <?php if (!empty($data['desc'])) : ?>
+            <!-- <?php if (!empty($data['desc'])) : ?>
                 <p class="text-[#414847] text-[15px] max-w-[560px]">
                     <?php echo wp_kses_post($data['desc']); ?>
                 </p>
-            <?php endif; ?>
+            <?php endif; ?> -->
         </div>
 
         <div class="swiper-partner slideSw relative opacity-50">

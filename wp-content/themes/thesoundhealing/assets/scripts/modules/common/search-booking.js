@@ -36,7 +36,10 @@
             var panel = f.querySelector('.sb-panel');
             if (panel) panel.setAttribute('aria-hidden', 'true');
         });
-        document.body.classList.remove('no-scroll');
+        // Keep body locked if mobile popup is still open
+        if (!sb.classList.contains('is-popup-open')) {
+            document.body.classList.remove('no-scroll');
+        }
     }
 
     function openPanel(name) {
@@ -76,7 +79,13 @@
     });
 
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeAllPanels();
+        if (e.key === 'Escape') {
+            if (sb.classList.contains('is-popup-open')) {
+                closePopup();
+            } else {
+                closeAllPanels();
+            }
+        }
     });
 
     // ── Loại hình — option list ───────────────────────────────────────────
@@ -98,11 +107,12 @@
             var valEl = document.getElementById('sb-val-type');
             if (valEl) valEl.textContent = label;
 
+            updateMobileSummary();
             openPanel('time');
         });
     }
 
-    // ── Time pills — individual listeners (không có child elements) ───────
+    // ── Time pills — individual listeners ─────────────────────────────────
     sb.querySelectorAll('.sb-time-pill').forEach(function (pill) {
         pill.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -122,6 +132,7 @@
 
             if (window._sbFlatpickr) window._sbFlatpickr.clear();
 
+            updateMobileSummary();
             openPanel('guest');
         });
     });
@@ -150,6 +161,7 @@
             if (hiddenInput) hiddenInput.value = current;
 
             updateGuestSummary();
+            updateMobileSummary();
         });
     }
 
@@ -177,17 +189,21 @@
                 if (hiddenInput) hiddenInput.value = 0;
             });
             updateGuestSummary();
+            updateMobileSummary();
         });
     }
 
     if (applyBtn) {
         applyBtn.addEventListener('click', function () {
             closeAllPanels();
-            if (sbForm) sbForm.requestSubmit();
+            // Trong popup mobile, không submit ngay — dùng nút Tìm kiếm ở footer
+            if (!sb.classList.contains('is-popup-open') && sbForm) {
+                sbForm.requestSubmit();
+            }
         });
     }
 
-    // ── Submit validation — toast nếu chưa chọn bất kỳ bước nào ────────────
+    // ── Submit validation — toast nếu chưa chọn bất kỳ bước nào ─────────
     var toastEl = null;
     var toastTimer = null;
 
@@ -225,7 +241,7 @@
         });
     }
 
-    // ── Flatpickr — init cuối cùng, wrap try-catch để không break script ──
+    // ── Flatpickr ─────────────────────────────────────────────────────────
     try {
         var fpTrigger = document.getElementById('sb-flatpickr-trigger');
         if (fpTrigger && typeof flatpickr === 'function') {
@@ -247,12 +263,123 @@
 
                     sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
 
+                    updateMobileSummary();
                     setTimeout(function () { openPanel('guest'); }, 300);
                 },
             });
         }
     } catch (err) {
         // flatpickr init failed — date picker falls back to hidden input only
+    }
+
+    // ── Mobile Popup (Airbnb-style) ───────────────────────────────────────
+    var popupTrigger  = document.getElementById('sb-mobile-trigger');
+    var popupOverlay  = document.getElementById('sb-popup-overlay');
+    var popupClose    = document.getElementById('sb-popup-close');
+    var popupSubmit   = document.getElementById('sb-popup-submit');
+    var popupClearAll = document.getElementById('sb-popup-clear-all');
+
+    function openPopup() {
+        sb.classList.add('is-popup-open');
+        if (popupOverlay) popupOverlay.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('no-scroll');
+        var gsbButtons = document.querySelector('.gsb-buttons');
+        if (gsbButtons) gsbButtons.style.display = 'none';
+        var zaloWidget = document.querySelector('.zalo-chat-widget');
+        if (zaloWidget) zaloWidget.style.display = 'none';
+        // Auto-open Loại hình nếu chưa chọn gì
+        var typeVal = (document.getElementById('sb-input-type') || {}).value;
+        if (!typeVal) {
+            setTimeout(function () { openPanel('type'); }, 50);
+        }
+    }
+
+    function closePopup() {
+        closeAllPanels();
+        sb.classList.remove('is-popup-open');
+        if (popupOverlay) popupOverlay.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('no-scroll');
+        var gsbButtons = document.querySelector('.gsb-buttons');
+        if (gsbButtons) gsbButtons.style.display = '';
+        var zaloWidget = document.querySelector('.zalo-chat-widget');
+        if (zaloWidget) zaloWidget.style.display = '';
+    }
+
+    if (popupTrigger) {
+        popupTrigger.addEventListener('click', openPopup);
+    }
+
+    if (popupClose) {
+        popupClose.addEventListener('click', closePopup);
+    }
+
+    if (popupSubmit) {
+        popupSubmit.addEventListener('click', function () {
+            closePopup();
+            if (sbForm) sbForm.requestSubmit();
+        });
+    }
+
+    if (popupClearAll) {
+        popupClearAll.addEventListener('click', function () {
+            // Xóa loại hình
+            var typeInput    = document.getElementById('sb-input-type');
+            var subtermInput = document.getElementById('sb-input-subterm');
+            var valType      = document.getElementById('sb-val-type');
+            if (typeInput)    typeInput.value    = '';
+            if (subtermInput) subtermInput.value = '';
+            if (valType)      valType.textContent = 'Chọn loại hình';
+            sb.querySelectorAll('.sb-type-item').forEach(function (i) { i.classList.remove('is-active'); });
+
+            // Xóa thời gian
+            var timeInput = document.getElementById('sb-input-time');
+            var dateInput = document.getElementById('sb-input-date');
+            var valTime   = document.getElementById('sb-val-time');
+            if (timeInput) timeInput.value     = '';
+            if (dateInput) dateInput.value     = '';
+            if (valTime)   valTime.textContent = 'Ngày đặt lịch';
+            sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
+            if (window._sbFlatpickr) window._sbFlatpickr.clear();
+
+            // Xóa khách
+            ['adult', 'child'].forEach(function (key) {
+                guestCounts[key] = 0;
+                var countEl = document.getElementById('sb-count-' + key);
+                if (countEl) countEl.textContent = '0';
+                var minus = sb.querySelector('[data-target="' + key + '"].sb-counter-minus');
+                if (minus) minus.disabled = true;
+                var hidden = document.getElementById(guestInputMap[key]);
+                if (hidden) hidden.value = 0;
+            });
+            updateGuestSummary();
+            updateMobileSummary();
+        });
+    }
+
+    function updateMobileSummary() {
+        var summaryEl = document.getElementById('sb-mobile-summary');
+        if (!summaryEl) return;
+        var parts = [];
+
+        var typeInput = document.getElementById('sb-input-type');
+        var valType   = document.getElementById('sb-val-type');
+        if (typeInput && typeInput.value) {
+            var typeText = valType ? valType.textContent.trim() : typeInput.value;
+            if (typeText && typeText !== 'Chọn loại hình') parts.push(typeText);
+        }
+
+        var timeInput = document.getElementById('sb-input-time');
+        var dateInput = document.getElementById('sb-input-date');
+        var valTime   = document.getElementById('sb-val-time');
+        if ((timeInput && timeInput.value) || (dateInput && dateInput.value)) {
+            var timeText = valTime ? valTime.textContent.trim() : '';
+            if (timeText && timeText !== 'Ngày đặt lịch') parts.push(timeText);
+        }
+
+        var totalGuest = (guestCounts.adult || 0) + (guestCounts.child || 0);
+        if (totalGuest > 0) parts.push(totalGuest + ' khách');
+
+        summaryEl.textContent = parts.length > 0 ? parts.join(' · ') : 'Loại hình · Thời gian · Khách';
     }
 
 })();
