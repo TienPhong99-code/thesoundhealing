@@ -15,7 +15,7 @@ $ws_guests     = get_field('ws_guests',     $post_id) ?: '20 người';
 $ws_capacity   = get_field('ws_capacity',   $post_id);
 $ws_status     = get_field('ws_status',     $post_id);
 $ws_spots_raw  = get_field('ws_spots',      $post_id);
-$ws_spots      = ($ws_spots_raw !== '' && $ws_spots_raw !== null) ? (int) $ws_spots_raw : 6;
+$ws_spots      = ($ws_spots_raw !== '' && $ws_spots_raw !== null) ? (int) $ws_spots_raw : 5;
 
 // ── Gallery ──
 $thumb    = get_the_post_thumbnail_url($post_id, 'full');
@@ -190,59 +190,51 @@ get_header();
                             </div>
 
                             <!-- ── GALLERY ──────────────────────────────────────────── -->
-                            <div class="rounded-[12px] overflow-hidden">
+                            <div class="aspect-[4/3] max-md:aspect-square overflow-hidden rounded-[12px] grid gap-[2px]"
+                                style="grid-template-columns: 3fr 1fr; grid-template-rows: repeat(3, 1fr);">
 
-                                <!-- Main large image -->
+                                <!-- Left: main image spans all 3 rows -->
                                 <a href="<?php echo esc_url($thumb ?: $fb_main); ?>"
                                     data-fancybox="gallery-ws"
                                     data-caption="<?php echo esc_attr($thumb_alt); ?>"
-                                    class="block aspect-video overflow-hidden">
+                                    class="row-span-3 max-md:col-span-2 overflow-hidden block aspect-square">
                                     <img src="<?php echo esc_url($thumb ?: $fb_main); ?>"
                                         class="block w-full h-full object-cover cursor-zoom-in"
                                         alt="<?php echo esc_attr($thumb_alt); ?>">
                                 </a>
 
-                                <!-- 8 thumbnails (2 rows × 4) -->
-                                <div class="grid grid-cols-4 gap-[2px] mt-[2px] max-md:hidden">
-                                    <!-- Row 1 -->
-                                    <a href="<?php echo esc_url($ws_gal_2['url'] ?? $fb_sub); ?>"
-                                        data-fancybox="gallery-ws"
-                                        class="block aspect-square overflow-hidden">
-                                        <img src="<?php echo esc_url($ws_gal_2['url'] ?? $fb_sub); ?>"
-                                            class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
-                                            alt="<?php echo esc_attr($ws_gal_2['alt'] ?? ''); ?>">
-                                    </a>
-                                    <a href="<?php echo esc_url($ws_gal_3['url'] ?? $fb_sub); ?>"
-                                        data-fancybox="gallery-ws"
-                                        class="block aspect-square overflow-hidden">
-                                        <img src="<?php echo esc_url($ws_gal_3['url'] ?? $fb_sub); ?>"
-                                            class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
-                                            alt="<?php echo esc_attr($ws_gal_3['alt'] ?? ''); ?>">
-                                    </a>
-                                    <a href="<?php echo esc_url($ws_gal_4['url'] ?? $fb_sub); ?>"
-                                        data-fancybox="gallery-ws"
-                                        class="block aspect-square overflow-hidden">
-                                        <img src="<?php echo esc_url($ws_gal_4['url'] ?? $fb_sub); ?>"
-                                            class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
-                                            alt="<?php echo esc_attr($ws_gal_4['alt'] ?? ''); ?>">
-                                    </a>
-                                    <!-- Last thumbnail with "Xem tất cả" overlay -->
-                                    <div class="relative aspect-square overflow-hidden">
-                                        <a href="<?php echo esc_url($ws_gal_5['url'] ?? $fb_sub); ?>"
-                                            data-fancybox="gallery-ws"
-                                            class="block w-full h-full">
-                                            <img src="<?php echo esc_url($ws_gal_5['url'] ?? $fb_sub); ?>"
-                                                class="block w-full h-full object-cover cursor-zoom-in"
-                                                alt="<?php echo esc_attr($ws_gal_5['alt'] ?? ''); ?>">
-                                        </a>
-                                        <button data-gallery-trigger="gallery-ws"
-                                            class="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/50 text-white hover:bg-black/60 transition-colors">
-                                            <svg class="size-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                            </svg>
-                                            <span class="text-[11px] font-semibold leading-tight text-center">Xem tất cả</span>
-                                        </button>
-                                    </div>
+                                <!-- Right col: thumbnail 1 -->
+                                <a href="<?php echo esc_url($ws_gal_2['url'] ?? $fb_sub); ?>"
+                                    data-fancybox="gallery-ws"
+                                    class="overflow-hidden block aspect-square max-md:hidden">
+                                    <img src="<?php echo esc_url($ws_gal_2['url'] ?? $fb_sub); ?>"
+                                        class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
+                                        alt="<?php echo esc_attr($ws_gal_2['alt'] ?? ''); ?>">
+                                </a>
+
+                                <!-- Right col: thumbnail 2 -->
+                                <a href="<?php echo esc_url($ws_gal_3['url'] ?? $fb_sub); ?>"
+                                    data-fancybox="gallery-ws"
+                                    class="overflow-hidden block aspect-square max-md:hidden">
+                                    <img src="<?php echo esc_url($ws_gal_3['url'] ?? $fb_sub); ?>"
+                                        class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
+                                        alt="<?php echo esc_attr($ws_gal_3['alt'] ?? ''); ?>">
+                                </a>
+
+                                <!-- Right col: thumbnail 3 with "Xem tất cả" overlay -->
+                                <div class="relative overflow-hidden aspect-square max-md:hidden">
+                                    <img src="<?php echo esc_url($ws_gal_4['url'] ?? $fb_sub); ?>"
+                                        class="block w-full h-full object-cover"
+                                        alt="<?php echo esc_attr($ws_gal_4['alt'] ?? ''); ?>">
+                                    <a href="<?php echo esc_url($ws_gal_4['url'] ?? $fb_sub); ?>" data-fancybox="gallery-ws" class="hidden" aria-hidden="true"></a>
+                                    <?php if (!empty($ws_gal_5['url'])) : ?><a href="<?php echo esc_url($ws_gal_5['url']); ?>" data-fancybox="gallery-ws" class="hidden" aria-hidden="true"></a><?php endif; ?>
+                                    <button data-fancybox-trigger="gallery-ws"
+                                        class="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/50 text-white hover:bg-black/60 transition-colors">
+                                        <svg class="size-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                        </svg>
+                                        <span class="text-[11px] font-semibold leading-tight text-center">Xem tất cả</span>
+                                    </button>
                                 </div>
 
                             </div>
@@ -519,12 +511,12 @@ get_header();
                                                         </svg>
                                                     </div>
                                                     <div class="flex flex-col justify-center min-h-10">
-                                                        <p class="text-[11px] font-medium text-[#717171] mb-1">CHỖ CÒN LẠI</p>
+                                                        <p class="text-[11px] font-medium text-[#717171] mb-1">SỐ SUẤT CÒN LẠI</p>
                                                         <?php if ($ws_spots !== null) :
                                                             if ($ws_spots === 0) : ?>
-                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Fully Booked / Hết chỗ</span>
+                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Fully Booked / Hết suất</span>
                                                             <?php else : ?>
-                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Còn <?php echo $ws_spots; ?> chỗ trống</span>
+                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Còn <?php echo $ws_spots; ?> suất</span>
                                                             <?php endif;
                                                         elseif ($ws_capacity) : ?>
                                                             <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]"><?php echo esc_html($ws_capacity); ?></span>

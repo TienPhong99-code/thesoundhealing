@@ -1,5 +1,5 @@
 /* ── Montserrat self-hosted ── */
-@import url("../fonts/Roboto/stylesheet.css");
+@import url("../fonts/Manrope/stylesheet.css");
 
 :root {
   --color-pri: #c2a056;
@@ -8,9 +8,9 @@
   --color-white: #fff;
   --color-black: #000;
   --cl-border: #d9d9d9;
-  --font-body: "Roboto", sans-serif;
-  --font-title: "Roboto", sans-serif;
-  --font-second: "Roboto", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-title: "Manrope", sans-serif;
+  --font-second: "Manrope", sans-serif;
   /* Layout */
   --size-hd: 80px;
   --pd-sc: 40px;
@@ -20,12 +20,12 @@
 @theme {
   --color-pri: #c2a056;
   --color-sec: #1b1c19;
-  --font-body: "Roboto", sans-serif;
-  --font-title: "Roboto", sans-serif;
-  --font-second: "Roboto", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-title: "Manrope", sans-serif;
+  --font-second: "Manrope", sans-serif;
 }
 .font-second {
-  font-family: "Roboto", sans-serif;
+  font-family: "Manrope", sans-serif;
 }
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
@@ -56,7 +56,7 @@
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 16px;
   line-height: 1.55;
   font-weight: 400;
@@ -302,7 +302,7 @@ iframe {
    <h2 class="title-main">Lĩnh vực <span>HOẠT ĐỘNG</span></h2>
 ============================================= */
 .title-main {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 48px;
   font-weight: 900;
   line-height: 1.5;
@@ -2688,7 +2688,7 @@ form .wpcf7-not-valid-tip {
     width: 100%;
     background: #fff;
     border: none;
-    border-radius: 40px;
+    border-radius: 0px;
     padding: 10px 14px;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.13);
     cursor: pointer;

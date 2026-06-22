@@ -151,7 +151,7 @@ $_dv_page_id      = get_queried_object_id();
 $_dv_list_heading = get_field('dv_page_heading', $_dv_page_id) ?: 'Dịch Vụ';
 ?>
 
-<section class="sec-dv-list section-pd"
+<section class="sec-dv-list section-pd max-md:!pt-20"
     <?php if (!$use_sample) : ?>
     data-total="<?php echo $total; ?>"
     data-ajaxurl="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"

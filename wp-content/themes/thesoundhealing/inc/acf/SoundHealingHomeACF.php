@@ -51,8 +51,8 @@ add_action('acf/init', function () {
             Tab::make('Hero')->placement('left'),
 
             Image::make('Ảnh nền hero', 'hero_image')
-                ->helperText('Kích thước đề xuất: 1440×819px. Định dạng JPG/PNG/WEBP.')
-                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
+                ->helperText('Kích thước đề xuất: 1440×819px. Định dạng JPG/PNG/WEBP/GIF.')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp', 'gif'])
                 ->format('array'),
 
             Text::make('Tiêu đề', 'hero_heading')

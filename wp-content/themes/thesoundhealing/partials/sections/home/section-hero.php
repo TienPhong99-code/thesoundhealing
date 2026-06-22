@@ -8,7 +8,7 @@ $sample = [
     'desc'     => 'Trải nghiệm sự chuyển hóa tâm thức thông qua các liệu pháp âm thanh và năng lượng chuyên sâu, được thiết kế cho tâm hồn hiện đại.',
     'btn_text' => 'KHÁM PHÁ KHÓA HỌC',
     'btn_url'  => home_url('/khoa-hoc'),
-    'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/hero-img-1.png', 'alt' => ''],
+    'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/banner.gif', 'alt' => ''],
 ];
 
 $raw_img = get_field('hero_image', $page_id);
@@ -22,27 +22,39 @@ $data = [
 ];
 ?>
 
-<section class="sec-hero relative overflow-hidden min-h-[819px]">
-    <span class="absolute inset-0 z-[-1] opacity-80 mix-blend-multiply">
-        <div class="w-full h-full">
-            <img src="<?php echo esc_url($data['image']['url']); ?>"
-                class="block w-full h-full object-cover"
-                alt="<?php echo esc_attr($data['image']['alt']); ?>">
-        </div>
-    </span>
+<section class="sec-hero relative z-10 section-pd ">
+    <div class="container ">
+        <div class="relative max-md:!pt-10">
+            <!-- 2-col row: content | image -->
+            <div class="grid grid-cols-2 gap-10 items-center max-md:grid-cols-1 max-md:gap-8">
 
-    <div class="container relative flex flex-col items-center justify-center min-h-[819px] py-20">
-        <div class="flex flex-col items-center text-center max-w-[1000px]">
-            <h1 class="font-second text-[#133a35] text-[56px] font-normal mb-6 max-sm:text-[8vw] max-md:text-[40px]">
-                <?php echo wp_kses_post($data['heading']); ?>
-            </h1>
-            <p class="text-[#414847] text-[18px] mb-10 max-w-[672px]">
-                <?php echo esc_html($data['desc']); ?>
-            </p>
-            <a href="<?php echo esc_url($data['btn_url']); ?>"
-                class="btn btn-pri">
-                <?php echo esc_html($data['btn_text']); ?>
-            </a>
+                <!-- Col 1: Content -->
+                <div class="flex flex-col items-start max-md:items-center max-md:text-center">
+                    <h1 class="font-second text-pri text-[40px] font-bold mb-6 max-sm:text-[8vw] max-md:text-[40px]">
+                        <?php echo wp_kses_post($data['heading']); ?>
+                    </h1>
+                    <p class="text-[18px]">
+                        <?php echo esc_html($data['desc']); ?>
+                    </p>
+                    <!-- <a href="<?php echo esc_url($data['btn_url']); ?>"
+                        class="btn btn-pri">
+                        <?php echo esc_html($data['btn_text']); ?>
+                    </a> -->
+                </div>
+                <!-- Search Booking -->
+                <div class="absolute max-md:fixed max-md:top-[calc(var(--size-hd))] max-md:w-full max-md:left-0 md:left-1/2 md:-translate-x-1/2 md:bottom-0 md:translate-y-1/2 w-full ">
+                    <?php get_template_part('partials/components/search-booking'); ?>
+                </div>
+                <!-- Col 2: Image -->
+                <div class="flex items-center justify-center ">
+                    <img src="<?php echo esc_url($data['image']['url']); ?>"
+                        class="block w-full max-w-[560px] h-auto object-contain rounded-2xl overflow-hidden"
+                        alt="<?php echo esc_attr($data['image']['alt']); ?>">
+                </div>
+
+            </div>
+
+
         </div>
     </div>
 </section>

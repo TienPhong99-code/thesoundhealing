@@ -12,16 +12,12 @@ if (! defined('ABSPATH')) {
 
 get_header();
 ?>
-<!-- <?php get_template_part('partials/sections/home/section', 'hero'); ?> -->
+<?php get_template_part('partials/sections/home/section', 'hero'); ?>
 <!--
  <?php get_template_part('partials/sections/home/section', 'about'); ?>
  -->
 
-<section class="sec-search-home section-pd-t">
-   <div class="container">
-      <?php get_template_part('partials/components/search-booking'); ?>
-   </div>
-</section>
+
 
 <?php get_template_part('partials/sections/home/section', 'featured'); ?>
 <?php // get_template_part('partials/sections/home/section', 'workshop'); 

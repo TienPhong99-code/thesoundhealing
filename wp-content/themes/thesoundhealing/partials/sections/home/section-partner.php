@@ -24,7 +24,7 @@ $data = [
 ];
 ?>
 
-<section class="sec-partner bg-white pb-20">
+<section class="sec-partner pt-20 pb-30">
     <div class="container flex flex-col gap-[48px]">
 
         <div class="w-full flex flex-col items-center gap-3 text-center">
@@ -48,7 +48,7 @@ $data = [
                         $href = !empty($item['url']) && $item['url'] !== '#' ? ' href="' . esc_url($item['url']) . '" target="_blank" rel="noopener noreferrer"' : '';
                     ?>
                         <div class="swiper-slide col !w-[calc(100%/5)] max-lg:!w-[calc(100%/3)] max-md:!w-1/2">
-                            <<?php echo $tag . $href; ?> class="flex items-center h-[40px] justify-center">
+                            <<?php echo $tag . $href; ?> class="flex items-center h-[48px] justify-center">
                                 <img src="<?php echo esc_url($item['logo']); ?>"
                                     alt="<?php echo esc_attr($item['name']); ?>"
                                     class="h-full w-auto object-contain">

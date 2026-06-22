@@ -102,7 +102,7 @@ if ($use_sample) {
 }
 ?>
 
-<section class="sec-khws-kh-list section-pd">
+<section class="sec-khws-kh-list section-pd max-md:!pt-20">
     <div class="container">
         <h2 class="font-title text-pri text-[40px] font-bold tracking-[-0.8px] leading-[48px] mb-10 max-md:text-[28px] max-md:mb-6">
             Khóa Học
