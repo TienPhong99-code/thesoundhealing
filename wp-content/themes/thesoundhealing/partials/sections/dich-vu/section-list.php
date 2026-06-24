@@ -140,6 +140,7 @@ if ($use_sample) {
             'spots'          => get_field('dv_spots',           $post_id),
             'best_seller'    => get_field('dv_best_seller',     $post_id),
             'url'            => get_permalink($post_id),
+            'post_id'        => $post_id,
         ];
     }
     wp_reset_postdata();

@@ -128,13 +128,14 @@ if (! function_exists('kiena_ajax_load_more_khoa_hoc')) {
             $term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
 
             $item = [
-                'image' => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
-                'level' => get_field('level', $post_id),
-                'term'  => $term_name,
-                'title' => get_the_title($post_id),
-                'desc'  => get_field('short_desc', $post_id),
-                'price' => get_field('price', $post_id),
-                'url'   => get_permalink($post_id),
+                'image'   => ['url' => $thumb ?: '', 'alt' => get_the_title($post_id)],
+                'level'   => get_field('level', $post_id),
+                'term'    => $term_name,
+                'title'   => get_the_title($post_id),
+                'desc'    => get_field('short_desc', $post_id),
+                'price'   => get_field('price', $post_id),
+                'url'     => get_permalink($post_id),
+                'post_id' => $post_id,
             ];
 
             echo '<div class="col col-4 max-lg:!w-1/2 max-sm:!w-full">';
@@ -196,6 +197,7 @@ if (! function_exists('kiena_ajax_load_more_workshop')) {
                 'desc'     => get_field('ws_short_desc', $post_id),
                 'price'    => get_field('ws_price', $post_id),
                 'url'      => get_permalink($post_id),
+                'post_id'  => $post_id,
             ];
 
             echo '<div class="col col-4">';

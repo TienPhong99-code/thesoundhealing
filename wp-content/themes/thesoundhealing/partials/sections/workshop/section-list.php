@@ -136,6 +136,7 @@ if ($use_sample) {
             'price'      => get_field('ws_price',         $post_id) ?: 'Liên hệ',
             'spots'      => get_field('ws_spots',         $post_id),
             'url'        => get_permalink($post_id),
+            'post_id'    => $post_id,
         ];
     }
     wp_reset_postdata();
