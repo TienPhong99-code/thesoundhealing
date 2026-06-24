@@ -56,6 +56,8 @@ class TSH_WC_Product_Sync {
         $product->set_name($post->post_title);
         $product->set_regular_price($price > 0 ? (string) $price : '');
         $product->set_status($post->post_status === 'publish' ? 'publish' : 'draft');
+        $product->set_virtual(true);
+        $product->set_catalog_visibility('hidden');
         $product->save();
     }
 }

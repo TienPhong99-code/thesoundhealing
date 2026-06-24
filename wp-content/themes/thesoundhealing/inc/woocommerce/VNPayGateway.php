@@ -1,6 +1,10 @@
 <?php
 defined('ABSPATH') || exit;
 
+if (!class_exists('WC_Payment_Gateway')) {
+    return;
+}
+
 add_filter('woocommerce_payment_gateways', function (array $gateways): array {
     $gateways[] = 'TSH_VNPay_Gateway';
     return $gateways;
