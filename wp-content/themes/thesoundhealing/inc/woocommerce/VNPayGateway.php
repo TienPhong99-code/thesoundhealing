@@ -113,11 +113,16 @@ class TSH_VNPay_Gateway extends WC_Payment_Gateway {
             wp_die('Order not found', '', ['response' => 404]);
         }
 
-        if (hash_equals($check_hash, $secure_hash) && ($data['vnp_ResponseCode'] ?? '') === '00') {
-            $order->update_status('processing', 'VNPAY: thanh toán thành công. Mã GD: ' . ($data['vnp_TransactionNo'] ?? ''));
+        if (!hash_equals($check_hash, $secure_hash)) {
+            wp_redirect(wc_get_checkout_url());
+            exit;
+        }
+
+        if (($data['vnp_ResponseCode'] ?? '') === '00') {
+            $order->update_status('processing', 'VNPAY: thanh toán thành công. Mã GD: ' . sanitize_text_field($data['vnp_TransactionNo'] ?? ''));
             wp_redirect($order->get_checkout_order_received_url());
         } else {
-            $order->update_status('failed', 'VNPAY: thanh toán thất bại. Mã lỗi: ' . ($data['vnp_ResponseCode'] ?? ''));
+            $order->update_status('failed', 'VNPAY: thanh toán thất bại. Mã lỗi: ' . sanitize_text_field($data['vnp_ResponseCode'] ?? ''));
             wc_add_notice('Thanh toán thất bại. Vui lòng thử lại hoặc chọn phương thức khác.', 'error');
             wp_redirect(wc_get_checkout_url());
         }
@@ -150,7 +155,7 @@ class TSH_VNPay_Gateway extends WC_Payment_Gateway {
         }
 
         if (($data['vnp_ResponseCode'] ?? '') === '00') {
-            $order->payment_complete($data['vnp_TransactionNo'] ?? '');
+            $order->payment_complete(sanitize_text_field($data['vnp_TransactionNo'] ?? ''));
             wp_send_json(['RspCode' => '00', 'Message' => 'Confirm Success']);
         }
 
