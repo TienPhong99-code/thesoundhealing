@@ -193,4 +193,12 @@ $(document).ready(function () {
          if (first) first.click();
       });
    });
+
+   // Sau khi CF7 submit thành công: redirect sang WC checkout nếu form nằm trong wrapper có data-buy-url
+   document.addEventListener('wpcf7mailsent', function (e) {
+      var wrapper = e.target.closest('[data-buy-url]');
+      if (!wrapper) return;
+      var url = wrapper.getAttribute('data-buy-url');
+      if (url) window.location.href = url;
+   }, false);
 });

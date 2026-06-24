@@ -3,14 +3,6 @@ $(document).ready(function () {
     initTocScrollspy();
 });
 
-// Sau khi CF7 submit thành công: redirect sang WC checkout nếu form có data-buy-url
-document.addEventListener('wpcf7mailsent', function (e) {
-    var wrapper = e.target.closest('[data-buy-url]');
-    if (!wrapper) return;
-    var url = wrapper.getAttribute('data-buy-url');
-    if (url) window.location.href = url;
-}, false);
-
 function initTocScroll() {
     $(document).on('click', 'a[href^="#"]', function (e) {
         const hash = $(this).attr('href');
