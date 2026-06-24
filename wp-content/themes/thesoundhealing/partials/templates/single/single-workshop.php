@@ -95,6 +95,13 @@ $status_map = [
 ];
 $status_info = $status_map[$ws_status] ?? null;
 
+// Buy Now
+$_ws_wc_id  = (int) get_post_meta($post_id, '_wc_product_id', true);
+$_ws_has_wc = $_ws_wc_id && TSH_WC_Product_Sync::parse_price($ws_price) > 0;
+$_ws_buy_url = $_ws_has_wc
+    ? add_query_arg(['product_id' => $_ws_wc_id, 'nonce' => wp_create_nonce('tsh_buy_now')], home_url('/mua-ngay/'))
+    : '';
+
 get_header();
 ?>
 
@@ -529,17 +536,24 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <!-- CF7 Form -->
+                            <!-- CF7 Form / Buy Now -->
                             <div id="ws-form-inner" class="flex p-6 max-md:p-4 overflow-y-auto flex-col gap-3">
                                 <h3 class="font-title text-pri text-[28px] max-md:text-[20px] font-bold">
                                     Đăng ký
                                 </h3>
-                                <?php
-                                $ws_cf7_id = defined('WS_CF7_FORM_ID') ? WS_CF7_FORM_ID : '';
-                                if ($ws_cf7_id) : ?>
-                                    <div class="cf7-workshop">
-                                        <?php echo do_shortcode('[contact-form-7 id="' . esc_attr($ws_cf7_id) . '"]'); ?>
-                                    </div>
+                                <?php if ($_ws_has_wc) : ?>
+                                    <a href="<?php echo esc_url($_ws_buy_url); ?>"
+                                        class="flex items-center justify-center w-full py-3.5 bg-[#c2a056] text-white text-[14px] font-semibold uppercase tracking-[0.5px] rounded-full transition-opacity hover:opacity-85">
+                                        ĐẶT LỊCH
+                                    </a>
+                                <?php else : ?>
+                                    <?php
+                                    $ws_cf7_id = defined('WS_CF7_FORM_ID') ? WS_CF7_FORM_ID : '';
+                                    if ($ws_cf7_id) : ?>
+                                        <div class="cf7-workshop">
+                                            <?php echo do_shortcode('[contact-form-7 id="' . esc_attr($ws_cf7_id) . '"]'); ?>
+                                        </div>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </div>
 
