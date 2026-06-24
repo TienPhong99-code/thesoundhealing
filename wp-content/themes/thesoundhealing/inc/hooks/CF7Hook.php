@@ -2,6 +2,32 @@
 defined('ABSPATH') || exit;
 
 /**
+ * Sau khi CF7 gửi mail thành công: lưu booking data vào transient + set cookie.
+ * JS sẽ đọc data-buy-url trên wrapper và redirect sang WC checkout.
+ */
+add_action('wpcf7_mail_sent', function ($cf7) {
+    $submission = WPCF7_Submission::get_instance();
+    if (!$submission) return;
+    $d = $submission->get_posted_data();
+
+    $booking = [
+        'fullname'    => sanitize_text_field($d['fullname']        ?? ''),
+        'email'       => sanitize_email($d['email']                ?? ''),
+        'phone'       => sanitize_text_field($d['phone']           ?? ''),
+        'date'        => sanitize_text_field($d['kh-date']         ?? ''),
+        'time'        => sanitize_text_field($d['kh-time']         ?? ($d['dv-time'] ?? ($d['ws-time'] ?? ''))),
+        'location'    => sanitize_text_field($d['kh-location']     ?? ($d['dv-branch'] ?? ($d['kh-branch'] ?? ($d['ws-branch'] ?? '')))),
+        'guests'      => sanitize_text_field($d['ws-guests']       ?? ''),
+        'instructor'  => sanitize_text_field($d['kh-instructor']   ?? ($d['dv-instructor'] ?? ($d['ws-instructor'] ?? ''))),
+        'children'    => sanitize_text_field($d['kh-children']     ?? ''),
+    ];
+
+    $token = wp_generate_password(32, false);
+    set_transient('tsh_booking_' . $token, $booking, HOUR_IN_SECONDS);
+    setcookie('tsh_booking_token', $token, time() + HOUR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+});
+
+/**
  * Inject tên dịch vụ (post title) vào posted data để dùng làm mail tag [service_name].
  * Lấy post_id từ HTTP referer vì filter này chạy trong AJAX context.
  */

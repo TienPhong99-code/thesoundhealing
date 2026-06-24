@@ -8,6 +8,9 @@ class TSH_WooCommerce_Hook {
         add_filter('woocommerce_enqueue_styles', '__return_empty_array');
         add_action('init',                [$this, 'register_endpoint']);
         add_action('template_redirect',   [$this, 'handle_buy_now']);
+        add_filter('woocommerce_checkout_get_value', [$this, 'prefill_checkout'], 10, 2);
+        add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
+        add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
     }
 
     public function declare_support(): void {
@@ -41,6 +44,72 @@ class TSH_WooCommerce_Hook {
         }
         wp_safe_redirect(wc_get_checkout_url());
         exit;
+    }
+
+    private function get_booking(): array {
+        $token = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
+        if (!$token) return [];
+        return (array) get_transient('tsh_booking_' . $token);
+    }
+
+    public function prefill_checkout($value, string $input) {
+        $booking = $this->get_booking();
+        if (!$booking) return $value;
+
+        $map = [
+            'billing_first_name' => $booking['fullname'] ?? '',
+            'billing_email'      => $booking['email']    ?? '',
+            'billing_phone'      => $booking['phone']    ?? '',
+        ];
+
+        return $map[$input] ?? $value;
+    }
+
+    public function save_booking_meta(int $order_id): void {
+        $token = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
+        if (!$token) return;
+
+        $booking = (array) get_transient('tsh_booking_' . $token);
+        if (!$booking) return;
+
+        $meta_map = [
+            '_booking_date'       => 'date',
+            '_booking_time'       => 'time',
+            '_booking_location'   => 'location',
+            '_booking_guests'     => 'guests',
+            '_booking_instructor' => 'instructor',
+            '_booking_children'   => 'children',
+        ];
+
+        foreach ($meta_map as $meta_key => $key) {
+            if (!empty($booking[$key])) {
+                update_post_meta($order_id, $meta_key, $booking[$key]);
+            }
+        }
+
+        delete_transient('tsh_booking_' . $token);
+        setcookie('tsh_booking_token', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+    }
+
+    public function display_booking_meta(\WC_Order $order): void {
+        $labels = [
+            '_booking_date'       => 'Ngày đặt',
+            '_booking_time'       => 'Khung giờ',
+            '_booking_location'   => 'Chi nhánh',
+            '_booking_guests'     => 'Số người',
+            '_booking_instructor' => 'Người hướng dẫn',
+            '_booking_children'   => 'Trẻ em tham gia',
+        ];
+
+        $rows = [];
+        foreach ($labels as $key => $label) {
+            $val = $order->get_meta($key);
+            if ($val) $rows[] = '<strong>' . esc_html($label) . ':</strong> ' . esc_html($val);
+        }
+
+        if (!$rows) return;
+
+        echo '<div class="tsh-booking-meta" style="margin-top:12px"><h4>Thông tin đặt lịch</h4><p>' . implode('<br>', $rows) . '</p></div>';
     }
 }
 
