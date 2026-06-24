@@ -72,4 +72,5 @@ return [
 
     // WooCommerce
     MONA_THEME_INC_PATH . '/woocommerce/WooCommerceHook.php',
+    MONA_THEME_INC_PATH . '/woocommerce/WcProductSync.php',
 ];
