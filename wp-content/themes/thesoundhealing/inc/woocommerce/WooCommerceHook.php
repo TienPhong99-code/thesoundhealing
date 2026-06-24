@@ -35,8 +35,11 @@ class TSH_WooCommerce_Hook {
         }
 
         WC()->cart->empty_cart();
-        WC()->cart->add_to_cart($product_id, 1);
-        wp_redirect(wc_get_checkout_url());
+        $added = WC()->cart->add_to_cart($product_id, 1);
+        if (!$added) {
+            wp_die('Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.', '', ['response' => 400]);
+        }
+        wp_safe_redirect(wc_get_checkout_url());
         exit;
     }
 }
