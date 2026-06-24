@@ -1,24 +1,35 @@
 <?php
 defined('ABSPATH') || exit;
 
-// Booking data từ transient (lưu khi CF7 submit)
 $_token   = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
 $_booking = $_token ? (array) get_transient('tsh_booking_' . $_token) : [];
 
-$_name       = $_booking['fullname']    ?? '';
-$_email      = $_booking['email']       ?? '';
-$_phone      = $_booking['phone']       ?? '';
-$_date       = $_booking['date']        ?? '';
-$_time       = $_booking['time']        ?? '';
-$_location   = $_booking['location']    ?? '';
-$_guests     = $_booking['guests']      ?? '';
-$_instructor = $_booking['instructor']  ?? '';
-$_children   = $_booking['children']    ?? '';
+$_name       = $_booking['fullname']   ?? '';
+$_email      = $_booking['email']      ?? '';
+$_phone      = $_booking['phone']      ?? '';
+$_date       = $_booking['date']       ?? '';
+$_time       = $_booking['time']       ?? '';
+$_location   = $_booking['location']   ?? '';
+$_guests     = $_booking['guests']     ?? '';
+$_instructor = $_booking['instructor'] ?? '';
+$_children   = $_booking['children']   ?? '';
 
-// Tách first/last name (họ = từ đầu tiên, tên = phần còn lại)
-$_name_parts  = explode(' ', trim($_name), 2);
-$_first_name  = $_name_parts[0] ?? $_name;
-$_last_name   = $_name_parts[1] ?? '';
+$_parts     = explode(' ', trim($_name), 2);
+$_first     = $_parts[0] ?? $_name;
+$_last      = $_parts[1] ?? '';
+
+// Danh sách field hiển thị (chỉ render dòng nào có giá trị)
+$_info_rows = [
+    ['label' => 'Họ và tên',           'value' => $_name],
+    ['label' => 'Số điện thoại',       'value' => $_phone],
+    ['label' => 'Email',               'value' => $_email],
+    ['label' => 'Ngày đặt',            'value' => $_date],
+    ['label' => 'Khung giờ',           'value' => $_time],
+    ['label' => 'Chi nhánh',           'value' => $_location],
+    ['label' => 'Số người tham gia',   'value' => $_guests ? $_guests . ' người' : ''],
+    ['label' => 'Người hướng dẫn',     'value' => $_instructor],
+    ['label' => 'Trẻ em tham gia',     'value' => $_children],
+];
 ?>
 
 <div class="tsh-checkout-wrap">
@@ -26,113 +37,51 @@ $_last_name   = $_name_parts[1] ?? '';
 
         <?php if (have_posts()) : while (have_posts()) : the_post(); endwhile; endif; ?>
 
+        <?php if (empty($_booking)) : ?>
+        <div class="tsh-co-empty">
+            <p>Không tìm thấy thông tin đặt lịch. Vui lòng quay lại và điền form đặt lịch.</p>
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-co-back-btn">← Về trang chủ</a>
+        </div>
+        <?php else : ?>
+
         <form name="checkout" method="post"
-              class="checkout woocommerce-checkout"
+              class="checkout woocommerce-checkout tsh-co-form"
               action="<?php echo esc_url(wc_get_checkout_url()); ?>"
               enctype="multipart/form-data">
 
-            <div class="tsh-co-grid">
+            <div class="tsh-co-box">
 
-                <!-- ── Cột trái: Thông tin đặt lịch ── -->
-                <div class="tsh-co-left">
-
-                    <?php if (empty($_booking)) : ?>
-                        <div class="tsh-co-empty">
-                            <p>Không tìm thấy thông tin đặt lịch. Vui lòng quay lại trang dịch vụ và điền form.</p>
-                            <a href="<?php echo esc_url(home_url('/dich-vu-trai-nghiem/')); ?>" class="tsh-co-back-btn">← Quay lại</a>
-                        </div>
-                    <?php else : ?>
-
-                    <div class="tsh-co-card">
-                        <h3 class="tsh-co-card__title">Thông tin đặt lịch</h3>
-
-                        <div class="tsh-co-info-grid">
-                            <?php if ($_name) : ?>
-                            <div class="tsh-co-info-row">
-                                <span class="tsh-co-info-label">Họ và tên</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_name); ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_phone) : ?>
-                            <div class="tsh-co-info-row">
-                                <span class="tsh-co-info-label">Số điện thoại</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_phone); ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_email) : ?>
-                            <div class="tsh-co-info-row tsh-co-info-row--wide">
-                                <span class="tsh-co-info-label">Email</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_email); ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_date) : ?>
-                            <div class="tsh-co-info-row">
-                                <span class="tsh-co-info-label">Ngày đặt</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_date); ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_time) : ?>
-                            <div class="tsh-co-info-row">
-                                <span class="tsh-co-info-label">Khung giờ</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_time); ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_location) : ?>
-                            <div class="tsh-co-info-row tsh-co-info-row--wide">
-                                <span class="tsh-co-info-label">Chi nhánh</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_location); ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_guests) : ?>
-                            <div class="tsh-co-info-row">
-                                <span class="tsh-co-info-label">Số người</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_guests); ?> người</span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_instructor) : ?>
-                            <div class="tsh-co-info-row">
-                                <span class="tsh-co-info-label">Người hướng dẫn</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_instructor); ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($_children) : ?>
-                            <div class="tsh-co-info-row tsh-co-info-row--wide">
-                                <span class="tsh-co-info-label">Có trẻ em tham gia</span>
-                                <span class="tsh-co-info-val"><?php echo esc_html($_children); ?></span>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-
-                        <a href="javascript:history.back()" class="tsh-co-edit-link">← Chỉnh sửa thông tin</a>
+                <!-- ── PHẦN 1: Thông tin đặt lịch ── -->
+                <div class="tsh-co-section tsh-co-section--booking">
+                    <div class="tsh-co-section__hd">
+                        <h3 class="tsh-co-section__title">Thông tin đặt lịch</h3>
+                        <a href="javascript:history.back()" class="tsh-co-edit-link">Chỉnh sửa</a>
                     </div>
-
-                    <?php endif; ?>
-
-                    <?php do_action('woocommerce_checkout_before_customer_details'); ?>
-                    <?php do_action('woocommerce_checkout_after_customer_details'); ?>
-                </div>
-
-                <!-- ── Cột phải: Đơn hàng + Thanh toán ── -->
-                <div class="tsh-co-right">
-                    <div class="tsh-co-card">
-                        <h3 class="tsh-co-card__title">Đơn hàng của bạn</h3>
-                        <?php do_action('woocommerce_checkout_order_review'); ?>
+                    <div class="tsh-co-info-grid">
+                        <?php foreach ($_info_rows as $row) : ?>
+                            <?php if (trim($row['value'])) : ?>
+                            <div class="tsh-co-info-row">
+                                <span class="tsh-co-info-label"><?php echo esc_html($row['label']); ?></span>
+                                <span class="tsh-co-info-val"><?php echo esc_html($row['value']); ?></span>
+                            </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
-            </div><!-- .tsh-co-grid -->
+                <!-- ── PHẦN 2: Đơn hàng + Thanh toán ── -->
+                <div class="tsh-co-section tsh-co-section--order">
+                    <div class="tsh-co-section__hd">
+                        <h3 class="tsh-co-section__title">Đơn hàng của bạn</h3>
+                    </div>
+                    <?php do_action('woocommerce_checkout_order_review'); ?>
+                </div>
 
-            <!-- Hidden billing fields — WC cần để tạo order -->
-            <input type="hidden" name="billing_first_name" value="<?php echo esc_attr($_first_name); ?>">
-            <input type="hidden" name="billing_last_name"  value="<?php echo esc_attr($_last_name); ?>">
+            </div><!-- .tsh-co-box -->
+
+            <!-- Hidden billing fields -->
+            <input type="hidden" name="billing_first_name" value="<?php echo esc_attr($_first); ?>">
+            <input type="hidden" name="billing_last_name"  value="<?php echo esc_attr($_last); ?>">
             <input type="hidden" name="billing_email"      value="<?php echo esc_attr($_email); ?>">
             <input type="hidden" name="billing_phone"      value="<?php echo esc_attr($_phone); ?>">
             <input type="hidden" name="billing_country"    value="VN">
@@ -142,6 +91,8 @@ $_last_name   = $_name_parts[1] ?? '';
             <?php wp_nonce_field('woocommerce-process_checkout', 'woocommerce-process-checkout-nonce'); ?>
 
         </form>
+
+        <?php endif; ?>
 
     </div>
 </div>
