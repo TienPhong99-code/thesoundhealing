@@ -12,8 +12,6 @@ class TSH_WooCommerce_Hook {
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
-        add_action('woocommerce_before_checkout_form', [$this, 'wrap_checkout_open'], 1);
-        add_action('woocommerce_after_checkout_form',  [$this, 'wrap_checkout_close'], 100);
     }
 
     public function declare_support(): void {
