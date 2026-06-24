@@ -11,6 +11,9 @@ class TSH_WooCommerce_Hook {
         add_filter('woocommerce_checkout_get_value', [$this, 'prefill_checkout'], 10, 2);
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
+        add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
+        add_action('woocommerce_before_checkout_form', [$this, 'wrap_checkout_open'], 1);
+        add_action('woocommerce_after_checkout_form',  [$this, 'wrap_checkout_close'], 100);
     }
 
     public function declare_support(): void {
@@ -89,6 +92,25 @@ class TSH_WooCommerce_Hook {
 
         delete_transient('tsh_booking_' . $token);
         setcookie('tsh_booking_token', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+    }
+
+    public function wrap_checkout_open(): void {
+        echo '<div class="tsh-checkout-wrap"><div class="container">';
+    }
+
+    public function wrap_checkout_close(): void {
+        echo '</div></div>';
+    }
+
+    public function simplify_checkout_fields(array $fields): array {
+        $keep = ['billing_first_name', 'billing_last_name', 'billing_email', 'billing_phone'];
+        foreach (array_keys($fields['billing'] ?? []) as $key) {
+            if (!in_array($key, $keep, true)) {
+                unset($fields['billing'][$key]);
+            }
+        }
+        unset($fields['shipping'], $fields['order']);
+        return $fields;
     }
 
     public function display_booking_meta(\WC_Order $order): void {
