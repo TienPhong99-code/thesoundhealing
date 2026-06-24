@@ -4,12 +4,21 @@ defined('ABSPATH') || exit;
 $search_url = home_url('/tim-kiem/');
 
 $_img_base = get_template_directory_uri() . '/assets/images/';
+
+$_sb_imgs = [
+    'best-seller'   => get_field('sb_img_best_seller',   'option') ?: $_img_base . 'dv-exp-main.jpg',
+    'sound-healing' => get_field('sb_img_sound_healing', 'option') ?: $_img_base . 'dv-tam-am-ngu-ngon-rieng-tu.jpg',
+    'usui-reiki'    => get_field('sb_img_usui_reiki',    'option') ?: $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg',
+    'khoa-hoc'      => get_field('sb_img_khoa_hoc',      'option') ?: $_img_base . 'kh-hero.jpg',
+    'workshop'      => get_field('sb_img_workshop',      'option') ?: $_img_base . 'gallery-img-1.jpg',
+];
+
 $loai_hinh_opts = [
-    'best-seller'   => ['label' => 'Best Seller',   'desc' => 'Được yêu thích nhất',              'image' => $_img_base . 'dv-exp-main.jpg'],
-    'sound-healing' => ['label' => 'Sound Healing', 'desc' => 'Liệu pháp âm thanh chữa lành',    'image' => $_img_base . 'dv-tam-am-ngu-ngon-rieng-tu.jpg'],
-    'usui-reiki'    => ['label' => 'Usui Reiki',    'desc' => 'Năng lượng chữa lành Reiki',       'image' => $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg'],
-    'khoa-hoc'      => ['label' => 'Khoá Học',      'desc' => 'Chương trình đào tạo chuyên sâu',  'image' => $_img_base . 'kh-hero.jpg'],
-    'workshop'      => ['label' => 'Workshop',      'desc' => 'Sự kiện trải nghiệm ngắn hạn',     'image' => $_img_base . 'gallery-img-1.jpg'],
+    'best-seller'   => ['label' => 'Best Seller',   'desc' => 'Được yêu thích nhất',              'image' => $_sb_imgs['best-seller']],
+    'sound-healing' => ['label' => 'Sound Healing', 'desc' => 'Liệu pháp âm thanh chữa lành',    'image' => $_sb_imgs['sound-healing']],
+    'usui-reiki'    => ['label' => 'Usui Reiki',    'desc' => 'Năng lượng chữa lành Reiki',       'image' => $_sb_imgs['usui-reiki']],
+    'khoa-hoc'      => ['label' => 'Khoá Học',      'desc' => 'Chương trình đào tạo chuyên sâu',  'image' => $_sb_imgs['khoa-hoc']],
+    'workshop'      => ['label' => 'Workshop',      'desc' => 'Sự kiện trải nghiệm ngắn hạn',     'image' => $_sb_imgs['workshop']],
 ];
 
 $_td  = new DateTime();
