@@ -1946,11 +1946,11 @@ form .wpcf7-not-valid-tip {
 }
 
 /* Validation error */
-.cf7-khoa-hoc .wpcf7-select.wpcf7-not-valid ~ .select2-container .select2-tsh,
+/* .cf7-khoa-hoc .wpcf7-select.wpcf7-not-valid ~ .select2-container .select2-tsh,
 .cf7-workshop .wpcf7-select.wpcf7-not-valid ~ .select2-container .select2-tsh,
 .cf7-dich-vu .wpcf7-select.wpcf7-not-valid ~ .select2-container .select2-tsh {
   border-color: #e53935 !important;
-}
+} */
 
 /* Dropdown panel (appended to <body>) */
 .select2-tsh-dropdown.select2-dropdown {

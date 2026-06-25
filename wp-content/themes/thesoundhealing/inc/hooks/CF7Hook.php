@@ -46,6 +46,7 @@ add_action('wpcf7_mail_sent', function ($cf7) {
         'guests'     => $pick(['ws-guests']),
         'instructor' => $pick(['kh-instructor', 'ws-instructor', 'dv-instructor']),
         'children'   => $pick(['kh-children']),
+        'source_url' => esc_url_raw(wp_get_referer() ?: ''),
     ];
 
     $token = wp_generate_password(32, false);
@@ -139,15 +140,37 @@ add_filter('wpcf7_form_elements', function ($html) {
     $post_id = (int) get_queried_object_id();
     if (!$post_id) return $html;
 
-    $build_options = function (string $placeholder, array $values): string {
+    // Đọc dữ liệu booking đã lưu để pre-select option đúng khi user quay lại form.
+    $token   = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
+    $booking = $token ? (array) get_transient('tsh_booking_' . $token) : [];
+
+    $build_options = function (string $placeholder, array $values, string $selected_val = ''): string {
         $out = '<option value="">' . esc_html($placeholder) . '</option>';
         foreach ($values as $v) {
-            $out .= '<option value="' . esc_attr($v) . '">' . esc_html($v) . '</option>';
+            $sel = ($selected_val !== '' && $v === $selected_val) ? ' selected' : '';
+            $out .= '<option value="' . esc_attr($v) . '"' . $sel . '>' . esc_html($v) . '</option>';
         }
         return $out;
     };
 
+    // Helper: thay value="" thành value="$val" trên input có name khớp.
+    $set_input_value = function (string $html, string $name, string $val): string {
+        if ($val === '') return $html;
+        return preg_replace(
+            '/(<input\b[^>]*\bname="' . preg_quote($name, '/') . '"[^>]*)\bvalue="[^"]*"([^>]*>)/i',
+            '$1value="' . esc_attr($val) . '"$2',
+            $html
+        );
+    };
+
     if ($post_type === 'dich_vu') {
+
+        $pre_date     = $booking['date']       ?? '';
+        $pre_time     = $booking['time']       ?? '';
+        $pre_location = $booking['location']   ?? '';
+        $pre_instr    = $booking['instructor'] ?? '';
+
+        $html = $set_input_value($html, 'dv-date', $pre_date);
 
         // ── dv-instructor ─────────────────────────────────────────────────
         $ins_values = [];
@@ -164,7 +187,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($ins_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="dv-instructor"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn người hướng dẫn', $ins_values) . '$3',
+                '$1' . $build_options('Chọn người hướng dẫn', $ins_values, $pre_instr) . '$3',
                 $html
             );
         }
@@ -181,7 +204,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($branch_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="dv-branch"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
+                '$1' . $build_options('Chọn chi nhánh', $branch_values, $pre_location) . '$3',
                 $html
             );
         }
@@ -200,10 +223,17 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         $html = preg_replace(
             '/(<select[^>]*\bname="dv-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
-            '$1' . $build_options('Chọn khung giờ', $time_values) . '$3',
+            '$1' . $build_options('Chọn khung giờ', $time_values, $pre_time) . '$3',
             $html
         );
     } elseif ($post_type === 'khoa_hoc') {
+
+        $pre_date     = $booking['date']       ?? '';
+        $pre_time     = $booking['time']       ?? '';
+        $pre_location = $booking['location']   ?? '';
+        $pre_instr    = $booking['instructor'] ?? '';
+
+        $html = $set_input_value($html, 'kh-date', $pre_date);
 
         // ── kh-instructor ─────────────────────────────────────────────────
         $ins_values = [];
@@ -220,7 +250,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($ins_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="kh-instructor"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn người hướng dẫn', $ins_values) . '$3',
+                '$1' . $build_options('Chọn người hướng dẫn', $ins_values, $pre_instr) . '$3',
                 $html
             );
         }
@@ -237,7 +267,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($branch_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="kh-location"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
+                '$1' . $build_options('Chọn chi nhánh', $branch_values, $pre_location) . '$3',
                 $html
             );
         }
@@ -256,10 +286,18 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         $html = preg_replace(
             '/(<select[^>]*\bname="kh-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
-            '$1' . $build_options('Chọn khung giờ', $time_values) . '$3',
+            '$1' . $build_options('Chọn khung giờ', $time_values, $pre_time) . '$3',
             $html
         );
     } elseif ($post_type === 'workshop') {
+
+        $pre_time     = $booking['time']       ?? '';
+        $pre_location = $booking['location']   ?? '';
+        $pre_date     = $booking['date']       ?? '';
+        $pre_instr    = $booking['instructor'] ?? '';
+        $pre_guests   = $booking['guests']     ?? '';
+
+        $html = $set_input_value($html, 'ws-date', $pre_date);
 
         // ── ws-instructor ─────────────────────────────────────────────────
         $ins_values = [];
@@ -276,7 +314,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($ins_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="ws-instructor"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn người hướng dẫn', $ins_values) . '$3',
+                '$1' . $build_options('Chọn người hướng dẫn', $ins_values, $pre_instr) . '$3',
                 $html
             );
         }
@@ -293,7 +331,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($branch_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="ws-location"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
+                '$1' . $build_options('Chọn chi nhánh', $branch_values, $pre_location) . '$3',
                 $html
             );
         }
@@ -312,7 +350,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         $html = preg_replace(
             '/(<select[^>]*\bname="ws-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
-            '$1' . $build_options('Chọn khung giờ', $time_values) . '$3',
+            '$1' . $build_options('Chọn khung giờ', $time_values, $pre_time) . '$3',
             $html
         );
     }

@@ -14,6 +14,7 @@ $_location   = $_booking['location']   ?? '';
 $_guests     = $_booking['guests']     ?? '';
 $_instructor = $_booking['instructor'] ?? '';
 $_children   = $_booking['children']   ?? '';
+$_source_url = $_booking['source_url'] ?? '';
 
 $_parts     = explode(' ', trim($_name), 2);
 $_first     = $_parts[0] ?? $_name;
@@ -58,7 +59,7 @@ $_info_rows = [
                     <div class="tsh-co-section tsh-co-section--booking">
                         <div class="tsh-co-section__hd">
                             <h3 class="tsh-co-section__title">Thông tin đặt lịch</h3>
-                            <a href="javascript:history.back()" class="tsh-co-edit-link">Chỉnh sửa</a>
+                            <a href="<?php echo esc_url($_source_url ?: 'javascript:history.back()'); ?>" class="tsh-co-edit-link">Chỉnh sửa</a>
                         </div>
                         <div class="tsh-co-info-grid">
                             <?php foreach ($_info_rows as $row) : ?>

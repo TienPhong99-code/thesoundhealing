@@ -101,6 +101,9 @@
 
         var fp = flatpickr(fpTrigger, fpConfig);
 
+        // Nếu input đã có value từ server-side pre-fill, sync flatpickr ngay
+        if (dateInput.value) fp.setDate(dateInput.value, true);
+
         function closePanel() { field.classList.remove('is-open'); panel.setAttribute('aria-hidden', 'true'); }
 
         pillRefs.forEach(function (item) {

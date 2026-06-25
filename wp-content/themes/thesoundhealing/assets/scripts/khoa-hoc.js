@@ -117,6 +117,9 @@
 
         if (availDateStr) {
             fp.setDate(availDateStr, true);
+        } else if (dateInput.value) {
+            // Nếu input đã có value từ server-side pre-fill, sync flatpickr ngay
+            fp.setDate(dateInput.value, true);
         }
 
         function closePanel() { field.classList.remove('is-open'); panel.setAttribute('aria-hidden', 'true'); }
