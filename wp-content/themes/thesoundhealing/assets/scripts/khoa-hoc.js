@@ -80,7 +80,7 @@
         field.appendChild(triggerBtn); field.appendChild(panel);
 
         var cfWrap = dateInput.closest('.wpcf7-form-control-wrap');
-        if (cfWrap) { cfWrap.style.display = 'none'; cfWrap.parentNode.insertBefore(field, cfWrap); }
+        if (cfWrap) { cfWrap.classList.add('cf7-date-replaced'); cfWrap.parentNode.insertBefore(field, cfWrap); }
         else { dateInput.style.display = 'none'; dateInput.parentNode.insertBefore(field, dateInput); }
 
         var fpConfig = {
@@ -131,6 +131,28 @@
         });
         document.addEventListener('click', function (e) { if (!field.contains(e.target)) closePanel(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(); });
+        return fp;
+    }
+
+    function prefillForm(fp) {
+        var p = window.tshPrefill;
+        if (!p) return;
+        var $form = $('.cf7-khoa-hoc');
+        if (!$form.length) return;
+        ['fullname', 'email', 'phone'].forEach(function (name) {
+            var $el = $form.find('input[name="' + name + '"]');
+            if ($el.length && p[name]) $el.val(p[name]);
+        });
+        if (p.children) {
+            $form.find('input[type="radio"][name="kh-children"][value="' + p.children + '"]').prop('checked', true);
+        }
+        if (fp && p.date) fp.setDate(p.date, true);
+        var selMap = { 'kh-time': p.time, 'kh-location': p.location, 'kh-instructor': p.instructor, 'ws-guests': p.guests };
+        Object.keys(selMap).forEach(function (name) {
+            if (!selMap[name]) return;
+            var $el = $form.find('select[name="' + name + '"]');
+            if ($el.length) $el.val(selMap[name]).trigger('change');
+        });
     }
 
     function injectCourseData() {
@@ -181,11 +203,22 @@
         });
     }
 
+    var fp;
+
     $(document).ready(function () {
-        initDatePicker();
+        fp = initDatePicker();
         injectCourseData();
         initSubmitLoading();
         initSelect2();
+        prefillForm(fp);
+    });
+
+    // Khi bfcache khôi phục trang (history.back/forward), JS không chạy lại.
+    // CF7 đã reset form trước khi redirect nên select rỗng — prefill lại ở đây.
+    window.addEventListener('pageshow', function (e) {
+        if (!e.persisted) return;
+        initSelect2();
+        prefillForm(fp);
     });
 
     // Re-inject sau khi CF7 reset (validation fail, spam)

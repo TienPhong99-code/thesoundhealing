@@ -5,21 +5,47 @@ defined('ABSPATH') || exit;
  * Sau khi CF7 gửi mail thành công: lưu booking data vào transient + set cookie.
  * JS sẽ đọc data-buy-url trên wrapper và redirect sang WC checkout.
  */
+add_filter('wpcf7_skip_mail', '__return_true');
+
 add_action('wpcf7_mail_sent', function ($cf7) {
     $submission = WPCF7_Submission::get_instance();
     if (!$submission) return;
     $d = $submission->get_posted_data();
 
+    // CF7 returns arrays for select/radio fields. Dynamic options injected via
+    // wpcf7_form_elements are not in CF7's shortcode definition, so CF7 may
+    // sanitize those values to empty. Fall back to raw $_POST when needed.
+    $raw = wp_unslash((array) $_POST);
+
+    // Extract a scalar string from either a CF7 array value or a raw $_POST value.
+    $scalar = function ($val): string {
+        if (is_array($val)) {
+            $val = array_values(array_filter(array_map('trim', array_map('strval', $val))));
+            $val = $val[0] ?? '';
+        }
+        return sanitize_text_field(trim((string) $val));
+    };
+
+    $pick = function (array $keys) use ($d, $raw, $scalar): string {
+        foreach ($keys as $k) {
+            $v = $scalar($d[$k] ?? null);
+            if ($v !== '') return $v;
+            $v = $scalar($raw[$k] ?? null);
+            if ($v !== '') return $v;
+        }
+        return '';
+    };
+
     $booking = [
-        'fullname'    => sanitize_text_field($d['fullname']        ?? ''),
-        'email'       => sanitize_email($d['email']                ?? ''),
-        'phone'       => sanitize_text_field($d['phone']           ?? ''),
-        'date'        => sanitize_text_field($d['kh-date']         ?? ''),
-        'time'        => sanitize_text_field($d['kh-time']         ?? ($d['dv-time'] ?? ($d['ws-time'] ?? ''))),
-        'location'    => sanitize_text_field($d['kh-location']     ?? ($d['dv-branch'] ?? ($d['kh-branch'] ?? ($d['ws-branch'] ?? '')))),
-        'guests'      => sanitize_text_field($d['ws-guests']       ?? ''),
-        'instructor'  => sanitize_text_field($d['kh-instructor']   ?? ($d['dv-instructor'] ?? ($d['ws-instructor'] ?? ''))),
-        'children'    => sanitize_text_field($d['kh-children']     ?? ''),
+        'fullname'   => $scalar($d['fullname'] ?? ($raw['fullname'] ?? '')),
+        'email'      => sanitize_email($scalar($d['email']  ?? ($raw['email']  ?? ''))),
+        'phone'      => $scalar($d['phone']    ?? ($raw['phone']    ?? '')),
+        'date'       => $pick(['kh-date',      'ws-date',      'dv-date']),
+        'time'       => $pick(['kh-time',       'ws-time',      'dv-time']),
+        'location'   => $pick(['kh-location',   'ws-location',  'dv-branch']),
+        'guests'     => $pick(['ws-guests']),
+        'instructor' => $pick(['kh-instructor', 'ws-instructor', 'dv-instructor']),
+        'children'   => $pick(['kh-children']),
     ];
 
     $token = wp_generate_password(32, false);
@@ -47,23 +73,60 @@ add_filter('wpcf7_posted_data', function ($data) {
 });
 
 /**
- * Xóa invalid state của dv-instructor và dv-time sau khi CF7 validate xong.
- * Dùng PHP Reflection để access private $invalid_fields của WPCF7_Validation.
- * Chạy priority 99 trên hook 'wpcf7_validate' (sau tất cả field validation).
+ * Bypass "Undefined value was submitted through this field." cho dynamic select fields.
+ *
+ * CF7 phiên bản mới dùng SWV (Simple Web Validator) schema.
+ * Schema enum được build trong wpcf7_swv_add_select_enum_rules (priority 20)
+ * bằng cách gọi scan_form_tags() → wpcf7_form_tag filter cho từng tag.
+ * Inject submitted value vào $tag->values tại đây để schema accept nó.
+ *
+ * Giữ lại wpcf7_validate_select hooks để tương thích CF7 phiên bản cũ hơn.
  */
-add_filter('wpcf7_validate', function ($result) {
+$_tsh_dynamic_selects = [
+    'kh-instructor', 'kh-time', 'kh-location',
+    'ws-instructor', 'ws-time', 'ws-location', 'ws-guests',
+    'dv-instructor', 'dv-time', 'dv-branch',
+];
+
+// CF7 mới: inject vào tag trước khi SWV enum schema được build
+add_filter('wpcf7_form_tag', function ($tag) use ($_tsh_dynamic_selects) {
+    if (!isset($tag->name) || !in_array($tag->name, $_tsh_dynamic_selects, true)) return $tag;
+    $val = sanitize_text_field(trim((string) ($_POST[$tag->name] ?? '')));
+    if ($val === '' || in_array($val, (array) $tag->values, true)) return $tag;
+    $tag->values[] = $val;
+    $tag->labels[] = $val;
+    return $tag;
+}, 10, 1);
+
+// CF7 cũ: wpcf7_validate_select hooks (backward compat)
+$_tsh_inject_fn = function ($result, $tag) use ($_tsh_dynamic_selects) {
+    if (!in_array($tag->name, $_tsh_dynamic_selects, true)) return $result;
+    $val = sanitize_text_field(trim((string) ($_POST[$tag->name] ?? '')));
+    if ($val !== '') {
+        $tag->values[] = $val;
+        $tag->labels[] = $val;
+    }
+    return $result;
+};
+add_filter('wpcf7_validate_select',  $_tsh_inject_fn, 9, 2);
+add_filter('wpcf7_validate_select*', $_tsh_inject_fn, 9, 2);
+
+$_tsh_reflection_fn = function ($result, $tag) use ($_tsh_dynamic_selects) {
+    if (!in_array($tag->name, $_tsh_dynamic_selects, true)) return $result;
+    $val = sanitize_text_field(trim((string) ($_POST[$tag->name] ?? '')));
+    if ($val === '') return $result;
     try {
         $ref  = new ReflectionClass($result);
         $prop = $ref->getProperty('invalid_fields');
         $prop->setAccessible(true);
         $fields = (array) $prop->getValue($result);
-        unset($fields['dv-instructor'], $fields['dv-time'], $fields['dv-branch'], $fields['kh-instructor'], $fields['kh-time'], $fields['kh-branch'], $fields['ws-instructor'], $fields['ws-branch'], $fields['ws-time']);
+        unset($fields[$tag->name]);
         $prop->setValue($result, $fields);
-    } catch (\Throwable $e) {
-        // Fail silently nếu CF7 thay đổi internal API
-    }
+    } catch (\Throwable $e) {}
     return $result;
-}, 99);
+};
+add_filter('wpcf7_validate_select',  $_tsh_reflection_fn, 20, 2);
+add_filter('wpcf7_validate_select*', $_tsh_reflection_fn, 20, 2);
 
 /**
  * wpcf7_form_elements — inject <option> vào rendered HTML.
@@ -173,7 +236,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         if ($branch_values) {
             $html = preg_replace(
-                '/(<select[^>]*\bname="kh-branch"[^>]*>)([\s\S]*?)(<\/select>)/i',
+                '/(<select[^>]*\bname="kh-location"[^>]*>)([\s\S]*?)(<\/select>)/i',
                 '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
                 $html
             );
@@ -229,7 +292,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         if ($branch_values) {
             $html = preg_replace(
-                '/(<select[^>]*\bname="ws-branch"[^>]*>)([\s\S]*?)(<\/select>)/i',
+                '/(<select[^>]*\bname="ws-location"[^>]*>)([\s\S]*?)(<\/select>)/i',
                 '$1' . $build_options('Chọn chi nhánh', $branch_values) . '$3',
                 $html
             );

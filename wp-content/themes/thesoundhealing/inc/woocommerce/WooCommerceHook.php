@@ -73,6 +73,9 @@ class TSH_WooCommerce_Hook {
         $booking = (array) get_transient('tsh_booking_' . $token);
         if (!$booking) return;
 
+        $order = wc_get_order($order_id);
+        if (!$order) return;
+
         $meta_map = [
             '_booking_date'       => 'date',
             '_booking_time'       => 'time',
@@ -84,9 +87,10 @@ class TSH_WooCommerce_Hook {
 
         foreach ($meta_map as $meta_key => $key) {
             if (!empty($booking[$key])) {
-                update_post_meta($order_id, $meta_key, $booking[$key]);
+                $order->update_meta_data($meta_key, $booking[$key]);
             }
         }
+        $order->save();
 
         delete_transient('tsh_booking_' . $token);
         setcookie('tsh_booking_token', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
@@ -106,6 +110,10 @@ class TSH_WooCommerce_Hook {
             if (!in_array($key, $keep, true)) {
                 unset($fields['billing'][$key]);
             }
+        }
+        // Last name is a hidden field auto-filled from full name — not required
+        if (isset($fields['billing']['billing_last_name'])) {
+            $fields['billing']['billing_last_name']['required'] = false;
         }
         unset($fields['shipping'], $fields['order']);
         return $fields;

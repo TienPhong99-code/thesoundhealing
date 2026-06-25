@@ -199,4 +199,69 @@ $(document).ready(function () {
       var url = wrapper.getAttribute('data-buy-url');
       if (url) window.location.href = url;
    }, false);
+
+   // Chỉ hiển thị lỗi CF7 khi submit, không hiện lại khi user đang nhập/thay đổi field
+   (function () {
+      function initCf7SubmitOnlyErrors(form) {
+         var submitting = false;
+
+         // Đánh dấu đang trong quá trình submit
+         form.addEventListener('submit', function () { submitting = true; });
+
+         // Sau khi lỗi được hiện (wpcf7:invalid), tắt cờ submit sau 600ms
+         // (đủ để CF7 insert tất cả error tips vào DOM)
+         form.addEventListener('wpcf7:invalid', function () {
+            setTimeout(function () { submitting = false; }, 600);
+         });
+
+         // Khi user thay đổi bất kỳ field nào → xoá lỗi của field đó
+         function clearFieldError(e) {
+            var wrap = e.target.closest('.wpcf7-form-control-wrap');
+            if (!wrap) return;
+            wrap.classList.remove('wpcf7-not-valid');
+            var tip = wrap.querySelector('.wpcf7-not-valid-tip');
+            if (tip) tip.remove();
+         }
+         form.addEventListener('input', clearFieldError);
+         form.addEventListener('change', clearFieldError);
+
+         // Chặn CF7 thêm lỗi mới trong live-validation (sau khi submit window đóng)
+         new MutationObserver(function (mutations) {
+            if (submitting) return;
+            mutations.forEach(function (mut) {
+               mut.addedNodes.forEach(function (node) {
+                  if (node.nodeType === 1 && node.classList && node.classList.contains('wpcf7-not-valid-tip')) {
+                     node.remove();
+                  }
+               });
+               if (mut.type === 'attributes' && mut.target.classList.contains('wpcf7-form-control-wrap')) {
+                  var oldVal = mut.oldValue || '';
+                  if (!oldVal.includes('wpcf7-not-valid') && mut.target.classList.contains('wpcf7-not-valid')) {
+                     mut.target.classList.remove('wpcf7-not-valid');
+                  }
+               }
+            });
+         }).observe(form, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class'],
+            attributeOldValue: true,
+         });
+      }
+
+      // Init ngay cho các form đã có trong DOM
+      document.querySelectorAll('.wpcf7-form').forEach(initCf7SubmitOnlyErrors);
+
+      // Init cho các form được render sau (lazy/shortcode)
+      new MutationObserver(function (muts) {
+         muts.forEach(function (m) {
+            m.addedNodes.forEach(function (n) {
+               if (n.nodeType !== 1) return;
+               if (n.classList && n.classList.contains('wpcf7-form')) initCf7SubmitOnlyErrors(n);
+               n.querySelectorAll && n.querySelectorAll('.wpcf7-form').forEach(initCf7SubmitOnlyErrors);
+            });
+         });
+      }).observe(document.body, { childList: true, subtree: true });
+   })();
 });

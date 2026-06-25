@@ -90,7 +90,7 @@ class TSH_VNPay_Gateway extends WC_Payment_Gateway {
         ];
 
         ksort($params);
-        $hash_data             = urldecode(http_build_query($params));
+        $hash_data                = http_build_query($params);
         $params['vnp_SecureHash'] = hash_hmac('sha512', $hash_data, $hash_secret);
 
         $order->update_status('pending', 'Chờ thanh toán qua VNPAY.');
@@ -107,7 +107,7 @@ class TSH_VNPay_Gateway extends WC_Payment_Gateway {
         unset($data['vnp_SecureHash'], $data['vnp_SecureHashType']);
 
         ksort($data);
-        $hash_data  = urldecode(http_build_query($data));
+        $hash_data  = http_build_query($data);
         $check_hash = hash_hmac('sha512', $hash_data, $this->get_option('hash_secret'));
 
         $order_id = (int) ($data['vnp_TxnRef'] ?? 0);
@@ -139,7 +139,7 @@ class TSH_VNPay_Gateway extends WC_Payment_Gateway {
         unset($data['vnp_SecureHash'], $data['vnp_SecureHashType']);
 
         ksort($data);
-        $hash_data  = urldecode(http_build_query($data));
+        $hash_data  = http_build_query($data);
         $check_hash = hash_hmac('sha512', $hash_data, $this->get_option('hash_secret'));
 
         if (!hash_equals($check_hash, $secure_hash)) {

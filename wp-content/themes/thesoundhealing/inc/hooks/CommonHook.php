@@ -349,6 +349,17 @@ add_filter('wpcf7_mail_components', function (array $components, $form) {
    return $components;
 }, 10, 2);
 
+
+// Khi người dùng quay lại từ checkout, pre-fill form với data đã nhập trước đó
+add_action('wp_footer', function () {
+   if (!is_singular(['khoa_hoc', 'workshop', 'dich_vu'])) return;
+   $token = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
+   if (!$token) return;
+   $booking = get_transient('tsh_booking_' . $token);
+   if (!$booking) return;
+   echo '<script>window.tshPrefill = ' . wp_json_encode((array) $booking) . ';</script>';
+}, 5);
+
 // Tắt WordPress Emoji JS
 remove_action('wp_head', 'print_emoji_detection_script', 7);
 remove_action('wp_print_styles', 'print_emoji_styles');
