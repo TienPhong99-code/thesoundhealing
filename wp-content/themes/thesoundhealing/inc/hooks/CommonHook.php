@@ -360,6 +360,60 @@ add_action('wp_footer', function () {
    echo '<script>window.tshPrefill = ' . wp_json_encode((array) $booking) . ';</script>';
 }, 5);
 
+// Dịch text WooCommerce sang tiếng Việt
+add_filter('gettext', function (string $translated, string $text, string $domain): string {
+   if ($domain !== 'woocommerce') return $translated;
+   static $map = [
+      // Bảng đơn hàng
+      'Product'                  => 'Sản phẩm',
+      'Subtotal'                 => 'Tạm tính',
+      'Total'                    => 'Tổng cộng',
+      'Cart'                     => 'Giỏ hàng',
+      'Order'                    => 'Đơn hàng',
+      'Order total'              => 'Tổng đơn hàng',
+      'Cart totals'              => 'Tổng giỏ hàng',
+
+      // Nút & hành động
+      'Place order'              => 'Đặt hàng ngay',
+      'Proceed to checkout'      => 'Tiến hành thanh toán',
+      'Update cart'              => 'Cập nhật giỏ hàng',
+      'Apply coupon'             => 'Áp dụng mã giảm giá',
+
+      // Thông tin cá nhân
+      'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our %s.' => 'Thông tin cá nhân của bạn sẽ được dùng để xử lý đơn hàng và hỗ trợ trải nghiệm trên website theo %s của chúng tôi.',
+      'privacy policy'           => 'chính sách bảo mật',
+
+      // Thông báo
+      'Coupon code'              => 'Mã giảm giá',
+      'Coupon:'                  => 'Mã giảm giá:',
+      'Shipping'                 => 'Phí vận chuyển',
+      'Free shipping'            => 'Miễn phí vận chuyển',
+      'Tax'                      => 'Thuế',
+
+      // Thanh toán
+      'Payment method'           => 'Phương thức thanh toán',
+      'Pay via %s'               => 'Thanh toán qua %s',
+
+      // Trạng thái đơn hàng
+      'Pending payment'          => 'Chờ thanh toán',
+      'Processing'               => 'Đang xử lý',
+      'On hold'                  => 'Tạm giữ',
+      'Completed'                => 'Hoàn thành',
+      'Cancelled'                => 'Đã hủy',
+      'Refunded'                 => 'Đã hoàn tiền',
+      'Failed'                   => 'Thất bại',
+
+      // Trang cảm ơn
+      'Thank you. Your order has been received.' => 'Cảm ơn bạn. Đơn hàng của bạn đã được tiếp nhận.',
+      'Order number:'            => 'Mã đơn hàng:',
+      'Date:'                    => 'Ngày đặt:',
+      'Email:'                   => 'Email:',
+      'Total:'                   => 'Tổng cộng:',
+      'Payment method:'          => 'Phương thức thanh toán:',
+   ];
+   return $map[$text] ?? $translated;
+}, 20, 3);
+
 // Tắt WordPress Emoji JS
 remove_action('wp_head', 'print_emoji_detection_script', 7);
 remove_action('wp_print_styles', 'print_emoji_styles');

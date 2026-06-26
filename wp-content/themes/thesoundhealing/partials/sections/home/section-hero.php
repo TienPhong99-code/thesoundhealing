@@ -30,12 +30,12 @@ $data = [
 
                 <!-- Col 1: Content -->
                 <div class="flex flex-col items-start max-md:items-center max-md:text-center">
-                    <h1 class="font-second text-pri text-[40px] font-bold mb-6 max-sm:text-[8vw] max-md:text-[40px]">
-                        <?php echo wp_kses_post($data['heading']); ?>
+                    <h1 class="font-second text-pri text-[54px] font-bold mb-2 max-sm:text-[8vw] max-md:text-[40px] leading-tight">
+                        <?php echo wp_kses_post(preg_replace('/^<p>(.*)<\/p>$/s', '$1', trim($data['heading']))); ?>
                     </h1>
-                    <p class="text-[18px]">
-                        <?php echo esc_html($data['desc']); ?>
-                    </p>
+                    <div class="text-[20px]">
+                        <?php echo wp_kses_post($data['desc']); ?>
+                    </div>
                     <!-- <a href="<?php echo esc_url($data['btn_url']); ?>"
                         class="btn btn-pri">
                         <?php echo esc_html($data['btn_text']); ?>

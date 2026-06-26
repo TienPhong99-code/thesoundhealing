@@ -73,8 +73,8 @@ add_action('acf/init', function () {
                 ->helperText('Nhập mỗi địa điểm trên một dòng. Ví dụ: 104/20 Mai Thị Lựu, Tân Định (Quận 1)')
                 ->rows(3),
 
-            Text::make('Ngày hoạt động', 'dv_available_days')
-                ->helperText('Nhập khoảng ngày trong tuần, dạng "Thứ X – Thứ Y". Ví dụ: Thứ 2 – Thứ 7 (thứ Hai đến thứ Bảy), Thứ 2 – Chủ nhật (cả tuần). Lịch đặt trên form sẽ tự xám các ngày ngoài khoảng này.'),
+            Text::make('Ngày diễn ra', 'dv_available_days')
+                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Dùng cho cả hiển thị trên trang lẫn lịch đặt chỗ trong form. Để trống = cho phép chọn tự do từ hôm nay.'),
 
             Text::make('Số khách / phiên', 'dv_guests')
                 ->helperText('Ví dụ: 1-2 khách / phiên · Tối đa 1 người'),

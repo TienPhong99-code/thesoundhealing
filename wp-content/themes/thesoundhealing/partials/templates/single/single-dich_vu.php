@@ -558,64 +558,30 @@ get_header();
     })();
 </script>
 <?php
-$_vi_week_order = [1, 2, 3, 4, 5, 6, 0];
-$_vi_day_map    = [
-    'Chủ Nhật' => 0,
-    'Chủ nhật' => 0,
-    'CN' => 0,
-    'Thứ Hai'  => 1,
-    'Thứ hai'  => 1,
-    'Thứ 2' => 1,
-    'T2' => 1,
-    'Thứ Ba'   => 2,
-    'Thứ ba'   => 2,
-    'Thứ 3' => 2,
-    'T3' => 2,
-    'Thứ Tư'   => 3,
-    'Thứ tư'   => 3,
-    'Thứ 4' => 3,
-    'T4' => 3,
-    'Thứ Năm'  => 4,
-    'Thứ năm'  => 4,
-    'Thứ 5' => 4,
-    'T5' => 4,
-    'Thứ Sáu'  => 5,
-    'Thứ sáu'  => 5,
-    'Thứ 6' => 5,
-    'T6' => 5,
-    'Thứ Bảy'  => 6,
-    'Thứ bảy'  => 6,
-    'Thứ 7' => 6,
-    'T7' => 6,
-];
-
-$_dv_avail_days_arr = null;
+$_dv_dates = [];
 if ($dv_avail_days) {
-    $_parts = preg_split('/\s*[–—\-]+\s*/u', $dv_avail_days);
-    if (count($_parts) === 2) {
-        $_start = null;
-        $_end = null;
-        arsort($_vi_day_map); // check longer keys first
-        foreach ($_vi_day_map as $_k => $_v) {
-            if ($_start === null && mb_strpos($_parts[0], $_k) !== false) $_start = $_v;
-            if ($_end   === null && mb_strpos($_parts[1], $_k) !== false) $_end   = $_v;
-        }
-        if ($_start !== null && $_end !== null) {
-            $_si = array_search($_start, $_vi_week_order);
-            $_ei = array_search($_end,   $_vi_week_order);
-            $_dv_avail_days_arr = [];
-            if ($_ei >= $_si) {
-                for ($_i = $_si; $_i <= $_ei; $_i++) $_dv_avail_days_arr[] = $_vi_week_order[$_i];
-            } else {
-                for ($_i = $_si; $_i < count($_vi_week_order); $_i++) $_dv_avail_days_arr[] = $_vi_week_order[$_i];
-                for ($_i = 0; $_i <= $_ei; $_i++) $_dv_avail_days_arr[] = $_vi_week_order[$_i];
-            }
-            if (count($_dv_avail_days_arr) === 7) $_dv_avail_days_arr = null;
+    foreach (preg_split('/\s*,\s*/', trim($dv_avail_days)) as $_part) {
+        $_part = trim($_part);
+        if (!$_part) continue;
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_part)) {
+            $_dv_dates[] = $_part;
+        } elseif (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_part, $_m)) {
+            $_dv_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+        } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_part, $_m)) {
+            $_dv_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+        } elseif (($_ts = strtotime($_part)) && $_ts > 0) {
+            $_dv_dates[] = date('Y-m-d', $_ts);
         }
     }
+    sort($_dv_dates);
+    $_dv_dates = array_values(array_unique($_dv_dates));
 }
+$_dv_future = array_values(array_filter($_dv_dates, fn($d) => $d >= date('Y-m-d')));
 ?>
 <script>
-    window.dvSchedule = <?php echo json_encode(['availDays' => $_dv_avail_days_arr]); ?>;
+    window.dvSchedule = <?php echo json_encode([
+        'availDates' => $_dv_future,
+        'isPast'     => empty($_dv_future),
+    ]); ?>;
 </script>
 <?php get_footer(); ?>

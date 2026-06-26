@@ -15,25 +15,36 @@
     function initDatePicker() {
         var dateInput = document.querySelector('.cf7-dich-vu input[type="date"]');
         if (!dateInput || typeof flatpickr === 'undefined') return;
+        dateInput.type = 'hidden';
 
-        var availDays = (window.dvSchedule && Array.isArray(window.dvSchedule.availDays)) ? window.dvSchedule.availDays : null;
+        var availDates = (window.dvSchedule && Array.isArray(window.dvSchedule.availDates) && window.dvSchedule.availDates.length)
+            ? window.dvSchedule.availDates : [];
+        var firstDate = availDates.length ? availDates[0] : null;
 
-        var today    = new Date();
-        var tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
-        var dow      = today.getDay();
-        var daysToSat = dow === 0 ? 6 : (6 - dow);
-        var sat      = new Date(today); sat.setDate(today.getDate() + daysToSat);
-        var sun      = new Date(sat);   sun.setDate(sat.getDate() + 1);
-
-        function fmtDate(d) { return d.getDate() + ' thg ' + (d.getMonth() + 1); }
-        function isAvail(d) { return !availDays || availDays.indexOf(d.getDay()) !== -1; }
-
-        var allQuickOpts = [
-            { label: 'Hôm nay',       sub: fmtDate(today),    date: today },
-            { label: 'Ngày mai',      sub: fmtDate(tomorrow), date: tomorrow },
-            { label: 'Cuối tuần này', sub: sat.getDate() + ' – ' + sun.getDate() + ' thg ' + (sat.getMonth() + 1), date: sat },
-        ];
-        var quickOpts = allQuickOpts.filter(function (opt) { return isAvail(opt.date); });
+        var quickOpts;
+        if (availDates.length) {
+            quickOpts = availDates.slice(0, 3).map(function (ds) {
+                var d = new Date(ds + 'T00:00:00');
+                return {
+                    label: d.toLocaleDateString('vi-VN', { day: 'numeric', month: 'long' }),
+                    sub:   d.toLocaleDateString('vi-VN', { weekday: 'long' }),
+                    date:  d,
+                };
+            });
+        } else {
+            var _today    = new Date();
+            var _tomorrow = new Date(_today); _tomorrow.setDate(_today.getDate() + 1);
+            var _dow      = _today.getDay();
+            var _dToSat   = _dow === 0 ? 6 : (6 - _dow);
+            var _sat      = new Date(_today); _sat.setDate(_today.getDate() + _dToSat);
+            var _sun      = new Date(_sat);   _sun.setDate(_sat.getDate() + 1);
+            function fmtDate(d) { return d.getDate() + ' thg ' + (d.getMonth() + 1); }
+            quickOpts = [
+                { label: 'Hôm nay',       sub: fmtDate(_today),    date: _today },
+                { label: 'Ngày mai',      sub: fmtDate(_tomorrow), date: _tomorrow },
+                { label: 'Cuối tuần này', sub: _sat.getDate() + ' – ' + _sun.getDate() + ' thg ' + (_sat.getMonth() + 1), date: _sat },
+            ];
+        }
 
         var field = document.createElement('div');
         field.className = 'cf7-date-field';
@@ -95,14 +106,52 @@
                 setTimeout(closePanel, 200);
             },
         };
-        if (availDays) {
-            fpConfig.disable = [function (date) { return availDays.indexOf(date.getDay()) === -1; }];
+        if (availDates.length) {
+            fpConfig.enable = availDates.slice();
+            delete fpConfig.minDate;
         }
 
         var fp = flatpickr(fpTrigger, fpConfig);
 
-        // Nếu input đã có value từ server-side pre-fill, sync flatpickr ngay
-        if (dateInput.value) fp.setDate(dateInput.value, true);
+        function syncDate() {
+            if (fp.selectedDates.length > 0) {
+                var d = fp.selectedDates[0];
+                dateInput.value = d.getFullYear() + '-' +
+                    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(d.getDate()).padStart(2, '0');
+            }
+        }
+        var formEl = dateInput.closest('form');
+        if (formEl) {
+            formEl.addEventListener('submit', syncDate, true);
+            var submitBtn = formEl.querySelector('.wpcf7-submit');
+            if (submitBtn) submitBtn.addEventListener('click', syncDate, true);
+        }
+
+        function applyDate(dateStr) {
+            fp.setDate(dateStr, false);
+            fp.jumpToDate(new Date(dateStr + 'T00:00:00'));
+            var d = fp.selectedDates[0];
+            if (!d) return;
+            dateInput.value = dateStr;
+            var valEl = triggerBtn.querySelector('.cf7-date-trigger__val');
+            if (valEl) {
+                valEl.textContent = d.toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' });
+                valEl.classList.add('has-value');
+            }
+            pillRefs.forEach(function (p) {
+                p.btn.classList.remove('is-active');
+                if (p.date.getFullYear() === d.getFullYear() &&
+                    p.date.getMonth()    === d.getMonth()    &&
+                    p.date.getDate()     === d.getDate()) { p.btn.classList.add('is-active'); }
+            });
+        }
+
+        if (firstDate) {
+            applyDate(firstDate);
+        } else if (dateInput.value) {
+            applyDate(dateInput.value);
+        }
 
         function closePanel() { field.classList.remove('is-open'); panel.setAttribute('aria-hidden', 'true'); }
 
@@ -112,7 +161,14 @@
 
         triggerBtn.addEventListener('click', function (e) {
             e.stopPropagation();
-            field.classList.contains('is-open') ? closePanel() : (field.classList.add('is-open'), panel.setAttribute('aria-hidden', 'false'));
+            if (field.classList.contains('is-open')) {
+                closePanel();
+            } else {
+                field.classList.add('is-open');
+                panel.setAttribute('aria-hidden', 'false');
+                var jumpTo = fp.selectedDates.length > 0 ? fp.selectedDates[0] : (firstDate ? new Date(firstDate + 'T00:00:00') : null);
+                if (jumpTo) { fp.setDate(jumpTo, false); fp.jumpToDate(jumpTo); }
+            }
         });
         document.addEventListener('click', function (e) { if (!field.contains(e.target)) closePanel(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(); });
@@ -182,6 +238,13 @@
         });
     }
 
+    function disableIfExpired() {
+        if (!(window.dvSchedule && window.dvSchedule.isPast)) return;
+        var $btn = $('.cf7-dich-vu .wpcf7-submit');
+        $btn.prop('disabled', true).css({ opacity: '0.5', cursor: 'not-allowed', 'pointer-events': 'none' });
+        $btn.val('Hết hạn');
+    }
+
     var fp;
 
     $(document).ready(function () {
@@ -189,6 +252,7 @@
         initSubmitLoading();
         initSelect2();
         prefillForm(fp);
+        disableIfExpired();
     });
 
     // Khi bfcache khôi phục trang (history.back/forward), JS không chạy lại.

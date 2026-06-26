@@ -34,7 +34,7 @@
         <!-- Heading band -->
         <tr>
           <td style="background:#c2a056;padding:18px 36px;text-align:center">
-            <h1 style="margin:0;font-size:16px;font-weight:600;letter-spacing:1px;color:#fff;text-transform:uppercase"><?php echo esc_html($email_heading); ?></h1>
+            <h1 style="margin:0;font-size:16px;font-weight:600;letter-spacing:1px;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;text-transform:uppercase"><?php echo esc_html($email_heading); ?></h1>
           </td>
         </tr>
 

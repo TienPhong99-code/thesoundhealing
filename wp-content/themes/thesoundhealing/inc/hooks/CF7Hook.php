@@ -43,7 +43,7 @@ add_action('wpcf7_mail_sent', function ($cf7) {
         'date'       => $pick(['kh-date',      'ws-date',      'dv-date']),
         'time'       => $pick(['kh-time',       'ws-time',      'dv-time']),
         'location'   => $pick(['kh-location',   'ws-location',  'dv-branch']),
-        'guests'     => $pick(['ws-guests']),
+        'guests'     => $pick(['ws-guests', 'kh-guests', 'dv-guests']),
         'instructor' => $pick(['kh-instructor', 'ws-instructor', 'dv-instructor']),
         'children'   => $pick(['kh-children']),
         'source_url' => esc_url_raw(wp_get_referer() ?: ''),

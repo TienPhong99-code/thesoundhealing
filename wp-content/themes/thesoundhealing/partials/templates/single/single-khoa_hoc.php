@@ -561,21 +561,30 @@ get_header();
     })();
 </script>
 <?php
-$_kh_min_date = null;
+$_kh_dates = [];
 if ($start_date) {
-    $_sd = trim($start_date);
-    if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_sd, $_m)) {
-        $_kh_min_date = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_sd)) {
-        $_kh_min_date = $_sd;
-    } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_sd, $_m)) {
-        $_kh_min_date = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-    } elseif (($_ts = strtotime($_sd)) && $_ts > 0) {
-        $_kh_min_date = date('Y-m-d', $_ts);
+    foreach (preg_split('/\s*,\s*/', trim($start_date)) as $_part) {
+        $_part = trim($_part);
+        if (!$_part) continue;
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_part)) {
+            $_kh_dates[] = $_part;
+        } elseif (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_part, $_m)) {
+            $_kh_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+        } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_part, $_m)) {
+            $_kh_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+        } elseif (($_ts = strtotime($_part)) && $_ts > 0) {
+            $_kh_dates[] = date('Y-m-d', $_ts);
+        }
     }
+    sort($_kh_dates);
+    $_kh_dates = array_values(array_unique($_kh_dates));
 }
+$_kh_future = array_values(array_filter($_kh_dates, fn($d) => $d >= date('Y-m-d')));
 ?>
 <script>
-    window.khSchedule = <?php echo json_encode(['availDate' => $_kh_min_date]); ?>;
+    window.khSchedule = <?php echo json_encode([
+        'availDates' => $_kh_future,
+        'isPast'     => empty($_kh_future),
+    ]); ?>;
 </script>
 <?php get_footer(); ?>

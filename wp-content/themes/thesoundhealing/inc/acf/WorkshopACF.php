@@ -62,7 +62,7 @@ add_action('acf/init', function () {
                 ->default('Onsite'),
 
             Text::make('Ngày tổ chức', 'ws_date')
-                ->helperText('Nhập theo định dạng DD-MM-YYYY. Ví dụ: 26-07-2026. Lịch đặt chỗ trong form sẽ tự bắt đầu từ ngày này.'),
+                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Form sẽ tự chọn ngày đầu tiên và chỉ cho phép chọn các ngày đã nhập.'),
 
             Text::make('Thời gian', 'ws_time')
                 ->helperText('Ví dụ: 09:00 – 17:00'),

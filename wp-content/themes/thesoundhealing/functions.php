@@ -33,6 +33,15 @@ define('KH_CF7_FORM_ID', '54b93b8');
 define('WS_CF7_FORM_ID', '202f452');
 define('DV_CF7_FORM_ID', 'a36266b');
 
+// Thông tin ngân hàng chuyển khoản — cập nhật tại đây khi thay đổi
+define('TSH_BANK_ID',      'ACB');
+define('TSH_BANK_ACCOUNT', '249193269');
+define('TSH_BANK_NAME',    'HO TIEN PHONG');
+
+// SePay credentials (test) — đổi sang production khi go-live
+define('TSH_SEPAY_MERCHANT_ID', 'SP-TEST-HT7A66B5');
+define('TSH_SEPAY_API_KEY',     '624f16a405a87871ff709a55ce9a2a477b2d94e938502512');
+
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/inc/init.php';
 

@@ -571,21 +571,31 @@ get_header();
     })();
 </script>
 <?php
-$_ws_min_date = null;
+$_ws_dates = [];
 if ($ws_date) {
-    $_sd = trim($ws_date);
-    if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_sd, $_m)) {
-        $_ws_min_date = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_sd)) {
-        $_ws_min_date = $_sd;
-    } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_sd, $_m)) {
-        $_ws_min_date = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-    } elseif (($_ts = strtotime($_sd)) && $_ts > 0) {
-        $_ws_min_date = date('Y-m-d', $_ts);
+    $_today_str = date('Y-m-d');
+    foreach (preg_split('/\s*,\s*/', trim($ws_date)) as $_part) {
+        $_part = trim($_part);
+        if (!$_part) continue;
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_part)) {
+            $_ws_dates[] = $_part;
+        } elseif (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_part, $_m)) {
+            $_ws_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+        } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_part, $_m)) {
+            $_ws_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
+        } elseif (($_ts = strtotime($_part)) && $_ts > 0) {
+            $_ws_dates[] = date('Y-m-d', $_ts);
+        }
     }
+    sort($_ws_dates);
+    $_ws_dates = array_values(array_unique($_ws_dates));
 }
+$_ws_future = array_values(array_filter($_ws_dates, fn($d) => $d >= date('Y-m-d')));
 ?>
 <script>
-    window.wsSchedule = <?php echo json_encode(['availDate' => $_ws_min_date]); ?>;
+    window.wsSchedule = <?php echo json_encode([
+        'availDates' => $_ws_future,
+        'isPast'     => empty($_ws_future),
+    ]); ?>;
 </script>
 <?php get_footer(); ?>

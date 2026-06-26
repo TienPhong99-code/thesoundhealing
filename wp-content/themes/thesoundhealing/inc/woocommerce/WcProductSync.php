@@ -13,12 +13,14 @@ class TSH_WC_Product_Sync {
     ];
 
     public function __construct() {
-        foreach (self::POST_TYPES as $type) {
-            add_action("save_post_{$type}", [$this, 'sync'], 20, 2);
-        }
+        add_action('acf/save_post', [$this, 'sync'], 20);
     }
 
-    public function sync(int $post_id, WP_Post $post): void {
+    public function sync($post_id): void {
+        if (!is_numeric($post_id)) return;
+        $post_id = (int) $post_id;
+        $post    = get_post($post_id);
+        if (!$post || !in_array($post->post_type, self::POST_TYPES, true)) return;
         if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
         if (!function_exists('wc_get_product')) return;
 

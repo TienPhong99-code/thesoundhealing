@@ -7,6 +7,7 @@ use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
+use Extended\ACF\Fields\WYSIWYGEditor;
 use Extended\ACF\Location;
 
 defined('ABSPATH') || exit;
@@ -55,12 +56,15 @@ add_action('acf/init', function () {
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp', 'gif'])
                 ->format('array'),
 
-            Text::make('Tiêu đề', 'hero_heading')
-                ->helperText('Ví dụ: Đánh Thức Sự Hài Hòa Bên Trong'),
+            WYSIWYGEditor::make('Tiêu đề', 'hero_heading')
+                ->helperText('Có thể xuống hàng, đổi màu, đổi font trực tiếp trong editor.')
+                ->tabs('visual')
+                ->toolbar('basic'),
 
-            Textarea::make('Mô tả ngắn', 'hero_desc')
-                ->helperText('1–2 câu giới thiệu hiển thị dưới tiêu đề.')
-                ->rows(3),
+            WYSIWYGEditor::make('Mô tả ngắn', 'hero_desc')
+                ->helperText('1–2 câu giới thiệu hiển thị dưới tiêu đề. Có thể đổi màu, font, xuống hàng. Dùng tab "Text" để thêm <br> hoặc class.')
+                ->tabs('all')
+                ->toolbar('basic'),
 
             Text::make('Text nút CTA', 'hero_btn_text')
                 ->helperText('Ví dụ: KHÁM PHÁ KHÓA HỌC')

@@ -15,6 +15,16 @@ $status_key     = $item['status']        ?? 'open';
 $location       = $item['location']      ?? '';
 $best_seller    = $item['best_seller']   ?? false;
 
+$_is_past = false;
+if ($available_days && $available_days !== 'Sắp diễn ra') {
+    $_sd = trim($available_days);
+    if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_sd, $_m)) {
+        $_is_past = mktime(0, 0, 0, (int)$_m[2], (int)$_m[1], (int)$_m[3]) < strtotime('today midnight');
+    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_sd)) {
+        $_is_past = strtotime($_sd) < strtotime('today midnight');
+    }
+}
+
 // Buy Now URL
 $_dv_post_id   = $item['post_id'] ?? 0;
 $_dv_wc_id     = $_dv_post_id ? (int) get_post_meta($_dv_post_id, '_wc_product_id', true) : 0;
@@ -112,7 +122,11 @@ $dat_lich_url  = $_dv_has_wc
                 </span>
             <?php endif; ?>
 
-            <?php if ($status_key !== 'closed') : ?>
+            <?php if ($_is_past) : ?>
+                <span class="relative z-[2] ml-auto flex items-center justify-center px-4 py-2 bg-[#999] text-white text-[12px] font-semibold uppercase tracking-[0.5px] rounded-full whitespace-nowrap shrink-0 cursor-not-allowed opacity-60">
+                    Hết hạn
+                </span>
+            <?php elseif ($status_key !== 'closed') : ?>
                 <a href="<?php echo esc_url($dat_lich_url); ?>"
                     class="relative z-[2] ml-auto flex items-center justify-center px-4 py-2 bg-[#c2a056] text-white text-[12px] font-semibold uppercase tracking-[0.5px] rounded-full transition-opacity hover:opacity-85 whitespace-nowrap shrink-0">
                     ĐẶT LỊCH
