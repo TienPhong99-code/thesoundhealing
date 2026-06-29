@@ -1,13 +1,13 @@
 <?php
-if (! defined('ABSPATH')) {
+if (!defined('ABSPATH')) {
    die;
 }
 
 // Inject link_class + active class vào <a> của wp_nav_menu()
 add_filter('nav_menu_link_attributes', function ($atts, $item, $args, $depth) {
-   if (! empty($args->link_class)) {
-      $base_class    = explode(' ', trim($args->link_class))[0]; // chỉ lấy class đầu tiên làm base
-      $classes       = [$args->link_class];
+   if (!empty($args->link_class)) {
+      $base_class = explode(' ', trim($args->link_class))[0]; // chỉ lấy class đầu tiên làm base
+      $classes = [$args->link_class];
       if ($item->current || $item->current_item_ancestor) {
          $classes[] = $base_class . '--active';
       }
@@ -20,9 +20,9 @@ add_filter('nav_menu_link_attributes', function ($atts, $item, $args, $depth) {
 add_action('after_setup_theme', function () {
    // regsiter menu
    register_nav_menus([
-      'header-menu-pc'  => __('Header Menu PC', 'monamedia'),
-      'header-menu-mb'  => __('Header Menu Mobile', 'monamedia'),
-      'footer-menu'     => __('Footer Menu', 'monamedia'),
+      'header-menu-pc' => __('Header Menu PC', 'monamedia'),
+      'header-menu-mb' => __('Header Menu Mobile', 'monamedia'),
+      'footer-menu' => __('Footer Menu', 'monamedia'),
    ]);
 });
 
@@ -30,14 +30,14 @@ add_action('after_setup_theme', function () {
 add_action('acf/init', function () {
    if (function_exists('acf_add_options_page')) {
       acf_add_options_page([
-         'page_title'  => 'Thiết lập Theme',
-         'menu_title'  => 'Theme Settings',
-         'menu_slug'   => 'theme-settings',
-         'capability'  => 'manage_options',
+         'page_title' => 'Thiết lập Theme',
+         'menu_title' => 'Theme Settings',
+         'menu_slug' => 'theme-settings',
+         'capability' => 'manage_options',
          'parent_slug' => 'themes.php',
-         'position'    => false,
-         'icon_url'    => false,
-         'redirect'    => false,
+         'position' => false,
+         'icon_url' => false,
+         'redirect' => false,
       ]);
    }
 });
@@ -52,7 +52,7 @@ add_action('acf/init', function () {
  * @return string
  */
 add_filter('admin_url', function ($url, $path, $blog_id) {
-   if ($path === 'admin-ajax.php' && ! is_admin()) {
+   if ($path === 'admin-ajax.php' && !is_admin()) {
       $url .= '?mona-ajax';
    }
 
@@ -61,23 +61,23 @@ add_filter('admin_url', function ($url, $path, $blog_id) {
 
 // Tailwind CDN
 add_action('wp_head', function () {
-?>
+   ?>
    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
    <style type="text/tailwindcss">
       @theme {
-  --color-pri: #283377;
-  --color-sec: #ed1c24;
-}
-</style>
-<?php
+        --color-pri: #283377;
+        --color-sec: #ed1c24;
+      }
+      </style>
+   <?php
 }, 1);
 
 // Register css
 add_action('wp_enqueue_scripts', function () {
    // CSS thư viện — nằm trên để theme CSS đè lại
-   wp_enqueue_style('mona-swiper',    MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.css',   [], MONA_THEME_VERSION);
-   wp_register_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css',          [], MONA_THEME_VERSION);
-   wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css',   [], MONA_THEME_VERSION);
+   wp_enqueue_style('mona-swiper', MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.css', [], MONA_THEME_VERSION);
+   wp_register_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css', [], MONA_THEME_VERSION);
+   wp_enqueue_style('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.min.css', [], MONA_THEME_VERSION);
 
    // CSS theme
    if (is_404()) {
@@ -94,17 +94,17 @@ add_action('wp_enqueue_scripts', function () {
 
    // Mở lại khi cần — uncomment từng dòng
    // wp_enqueue_script('mona-lenis',            MONA_THEME_PATH_URI . '/assets/library/lenis/lenis.min.js',                             array(), filemtime(MONA_THEME_PATH . '/assets/library/lenis/lenis.min.js'), array('in_footer' => true));
-   wp_enqueue_script('mona-swiper',           MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.js',                    array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+   wp_enqueue_script('mona-swiper', MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-aos',              MONA_THEME_PATH_URI . '/assets/library/aos/aos.js',                                     array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-select2',          MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.js',                         array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-flatpickr',        MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js',                         array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-SmoothScroll',     MONA_THEME_PATH_URI . '/assets/library/smoothscroll/SmoothScroll.min.js',                array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-splitting',        MONA_THEME_PATH_URI . '/assets/library/splitting/splitting.min.js',                     array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_register_script('mona-fancybox',         MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.umd.js',                       array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_register_script('mona-gsap',             MONA_THEME_PATH_URI . '/assets/library/gsap/gsap.min.js',                               array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_register_script('mona-ScrollTrigger',    MONA_THEME_PATH_URI . '/assets/library/gsap/ScrollTrigger.min.js',                      array('mona-gsap'), MONA_THEME_VERSION, array('in_footer' => true));
-   wp_register_script('mona-MorphSVGPlugin',   MONA_THEME_PATH_URI . '/assets/library/gsap/MorphSVGPlugin.min.js',                     array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/MorphSVGPlugin.min.js'), array('in_footer' => true));
-   wp_register_script('mona-SplitText',        MONA_THEME_PATH_URI . '/assets/library/gsap/SplitText.min.js',                          array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/SplitText.min.js'),        array('in_footer' => true));
+   wp_register_script('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.umd.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+   wp_register_script('mona-gsap', MONA_THEME_PATH_URI . '/assets/library/gsap/gsap.min.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
+   wp_register_script('mona-ScrollTrigger', MONA_THEME_PATH_URI . '/assets/library/gsap/ScrollTrigger.min.js', array('mona-gsap'), MONA_THEME_VERSION, array('in_footer' => true));
+   wp_register_script('mona-MorphSVGPlugin', MONA_THEME_PATH_URI . '/assets/library/gsap/MorphSVGPlugin.min.js', array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/MorphSVGPlugin.min.js'), array('in_footer' => true));
+   wp_register_script('mona-SplitText', MONA_THEME_PATH_URI . '/assets/library/gsap/SplitText.min.js', array('mona-gsap'), filemtime(MONA_THEME_PATH . '/assets/library/gsap/SplitText.min.js'), array('in_footer' => true));
    // wp_enqueue_script('mona-ukiyo',            MONA_THEME_PATH_URI . '/assets/library/ukiyo/ukiyo.min.js',                             array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-splide',           MONA_THEME_PATH_URI . '/assets/library/splide/splide.min.js',                           array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
    // wp_enqueue_script('mona-splide-extension', MONA_THEME_PATH_URI . '/assets/library/splide/splide-extension-auto-scroll.min.js',     array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
@@ -120,14 +120,14 @@ add_action('wp_enqueue_scripts', function () {
    // ]);
    // wp_localize_script('mona-backend', 'mona_params', $params);
 
-   wp_enqueue_script('mona-modal',          MONA_THEME_PATH_URI . '/assets/scripts/modules/common/modal.js',          array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/modal.js'),          array('in_footer' => true));
-   wp_enqueue_script('mona-header',         MONA_THEME_PATH_URI . '/assets/scripts/modules/common/header.js',         array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/header.js'),         array('in_footer' => true));
-   wp_enqueue_script('mona-flatpickr',      MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js',                                                               array(), MONA_THEME_VERSION,                                                                                          array('in_footer' => true));
+   wp_enqueue_script('mona-modal', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/modal.js', array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/modal.js'), array('in_footer' => true));
+   wp_enqueue_script('mona-header', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/header.js', array(), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/header.js'), array('in_footer' => true));
+   wp_enqueue_script('mona-flatpickr', MONA_THEME_PATH_URI . '/assets/library/flatpickr/flatpickr.js', array(), MONA_THEME_VERSION, array('in_footer' => true));
    wp_enqueue_script('mona-search-booking', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/search-booking.js', array('mona-flatpickr'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/search-booking.js'), array('in_footer' => true));
    wp_enqueue_script('mona-main', MONA_THEME_PATH_URI . '/assets/scripts/main.js', array('jquery', 'mona-swiper', 'mona-modal', 'mona-header'), filemtime(MONA_THEME_PATH . '/assets/scripts/main.js'), array('in_footer' => true));
 
    if (is_front_page()) {
-      wp_enqueue_script('mona-hero',    MONA_THEME_PATH_URI . '/assets/scripts/modules/home/hero.js',    array('mona-gsap', 'mona-MorphSVGPlugin', 'mona-SplitText'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/home/hero.js'),    array('in_footer' => true));
+      wp_enqueue_script('mona-hero', MONA_THEME_PATH_URI . '/assets/scripts/modules/home/hero.js', array('mona-gsap', 'mona-MorphSVGPlugin', 'mona-SplitText'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/home/hero.js'), array('in_footer' => true));
       wp_enqueue_script('mona-home', MONA_THEME_PATH_URI . '/assets/scripts/home.js', array('jquery', 'mona-swiper', 'mona-main', 'mona-gsap', 'mona-ScrollTrigger', 'mona-MorphSVGPlugin', 'mona-SplitText', 'mona-hero'), filemtime(MONA_THEME_PATH . '/assets/scripts/home.js'), array('in_footer' => true));
    }
 
@@ -143,7 +143,7 @@ add_action('wp_enqueue_scripts', function () {
       wp_enqueue_script('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
       wp_enqueue_script('mona-khoa-hoc', MONA_THEME_PATH_URI . '/assets/scripts/khoa-hoc.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr', 'mona-select2'), filemtime(MONA_THEME_PATH . '/assets/scripts/khoa-hoc.js'), array('in_footer' => true));
       wp_localize_script('mona-khoa-hoc', 'kh_course', [
-         'id'   => get_the_ID(),
+         'id' => get_the_ID(),
          'name' => get_the_title(),
       ]);
    }
@@ -165,7 +165,7 @@ add_action('wp_enqueue_scripts', function () {
       wp_enqueue_script('mona-select2', MONA_THEME_PATH_URI . '/assets/library/select2/select2.min.js', array('jquery'), MONA_THEME_VERSION, array('in_footer' => true));
       wp_enqueue_script('mona-ws', MONA_THEME_PATH_URI . '/assets/scripts/ws.js', array('jquery', 'contact-form-7', 'mona-fancybox', 'mona-flatpickr', 'mona-select2'), filemtime(MONA_THEME_PATH . '/assets/scripts/ws.js'), array('in_footer' => true));
       wp_localize_script('mona-ws', 'ws_data', [
-         'id'   => get_the_ID(),
+         'id' => get_the_ID(),
          'name' => get_the_title(),
       ]);
    }
@@ -199,10 +199,10 @@ add_filter('script_loader_tag', function ($tag, $handle) {
 
 // Preconnect google font
 add_action('wp_head', function () {
-?>
+   ?>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<?php
+   <?php
 }, 1);
 
 // Dequeue plugin JS không dùng — mở lại khi cần
@@ -228,7 +228,7 @@ add_action('wp_enqueue_scripts', function () {
       || is_singular('dich_vu')
       || is_page_template('page-template/template-tuyen-dung.php')
       || is_page_template('page-template/template-contact.php');
-   if (! $need_cf7) {
+   if (!$need_cf7) {
       wp_dequeue_script('swv');
       wp_deregister_script('swv');
       wp_dequeue_script('contact-form-7');
@@ -277,7 +277,7 @@ add_action('wp_enqueue_scripts', function () {
 
 // Override query posts
 add_action('pre_get_posts', function (WP_Query $query) {
-   if (! $query->is_admin() && $query->is_main_query()) {
+   if (!$query->is_admin() && $query->is_main_query()) {
       if ($query->is_category() || $query->is_tag() || $query->is_home()) {
          $paged = max(get_query_var('paged'), 1);
          $posts_per_page = wp_is_mobile() ? MONA_POSTS_PER_PAGE : 9;
@@ -300,7 +300,7 @@ add_filter('mona_main_classes', function (array $classes) {
       $classes[] = 'page-news';
    } elseif (is_front_page()) {
       $classes[] = 'page-home';
-   } elseif (is_page() && ! is_page_template() && ! is_front_page() && ! is_home()) {
+   } elseif (is_page() && !is_page_template() && !is_front_page() && !is_home()) {
       $classes[] = 'page-policy';
    }
 
@@ -315,28 +315,28 @@ add_action('template_redirect', function () {
 
 // Shift+Enter tạo <br> thay vì <p> trong tất cả TinyMCE editor
 add_filter('tiny_mce_before_init', function (array $settings) {
-   $settings['newline_as_br']       = true;
-   $settings['force_br_newlines']   = true;
-   $settings['force_p_newlines']    = false;
+   $settings['newline_as_br'] = true;
+   $settings['force_br_newlines'] = true;
+   $settings['force_p_newlines'] = false;
    return $settings;
 });
 
 // Thông báo tiếng Việt cho CF7
 add_filter('wpcf7_messages', function (array $messages) {
-   $messages['mail_sent_ok']['default']           = 'Cảm ơn bạn! Tin nhắn của bạn đã được gửi thành công.';
-   $messages['mail_sent_ng']['default']           = 'Có lỗi xảy ra. Vui lòng thử lại sau.';
-   $messages['validation_error']['default']       = 'Vui lòng kiểm tra lại các trường bên dưới.';
-   $messages['spam']['default']                   = 'Tin nhắn của bạn bị đánh dấu là spam.';
-   $messages['invalid_required']['default']       = 'Vui lòng điền vào trường này.';
-   $messages['invalid_too_long']['default']       = 'Nội dung quá dài.';
-   $messages['invalid_too_short']['default']      = 'Nội dung quá ngắn.';
-   $messages['invalid_email']['default']          = 'Địa chỉ email không hợp lệ.';
-   $messages['invalid_url']['default']            = 'URL không hợp lệ.';
-   $messages['invalid_tel']['default']            = 'Số điện thoại không hợp lệ.';
-   $messages['invalid_date']['default']           = 'Ngày không hợp lệ.';
-   $messages['upload_failed']['default']          = 'Tải lên thất bại.';
+   $messages['mail_sent_ok']['default'] = 'Cảm ơn bạn! Tin nhắn của bạn đã được gửi thành công.';
+   $messages['mail_sent_ng']['default'] = 'Có lỗi xảy ra. Vui lòng thử lại sau.';
+   $messages['validation_error']['default'] = 'Vui lòng kiểm tra lại các trường bên dưới.';
+   $messages['spam']['default'] = 'Tin nhắn của bạn bị đánh dấu là spam.';
+   $messages['invalid_required']['default'] = 'Vui lòng điền vào trường này.';
+   $messages['invalid_too_long']['default'] = 'Nội dung quá dài.';
+   $messages['invalid_too_short']['default'] = 'Nội dung quá ngắn.';
+   $messages['invalid_email']['default'] = 'Địa chỉ email không hợp lệ.';
+   $messages['invalid_url']['default'] = 'URL không hợp lệ.';
+   $messages['invalid_tel']['default'] = 'Số điện thoại không hợp lệ.';
+   $messages['invalid_date']['default'] = 'Ngày không hợp lệ.';
+   $messages['upload_failed']['default'] = 'Tải lên thất bại.';
    $messages['upload_file_type_invalid']['default'] = 'Loại file không được phép.';
-   $messages['upload_file_too_large']['default']  = 'File vượt quá dung lượng cho phép.';
+   $messages['upload_file_too_large']['default'] = 'File vượt quá dung lượng cho phép.';
    return $messages;
 });
 
@@ -352,64 +352,68 @@ add_filter('wpcf7_mail_components', function (array $components, $form) {
 
 // Khi người dùng quay lại từ checkout, pre-fill form với data đã nhập trước đó
 add_action('wp_footer', function () {
-   if (!is_singular(['khoa_hoc', 'workshop', 'dich_vu'])) return;
+   if (!is_singular(['khoa_hoc', 'workshop', 'dich_vu']))
+      return;
    $token = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
-   if (!$token) return;
+   if (!$token)
+      return;
    $booking = get_transient('tsh_booking_' . $token);
-   if (!$booking) return;
+   if (!$booking)
+      return;
    echo '<script>window.tshPrefill = ' . wp_json_encode((array) $booking) . ';</script>';
 }, 5);
 
 // Dịch text WooCommerce sang tiếng Việt
 add_filter('gettext', function (string $translated, string $text, string $domain): string {
-   if ($domain !== 'woocommerce') return $translated;
+   if ($domain !== 'woocommerce')
+      return $translated;
    static $map = [
-      // Bảng đơn hàng
-      'Product'                  => 'Sản phẩm',
-      'Subtotal'                 => 'Tạm tính',
-      'Total'                    => 'Tổng cộng',
-      'Cart'                     => 'Giỏ hàng',
-      'Order'                    => 'Đơn hàng',
-      'Order total'              => 'Tổng đơn hàng',
-      'Cart totals'              => 'Tổng giỏ hàng',
+   // Bảng đơn hàng
+   'Product' => 'Sản phẩm',
+   'Subtotal' => 'Tạm tính',
+   'Total' => 'Tổng cộng',
+   'Cart' => 'Giỏ hàng',
+   'Order' => 'Đơn hàng',
+   'Order total' => 'Tổng đơn hàng',
+   'Cart totals' => 'Tổng giỏ hàng',
 
-      // Nút & hành động
-      'Place order'              => 'Đặt hàng ngay',
-      'Proceed to checkout'      => 'Tiến hành thanh toán',
-      'Update cart'              => 'Cập nhật giỏ hàng',
-      'Apply coupon'             => 'Áp dụng mã giảm giá',
+   // Nút & hành động
+   'Place order' => 'Đặt hàng ngay',
+   'Proceed to checkout' => 'Tiến hành thanh toán',
+   'Update cart' => 'Cập nhật giỏ hàng',
+   'Apply coupon' => 'Áp dụng mã giảm giá',
 
-      // Thông tin cá nhân
-      'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our %s.' => 'Thông tin cá nhân của bạn sẽ được dùng để xử lý đơn hàng và hỗ trợ trải nghiệm trên website theo %s của chúng tôi.',
-      'privacy policy'           => 'chính sách bảo mật',
+   // Thông tin cá nhân
+   'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our %s.' => 'Thông tin cá nhân của bạn sẽ được dùng để xử lý đơn hàng và hỗ trợ trải nghiệm trên website theo %s của chúng tôi.',
+   'privacy policy' => 'chính sách bảo mật',
 
-      // Thông báo
-      'Coupon code'              => 'Mã giảm giá',
-      'Coupon:'                  => 'Mã giảm giá:',
-      'Shipping'                 => 'Phí vận chuyển',
-      'Free shipping'            => 'Miễn phí vận chuyển',
-      'Tax'                      => 'Thuế',
+   // Thông báo
+   'Coupon code' => 'Mã giảm giá',
+   'Coupon:' => 'Mã giảm giá:',
+   'Shipping' => 'Phí vận chuyển',
+   'Free shipping' => 'Miễn phí vận chuyển',
+   'Tax' => 'Thuế',
 
-      // Thanh toán
-      'Payment method'           => 'Phương thức thanh toán',
-      'Pay via %s'               => 'Thanh toán qua %s',
+   // Thanh toán
+   'Payment method' => 'Phương thức thanh toán',
+   'Pay via %s' => 'Thanh toán qua %s',
 
-      // Trạng thái đơn hàng
-      'Pending payment'          => 'Chờ thanh toán',
-      'Processing'               => 'Đang xử lý',
-      'On hold'                  => 'Tạm giữ',
-      'Completed'                => 'Hoàn thành',
-      'Cancelled'                => 'Đã hủy',
-      'Refunded'                 => 'Đã hoàn tiền',
-      'Failed'                   => 'Thất bại',
+   // Trạng thái đơn hàng
+   'Pending payment' => 'Chờ thanh toán',
+   'Processing' => 'Đang xử lý',
+   'On hold' => 'Tạm giữ',
+   'Completed' => 'Hoàn thành',
+   'Cancelled' => 'Đã hủy',
+   'Refunded' => 'Đã hoàn tiền',
+   'Failed' => 'Thất bại',
 
-      // Trang cảm ơn
-      'Thank you. Your order has been received.' => 'Cảm ơn bạn. Đơn hàng của bạn đã được tiếp nhận.',
-      'Order number:'            => 'Mã đơn hàng:',
-      'Date:'                    => 'Ngày đặt:',
-      'Email:'                   => 'Email:',
-      'Total:'                   => 'Tổng cộng:',
-      'Payment method:'          => 'Phương thức thanh toán:',
+   // Trang cảm ơn
+   'Thank you. Your order has been received.' => 'Cảm ơn bạn. Đơn hàng của bạn đã được tiếp nhận.',
+   'Order number:' => 'Mã đơn hàng:',
+   'Date:' => 'Ngày đặt:',
+   'Email:' => 'Email:',
+   'Total:' => 'Tổng cộng:',
+   'Payment method:' => 'Phương thức thanh toán:',
    ];
    return $map[$text] ?? $translated;
 }, 20, 3);
@@ -422,3 +426,8 @@ remove_action('admin_print_styles', 'print_emoji_styles');
 remove_filter('the_content_feed', 'wp_staticize_emoji');
 remove_filter('comment_text_rss', 'wp_staticize_emoji');
 remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+
+// Ẩn cột .column-wpseo-title ở wp-admin
+add_action('admin_head', function () {
+   echo '<style>.column-wpseo-title { display: none !important; }</style>';
+});

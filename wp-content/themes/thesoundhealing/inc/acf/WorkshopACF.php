@@ -87,9 +87,6 @@ add_action('acf/init', function () {
             Text::make('Mô tả chỗ còn lại', 'ws_capacity')
                 ->helperText('Ví dụ: Còn 8 chỗ · Chỉ còn 2 chỗ · Hết chỗ'),
 
-            Text::make('Chi nhánh', 'ws_branch')
-                ->helperText('Hiển thị trên card. Ví dụ: Thảo Điền · Quận 1'),
-
             Number::make('Số chỗ còn lại (số)', 'ws_spots')
                 ->helperText('Nhập số chỗ còn trống. 0 = Hết chỗ. Để trống = không hiển thị badge. Dùng cho bộ lọc tìm kiếm.')
                 ->min(0),
@@ -221,14 +218,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: KHUNG GIỜ ──────────────────────────────────────────
             Tab::make('Khung giờ')->placement('left'),
-
-            Repeater::make('Danh sách chi nhánh (form đặt lịch)', 'ws_branches')
-                ->helperText('Các lựa chọn hiển thị trong dropdown "Chi nhánh" của form đặt lịch.')
-                ->layout('table')
-                ->fields([
-                    Text::make('Chi nhánh', 'ws_branch_name')->required()
-                        ->helperText('Ví dụ: Thảo Điền'),
-                ]),
 
             Repeater::make('Khung giờ đặt lịch', 'ws_time_slots')
                 ->helperText('Để trống sẽ dùng khung giờ mặc định: 09:00-10:30, 10:30-12:00, 14:00-15:30, 15:30-17:00.')

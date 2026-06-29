@@ -1366,7 +1366,8 @@ form .wpcf7-not-valid-tip {
   transition: color 0.2s ease;
 }
 .hd-lang a:hover,
-.hd-lang a.lang-active {
+.hd-lang a.lang-active,
+.hd-lang span.lang-active {
   color: var(--color-pri);
 }
 
@@ -3832,7 +3833,7 @@ form .wpcf7-not-valid-tip {
   font-size: 13px !important;
   font-weight: 400;
   color: #166534;
-  opacity: .85;
+  opacity: 0.85;
 }
 .tsh-bacs-qr--success {
   background: #f0faf4;
@@ -3849,10 +3850,12 @@ form .wpcf7-not-valid-tip {
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
   margin-top: 8px;
 }
-#tsh-place-order:hover { opacity: .85; }
+#tsh-place-order:hover {
+  opacity: 0.85;
+}
 .tsh-confirm-btn {
   width: 100%;
   margin-top: 14px;
@@ -3864,10 +3867,15 @@ form .wpcf7-not-valid-tip {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
 }
-.tsh-confirm-btn:hover { opacity: .85; }
-.tsh-confirm-btn:disabled { opacity: .5; cursor: not-allowed; }
+.tsh-confirm-btn:hover {
+  opacity: 0.85;
+}
+.tsh-confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .tsh-transfer-msg {
   margin-top: 12px;
   padding: 14px 16px;
@@ -3878,5 +3886,9 @@ form .wpcf7-not-valid-tip {
   line-height: 1.6;
   color: #166534;
 }
-.tsh-transfer-msg p { margin: 0 0 4px; }
-.tsh-transfer-msg p:last-child { margin: 0; }
+.tsh-transfer-msg p {
+  margin: 0 0 4px;
+}
+.tsh-transfer-msg p:last-child {
+  margin: 0;
+}

@@ -7,8 +7,25 @@
 
 defined('ABSPATH') || exit;
 
-$lang_vi = home_url('/');
-$lang_en = '#';
+?>
+<?php
+function mona_render_lang_switcher($classes = '')
+{
+   if (!function_exists('icl_get_languages')) return;
+   $langs = icl_get_languages('skip_missing=0&orderby=KEY&order=DIR&link_empty_to=str');
+   if (empty($langs) || !is_array($langs)) return;
+   $label_map = ['vi' => 'VN', 'en' => 'ENG'];
+   $items = array_values($langs);
+   foreach ($items as $i => $item) {
+      if ($i > 0) echo '<span class="block w-px h-4 bg-[#d9d9d9]"></span>';
+      $code = $label_map[$item['language_code']] ?? strtoupper($item['language_code']);
+      if ($item['active']) {
+         echo '<span class="font-bold text-[14px] uppercase lang-active ' . esc_attr($classes) . '">' . esc_html($code) . '</span>';
+      } else {
+         echo '<a href="' . esc_url($item['url']) . '" class="font-bold text-[14px] uppercase ' . esc_attr($classes) . '">' . esc_html($code) . '</a>';
+      }
+   }
+}
 ?>
 
 <!-- =============================================
@@ -49,9 +66,7 @@ $lang_en = '#';
 
                <!-- Language switcher -->
                <div class="flex items-center gap-2 hd-lang">
-                  <a href="<?php echo esc_url($lang_vi); ?>" class="font-bold text-[14px] uppercase lang-active">VI</a>
-                  <span class="block w-px h-4 bg-[#d9d9d9]"></span>
-                  <a href="<?php echo esc_url($lang_en); ?>" class="font-bold text-[14px] uppercase">EN</a>
+                  <?php mona_render_lang_switcher(); ?>
                </div>
 
             </div>
@@ -103,9 +118,7 @@ $lang_en = '#';
 
    <!-- Language switcher -->
    <div class="flex items-center gap-3 px-2 pt-2 hd-lang justify-end">
-      <a href="<?php echo esc_url($lang_vi); ?>" class="font-bold text-[14px] uppercase lang-active">VI</a>
-      <span class="block w-px h-4 bg-[#d9d9d9]"></span>
-      <a href="<?php echo esc_url($lang_en); ?>" class="font-bold text-[14px] uppercase">EN</a>
+      <?php mona_render_lang_switcher(); ?>
    </div>
 
 </div>

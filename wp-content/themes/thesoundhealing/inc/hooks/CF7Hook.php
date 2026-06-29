@@ -194,11 +194,11 @@ add_filter('wpcf7_form_elements', function ($html) {
 
         // ── dv-branch ────────────────────────────────────────────────────
         $branch_values = [];
-        $rows          = get_field('dv_branches', $post_id);
-        if (!empty($rows)) {
-            foreach ($rows as $row) {
-                $branch = trim($row['dv_branch_name'] ?? '');
-                if ($branch) $branch_values[] = $branch;
+        $location_raw  = get_field('dv_location', $post_id);
+        if (!empty($location_raw)) {
+            foreach (explode("\n", $location_raw) as $line) {
+                $line = trim($line);
+                if ($line) $branch_values[] = $line;
             }
         }
         if ($branch_values) {
@@ -257,11 +257,11 @@ add_filter('wpcf7_form_elements', function ($html) {
 
         // ── kh-branch ────────────────────────────────────────────────────
         $branch_values = [];
-        $rows          = get_field('kh_branches', $post_id);
-        if (!empty($rows)) {
-            foreach ($rows as $row) {
-                $branch = trim($row['kh_branch_name'] ?? '');
-                if ($branch) $branch_values[] = $branch;
+        $location_raw  = get_field('location', $post_id);
+        if (!empty($location_raw)) {
+            foreach (explode("\n", $location_raw) as $line) {
+                $line = trim($line);
+                if ($line) $branch_values[] = $line;
             }
         }
         if ($branch_values) {
@@ -321,11 +321,11 @@ add_filter('wpcf7_form_elements', function ($html) {
 
         // ── ws-branch ────────────────────────────────────────────────────
         $branch_values = [];
-        $rows          = get_field('ws_branches', $post_id);
-        if (!empty($rows)) {
-            foreach ($rows as $row) {
-                $branch = trim($row['ws_branch_name'] ?? '');
-                if ($branch) $branch_values[] = $branch;
+        $location_raw  = get_field('ws_location', $post_id);
+        if (!empty($location_raw)) {
+            foreach (explode("\n", $location_raw) as $line) {
+                $line = trim($line);
+                if ($line) $branch_values[] = $line;
             }
         }
         if ($branch_values) {
