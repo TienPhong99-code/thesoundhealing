@@ -20,12 +20,6 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
         add_action('woocommerce_thankyou_' . $this->id, [$this, 'thankyou_page']);
-        add_filter('woocommerce_payment_gateways', [$this, 'register_gateway']);
-    }
-
-    public function register_gateway(array $gateways): array {
-        $gateways[] = self::class;
-        return $gateways;
     }
 
     public function init_form_fields(): void {
@@ -131,4 +125,8 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
     }
 }
 
-new WC_Gateway_TSH_Paypal();
+// WooCommerce tự khởi tạo class khi cần — không dùng new trực tiếp
+add_filter('woocommerce_payment_gateways', function (array $gateways): array {
+    $gateways[] = 'WC_Gateway_TSH_Paypal';
+    return $gateways;
+});
