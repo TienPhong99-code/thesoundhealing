@@ -3366,9 +3366,13 @@ form .wpcf7-not-valid-tip {
   padding: 9px 13px;
   font-size: 14px;
   margin-top: 6px;
-  display: flex;
   flex-direction: column;
   gap: 12px;
+  display: none !important;
+}
+#payment_method_bacs:checked ~ .payment_box,
+#payment_method_tsh_paypal_qr:checked ~ .payment_box {
+  display: flex !important;
 }
 #payment .form-row {
   margin: 0;
