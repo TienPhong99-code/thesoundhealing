@@ -585,7 +585,7 @@ class TSH_WooCommerce_Hook
         $order_id = absint($wp->query_vars['order-received'] ?? 0);
         $order    = $order_id ? wc_get_order($order_id) : null;
 
-        if (!$order || !in_array($order->get_payment_method(), ['bacs', 'sepay'], true)) return;
+        if (!$order || !in_array($order->get_payment_method(), ['bacs', 'sepay', 'tsh_paypal_qr'], true)) return;
         if (!in_array($order->get_status(), ['pending', 'on-hold'], true)) return;
     ?>
         <script>

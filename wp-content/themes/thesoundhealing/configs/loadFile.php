@@ -75,4 +75,5 @@ return [
     MONA_THEME_INC_PATH . '/woocommerce/WcProductSync.php',
     MONA_THEME_INC_PATH . '/woocommerce/VNPayGateway.php',
     MONA_THEME_INC_PATH . '/woocommerce/SepayWebhook.php',
+    MONA_THEME_INC_PATH . '/woocommerce/PaypalQRGateway.php',
 ];
