@@ -6,6 +6,7 @@ class TSH_WooCommerce_Hook
 
     public function __construct()
     {
+        add_action('template_redirect',   [$this, 'redirect_cart_to_home']);
         add_action('after_setup_theme',   [$this, 'declare_support']);
         add_filter('woocommerce_enqueue_styles', '__return_empty_array');
         add_action('init',                [$this, 'register_endpoint']);
@@ -35,6 +36,14 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_get_cart_item_from_session', [$this, 'restore_guests_cart_item'], 10, 2);
         add_action('woocommerce_before_calculate_totals',    [$this, 'apply_guests_price']);
         add_filter('woocommerce_get_item_data',              [$this, 'display_guests_in_cart'], 10, 2);
+    }
+
+    public function redirect_cart_to_home(): void
+    {
+        if (is_cart()) {
+            wp_safe_redirect(home_url('/'));
+            exit;
+        }
     }
 
     public function declare_support(): void
