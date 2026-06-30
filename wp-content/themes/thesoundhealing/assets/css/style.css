@@ -3504,10 +3504,22 @@ form .wpcf7-not-valid-tip {
   margin: 0;
 }
 
+/* ── 2-col body ── */
+.tsh-ty-body {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.tsh-ty-payment .tsh-bacs-qr--ty {
+  margin: 0;
+  max-width: none;
+}
+
 /* ── Card ── */
 .tsh-ty-card {
-  max-width: 560px;
-  margin: 0 auto;
   background: #fff;
   border: 1px solid #e4e2dd;
   border-radius: 16px;
@@ -3709,6 +3721,14 @@ form .wpcf7-not-valid-tip {
 }
 
 /* ── Mobile ── */
+@media (max-width: 768px) {
+  .tsh-ty-body {
+    grid-template-columns: 1fr;
+  }
+  .tsh-ty-payment {
+    order: -1;
+  }
+}
 @media (max-width: 640px) {
   .tsh-ty-wrap {
     padding: 40px 0 70px;

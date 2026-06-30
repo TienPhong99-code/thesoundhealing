@@ -44,6 +44,9 @@ $order = isset($order) ? $order : false;
             <p class="tsh-ty-sub">Cảm ơn bạn đã tin tưởng lựa chọn dịch vụ của The Sound Healing.<br>Chúng tôi đã nhận được yêu cầu của bạn.</p>
         </div>
 
+        <!-- Grid: card trái + QR phải -->
+        <div class="tsh-ty-body">
+
         <!-- Card -->
         <div class="tsh-ty-card">
 
@@ -176,7 +179,12 @@ $order = isset($order) ? $order : false;
 
         </div><!-- /.tsh-ty-card -->
 
-        <?php do_action('woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id()); ?>
+        <!-- Cột phải: QR + xác nhận -->
+        <div class="tsh-ty-payment">
+            <?php do_action('woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id()); ?>
+        </div>
+
+        </div><!-- /.tsh-ty-body -->
 
         <!-- Actions -->
         <div class="tsh-ty-actions">
