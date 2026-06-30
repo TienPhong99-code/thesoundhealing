@@ -3364,9 +3364,11 @@ form .wpcf7-not-valid-tip {
   background: #f0ede6;
   border-radius: 6px;
   padding: 9px 13px;
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 6px;
-  color: #888;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 #payment .form-row {
   margin: 0;

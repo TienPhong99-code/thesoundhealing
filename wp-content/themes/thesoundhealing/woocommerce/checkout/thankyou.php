@@ -176,6 +176,8 @@ $order = isset($order) ? $order : false;
 
         </div><!-- /.tsh-ty-card -->
 
+        <?php do_action('woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id()); ?>
+
         <!-- Actions -->
         <div class="tsh-ty-actions">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri">Về trang chủ</a>

@@ -248,20 +248,22 @@ class TSH_WooCommerce_Hook
 
         // ── BACS ─────────────────────────────────────────────────────────
         if ($payment_id === 'bacs') {
-            $cart       = WC()->cart;
-            $total      = $cart ? (int) round((float) $cart->get_total('edit')) : 0;
-            $name       = sanitize_text_field(WC()->customer ? WC()->customer->get_billing_first_name() : '');
-            $first_item = $cart ? reset($cart->get_cart()) : null;
-            $service    = $first_item ? $this->to_ascii($first_item['data']->get_name()) : '';
-            $info       = 'DAT LICH' . ($service ? ' - ' . $service : '') . ($name ? ' - ' . $this->to_ascii($name) : ' - TSH');
-            $base       = 'https://img.vietqr.io/image/' . TSH_BANK_ID . '-' . TSH_BANK_ACCOUNT . '-compact2.png?' . http_build_query([
+            $cart      = WC()->cart;
+            $total     = $cart ? (int) round((float) $cart->get_total('edit')) : 0;
+            $customer  = WC()->customer;
+            $name_raw  = $customer ? trim($customer->get_billing_first_name() . ' ' . $customer->get_billing_last_name()) : '';
+            $name_asc  = str_replace(' ', '', $this->to_ascii($name_raw)) ?: 'TSH';
+            $phone     = preg_replace('/\D/', '', $customer ? $customer->get_billing_phone() : '');
+            $amount_k  = $total > 0 ? round($total / 1000) . 'K' : '';
+            $info      = 'HEAL-' . $name_asc . ($phone ? '-' . $phone : '') . ($amount_k ? '-' . $amount_k : '');
+            $base      = 'https://img.vietqr.io/image/' . TSH_BANK_ID . '-' . TSH_BANK_ACCOUNT . '-compact2.png?' . http_build_query([
                 'accountName' => TSH_BANK_NAME,
             ]);
             $src = $base . '&amount=' . $total . '&addInfo=' . rawurlencode($info);
 
             ob_start(); ?>
             <div class="tsh-bacs-qr">
-                <img src="<?= esc_url($src) ?>" data-base="<?= esc_url($base) ?>" data-service="<?= esc_attr($service) ?>" alt="QR chuyển khoản <?= esc_attr(TSH_BANK_ID) ?>">
+                <img src="<?= esc_url($src) ?>" data-base="<?= esc_url($base) ?>" alt="QR chuyển khoản <?= esc_attr(TSH_BANK_ID) ?>">
                 <p class="tsh-bacs-qr__note">Quét mã QR bằng app ngân hàng để thanh toán tự động</p>
             </div>
             <script>
@@ -275,13 +277,14 @@ class TSH_WooCommerce_Hook
                         var $img = $('.tsh-bacs-qr:not(.tsh-sepay-checkout-qr) img');
                         if (!$img.length) return;
                         var amount = parseInt($('.order-total .amount').first().text().replace(/\D/g, '')) || 0;
-                        var name = toAscii($('#billing_first_name').val() || '');
-                        var service = $img.data('service') || '';
-                        var addInfo = 'DAT LICH' + (service ? ' - ' + service : '') + (name ? ' - ' + name : ' - TSH');
+                        var name = toAscii(($('#billing_first_name').val() || '') + ' ' + ($('#billing_last_name').val() || '')).replace(/\s+/g, '');
+                        var phone = ($('#billing_phone').val() || '').replace(/\D/g, '');
+                        var amountK = amount > 0 ? Math.round(amount / 1000) + 'K' : '';
+                        var addInfo = 'HEAL' + (name ? '-' + name : '') + (phone ? '-' + phone : '') + (amountK ? '-' + amountK : '');
                         $img.attr('src', $img.data('base') + '&amount=' + amount + '&addInfo=' + encodeURIComponent(addInfo));
                     }
                     $(document.body).on('updated_checkout', updateBacsQr);
-                    $(document).on('input', '#billing_first_name', updateBacsQr);
+                    $(document).on('input', '#billing_first_name, #billing_last_name, #billing_phone', updateBacsQr);
                 });
             </script>
         <?php
@@ -346,11 +349,12 @@ class TSH_WooCommerce_Hook
         }
 
         // Chờ thanh toán → hiện QR
-        $amount     = (int) round((float) $order->get_total());
-        $first_item = reset($order->get_items());
-        $service    = $first_item ? $this->to_ascii($first_item->get_name()) : '';
-        $info       = 'DAT LICH' . ($service ? ' - ' . $service : '') . ' - TSH' . $order_id;
-        $url        = $this->vietqr_url($amount, $info);
+        $amount    = (int) round((float) $order->get_total());
+        $name_asc  = str_replace(' ', '', $this->to_ascii(trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name()))) ?: 'TSH';
+        $phone     = preg_replace('/\D/', '', $order->get_billing_phone());
+        $amount_k  = round($amount / 1000) . 'K';
+        $info      = 'HEAL-' . $name_asc . ($phone ? '-' . $phone : '') . '-' . $amount_k;
+        $url       = $this->vietqr_url($amount, $info);
         ?>
         <div class="tsh-bacs-qr tsh-bacs-qr--ty">
             <h3 class="tsh-bacs-qr__title">Hoàn tất thanh toán</h3>
@@ -360,7 +364,7 @@ class TSH_WooCommerce_Hook
                 <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong></div>
                 <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><strong><?= esc_html(TSH_BANK_NAME) ?></strong></div>
                 <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong><?= wc_price($amount) ?></strong></div>
-                <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><strong>TSH <?= esc_html($order_id) ?></strong></div>
+                <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><strong><?= esc_html($info) ?></strong></div>
             </div>
             <button type="button" id="tsh-confirm-transfer"
                 data-order="<?= (int) $order_id ?>"
@@ -384,15 +388,15 @@ class TSH_WooCommerce_Hook
     {
         if (!$sent_to_admin || $order->get_payment_method() !== 'bacs') return;
 
-        $ref         = 'TSH' . $order->get_id();
-        $first_item  = reset($order->get_items());
-        $service     = $first_item ? $this->to_ascii($first_item->get_name()) : '';
-        $full_ref    = 'DAT LICH' . ($service ? ' - ' . $service : '') . ' - ' . $ref;
+        $name_asc  = str_replace(' ', '', $this->to_ascii(trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name()))) ?: 'TSH';
+        $phone     = preg_replace('/\D/', '', $order->get_billing_phone());
+        $amount_k  = round((float) $order->get_total() / 1000) . 'K';
+        $full_ref  = 'HEAL-' . $name_asc . ($phone ? '-' . $phone : '') . '-' . $amount_k;
 
         echo '<div style="margin:16px 0;padding:14px 16px;background:#fff8e1;border-left:4px solid #c2a056;font-family:sans-serif">
             <p style="margin:0 0 6px;font-size:13px;color:#666">Nội dung chuyển khoản khách sẽ ghi:</p>
             <p style="margin:0;font-size:16px;font-weight:700;color:#1b1c19;letter-spacing:.5px">' . esc_html($full_ref) . '</p>
-            <p style="margin:6px 0 0;font-size:13px;color:#666">Mã đơn: <strong>' . esc_html($ref) . '</strong> &nbsp;|&nbsp; Số tiền: <strong>' . wc_price($order->get_total()) . '</strong></p>
+            <p style="margin:6px 0 0;font-size:13px;color:#666">Số tiền: <strong>' . wc_price($order->get_total()) . '</strong></p>
         </div>';
     }
 

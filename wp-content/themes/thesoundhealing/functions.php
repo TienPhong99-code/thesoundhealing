@@ -35,8 +35,8 @@ define('DV_CF7_FORM_ID', 'a36266b');
 
 // Thông tin ngân hàng chuyển khoản — cập nhật tại đây khi thay đổi
 define('TSH_BANK_ID',      'ACB');
-define('TSH_BANK_ACCOUNT', '249193269');
-define('TSH_BANK_NAME',    'HO TIEN PHONG');
+define('TSH_BANK_ACCOUNT', '66606898');
+define('TSH_BANK_NAME',    'CONG TY CO PHAN HEALIVERSE');
 
 // SePay credentials (test) — đổi sang production khi go-live
 define('TSH_SEPAY_MERCHANT_ID', 'SP-TEST-HT7A66B5');

@@ -16,7 +16,8 @@ $best_seller = $item['best_seller']  ?? false;
 
 $_is_past = false;
 if ($start_date) {
-    $_sd = trim($start_date);
+    $_parts   = array_map('trim', explode(',', $start_date));
+    $_sd      = end($_parts);
     if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_sd, $_m)) {
         $_is_past = mktime(0, 0, 0, (int)$_m[2], (int)$_m[1], (int)$_m[3]) < strtotime('today midnight');
     } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_sd)) {
