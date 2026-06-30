@@ -3861,6 +3861,9 @@ form .wpcf7-not-valid-tip {
   background: #f0faf4;
   border-color: #86efac;
 }
+.woocommerce-bacs-bank-details {
+  display: none;
+}
 #tsh-place-order {
   display: none;
   width: 100%;
