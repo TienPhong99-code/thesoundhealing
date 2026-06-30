@@ -551,8 +551,14 @@ class TSH_WooCommerce_Hook
                     $qr.find('img').attr('src', $qr.data('base') + '&amount=' + amount + '&addInfo=' + encodeURIComponent($qr.data('addinfo')));
                 });
 
+                function showPaymentBox(method) {
+                    $('.payment_box').hide();
+                    $('.payment_box.payment_method_' + method).show();
+                }
+
                 function toggle(method) {
                     stopSepayPoll();
+                    showPaymentBox(method);
                     if (method === 'bacs') {
                         $orig.hide();
                         $fake.show();
@@ -567,7 +573,7 @@ class TSH_WooCommerce_Hook
                 }
 
                 toggle($('input[name="payment_method"]:checked').val());
-                $(document.body).on('payment_method_selected', function() {
+                $(document.body).on('payment_method_selected updated_checkout', function() {
                     toggle($('input[name="payment_method"]:checked').val());
                 });
             });
