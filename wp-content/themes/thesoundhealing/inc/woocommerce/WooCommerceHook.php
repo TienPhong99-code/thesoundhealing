@@ -446,7 +446,11 @@ class TSH_WooCommerce_Hook
         }
 
         if (in_array($order->get_status(), ['pending', 'on-hold'], true)) {
-            $order->add_order_note('Khách xác nhận đã chuyển khoản — chờ admin kiểm tra.');
+            $method = $order->get_payment_method();
+            $note   = $method === 'tsh_paypal_qr'
+                ? 'Khách xác nhận đã thanh toán qua PayPal — chờ admin kiểm tra.'
+                : 'Khách xác nhận đã chuyển khoản — chờ admin kiểm tra.';
+            $order->add_order_note($note);
             $this->send_transfer_confirmed_email($order);
         }
 
@@ -465,17 +469,39 @@ class TSH_WooCommerce_Hook
         $service     = $items ? reset($items)->get_name() : '';
         $b_date      = $order->get_meta('_booking_date');
         $b_time      = $order->get_meta('_booking_time');
+        $method      = $order->get_payment_method();
+        $is_paypal   = $method === 'tsh_paypal_qr';
 
-        $name_asc  = str_replace(' ', '', $this->to_ascii($name)) ?: 'TSH';
-        $phone_raw = preg_replace('/\D/', '', $phone);
-        $amount_k  = round((float) $order->get_total() / 1000) . 'K';
-        $ref       = 'HEAL-' . $name_asc . ($phone_raw ? '-' . $phone_raw : '') . '-' . $amount_k;
+        if ($is_paypal) {
+            $gateway       = new WC_Gateway_TSH_Paypal();
+            $heading       = 'Khách xác nhận đã thanh toán qua PayPal';
+            $subject_label = 'Khách xác nhận PayPal';
+            $payment_block = '
+            <div style="margin:16px 0;padding:14px 16px;background:#fff8e1;border-left:4px solid #c2a056">
+                <p style="margin:0 0 4px;font-size:12px;color:#666">Phương thức thanh toán:</p>
+                <p style="margin:0;font-size:16px;font-weight:700;color:#1b1c19">PayPal — ' . esc_html($gateway->paypal_email) . '</p>
+            </div>
+            <p style="font-size:13px;color:#666">Vui lòng kiểm tra tài khoản PayPal và xác nhận đơn hàng.</p>';
+        } else {
+            $name_asc      = str_replace(' ', '', $this->to_ascii($name)) ?: 'TSH';
+            $phone_raw     = preg_replace('/\D/', '', $phone);
+            $amount_k      = round((float) $order->get_total() / 1000) . 'K';
+            $ref           = 'HEAL-' . $name_asc . ($phone_raw ? '-' . $phone_raw : '') . '-' . $amount_k;
+            $heading       = 'Khách xác nhận đã chuyển khoản';
+            $subject_label = 'Khách xác nhận chuyển khoản';
+            $payment_block = '
+            <div style="margin:16px 0;padding:14px 16px;background:#fff8e1;border-left:4px solid #c2a056">
+                <p style="margin:0 0 4px;font-size:12px;color:#666">Nội dung chuyển khoản khách ghi:</p>
+                <p style="margin:0;font-size:16px;font-weight:700;letter-spacing:.5px;color:#1b1c19">' . esc_html($ref) . '</p>
+            </div>
+            <p style="font-size:13px;color:#666">Vui lòng kiểm tra tài khoản ACB <strong>' . esc_html(TSH_BANK_ACCOUNT) . '</strong> và xác nhận đơn hàng.</p>';
+        }
 
-        $subject = '[Đặt lịch] Khách xác nhận chuyển khoản — #' . str_pad($order_id, 5, '0', STR_PAD_LEFT) . ' ' . $name;
+        $subject = '[Đặt lịch] ' . $subject_label . ' — #' . str_pad($order_id, 5, '0', STR_PAD_LEFT) . ' ' . $name;
 
         $body = '
         <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
-            <h2 style="color:#1b1c19;border-bottom:2px solid #c2a056;padding-bottom:8px">Khách xác nhận đã chuyển khoản</h2>
+            <h2 style="color:#1b1c19;border-bottom:2px solid #c2a056;padding-bottom:8px">' . $heading . '</h2>
             <table style="width:100%;border-collapse:collapse;font-size:14px">
                 <tr><td style="padding:8px 0;color:#666;width:140px">Mã đơn</td><td style="padding:8px 0;font-weight:700">#' . str_pad($order_id, 5, '0', STR_PAD_LEFT) . '</td></tr>
                 <tr><td style="padding:8px 0;color:#666">Khách hàng</td><td style="padding:8px 0">' . esc_html($name) . '</td></tr>
@@ -485,11 +511,7 @@ class TSH_WooCommerce_Hook
                 ' . ($b_date  ? '<tr><td style="padding:8px 0;color:#666">Ngày đặt</td><td style="padding:8px 0">' . esc_html($b_date) . ($b_time ? ' — ' . esc_html($b_time) : '') . '</td></tr>' : '') . '
                 <tr><td style="padding:8px 0;color:#666">Số tiền</td><td style="padding:8px 0;font-weight:700;color:#c2a056">' . $total . '</td></tr>
             </table>
-            <div style="margin:16px 0;padding:14px 16px;background:#fff8e1;border-left:4px solid #c2a056">
-                <p style="margin:0 0 4px;font-size:12px;color:#666">Nội dung chuyển khoản khách ghi:</p>
-                <p style="margin:0;font-size:16px;font-weight:700;letter-spacing:.5px;color:#1b1c19">' . esc_html($ref) . '</p>
-            </div>
-            <p style="font-size:13px;color:#666">Vui lòng kiểm tra tài khoản ACB <strong>' . esc_html(TSH_BANK_ACCOUNT) . '</strong> và xác nhận đơn hàng.</p>
+            ' . $payment_block . '
             <a href="' . esc_url(admin_url('post.php?post=' . $order_id . '&action=edit')) . '" style="display:inline-block;margin-top:8px;padding:10px 20px;background:#c2a056;color:#fff;text-decoration:none;border-radius:4px;font-weight:600">Xem đơn hàng</a>
         </div>';
 
