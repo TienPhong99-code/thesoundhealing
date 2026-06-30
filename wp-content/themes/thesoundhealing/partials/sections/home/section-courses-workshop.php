@@ -85,7 +85,7 @@ $data = [
     'label'           => get_field('cwlist_label', $page_id)   ?: 'ĐÀO TẠO & SỰ KIỆN',
     'heading'         => get_field('cwlist_heading', $page_id) ?: 'Khóa Học & Workshop',
     'desc'            => get_field('cwlist_desc', $page_id)    ?: 'Tham gia các khóa học và workshop được thiết kế để dẫn dắt bạn qua từng giai đoạn chuyển hóa tâm thức sâu sắc.',
-    'link_all'        => get_field('cwlist_link_all', $page_id) ?: ['url' => home_url('/khoa-hoc-workshop'), 'title' => 'Xem tất cả', 'target' => ''],
+    'link_all'        => get_field('cwlist_link_all', $page_id) ?: ['url' => home_url('/khoa-hoc-workshop'), 'title' => __('Xem tất cả', 'monamedia'), 'target' => ''],
     'items'           => $all_items,
 ];
 ?>

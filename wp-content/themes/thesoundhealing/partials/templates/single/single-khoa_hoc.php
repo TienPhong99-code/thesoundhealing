@@ -9,7 +9,6 @@ $start_date  = get_field('start_date', $post_id) ?: '20 THÁNG 7, 2025';
 $kh_time     = get_field('kh_time',    $post_id) ?: '09:00 – 17:00';
 $duration    = get_field('duration',   $post_id) ?: '2 ngày · Cuối tuần';
 $short_desc     = get_field('short_desc',    $post_id);
-$kh_description = get_field('kh_description', $post_id) ?: 'Khóa học chuyên sâu dành cho những ai muốn làm chủ nghệ thuật Sound Healing. Bạn sẽ được học từ nền tảng lý thuyết tần số đến kỹ thuật thực hành với chuông pha lê, sẵn sàng hướng dẫn người khác sau khi hoàn thành.';
 $price       = get_field('price',      $post_id) ?: '8.500.000 VNĐ';
 $kh_location = get_field('location',   $post_id) ?: 'Aetheria Studio — 104/20 Mai Thị Lựu, Quận 1, TP.HCM';
 $kh_capacity  = get_field('kh_capacity', $post_id) ?: '20 học viên';
@@ -98,8 +97,8 @@ get_header();
 
 <?php get_template_part('partials/components/breadcrumb', null, [
     'links' => [
-        ['title' => 'Trang chủ', 'url' => home_url('/'),         'is-active' => false],
-        ['title' => 'Khóa học',  'url' => home_url('/khoa-hoc'), 'is-active' => false],
+        ['title' => __('Trang chủ', 'monamedia'), 'url' => home_url('/'),         'is-active' => false],
+        ['title' => __('Khóa học', 'monamedia'),  'url' => home_url('/khoa-hoc'), 'is-active' => false],
         ['title' => get_the_title(), 'url' => '',                'is-active' => true],
     ],
 ]); ?>
@@ -127,14 +126,14 @@ get_header();
                                     <?php $kh_terms = get_the_terms($post_id, 'bo_mon_khoa_hoc'); ?>
                                     <div class="flex items-center gap-2 flex-wrap mb-3">
                                         <span class="text-[11px] font-medium uppercase tracking-[1px] px-3 py-1 rounded-full border border-[#c0c8c6] text-[#414847]">
-                                            Khóa Học
+                                            <?php esc_html_e('Khóa Học', 'monamedia'); ?>
                                         </span>
                                         <button type="button"
                                             class="ml-auto w-9 h-9 flex items-center justify-center rounded-full border border-[#e4e2dd] text-[#414847] hover:border-[#c2a056] hover:text-[#c2a056] transition-colors shrink-0 cursor-pointer"
                                             data-modal-open="share"
                                             data-share-url="<?php echo esc_url(get_permalink()); ?>"
                                             data-share-title="<?php echo esc_attr(get_the_title()); ?>"
-                                            aria-label="Chia sẻ">
+                                            aria-label="<?php echo esc_attr__('Chia sẻ', 'monamedia'); ?>">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <circle cx="18" cy="5" r="3" />
                                                 <circle cx="6" cy="12" r="3" />
@@ -148,11 +147,6 @@ get_header();
                                     <h1 class="font-title text-pri text-[48px] max-md:text-[24px] leading-[56px] max-md:leading-[40px] tracking-[-0.96px] font-bold">
                                         <?php the_title(); ?>
                                     </h1>
-                                    <?php if ($kh_description) : ?>
-                                        <p class="text-[#414847] text-[16px] leading-[26px] mt-3">
-                                            <?php echo wp_kses_post(nl2br(esc_html($kh_description))); ?>
-                                        </p>
-                                    <?php endif; ?>
 
                                 </div>
 
@@ -235,7 +229,7 @@ get_header();
                                         <svg class="size-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                                         </svg>
-                                        <span class="text-[11px] font-semibold leading-tight text-center">Xem tất cả</span>
+                                        <span class="text-[11px] font-semibold leading-tight text-center"><?php esc_html_e('Xem tất cả', 'monamedia'); ?></span>
                                     </button>
                                 </div>
 
@@ -251,7 +245,7 @@ get_header();
                             <!-- 1. About the course -->
                             <div class="pb-10">
                                 <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-5">
-                                    Về khóa học
+                                    <?php esc_html_e('Về khóa học', 'monamedia'); ?>
                                 </h2>
                                 <?php if ($short_desc) : ?>
                                     <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
@@ -269,7 +263,7 @@ get_header();
                             <?php if (!empty($bn_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        Mục tiêu &amp; Lợi ích
+                                        <?php esc_html_e('Mục tiêu & Lợi ích', 'monamedia'); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($bn_items as $item) : ?>
@@ -292,7 +286,7 @@ get_header();
                             <?php if (!empty($rm_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-8">
-                                        Hành trình chữa lành
+                                        <?php esc_html_e('Hành trình chữa lành', 'monamedia'); ?>
                                     </h2>
                                     <div class="flex flex-col divide-y divide-[#e4e2dd]">
                                         <?php foreach ($rm_items as $i => $item) : ?>
@@ -331,7 +325,7 @@ get_header();
                             <?php if (!empty($receive_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        Lợi ích khóa học
+                                        <?php esc_html_e('Lợi ích khóa học', 'monamedia'); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($receive_items as $item) : ?>
@@ -354,7 +348,7 @@ get_header();
                             <?php if ($ins_name) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        Về giảng viên
+                                        <?php esc_html_e('Về giảng viên', 'monamedia'); ?>
                                     </h2>
                                     <div class="flex gap-5 items-start">
                                         <div class="size-16 rounded-full overflow-hidden shrink-0">
@@ -456,18 +450,18 @@ get_header();
                             <!-- Meta box -->
                             <?php
                             $meta_rows = [];
-                            if ($start_date)   $meta_rows[] = ['label' => 'KHAI GIẢNG',  'value' => $start_date,   'type' => 'text',     'icon' => 'calendar'];
-                            if ($kh_time)      $meta_rows[] = ['label' => 'THỜI GIAN',   'value' => $kh_time,      'type' => 'text',     'icon' => 'clock'];
-                            if ($duration)     $meta_rows[] = ['label' => 'THỜI LƯỢNG',  'value' => $duration,     'type' => 'text',     'icon' => 'clock'];
-                            if ($kh_capacity)  $meta_rows[] = ['label' => 'SỐ HỌC VIÊN', 'value' => $kh_capacity,  'type' => 'text',     'icon' => 'users'];
-                            if ($kh_location)  $meta_rows[] = ['label' => 'ĐỊA ĐIỂM',   'value' => $kh_location,  'type' => 'location', 'icon' => 'location'];
+                            if ($start_date)   $meta_rows[] = ['label' => __('KHAI GIẢNG', 'monamedia'),  'value' => $start_date,   'type' => 'text',     'icon' => 'calendar'];
+                            if ($kh_time)      $meta_rows[] = ['label' => __('THỜI GIAN', 'monamedia'),   'value' => $kh_time,      'type' => 'text',     'icon' => 'clock'];
+                            if ($duration)     $meta_rows[] = ['label' => __('THỜI LƯỢNG', 'monamedia'),  'value' => $duration,     'type' => 'text',     'icon' => 'clock'];
+                            if ($kh_capacity)  $meta_rows[] = ['label' => __('SỐ HỌC VIÊN', 'monamedia'), 'value' => $kh_capacity,  'type' => 'text',     'icon' => 'users'];
+                            if ($kh_location)  $meta_rows[] = ['label' => __('ĐỊA ĐIỂM', 'monamedia'),   'value' => $kh_location,  'type' => 'location', 'icon' => 'location'];
                             $has_spots = $kh_spots !== null;
                             if ($price || !empty($meta_rows) || $has_spots) : ?>
                                 <div class="p-6 max-md:p-4 border-b border-[#e4e2dd]">
                                     <?php if ($price) : ?>
                                         <div class="flex items-baseline gap-1 mb-4">
                                             <span class="font-title text-pri text-[28px] max-md:text-[20px] font-semibold"><?php echo esc_html($price); ?></span>
-                                            <?php if (strtolower(trim($price)) !== 'liên hệ') : ?><span class="text-[#717171] text-[14px]">/ khóa học</span><?php endif; ?>
+                                            <?php if (strtolower(trim($price)) !== 'liên hệ') : ?><span class="text-[#717171] text-[14px]"><?php esc_html_e('/ khóa học', 'monamedia'); ?></span><?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     <?php if (!empty($meta_rows) || $has_spots) : ?>
@@ -486,7 +480,7 @@ get_header();
                                                         <?php echo $icon_svgs[$row['icon'] ?? 'calendar']; ?>
                                                     </div>
                                                     <div class="flex flex-col justify-center min-h-10">
-                                                        <p class="text-[11px] font-medium text-[#717171] mb-0.5"><?php echo $row['label']; ?></p>
+                                                        <p class="text-[11px] font-medium text-[#717171] mb-0.5"><?php echo esc_html($row['label']); ?></p>
                                                         <?php if ($row['type'] === 'location') :
                                                             $lines = array_filter(array_map('trim', explode("\n", $row['value'])));
                                                             if (count($lines) > 1) : ?>
@@ -512,11 +506,11 @@ get_header();
                                                         </svg>
                                                     </div>
                                                     <div class="flex flex-col justify-center min-h-10">
-                                                        <p class="text-[11px] font-medium text-[#717171] mb-1">SỐ SUẤT CÒN LẠI</p>
+                                                        <p class="text-[11px] font-medium text-[#717171] mb-1"><?php esc_html_e('SỐ SUẤT CÒN LẠI', 'monamedia'); ?></p>
                                                         <?php if ($kh_spots === 0) : ?>
-                                                            <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Fully Booked / Hết suất</span>
+                                                            <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]"><?php esc_html_e('Fully Booked / Hết suất', 'monamedia'); ?></span>
                                                         <?php else : ?>
-                                                            <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Còn <?php echo $kh_spots; ?> suất</span>
+                                                            <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]"><?php echo esc_html(sprintf(__('Còn %d suất', 'monamedia'), $kh_spots)); ?></span>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -529,7 +523,7 @@ get_header();
                             <!-- CF7 Form / Buy Now -->
                             <div id="kh-form-inner" class="flex p-6 max-md:p-4 overflow-y-auto flex-col gap-3">
                                 <h3 class="font-title text-pri text-[28px] max-md:text-[20px] font-bold">
-                                    Đăng ký
+                                    <?php esc_html_e('Đăng ký', 'monamedia'); ?>
                                 </h3>
                                 <?php
                                     $cf7_id = defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '';

@@ -28,26 +28,6 @@ add_action('acf/init', function () {
         ],
         'fields' => [
 
-            // ─── TAB: SỰ KIỆN NỔI BẬT ────────────────────────────────────
-            Tab::make('Sự kiện nổi bật')->placement('left'),
-
-            Text::make('Nhãn nhỏ (label)', 'featured_label')
-                ->helperText('Ví dụ: SỰ KIỆN NỔI BẬT')
-                ->default('SỰ KIỆN NỔI BẬT'),
-
-            Text::make('Tiêu đề', 'featured_heading')
-                ->helperText('Ví dụ: Các Sự Kiện Nổi Bật')
-                ->default('Các Sự Kiện Nổi Bật'),
-
-            Link::make('Link "Xem tất cả"', 'featured_link')
-                ->helperText('Link dẫn đến trang tổng hợp sự kiện.'),
-
-            PostObject::make('Chọn sự kiện nổi bật', 'featured_items')
-                ->helperText('Chọn các dịch vụ, khóa học hoặc workshop muốn hiển thị. Kéo thả để sắp xếp thứ tự.')
-                ->postTypes(['dich_vu', 'khoa_hoc', 'workshop'])
-                ->multiple()
-                ->format('object'),
-
             // ─── TAB: HERO ────────────────────────────────────────────────
             Tab::make('Hero')->placement('left'),
 
@@ -66,50 +46,53 @@ add_action('acf/init', function () {
                 ->tabs('all')
                 ->toolbar('basic'),
 
-            Text::make('Text nút CTA', 'hero_btn_text')
-                ->helperText('Ví dụ: KHÁM PHÁ KHÓA HỌC')
-                ->default('KHÁM PHÁ KHÓA HỌC'),
+            // ─── TAB: SỰ KIỆN NỔI BẬT ────────────────────────────────────
+            Tab::make('Sự kiện nổi bật')->placement('left'),
 
-            Text::make('URL nút CTA', 'hero_btn_url')
-                ->helperText('Link trang khóa học'),
+            Text::make('Nhãn nhỏ (label)', 'featured_label')
+                ->helperText('Ví dụ: SỰ KIỆN NỔI BẬT')
+                ->default('SỰ KIỆN NỔI BẬT'),
 
-            // ─── TAB: ABOUT ───────────────────────────────────────────────
-            Tab::make('Giới thiệu')->placement('left'),
+            Text::make('Tiêu đề', 'featured_heading')
+                ->helperText('Ví dụ: Các Sự Kiện Nổi Bật')
+                ->default('Các Sự Kiện Nổi Bật'),
 
-            Image::make('Ảnh giới thiệu', 'about_image')
-                ->helperText('Ảnh chân dung/không gian — kích thước đề xuất: 560×700px (tỷ lệ 4:5).')
-                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
-                ->format('array'),
-
-            Text::make('Nhãn nhỏ (label)', 'about_label')
-                ->helperText('Chữ in hoa nhỏ bên trên tiêu đề. Ví dụ: VỀ CHÚNG TÔI')
-                ->default('VỀ CHÚNG TÔI'),
-
-            Textarea::make('Tiêu đề', 'about_heading')
-                ->helperText('Tiêu đề lớn phần giới thiệu.')
+            Textarea::make('Mô tả', 'featured_desc')
+                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
                 ->rows(2),
 
-            Textarea::make('Mô tả', 'about_desc')
-                ->helperText('Đoạn văn giới thiệu chi tiết.')
-                ->rows(5),
+            Link::make('Link "Xem tất cả"', 'featured_link')
+                ->helperText('Link dẫn đến trang tổng hợp sự kiện.'),
 
-            Repeater::make('Điểm nổi bật', 'about_items')
-                ->helperText('Tối đa 3 điểm nổi bật, mỗi điểm gồm icon + tiêu đề + mô tả ngắn.')
-                ->layout('block')
-                ->collapsed('title')
-                ->minRows(1)
-                ->maxRows(3)
-                ->fields([
-                    Image::make('Icon SVG', 'icon')
-                        ->helperText('Icon 20×20px định dạng SVG.')
-                        ->acceptedFileTypes(['svg', 'png'])
-                        ->format('url'),
+            PostObject::make('Chọn sự kiện nổi bật', 'featured_items')
+                ->helperText('Chọn các dịch vụ, khóa học hoặc workshop muốn hiển thị. Kéo thả để sắp xếp thứ tự.')
+                ->postTypes(['dich_vu', 'khoa_hoc', 'workshop'])
+                ->multiple()
+                ->format('object'),
 
-                    Text::make('Tiêu đề điểm nổi bật', 'title')
-                        ->required(),
+            // ─── TAB: DỊCH VỤ ────────────────────────────────────────────
+            Tab::make('Dịch vụ nổi bật')->placement('left'),
 
-                    Text::make('Mô tả ngắn', 'desc'),
-                ]),
+            Text::make('Nhãn nhỏ (label)', 'service_label')
+                ->helperText('Ví dụ: DỊCH VỤ NỔI BẬT')
+                ->default('DỊCH VỤ NỔI BẬT'),
+
+            Text::make('Tiêu đề', 'service_heading')
+                ->helperText('Ví dụ: Trải Nghiệm Dịch Vụ')
+                ->default('Trải Nghiệm Dịch Vụ'),
+
+            Textarea::make('Mô tả', 'service_desc')
+                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
+                ->rows(2),
+
+            Link::make('Link "Xem tất cả"', 'service_link')
+                ->helperText('Link dẫn đến trang danh sách dịch vụ.'),
+
+            PostObject::make('Dịch vụ nổi bật', 'service_items')
+                ->helperText('Chọn các dịch vụ muốn hiển thị trên trang chủ. Để trống → lấy dịch vụ mới nhất.')
+                ->postTypes(['dich_vu'])
+                ->multiple()
+                ->format('object'),
 
             // ─── TAB: COURSES ─────────────────────────────────────────────
             Tab::make('Khóa học nổi bật')->placement('left'),
@@ -151,45 +134,12 @@ add_action('acf/init', function () {
                 ->multiple()
                 ->format('object'),
 
-            // ─── TAB: CTA ─────────────────────────────────────────────────
-            Tab::make('CTA')->placement('left'),
-
-            Text::make('Tiêu đề', 'cta_heading')
-                ->helperText('Ví dụ: Bắt Đầu Hành Trình Chuyển Hoá Của Bạn')
-                ->default('Bắt Đầu Hành Trình Chuyển Hoá Của Bạn'),
-
-            Textarea::make('Mô tả', 'cta_desc')
-                ->helperText('1–2 câu kêu gọi hiển thị dưới tiêu đề.')
-                ->rows(3),
-
-            Text::make('Nút chính — text', 'cta_btn_primary_text')
-                ->helperText('Ví dụ: ĐĂNG KÝ NGAY')
-                ->default('ĐĂNG KÝ NGAY'),
-
-            Text::make('Nút chính — URL', 'cta_btn_primary_url')
-                ->helperText('Link trang đăng ký'),
-
-            Text::make('Nút phụ — text', 'cta_btn_secondary_text')
-                ->helperText('Ví dụ: TƯ VẤN MIỄN PHÍ')
-                ->default('TƯ VẤN MIỄN PHÍ'),
-
-            Text::make('Nút phụ — URL', 'cta_btn_secondary_url')
-                ->helperText('Link trang tư vấn / liên hệ'),
-
             // ─── TAB: GALLERY ─────────────────────────────────────────────
             Tab::make('Học viên & Trải nghiệm')->placement('left'),
-
-            Text::make('Nhãn nhỏ (label)', 'gallery_label')
-                ->helperText('Ví dụ: HỌC VIÊN & TRẢI NGHIỆM')
-                ->default('HỌC VIÊN & TRẢI NGHIỆM'),
 
             Text::make('Tiêu đề', 'gallery_heading')
                 ->helperText('Ví dụ: Khoảnh Khắc Tại Aetheria')
                 ->default('Khoảnh Khắc Tại Aetheria'),
-
-            Textarea::make('Mô tả', 'gallery_desc')
-                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
-                ->rows(2),
 
             Repeater::make('Danh sách ảnh', 'gallery_items')
                 ->helperText('Kích thước đề xuất: 360×480px (tỷ lệ 3:4).')
@@ -213,17 +163,9 @@ add_action('acf/init', function () {
             // ─── TAB: TEAMS ───────────────────────────────────────────────
             Tab::make('Đội ngũ chuyên gia')->placement('left'),
 
-            Text::make('Nhãn nhỏ (label)', 'teams_label')
-                ->helperText('Ví dụ: NGƯỜI DẪN DẮT')
-                ->default('NGƯỜI DẪN DẮT'),
-
             Text::make('Tiêu đề', 'teams_heading')
                 ->helperText('Ví dụ: Đội Ngũ Chuyên Gia')
                 ->default('Đội Ngũ Chuyên Gia'),
-
-            Textarea::make('Mô tả', 'teams_desc')
-                ->helperText('1–2 câu giới thiệu đội ngũ, hiển thị dưới tiêu đề.')
-                ->rows(3),
 
             Repeater::make('Danh sách chuyên gia', 'teams_items')
                 ->helperText('Mỗi chuyên gia gồm ảnh, tên, vai trò và mô tả ngắn.')
@@ -252,30 +194,20 @@ add_action('acf/init', function () {
             // ─── TAB: PARTNER ─────────────────────────────────────────────
             Tab::make('Đối tác đồng hành')->placement('left'),
 
-            Text::make('Nhãn nhỏ (label)', 'partner_label')
-                ->helperText('Ví dụ: ĐỐI TÁC ĐỒNG HÀNH')
-                ->default('ĐỐI TÁC ĐỒNG HÀNH'),
-
             Text::make('Tiêu đề', 'partner_heading')
                 ->helperText('Ví dụ: Những Người Bạn Đồng Hành Tin Cậy')
                 ->default('Những Người Bạn Đồng Hành Tin Cậy'),
 
             Repeater::make('Danh sách đối tác', 'partner_items')
-                ->helperText('Mỗi đối tác gồm logo (tùy chọn), tên và đường dẫn.')
+                ->helperText('Upload logo SVG/PNG/WEBP cho từng đối tác.')
                 ->layout('block')
-                ->collapsed('name')
+                ->collapsed('logo')
                 ->minRows(1)
                 ->fields([
                     Image::make('Logo', 'logo')
-                        ->helperText('Upload logo (SVG/PNG/WEBP). Nếu để trống, tên văn bản sẽ được hiển thị thay thế.')
+                        ->helperText('Kích thước đề xuất: 160×48px. Định dạng SVG/PNG/WEBP.')
                         ->acceptedFileTypes(['svg', 'png', 'webp', 'jpg', 'jpeg'])
                         ->format('url'),
-
-                    Text::make('Tên đối tác', 'name')
-                        ->helperText('Hiện khi không có logo. Ví dụ: ZenFlow'),
-
-                    Text::make('URL liên kết', 'url')
-                        ->helperText('Đường dẫn trang web đối tác. Bỏ trống nếu không cần link.'),
                 ]),
         ],
     ], false);

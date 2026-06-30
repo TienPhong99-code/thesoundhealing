@@ -74,10 +74,6 @@ add_action('acf/init', function () {
             Text::make('Embed URL Google Maps', 'lh_map_embed_url')
                 ->helperText('URL nhúng từ Google Maps: Share → Embed a map → lấy phần src="...".'),
 
-            Text::make('Tiêu đề bản đồ (title)', 'lh_pin_label')
-                ->helperText('Dùng làm thuộc tính title của iframe. Ví dụ: The Sound Healing')
-                ->default('The Sound Healing'),
-
             // ─── TAB: FAQ / CTA ───────────────────────────────────────────
             Tab::make('FAQ / CTA')->placement('left'),
 

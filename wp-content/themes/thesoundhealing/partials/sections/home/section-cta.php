@@ -11,8 +11,8 @@ $sample = [
 ];
 
 $data = [
-    'heading'       => get_field('cta_heading', $page_id)          ?: $sample['heading'],
-    'desc'          => get_field('cta_desc', $page_id)             ?: $sample['desc'],
+    'heading'       => get_field('cta_heading', $page_id),
+    'desc'          => get_field('cta_desc', $page_id),
     'btn_primary'   => [
         'text' => get_field('cta_btn_primary_text', $page_id)  ?: $sample['btn_primary']['text'],
         'url'  => get_field('cta_btn_primary_url', $page_id)   ?: home_url('/khoa-hoc'),
@@ -27,13 +27,17 @@ $data = [
 <section class="sec-cta bg-[#f5f3ee] section-pd">
     <div class="container">
         <div class="flex flex-col items-center text-center">
-            <h2 class="font-title text-pri text-[56px] max-md:text-[40px] max-sm:text-[8vw] font-normal tracking-[-1.12px] mb-6">
-                <?php echo wp_kses_post($data['heading']); ?>
-            </h2>
+            <?php if (!empty($data['heading'])) : ?>
+                <h2 class="font-title text-pri text-[56px] max-md:text-[40px] max-sm:text-[8vw] font-normal tracking-[-1.12px] mb-6">
+                    <?php echo wp_kses_post($data['heading']); ?>
+                </h2>
+            <?php endif; ?>
 
-            <p class="text-[#414847] text-[18px] max-w-[672px] mb-10">
-                <?php echo esc_html($data['desc']); ?>
-            </p>
+            <?php if (!empty($data['desc'])) : ?>
+                <p class="text-[#414847] text-[18px] max-w-[672px] mb-10">
+                    <?php echo esc_html($data['desc']); ?>
+                </p>
+            <?php endif; ?>
 
             <div class="flex gap-6 max-md:flex-col max-md:gap-4">
                 <a href="<?php echo esc_url($data['btn_primary']['url']); ?>"

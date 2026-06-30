@@ -63,20 +63,8 @@ add_action('acf/init', function () {
                 ->toolbar('basic')
                 ->disableMediaUpload(),
 
-            Text::make('Nhãn link', 'ab_journey_link_text')
-                ->helperText('Ví dụ: Khám Phá Triết Lý')
-                ->default('Khám Phá Triết Lý'),
-
-            URL::make('URL link', 'ab_journey_link_url')
-                ->helperText('Đường dẫn trang triết lý / philosophy.'),
-
             URL::make('URL Video', 'ab_journey_video_url')
                 ->helperText('Link YouTube hoặc Vimeo hiển thị cột bên trái.'),
-
-            Image::make('Ảnh thumbnail Video', 'ab_journey_image')
-                ->helperText('Ảnh hiển thị khi chưa có video URL. Tỉ lệ: 16/9.')
-                ->format('array')
-                ->previewSize('medium'),
 
             // ─── TAB: HỆ SINH THÁI ────────────────────────────────────────
             Tab::make('Hệ Sinh Thái')->placement('left'),
@@ -128,22 +116,10 @@ add_action('acf/init', function () {
                 ->toolbar('basic')
                 ->disableMediaUpload(),
 
-            Textarea::make('Danh sách checklist', 'ab_pillars_feat_list')
-                ->helperText('Mỗi dòng là một mục. Hiển thị trong khung màu.')
-                ->rows(5),
-
             Image::make('Ảnh nổi bật', 'ab_pillars_feat_image')
                 ->helperText('Ảnh cột trái. Tỉ lệ: 4/5.')
                 ->format('array')
                 ->previewSize('medium'),
-
-            Text::make('Badge trên ảnh', 'ab_pillars_feat_img_badge')
-                ->helperText('Nhãn hiển thị góc dưới trái ảnh.'),
-
-            Text::make('Nhãn link', 'ab_pillars_feat_link_text')
-                ->helperText('Ví dụ: Xem tất cả ưu đãi'),
-
-            URL::make('URL link', 'ab_pillars_feat_link_url'),
 
             // 3-column cards (bottom)
             Repeater::make('Danh sách thẻ (3 cột)', 'ab_pillars_items')
@@ -196,32 +172,6 @@ add_action('acf/init', function () {
                 ->helperText('Texture overlay mờ phía sau section.')
                 ->format('array')
                 ->previewSize('medium'),
-
-            // ─── TAB: GALLERY ─────────────────────────────────────────────
-            Tab::make('Gallery')->placement('left'),
-
-            Text::make('Tiêu đề Gallery', 'ab_gallery_heading')
-                ->helperText('Ví dụ: Sống Trọn Vẹn')
-                ->default('Sống Trọn Vẹn'),
-
-            WYSIWYGEditor::make('Mô tả Gallery', 'ab_gallery_desc')
-                ->helperText('1 câu mô tả ngắn.')
-                ->tabs('visual')
-                ->toolbar('basic')
-                ->disableMediaUpload(),
-
-            Repeater::make('Ảnh Gallery', 'ab_gallery_images')
-                ->helperText('Đúng 4 ảnh. Ảnh đầu tiên sẽ hiển thị lớn (chiếm 2 hàng).')
-                ->layout('block')
-                ->minRows(4)
-                ->maxRows(4)
-                ->button('+ Thêm ảnh')
-                ->fields([
-                    Image::make('Ảnh', 'image')
-                        ->format('array')
-                        ->previewSize('medium')
-                        ->required(),
-                ]),
 
             // ─── TAB: ĐẶC ĐIỂM NỔI BẬT ───────────────────────────────────
             Tab::make('Đặc Điểm Nổi Bật')->placement('left'),

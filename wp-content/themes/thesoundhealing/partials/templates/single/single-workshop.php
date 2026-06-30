@@ -9,7 +9,6 @@ $ws_time       = get_field('ws_time',       $post_id) ?: '09:00 – 12:00';
 $ws_duration   = get_field('ws_duration',   $post_id) ?: '3 tiếng';
 $ws_location   = get_field('ws_location',   $post_id) ?: 'Aetheria Studio — Quận 1, TP.HCM';
 $ws_short_desc  = get_field('ws_short_desc',  $post_id);
-$ws_description = get_field('ws_description', $post_id) ?: 'Buổi workshop trải nghiệm Sound Bath toàn thân giúp bạn thư giãn sâu, giải phóng căng thẳng và kết nối với bản thân. Phù hợp cho người mới bắt đầu — không cần kinh nghiệm trước đó.';
 $ws_price      = get_field('ws_price',      $post_id) ?: '1.200.000 VNĐ';
 $ws_guests     = get_field('ws_guests',     $post_id) ?: '20 người';
 $ws_capacity   = get_field('ws_capacity',   $post_id);
@@ -88,10 +87,10 @@ $ic_check = MONA_THEME_PATH_URI . '/assets/images/ic-check-pri.svg';
 
 // ── Status badge ──
 $status_map = [
-    'open'     => ['label' => 'Còn chỗ',       'color' => '#2e7d32', 'bg' => '#e8f5e9'],
-    'limited'  => ['label' => 'Sắp hết chỗ',   'color' => '#e65100', 'bg' => '#fff3e0'],
-    'closed'   => ['label' => 'Hết chỗ',        'color' => '#c62828', 'bg' => '#ffebee'],
-    'upcoming' => ['label' => 'Sắp diễn ra',    'color' => '#1565c0', 'bg' => '#e3f2fd'],
+    'open'     => ['label' => __('Còn chỗ', 'monamedia'),       'color' => '#2e7d32', 'bg' => '#e8f5e9'],
+    'limited'  => ['label' => __('Sắp hết chỗ', 'monamedia'),   'color' => '#e65100', 'bg' => '#fff3e0'],
+    'closed'   => ['label' => __('Hết chỗ', 'monamedia'),        'color' => '#c62828', 'bg' => '#ffebee'],
+    'upcoming' => ['label' => __('Sắp diễn ra', 'monamedia'),    'color' => '#1565c0', 'bg' => '#e3f2fd'],
 ];
 $status_info = $status_map[$ws_status] ?? null;
 
@@ -107,7 +106,7 @@ get_header();
 
 <?php get_template_part('partials/components/breadcrumb', null, [
     'links' => [
-        ['title' => 'Trang chủ', 'url' => home_url('/'),        'is-active' => false],
+        ['title' => __('Trang chủ', 'monamedia'), 'url' => home_url('/'),        'is-active' => false],
         ['title' => 'Workshop',  'url' => home_url('/workshop'), 'is-active' => false],
         ['title' => get_the_title(), 'url' => '',               'is-active' => true],
     ],
@@ -140,7 +139,7 @@ get_header();
                                             data-modal-open="share"
                                             data-share-url="<?php echo esc_url(get_permalink()); ?>"
                                             data-share-title="<?php echo esc_attr(get_the_title()); ?>"
-                                            aria-label="Chia sẻ">
+                                            aria-label="<?php echo esc_attr__('Chia sẻ', 'monamedia'); ?>">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <circle cx="18" cy="5" r="3" />
                                                 <circle cx="6" cy="12" r="3" />
@@ -154,11 +153,6 @@ get_header();
                                     <h1 class="font-title text-pri text-[48px] max-md:text-[24px] leading-[56px] max-md:leading-[40px] tracking-[-0.96px] font-bold">
                                         <?php the_title(); ?>
                                     </h1>
-                                    <?php if ($ws_description) : ?>
-                                        <p class="text-[#414847] text-[16px] leading-[26px] mt-3">
-                                            <?php echo wp_kses_post(nl2br(esc_html($ws_description))); ?>
-                                        </p>
-                                    <?php endif; ?>
                                 </div>
                                 <!-- <?php if ($ws_date || $ws_time || $ws_location) : ?>
                                     <div class="flex flex-col gap-3">
@@ -240,7 +234,7 @@ get_header();
                                         <svg class="size-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                                         </svg>
-                                        <span class="text-[11px] font-semibold leading-tight text-center">Xem tất cả</span>
+                                        <span class="text-[11px] font-semibold leading-tight text-center"><?php esc_html_e('Xem tất cả', 'monamedia'); ?></span>
                                     </button>
                                 </div>
 
@@ -256,7 +250,7 @@ get_header();
                             <!-- 1. About the workshop -->
                             <div class="pb-10">
                                 <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-5">
-                                    Về workshop
+                                    <?php esc_html_e('Về workshop', 'monamedia'); ?>
                                 </h2>
                                 <?php if ($ws_short_desc) : ?>
                                     <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
@@ -274,7 +268,7 @@ get_header();
                             <?php if (!empty($ws_bn_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        Mục tiêu &amp; Lợi ích
+                                        <?php esc_html_e('Mục tiêu & Lợi ích', 'monamedia'); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($ws_bn_items as $item) : ?>
@@ -297,7 +291,7 @@ get_header();
                             <?php if (!empty($ws_rm_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-8">
-                                        Hành trình chữa lành
+                                        <?php esc_html_e('Hành trình chữa lành', 'monamedia'); ?>
                                     </h2>
                                     <div class="flex flex-col divide-y divide-[#e4e2dd]">
                                         <?php foreach ($ws_rm_items as $i => $item) : ?>
@@ -336,7 +330,7 @@ get_header();
                             <?php if (!empty($ws_receive_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        Lợi ích workshop
+                                        <?php esc_html_e('Lợi ích workshop', 'monamedia'); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($ws_receive_items as $item) : ?>
@@ -359,7 +353,7 @@ get_header();
                             <?php if ($ws_ins_name) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        Về giảng viên
+                                        <?php esc_html_e('Về giảng viên', 'monamedia'); ?>
                                     </h2>
                                     <div class="flex gap-5 items-start">
                                         <div class="size-16 rounded-full overflow-hidden shrink-0">
@@ -462,18 +456,18 @@ get_header();
                             <!-- Meta box -->
                             <?php
                             $meta_rows = [];
-                            if ($ws_date)     $meta_rows[] = ['label' => 'NGÀY',            'value' => $ws_date,     'type' => 'text',     'icon' => 'calendar'];
-                            if ($ws_time)     $meta_rows[] = ['label' => 'THỜI GIAN',       'value' => $ws_time,     'type' => 'text',     'icon' => 'clock'];
-                            if ($ws_duration) $meta_rows[] = ['label' => 'THỜI LƯỢNG',      'value' => $ws_duration, 'type' => 'text',     'icon' => 'clock'];
-                            if ($ws_guests)   $meta_rows[] = ['label' => 'SỐ LƯỢNG KHÁCH',  'value' => $ws_guests,   'type' => 'text',     'icon' => 'users'];
-                            if ($ws_location) $meta_rows[] = ['label' => 'ĐỊA ĐIỂM',        'value' => $ws_location, 'type' => 'location', 'icon' => 'location'];
+                            if ($ws_date)     $meta_rows[] = ['label' => __('NGÀY', 'monamedia'),            'value' => $ws_date,     'type' => 'text',     'icon' => 'calendar'];
+                            if ($ws_time)     $meta_rows[] = ['label' => __('THỜI GIAN', 'monamedia'),       'value' => $ws_time,     'type' => 'text',     'icon' => 'clock'];
+                            if ($ws_duration) $meta_rows[] = ['label' => __('THỜI LƯỢNG', 'monamedia'),      'value' => $ws_duration, 'type' => 'text',     'icon' => 'clock'];
+                            if ($ws_guests)   $meta_rows[] = ['label' => __('SỐ LƯỢNG KHÁCH', 'monamedia'),  'value' => $ws_guests,   'type' => 'text',     'icon' => 'users'];
+                            if ($ws_location) $meta_rows[] = ['label' => __('ĐỊA ĐIỂM', 'monamedia'),        'value' => $ws_location, 'type' => 'location', 'icon' => 'location'];
                             $has_spots = $ws_spots !== null || $ws_capacity;
                             if ($ws_price || !empty($meta_rows) || $has_spots) : ?>
                                 <div class="p-6 max-md:p-4 border-b border-[#e4e2dd]">
                                     <?php if ($ws_price) : ?>
                                         <div class="flex items-baseline gap-1 mb-4">
                                             <span class="font-title text-pri text-[28px] max-md:text-[20px] font-semibold"><?php echo esc_html($ws_price); ?></span>
-                                            <?php if (strtolower(trim($ws_price)) !== 'liên hệ') : ?><span class="text-[#717171] text-[14px]">/ người</span><?php endif; ?>
+                                            <?php if (strtolower(trim($ws_price)) !== 'liên hệ') : ?><span class="text-[#717171] text-[14px]"><?php esc_html_e('/ người', 'monamedia'); ?></span><?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     <?php if (!empty($meta_rows) || $has_spots) : ?>
@@ -492,7 +486,7 @@ get_header();
                                                         <?php echo $icon_svgs[$row['icon'] ?? 'calendar']; ?>
                                                     </div>
                                                     <div class="flex flex-col justify-center min-h-10">
-                                                        <p class="text-[11px] font-medium text-[#717171] mb-0.5"><?php echo $row['label']; ?></p>
+                                                        <p class="text-[11px] font-medium text-[#717171] mb-0.5"><?php echo esc_html($row['label']); ?></p>
                                                         <?php if ($row['type'] === 'location') :
                                                             $lines = array_filter(array_map('trim', explode("\n", $row['value'])));
                                                             if (count($lines) > 1) : ?>
@@ -518,12 +512,12 @@ get_header();
                                                         </svg>
                                                     </div>
                                                     <div class="flex flex-col justify-center min-h-10">
-                                                        <p class="text-[11px] font-medium text-[#717171] mb-1">SỐ SUẤT CÒN LẠI</p>
+                                                        <p class="text-[11px] font-medium text-[#717171] mb-1"><?php esc_html_e('SỐ SUẤT CÒN LẠI', 'monamedia'); ?></p>
                                                         <?php if ($ws_spots !== null) :
                                                             if ($ws_spots === 0) : ?>
-                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Fully Booked / Hết suất</span>
+                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]"><?php esc_html_e('Fully Booked / Hết suất', 'monamedia'); ?></span>
                                                             <?php else : ?>
-                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]">Còn <?php echo $ws_spots; ?> suất</span>
+                                                                <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]"><?php echo sprintf(__('Còn %d suất', 'monamedia'), $ws_spots); ?></span>
                                                             <?php endif;
                                                         elseif ($ws_capacity) : ?>
                                                             <span class="inline-flex items-center gap-1.5 bg-[#fef9c3] text-[#854d0e] text-[12px] font-semibold px-2 py-1 rounded-[4px]"><?php echo esc_html($ws_capacity); ?></span>
@@ -539,7 +533,7 @@ get_header();
                             <!-- CF7 Form / Buy Now -->
                             <div id="ws-form-inner" class="flex p-6 max-md:p-4 overflow-y-auto flex-col gap-3">
                                 <h3 class="font-title text-pri text-[28px] max-md:text-[20px] font-bold">
-                                    Đăng ký
+                                    <?php esc_html_e('Đăng ký', 'monamedia'); ?>
                                 </h3>
                                 <?php
                                     $ws_cf7_id = defined('WS_CF7_FORM_ID') ? WS_CF7_FORM_ID : '';

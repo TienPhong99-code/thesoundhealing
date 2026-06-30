@@ -14,11 +14,11 @@ $sample = [
 $raw_img = get_field('hero_image', $page_id);
 
 $data = [
-    'heading'  => get_field('hero_heading', $page_id)  ?: $sample['heading'],
-    'desc'     => get_field('hero_desc', $page_id)     ?: $sample['desc'],
+    'heading'  => get_field('hero_heading', $page_id),
+    'desc'     => get_field('hero_desc', $page_id),
     'btn_text' => get_field('hero_btn_text', $page_id) ?: $sample['btn_text'],
     'btn_url'  => get_field('hero_btn_url', $page_id)  ?: $sample['btn_url'],
-    'image'    => $raw_img                              ?: $sample['image'],
+    'image'    => $raw_img ?: $sample['image'],
 ];
 ?>
 
@@ -30,12 +30,16 @@ $data = [
 
                 <!-- Col 1: Content -->
                 <div class="flex flex-col items-start max-md:items-center max-md:text-center">
-                    <h1 class="font-second text-pri text-[54px] font-bold mb-2 max-sm:text-[8vw] max-md:text-[40px] leading-tight">
-                        <?php echo wp_kses_post(preg_replace('/^<p>(.*)<\/p>$/s', '$1', trim($data['heading']))); ?>
-                    </h1>
-                    <div class="text-[20px]">
-                        <?php echo wp_kses_post($data['desc']); ?>
-                    </div>
+                    <?php if (!empty($data['heading'])) : ?>
+                        <h1 class="font-second text-pri text-[54px] font-bold mb-2 max-sm:text-[8vw] max-md:text-[40px] leading-tight">
+                            <?php echo wp_kses_post(preg_replace('/^<p>(.*)<\/p>$/s', '$1', trim($data['heading']))); ?>
+                        </h1>
+                    <?php endif; ?>
+                    <?php if (!empty($data['desc'])) : ?>
+                        <div class="text-[20px]">
+                            <?php echo wp_kses_post($data['desc']); ?>
+                        </div>
+                    <?php endif; ?>
                     <!-- <a href="<?php echo esc_url($data['btn_url']); ?>"
                         class="btn btn-pri">
                         <?php echo esc_html($data['btn_text']); ?>

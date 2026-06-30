@@ -46,7 +46,7 @@ $data = [
                             <!-- Heading -->
                             <div class="border-b border-[#e4e2dd] pb-4">
                                 <h2 class="font-title text-sec text-[24px] font-normal leading-[32px]">
-                                    Thông Tin Liên Hệ
+                                    <?php esc_html_e('Thông Tin Liên Hệ', 'monamedia'); ?>
                                 </h2>
                                 <p class="text-[#414847] text-[13px] font-semibold uppercase tracking-[1.2px] leading-[20px] mt-1">
                                     <?php echo esc_html($data['company']); ?>
@@ -63,7 +63,7 @@ $data = [
                                             class="block w-full h-full object-contain" alt="">
                                     </div>
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]">Địa Chỉ</span>
+                                        <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]"><?php esc_html_e('Địa Chỉ', 'monamedia'); ?></span>
                                         <p class="text-[#1b1c19] text-[16px] leading-[24px]">
                                             <?php echo nl2br(esc_html($data['address'])); ?>
                                         </p>
@@ -77,7 +77,7 @@ $data = [
                                             class="block w-full h-full object-contain" alt="">
                                     </div>
                                     <div class="flex flex-col gap-2">
-                                        <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]">Booking | Đặt lịch · Hotline | Zalo | WhatsApp</span>
+                                        <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]"><?php esc_html_e('Booking | Đặt lịch · Hotline | Zalo | WhatsApp', 'monamedia'); ?></span>
                                         <?php
                                         $phones = [
                                             ['number' => $data['phone'],   'label' => $data['phone_label']],
@@ -96,7 +96,7 @@ $data = [
                                                     </a>
                                                     <a href="<?php echo esc_url($wa); ?>"
                                                         class="flex items-center justify-center size-[20px] text-[#25D366] hover:opacity-75 transition-opacity shrink-0"
-                                                        target="_blank" rel="noopener noreferrer" title="Nhắn tin WhatsApp">
+                                                        target="_blank" rel="noopener noreferrer" title="<?php echo esc_attr__('Nhắn tin WhatsApp', 'monamedia'); ?>">
                                                         <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/ic-whatsapp.svg'); ?>"
                                                             class="block w-full h-full object-contain" alt="WhatsApp">
                                                     </a>
@@ -114,7 +114,7 @@ $data = [
                                             class="block w-full h-full object-contain" alt="">
                                     </div>
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]">Email</span>
+                                        <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]"><?php esc_html_e('Email', 'monamedia'); ?></span>
                                         <a href="mailto:<?php echo esc_attr($data['email']); ?>"
                                             class="text-[#1b1c19] text-[16px] leading-[24px] hover:text-pri transition-colors">
                                             <?php echo esc_html($data['email']); ?>
@@ -126,7 +126,7 @@ $data = [
 
                             <!-- Social links -->
                             <div class="flex flex-col gap-4 pt-12">
-                                <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]">Mạng Xã Hội</span>
+                                <span class="text-[#414847] text-[12px] font-semibold uppercase tracking-[1.2px] leading-[16px]"><?php esc_html_e('Mạng Xã Hội', 'monamedia'); ?></span>
                                 <div class="flex gap-4">
                                     <?php if ($data['instagram_url']) : ?>
                                         <a href="<?php echo esc_url($data['instagram_url']); ?>"
@@ -158,7 +158,7 @@ $data = [
                             allowfullscreen=""
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade"
-                            title="Bản đồ vị trí">
+                            title="<?php echo esc_attr__('Bản đồ vị trí', 'monamedia'); ?>">
                         </iframe>
                     </div>
                 </div>

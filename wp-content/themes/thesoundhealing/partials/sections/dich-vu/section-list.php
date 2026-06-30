@@ -149,7 +149,7 @@ if ($use_sample) {
 
 <?php
 $_dv_page_id      = get_queried_object_id();
-$_dv_list_heading = get_field('dv_page_heading', $_dv_page_id) ?: 'Dịch Vụ';
+$_dv_list_heading = get_field('dv_page_heading', $_dv_page_id) ?: __('Dịch Vụ', 'monamedia');
 ?>
 
 <section class="sec-dv-list section-pd max-md:!pt-20"

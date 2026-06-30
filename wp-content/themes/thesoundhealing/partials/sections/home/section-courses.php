@@ -108,10 +108,10 @@ foreach ($raw_objects as $post) {
 }
 
 $data = [
-    'label'   => get_field('courses_label', $page_id)   ?: $sample['label'],
-    'heading' => get_field('courses_heading', $page_id) ?: $sample['heading'],
-    'link'    => $raw_link                              ?: $sample['link'],
-    'items'   => $acf_items                            ?: $sample['items'],
+    'label'   => get_field('courses_label', $page_id),
+    'heading' => get_field('courses_heading', $page_id),
+    'link'    => $raw_link ?: $sample['link'],
+    'items'   => $acf_items ?: $sample['items'],
 ];
 ?>
 
@@ -122,19 +122,23 @@ $data = [
         <!-- Header -->
         <div class="flex max-md:flex-col gap-4 items-center max-md:text-center md:items-end md:justify-between mb-4 md:mb-12">
             <div>
-                <p class="text-pri text-[16px] font-semibold uppercase tracking-[1.2px] mb-4">
-                    <?php echo esc_html($data['label']); ?>
-                </p>
-                <h2 class="font-title text-sec text-[32px] font-normal max-sm:text-[24px]">
-                    <?php echo esc_html($data['heading']); ?>
-                </h2>
+                <?php if (!empty($data['label'])) : ?>
+                    <p class="text-pri text-[16px] font-semibold uppercase tracking-[1.2px] mb-4">
+                        <?php echo esc_html($data['label']); ?>
+                    </p>
+                <?php endif; ?>
+                <?php if (!empty($data['heading'])) : ?>
+                    <h2 class="font-title text-sec text-[32px] font-normal max-sm:text-[24px]">
+                        <?php echo esc_html($data['heading']); ?>
+                    </h2>
+                <?php endif; ?>
             </div>
 
             <?php if (!empty($data['link']['url'])) : ?>
                 <a href="<?php echo esc_url($data['link']['url']); ?>"
                     target="<?php echo esc_attr($data['link']['target'] ?? ''); ?>"
                     class="flex items-center gap-1 text-pri text-[16px] font-semibold uppercase tracking-[1.2px] shrink-0">
-                    <?php echo esc_html($data['link']['title'] ?: 'XEM TẤT CẢ'); ?>
+                    <?php echo esc_html($data['link']['title'] ?: __('XEM TẤT CẢ', 'monamedia')); ?>
                 </a>
             <?php endif; ?>
         </div>

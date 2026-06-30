@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 if (! function_exists('kiena_time_ago')) {
     function kiena_time_ago(int $post_id): string
     {
-        return human_time_diff(get_the_time('U', $post_id), current_time('timestamp')) . ' trước';
+        return human_time_diff(get_the_time('U', $post_id), current_time('timestamp')) . ' ' . __('trước', 'monamedia');
     }
 }
 
@@ -123,7 +123,7 @@ $tin_tuc_page = get_page_by_path('tin-tuc');
                             class="w-12 h-12 rounded-full object-cover shrink-0" alt="">
                     <?php endif; ?>
                     <div>
-                        <p class="text-[12px] text-[#ababab]">Tác giả</p>
+                        <p class="text-[12px] text-[#ababab]"><?php esc_html_e('Tác giả', 'monamedia'); ?></p>
                         <p class="text-[15px] font-semibold text-[#121214]">
                             <?php echo esc_html(get_the_author()); ?>
                         </p>

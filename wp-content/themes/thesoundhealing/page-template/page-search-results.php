@@ -297,11 +297,11 @@ get_header();
         elseif (!empty($ngay))
             $active_tags[] = date_i18n('j/m/Y', strtotime($ngay));
         if ($tong_khach > 0)
-            $active_tags[] = $tong_khach . ' khách';
+            $active_tags[] = $tong_khach . ' ' . __('khách', 'monamedia');
         ?>
         <div class="sr-meta">
             <p class="sr-count">
-                <strong><?php echo count($results); ?></strong> kết quả<?php if (!empty($active_tags)) echo ' cho ' . implode(' · ', $active_tags); ?>
+                <strong><?php echo count($results); ?></strong> <?php esc_html_e('kết quả', 'monamedia'); ?><?php if (!empty($active_tags)) echo ' ' . __('cho', 'monamedia') . ' ' . implode(' · ', $active_tags); ?>
             </p>
         </div>
 
@@ -327,7 +327,7 @@ get_header();
                     <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
                     <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.3" />
                 </svg>
-                <p class="sr-empty__title">Không tìm thấy kết quả</p>
+                <p class="sr-empty__title"><?php esc_html_e('Không tìm thấy kết quả', 'monamedia'); ?></p>
             </div>
         <?php endif; ?>
 

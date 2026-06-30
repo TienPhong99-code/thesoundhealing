@@ -9,7 +9,7 @@ $permalink = get_permalink($post_id);
 $title     = get_the_title($post_id);
 $excerpt   = get_the_excerpt($post_id);
 $thumb_url = get_the_post_thumbnail_url($post_id, 'medium');
-$time_ago  = human_time_diff(get_the_time('U', $post_id), current_time('timestamp')) . ' trước';
+$time_ago  = human_time_diff(get_the_time('U', $post_id), current_time('timestamp')) . ' ' . __('trước', 'monamedia');
 
 $wrap_class  = $layout === 'vertical' ? 'flex flex-col gap-3'          : 'flex gap-4 max-sm:gap-3 items-start max-sm:flex-col';
 $image_class = $layout === 'vertical' ? 'w-full shrink-0'               : 'w-[45%] max-sm:w-full shrink-0';

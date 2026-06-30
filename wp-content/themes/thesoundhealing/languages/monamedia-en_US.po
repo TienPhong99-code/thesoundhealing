@@ -1,0 +1,441 @@
+# English (US) translations for The Sound Healing theme
+# Copyright (C) 2024 Mona Media
+msgid ""
+msgstr ""
+"Project-Id-Version: thesoundhealing\n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# --- Flatpickr calendar: weekday shorthand ---
+msgid "CN"
+msgstr "Sun"
+
+msgid "T2"
+msgstr "Mon"
+
+msgid "T3"
+msgstr "Tue"
+
+msgid "T4"
+msgstr "Wed"
+
+msgid "T5"
+msgstr "Thu"
+
+msgid "T6"
+msgstr "Fri"
+
+msgid "T7"
+msgstr "Sat"
+
+# --- Flatpickr calendar: weekday longhand ---
+msgid "Chủ Nhật"
+msgstr "Sunday"
+
+msgid "Thứ Hai"
+msgstr "Monday"
+
+msgid "Thứ Ba"
+msgstr "Tuesday"
+
+msgid "Thứ Tư"
+msgstr "Wednesday"
+
+msgid "Thứ Năm"
+msgstr "Thursday"
+
+msgid "Thứ Sáu"
+msgstr "Friday"
+
+msgid "Thứ Bảy"
+msgstr "Saturday"
+
+# --- Flatpickr calendar: month shorthand ---
+msgid "Th.1"
+msgstr "Jan"
+
+msgid "Th.2"
+msgstr "Feb"
+
+msgid "Th.3"
+msgstr "Mar"
+
+msgid "Th.4"
+msgstr "Apr"
+
+msgid "Th.5"
+msgstr "May"
+
+msgid "Th.6"
+msgstr "Jun"
+
+msgid "Th.7"
+msgstr "Jul"
+
+msgid "Th.8"
+msgstr "Aug"
+
+msgid "Th.9"
+msgstr "Sep"
+
+msgid "Th.10"
+msgstr "Oct"
+
+msgid "Th.11"
+msgstr "Nov"
+
+msgid "Th.12"
+msgstr "Dec"
+
+# --- Flatpickr calendar: month longhand ---
+msgid "Tháng 1"
+msgstr "January"
+
+msgid "Tháng 2"
+msgstr "February"
+
+msgid "Tháng 3"
+msgstr "March"
+
+msgid "Tháng 4"
+msgstr "April"
+
+msgid "Tháng 5"
+msgstr "May"
+
+msgid "Tháng 6"
+msgstr "June"
+
+msgid "Tháng 7"
+msgstr "July"
+
+msgid "Tháng 8"
+msgstr "August"
+
+msgid "Tháng 9"
+msgstr "September"
+
+msgid "Tháng 10"
+msgstr "October"
+
+msgid "Tháng 11"
+msgstr "November"
+
+msgid "Tháng 12"
+msgstr "December"
+
+# --- Date format helper ---
+msgid "thg"
+msgstr ""
+
+# --- Search booking: quick time pills ---
+msgid "Hôm nay"
+msgstr "Today"
+
+msgid "Ngày mai"
+msgstr "Tomorrow"
+
+msgid "Cuối tuần này"
+msgstr "This weekend"
+
+# --- Search booking: date trigger ---
+msgid "Chọn ngày"
+msgstr "Select date"
+
+# --- Search booking: guest labels ---
+msgid "Người lớn (13+)"
+msgstr "Adults (13+)"
+
+msgid "Trẻ em (6–12)"
+msgstr "Children (6–12)"
+
+msgid "người lớn"
+msgstr "adults"
+
+msgid "trẻ em"
+msgstr "children"
+
+msgid "Thêm khách"
+msgstr "Add guests"
+
+msgid "khách"
+msgstr "guests"
+
+msgid "Số lượng khách"
+msgstr "Number of guests"
+
+# --- Search booking: field labels & placeholders ---
+msgid "Loại hình"
+msgstr "Type"
+
+msgid "Chọn loại hình"
+msgstr "Select type"
+
+msgid "Thời gian"
+msgstr "Date"
+
+msgid "Ngày đặt lịch"
+msgstr "Pick a date"
+
+msgid "Khách"
+msgstr "Guests"
+
+msgid "Loại hình · Thời gian · Khách"
+msgstr "Type · Date · Guests"
+
+msgid "Tìm kiếm"
+msgstr "Search"
+
+msgid "Vui lòng chọn ít nhất một tiêu chí tìm kiếm"
+msgstr "Please select at least one search criterion"
+
+# --- Search booking: guest actions ---
+msgid "Xóa tất cả"
+msgstr "Clear all"
+
+msgid "Áp dụng"
+msgstr "Apply"
+
+# --- Search results ---
+msgid "kết quả"
+msgstr "results"
+
+msgid "cho"
+msgstr "for"
+
+msgid "/ khách"
+msgstr "/ guest"
+
+msgid "/ khóa học"
+msgstr "/ course"
+
+msgid "/ người"
+msgstr "/ person"
+
+# --- Card buttons ---
+msgid "ĐẶT LỊCH"
+msgstr "BOOK NOW"
+
+msgid "XEM TẤT CẢ"
+msgstr "VIEW ALL"
+
+msgid "Xem tất cả"
+msgstr "View all"
+
+# --- Card status ---
+msgid "Hết hạn"
+msgstr "Expired"
+
+msgid "Hết hàng"
+msgstr "Sold out"
+
+msgid "Fully Booked / Hết suất"
+msgstr "Fully Booked"
+
+msgid "Còn %d suất"
+msgstr "%d spots left"
+
+msgid "SỐ SUẤT CÒN LẠI"
+msgstr "SPOTS REMAINING"
+
+msgid "Giảm %d%%"
+msgstr "%d%% off"
+
+msgid "Giảm giá"
+msgstr "Sale"
+
+# --- Card type badges ---
+msgid "Dịch vụ"
+msgstr "Service"
+
+msgid "Dịch Vụ"
+msgstr "Service"
+
+msgid "Khóa học"
+msgstr "Course"
+
+msgid "Khóa Học"
+msgstr "Course"
+
+# --- Single page sections ---
+msgid "Về dịch vụ"
+msgstr "About this service"
+
+msgid "Về khóa học"
+msgstr "About this course"
+
+msgid "Về workshop"
+msgstr "About this workshop"
+
+msgid "Về giảng viên"
+msgstr "About the instructor"
+
+msgid "Mục tiêu & Lợi ích"
+msgstr "Goals & Benefits"
+
+msgid "Hành trình chữa lành"
+msgstr "Healing journey"
+
+msgid "Lợi ích dịch vụ"
+msgstr "Service benefits"
+
+msgid "Lợi ích khóa học"
+msgstr "Course benefits"
+
+msgid "Lợi ích workshop"
+msgstr "Workshop benefits"
+
+msgid "Đăng ký"
+msgstr "Register"
+
+# --- Blog / post ---
+msgid "trước"
+msgstr "ago"
+
+msgid "Tin tức"
+msgstr "News"
+
+msgid "Có thể bạn quan tâm"
+msgstr "You might also like"
+
+msgid "Tác giả"
+msgstr "Author"
+
+msgid "Trang"
+msgstr "Page"
+
+msgid "Page %s"
+msgstr "Page %s"
+
+msgid "Các bài viết được đăng bởi "
+msgstr "Posts by "
+
+msgid "Được gán thẻ "
+msgstr "Tagged "
+
+msgid "Không có bài viết nào được tìm thấy"
+msgstr "No posts found"
+
+msgid "Không tìm thấy bài viết nào"
+msgstr "No posts found"
+
+msgid "Không tìm thấy kết quả"
+msgstr "No results found"
+
+msgid "Kết quả tìm kiếm "
+msgstr "Search results "
+
+msgid "Tất cả tin tức"
+msgstr "All news"
+
+msgid "Tất cả"
+msgstr "All"
+
+# --- Nav / UI ---
+msgid "Trang chủ"
+msgstr "Home"
+
+msgid "Mở menu"
+msgstr "Open menu"
+
+msgid "Đóng menu"
+msgstr "Close menu"
+
+msgid "Đóng"
+msgstr "Close"
+
+msgid "Mạng Xã Hội"
+msgstr "Social Media"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Zalo"
+msgstr "Zalo"
+
+msgid "Footer Menu"
+msgstr "Footer Menu"
+
+msgid "Header Menu Mobile"
+msgstr "Header Menu Mobile"
+
+msgid "Header Menu PC"
+msgstr "Header Menu PC"
+
+# --- Share modal ---
+msgid "Chia sẻ"
+msgstr "Share"
+
+msgid "Chia sẻ sự kiện để lan tỏa trải nghiệm và xây dựng mạng lưới giới thiệu để nhận ngay ưu đãi!"
+msgstr "Share this event to spread the experience and build a referral network for exclusive perks!"
+
+msgid "Chia sẻ đường dẫn với mã giới thiệu của bạn"
+msgstr "Share the link with your referral code"
+
+msgid "Chia sẻ:"
+msgstr "Share:"
+
+msgid "Hoặc chia sẻ ngay:"
+msgstr "Or share directly:"
+
+msgid "Sao Chép Đường Dẫn"
+msgstr "Copy Link"
+
+msgid "Sao chép liên kết"
+msgstr "Copy link"
+
+msgid "Đã sao chép"
+msgstr "Copied"
+
+msgid "Copy không được"
+msgstr "Copy failed"
+
+msgid "Tải Mã QR"
+msgstr "Download QR Code"
+
+# --- Woo / booking ---
+msgid "Thêm vào giỏ hàng"
+msgstr "Add to cart"
+
+msgid "Mua ngay"
+msgstr "Buy now"
+
+msgid "Mua qua Shopee"
+msgstr "Buy on Shopee"
+
+msgid "Hành động không được xác thực"
+msgstr "Action could not be verified"
+
+msgid "Đã xảy ra sự cố"
+msgstr "Something went wrong"
+
+# --- Select inputs ---
+msgid "Chọn %s"
+msgstr "Select %s"
+
+msgid "Chọn %s:"
+msgstr "Select %s:"
+
+msgid "Chọn số lượng:"
+msgstr "Select quantity:"
+
+msgid "Nội dung sẽ sớm được cập nhật"
+msgstr "Content coming soon"
+
+# --- Misc ---
+msgid "Lỗi 404"
+msgstr "Error 404"
+
+msgid "Booking | Đặt lịch · Hotline | Zalo | WhatsApp"
+msgstr "Booking · Hotline | Zalo | WhatsApp"
+
+msgid "Dự án"
+msgstr "Projects"
+
+msgid "Tuyển dụng"
+msgstr "Careers"

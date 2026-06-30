@@ -26,10 +26,6 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Dịch Vụ Trị Liệu')
                 ->default('Dịch Vụ Trị Liệu'),
 
-            Textarea::make('Mô tả trang', 'dv_page_desc')
-                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
-                ->rows(3)
-                ->default('Khám phá các liệu pháp chữa lành cá nhân hóa, từ trị liệu âm thanh đến năng lượng, được thiết kế để mang lại sự an lạc tuyệt đối.'),
         ],
     ], false);
 }, 10);

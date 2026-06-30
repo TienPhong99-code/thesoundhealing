@@ -26,11 +26,11 @@ $raw_img   = get_field('about_image', $page_id);
 $raw_items = get_field('about_items', $page_id);
 
 $data = [
-    'label'   => get_field('about_label', $page_id)   ?: $sample['label'],
-    'heading' => get_field('about_heading', $page_id) ?: $sample['heading'],
-    'desc'    => get_field('about_desc', $page_id)    ?: $sample['desc'],
-    'image'   => $raw_img                             ?: $sample['image'],
-    'items'   => $raw_items                           ?: $sample['items'],
+    'label'   => get_field('about_label', $page_id),
+    'heading' => get_field('about_heading', $page_id),
+    'desc'    => get_field('about_desc', $page_id),
+    'image'   => $raw_img  ?: $sample['image'],
+    'items'   => $raw_items ?: $sample['items'],
 ];
 ?>
 
@@ -47,13 +47,17 @@ $data = [
                 </div>
                 <div class="max-md:!w-full col col-7 ">
                     <div class="flex flex-col justify-center h-full">
-                        <h2 class="font-title text-sec text-[32px] font-normal mb-6 max-sm:text-[24px]">
-                            <?php echo wp_kses_post($data['heading']); ?>
-                        </h2>
+                        <?php if (!empty($data['heading'])) : ?>
+                            <h2 class="font-title text-sec text-[32px] font-normal mb-6 max-sm:text-[24px]">
+                                <?php echo wp_kses_post($data['heading']); ?>
+                            </h2>
+                        <?php endif; ?>
 
-                        <p class="text-[#414847] text-[16px] mb-8">
-                            <?php echo wp_kses_post($data['desc']); ?>
-                        </p>
+                        <?php if (!empty($data['desc'])) : ?>
+                            <p class="text-[#414847] text-[16px] mb-8">
+                                <?php echo wp_kses_post($data['desc']); ?>
+                            </p>
+                        <?php endif; ?>
 
                         <div class="flex flex-col gap-4">
                             <?php foreach ($data['items'] as $item) :

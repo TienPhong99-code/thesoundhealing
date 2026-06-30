@@ -34,10 +34,10 @@ $sample = [
 $raw_items = get_field('gallery_items', $page_id);
 
 $data = [
-    'label'   => get_field('gallery_label', $page_id)   ?: $sample['label'],
-    'heading' => get_field('gallery_heading', $page_id) ?: $sample['heading'],
-    'desc'    => get_field('gallery_desc', $page_id)    ?: $sample['desc'],
-    'items'   => $raw_items                             ?: $sample['items'],
+    'label'   => get_field('gallery_label', $page_id),
+    'heading' => get_field('gallery_heading', $page_id),
+    'desc'    => get_field('gallery_desc', $page_id),
+    'items'   => $raw_items ?: $sample['items'],
 ];
 ?>
 
@@ -45,9 +45,11 @@ $data = [
     <div class="container">
 
         <div class="flex flex-col items-center gap-3 text-center max-w-[768px] mx-auto mb-8">
-            <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
-                <?php echo esc_html($data['heading']); ?>
-            </h2>
+            <?php if (!empty($data['heading'])) : ?>
+                <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
+                    <?php echo esc_html($data['heading']); ?>
+                </h2>
+            <?php endif; ?>
 
             <!-- <p class="text-[#414847] text-[16px] leading-[24px]">
                 <?php echo wp_kses_post($data['desc']); ?>

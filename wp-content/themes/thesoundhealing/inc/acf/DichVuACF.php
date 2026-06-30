@@ -27,19 +27,6 @@ add_action('acf/init', function () {
         ],
     ]);
 
-    mona_regist_acf_field_group([
-        'title'    => 'Mô tả Dịch Vụ',
-        'style'    => 'seamless',
-        'position' => 'acf_after_title',
-        'location' => [
-            Location::where('post_type', '==', 'dich_vu'),
-        ],
-        'fields' => [
-            Textarea::make('Mô tả', 'dv_description')
-                ->helperText('Mô tả hiển thị ngay dưới tiêu đề trên trang chi tiết dịch vụ.')
-                ->rows(3),
-        ],
-    ]);
 
     mona_regist_acf_field_group([
         'title'    => 'Chi tiết Dịch Vụ',
@@ -145,6 +132,21 @@ add_action('acf/init', function () {
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                 ->format('array'),
 
+            // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
+            Tab::make('Lợi ích')->placement('left'),
+
+            Text::make('Tiêu đề', 'dv_benefits_heading')
+                ->default('Lợi ích của liệu pháp'),
+
+            Repeater::make('Danh sách lợi ích', 'dv_benefits_items')
+                ->layout('block')
+                ->collapsed('dv_benefit_title')
+                ->fields([
+                    Text::make('Nhãn (uppercase)', 'dv_benefit_title')->required()
+                        ->helperText('Ví dụ: CẢI THIỆN GIẤC NGỦ'),
+                    Textarea::make('Mô tả', 'dv_benefit_desc')->rows(2),
+                ]),
+
             // ─── TAB: LỘ TRÌNH ───────────────────────────────────────────
             Tab::make('Lộ trình')->placement('left'),
 
@@ -155,6 +157,10 @@ add_action('acf/init', function () {
             Text::make('Tiêu đề lộ trình', 'dv_roadmap_heading')
                 ->helperText('Ví dụ: Hành trình chữa lành')
                 ->default('Hành trình chữa lành'),
+
+            Textarea::make('Mô tả lộ trình', 'dv_roadmap_desc')
+                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
+                ->rows(2),
 
             Repeater::make('Các giai đoạn', 'dv_roadmap_items')
                 ->helperText('Mỗi giai đoạn gồm tiêu đề, mô tả và tag.')
@@ -170,21 +176,6 @@ add_action('acf/init', function () {
 
                     Text::make('Tags', 'dv_week_tags')
                         ->helperText('Các tag cách nhau bởi dấu phẩy. Ví dụ: Sound Bath, Thiền định'),
-                ]),
-
-            // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
-            Tab::make('Lợi ích')->placement('left'),
-
-            Text::make('Tiêu đề', 'dv_benefits_heading')
-                ->default('Lợi ích của liệu pháp'),
-
-            Repeater::make('Danh sách lợi ích', 'dv_benefits_items')
-                ->layout('block')
-                ->collapsed('dv_benefit_title')
-                ->fields([
-                    Text::make('Nhãn (uppercase)', 'dv_benefit_title')->required()
-                        ->helperText('Ví dụ: CẢI THIỆN GIẤC NGỦ'),
-                    Textarea::make('Mô tả', 'dv_benefit_desc')->rows(2),
                 ]),
 
             // ─── TAB: LỢI ÍCH NHẬN ĐƯỢC ─────────────────────────────────

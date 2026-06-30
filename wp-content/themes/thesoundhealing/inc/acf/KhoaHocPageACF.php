@@ -25,10 +25,6 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Course Directory')
                 ->default('Course Directory'),
 
-            Textarea::make('Mô tả trang', 'kh_page_desc')
-                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
-                ->rows(3)
-                ->default('Explore our comprehensive curriculum of sound and energy healing practices, designed for profound personal growth and professional mastery.'),
         ],
     ], false);
 }, 10);

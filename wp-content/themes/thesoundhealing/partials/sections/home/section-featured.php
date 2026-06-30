@@ -9,8 +9,8 @@ $raw_objects = get_field('featured_items', $page_id);
 if (empty($raw_objects)) return;
 
 $data = [
-    'heading' => get_field('featured_heading', $page_id) ?: 'Các Sự Kiện Nổi Bật',
-    'desc'    => get_field('featured_desc',    $page_id) ?: 'Khám phá các sự kiện âm thanh chữa lành đặc sắc, được thiết kế để mang lại sự cân bằng và bình yên cho tâm hồn bạn.',
+    'heading' => get_field('featured_heading', $page_id),
+    'desc'    => get_field('featured_desc',    $page_id),
     'link'    => $raw_link ?: null,
     'items'   => [],
 ];
@@ -90,9 +90,11 @@ if (empty($data['items'])) return;
         <!-- Header -->
         <div class="flex md:items-end justify-between mb-8 max-md:flex-col gap-4">
             <div>
-                <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
-                    <?php echo esc_html($data['heading']); ?>
-                </h2>
+                <?php if (!empty($data['heading'])) : ?>
+                    <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
+                        <?php echo esc_html($data['heading']); ?>
+                    </h2>
+                <?php endif; ?>
                 <?php if (!empty($data['desc'])) : ?>
                     <p class="text-[16px] text-sec mt-3">
                         <?php echo esc_html($data['desc']); ?>
@@ -104,7 +106,7 @@ if (empty($data['items'])) return;
                 <a href="<?php echo esc_url($data['link']['url']); ?>"
                     target="<?php echo esc_attr($data['link']['target'] ?? ''); ?>"
                     class="flex items-center gap-1 text-pri text-[16px] font-semibold uppercase tracking-[1.2px] shrink-0">
-                    <?php echo esc_html($data['link']['title'] ?: 'XEM TẤT CẢ'); ?>
+                    <?php echo esc_html($data['link']['title'] ?: __('XEM TẤT CẢ', 'monamedia')); ?>
                 </a>
             <?php endif; ?>
         </div>

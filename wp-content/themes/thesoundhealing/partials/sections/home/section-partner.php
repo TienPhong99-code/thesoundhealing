@@ -17,9 +17,9 @@ $sample = [
 ];
 
 $data = [
-    'label'   => get_field('partner_label',   $page_id) ?: $sample['label'],
-    'heading' => get_field('partner_heading', $page_id) ?: $sample['heading'],
-    'desc'    => get_field('partner_desc',    $page_id) ?: $sample['desc'],
+    'label'   => get_field('partner_label',   $page_id),
+    'heading' => get_field('partner_heading', $page_id),
+    'desc'    => get_field('partner_desc',    $page_id),
     'items'   => $sample['items'],
 ];
 ?>
@@ -28,9 +28,11 @@ $data = [
     <div class="container flex flex-col gap-[48px]">
 
         <div class="w-full flex flex-col items-center gap-3 text-center">
-            <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
-                <?php echo esc_html($data['heading']); ?>
-            </h2>
+            <?php if (!empty($data['heading'])) : ?>
+                <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
+                    <?php echo esc_html($data['heading']); ?>
+                </h2>
+            <?php endif; ?>
             <!-- <?php if (!empty($data['desc'])) : ?>
                 <p class="text-[#414847] text-[15px] max-w-[560px]">
                     <?php echo wp_kses_post($data['desc']); ?>

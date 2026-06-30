@@ -9,7 +9,7 @@ defined('ABSPATH') || exit;
         <!-- Close -->
         <button type="button" data-modal-close
             class="cursor-pointer absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-[#808080] hover:text-[#1b1c19] transition-colors"
-            aria-label="Đóng">
+            aria-label="<?php echo esc_attr__('Đóng', 'monamedia'); ?>">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <path d="M18 6 6 18M6 6l12 12" />
             </svg>
@@ -17,9 +17,9 @@ defined('ABSPATH') || exit;
 
         <!-- Header -->
         <div class="flex flex-col gap-1.5 pr-8">
-            <h2 class="text-[22px] font-bold text-[#1b1c19]">Chia sẻ</h2>
+            <h2 class="text-[22px] font-bold text-[#1b1c19]"><?php esc_html_e('Chia sẻ', 'monamedia'); ?></h2>
             <p class="text-[14px] text-[#555] leading-[1.5]">
-                Chia sẻ sự kiện để lan tỏa trải nghiệm và xây dựng mạng lưới giới thiệu để nhận ngay ưu đãi!
+                <?php esc_html_e('Chia sẻ sự kiện để lan tỏa trải nghiệm và xây dựng mạng lưới giới thiệu để nhận ngay ưu đãi!', 'monamedia'); ?>
             </p>
         </div>
 
@@ -62,16 +62,16 @@ defined('ABSPATH') || exit;
 
         <!-- Divider -->
         <div class="flex flex-col gap-3">
-            <p class="text-[13px] text-[#414847]">Chia sẻ đường dẫn với mã giới thiệu của bạn</p>
+            <p class="text-[13px] text-[#414847]"><?php esc_html_e('Chia sẻ đường dẫn với mã giới thiệu của bạn', 'monamedia'); ?></p>
 
             <button type="button"
                 class="share-copy-btn w-full py-3 px-4 rounded-xl border border-[#c0c8c6] text-[14px] font-medium text-[#1b1c19] hover:bg-[#f5f4f1] transition-colors cursor-pointer">
-                Sao Chép Đường Dẫn
+                <?php esc_html_e('Sao Chép Đường Dẫn', 'monamedia'); ?>
             </button>
 
             <button type="button"
                 class="share-qr-btn w-full py-3 px-4 rounded-xl border border-[#c0c8c6] text-[14px] font-medium text-[#1b1c19] hover:bg-[#f5f4f1] transition-colors cursor-pointer">
-                Tải Mã QR
+                <?php esc_html_e('Tải Mã QR', 'monamedia'); ?>
             </button>
         </div>
 

@@ -49,7 +49,7 @@ $dat_lich_url  = $_dv_has_wc
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
-                Best Seller
+                <?php esc_html_e('Best Seller', 'monamedia'); ?>
             </span>
         <?php endif; ?>
         <button type="button"
@@ -57,7 +57,7 @@ $dat_lich_url  = $_dv_has_wc
             data-modal-open="share"
             data-share-url="<?php echo esc_url($card_url); ?>"
             data-share-title="<?php echo esc_attr($item['title']); ?>"
-            aria-label="Chia sẻ">
+            aria-label="<?php echo esc_attr__('Chia sẻ', 'monamedia'); ?>">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="18" cy="5" r="3" />
                 <circle cx="6" cy="12" r="3" />
@@ -71,7 +71,7 @@ $dat_lich_url  = $_dv_has_wc
     <!-- Tags -->
     <div class="flex items-center gap-2 mt-3">
         <span class="text-[11px] font-medium uppercase tracking-[1px] text-[#414847]">
-            Dịch vụ
+            <?php esc_html_e('Dịch vụ', 'monamedia'); ?>
         </span>
         <?php if (!empty($format)) : ?>
             <span class="ml-auto text-[11px] font-medium uppercase tracking-[1px] px-3 py-1 rounded-full border border-[#c0c8c6] text-[#414847]">
@@ -118,18 +118,18 @@ $dat_lich_url  = $_dv_has_wc
         <div class="flex items-center gap-2">
             <?php if (!empty($price)) : ?>
                 <span class="text-[#1b1c19] text-[15px] font-semibold">
-                    <?php echo esc_html($price); ?><?php if (strtolower(trim($price)) !== 'liên hệ') : ?> / khách<?php endif; ?>
+                    <?php echo esc_html($price); ?><?php if (strtolower(trim($price)) !== 'liên hệ') : ?> <?php esc_html_e('/ khách', 'monamedia'); ?><?php endif; ?>
                 </span>
             <?php endif; ?>
 
             <?php if ($_is_past) : ?>
                 <span class="relative z-[2] ml-auto flex items-center justify-center px-4 py-2 bg-[#999] text-white text-[12px] font-semibold uppercase tracking-[0.5px] rounded-full whitespace-nowrap shrink-0 cursor-not-allowed opacity-60">
-                    Hết hạn
+                    <?php esc_html_e('Hết hạn', 'monamedia'); ?>
                 </span>
             <?php elseif ($status_key !== 'closed') : ?>
                 <a href="<?php echo esc_url($dat_lich_url); ?>"
                     class="relative z-[2] ml-auto flex items-center justify-center px-4 py-2 bg-[#c2a056] text-white text-[12px] font-semibold uppercase tracking-[0.5px] rounded-full transition-opacity hover:opacity-85 whitespace-nowrap shrink-0">
-                    ĐẶT LỊCH
+                    <?php esc_html_e('ĐẶT LỊCH', 'monamedia'); ?>
                 </a>
             <?php endif; ?>
 
