@@ -1,6 +1,15 @@
 <?php
 defined('ABSPATH') || exit;
 
+if (!class_exists('WC_Payment_Gateway')) {
+    return;
+}
+
+add_filter('woocommerce_payment_gateways', function (array $gateways): array {
+    $gateways[] = 'WC_Gateway_TSH_Paypal';
+    return $gateways;
+});
+
 class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
 
     public function __construct() {
@@ -125,8 +134,3 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
     }
 }
 
-// WooCommerce tự khởi tạo class khi cần — không dùng new trực tiếp
-add_filter('woocommerce_payment_gateways', function (array $gateways): array {
-    $gateways[] = 'WC_Gateway_TSH_Paypal';
-    return $gateways;
-});
