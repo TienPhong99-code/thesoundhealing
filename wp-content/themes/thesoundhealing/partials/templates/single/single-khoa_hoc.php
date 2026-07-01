@@ -34,23 +34,7 @@ $exp_desc  = get_field('exp_desc',  $post_id);
 // ── Lộ trình ──
 $rm_label   = get_field('roadmap_label',   $post_id) ?: 'LỘ TRÌNH HỌC';
 $rm_heading = get_field('roadmap_heading', $post_id) ?: 'Hành trình';
-$rm_items   = get_field('roadmap_items',   $post_id) ?: [
-    [
-        'week_title' => 'Tuần 1 – Kết nối với hơi thở',
-        'week_desc'  => 'Khám phá sức mạnh của hơi thở có chủ đích. Học các kỹ thuật thở cơ bản để thư giãn hệ thần kinh và đưa cơ thể về trạng thái cân bằng.',
-        'week_tags'  => 'Thở có ý thức, Pranayama cơ bản, Thư giãn hệ thần kinh',
-    ],
-    [
-        'week_title' => 'Tuần 2 – Lắng nghe âm thanh nội tâm',
-        'week_desc'  => 'Khám phá cách âm thanh ảnh hưởng đến trạng thái cảm xúc và năng lượng. Thực hành với singing bowl và các nhạc cụ trị liệu.',
-        'week_tags'  => 'Singing Bowl, Sound Bath, Âm điều trị',
-    ],
-    [
-        'week_title' => 'Tuần 3 – Thiền định & Tích hợp',
-        'week_desc'  => 'Kết hợp âm thanh và hơi thở vào thực hành thiền định hàng ngày. Xây dựng thói quen chăm sóc tâm lý bền vững.',
-        'week_tags'  => 'Thiền định, Tích hợp thực hành, Chăm sóc bản thân',
-    ],
-];
+$rm_items   = get_field('roadmap_items',   $post_id) ?: [];
 
 // ── Người hướng dẫn ──
 $ins_label     = get_field('instructor_label',     $post_id) ?: 'NGƯỜI HƯỚNG DẪN';

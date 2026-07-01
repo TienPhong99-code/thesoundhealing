@@ -21,8 +21,8 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
         $this->init_form_fields();
         $this->init_settings();
 
-        $this->title       = $this->get_option('title',       'Thanh toán tiền mặt');
-        $this->description = $this->get_option('description',  'Thanh toán bằng tiền mặt trực tiếp khi đến sử dụng dịch vụ. Nhân viên sẽ liên hệ xác nhận lịch hẹn với bạn.');
+        $this->title       = $this->get_option('title',       'Thanh toán khác');
+        $this->description = $this->get_option('description',  '');
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
         add_action('woocommerce_thankyou_' . $this->id, [$this, 'thankyou_page']);
@@ -39,12 +39,12 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
             'title' => [
                 'title'   => 'Tiêu đề hiển thị',
                 'type'    => 'text',
-                'default' => 'Thanh toán tiền mặt',
+                'default' => 'Thanh toán khác',
             ],
             'description' => [
                 'title'   => 'Mô tả',
                 'type'    => 'textarea',
-                'default' => 'Thanh toán bằng tiền mặt trực tiếp khi đến sử dụng dịch vụ. Nhân viên sẽ liên hệ xác nhận lịch hẹn với bạn.',
+                'default' => '',
             ],
         ];
     }

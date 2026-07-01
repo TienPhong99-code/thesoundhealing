@@ -22,7 +22,7 @@ $data = [
 ];
 ?>
 
-<section class="sec-hero relative z-10 section-pd ">
+<section class="sec-hero relative z-10 section-pd mb-10 max-md:mb-5 ">
     <div class="container ">
         <div class="relative max-md:!pt-10">
             <!-- 2-col row: content | image -->

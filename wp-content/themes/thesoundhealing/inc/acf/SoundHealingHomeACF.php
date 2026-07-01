@@ -49,10 +49,6 @@ add_action('acf/init', function () {
             // ─── TAB: SỰ KIỆN NỔI BẬT ────────────────────────────────────
             Tab::make('Sự kiện nổi bật')->placement('left'),
 
-            Text::make('Nhãn nhỏ (label)', 'featured_label')
-                ->helperText('Ví dụ: SỰ KIỆN NỔI BẬT')
-                ->default('SỰ KIỆN NỔI BẬT'),
-
             Text::make('Tiêu đề', 'featured_heading')
                 ->helperText('Ví dụ: Các Sự Kiện Nổi Bật')
                 ->default('Các Sự Kiện Nổi Bật'),
@@ -73,10 +69,6 @@ add_action('acf/init', function () {
             // ─── TAB: DỊCH VỤ ────────────────────────────────────────────
             Tab::make('Dịch vụ nổi bật')->placement('left'),
 
-            Text::make('Nhãn nhỏ (label)', 'service_label')
-                ->helperText('Ví dụ: DỊCH VỤ NỔI BẬT')
-                ->default('DỊCH VỤ NỔI BẬT'),
-
             Text::make('Tiêu đề', 'service_heading')
                 ->helperText('Ví dụ: Trải Nghiệm Dịch Vụ')
                 ->default('Trải Nghiệm Dịch Vụ'),
@@ -96,10 +88,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: COURSES ─────────────────────────────────────────────
             Tab::make('Khóa học nổi bật')->placement('left'),
-
-            Text::make('Nhãn nhỏ (label)', 'courses_label')
-                ->helperText('Ví dụ: KHÓA HỌC NỔI BẬT')
-                ->default('KHÓA HỌC NỔI BẬT'),
 
             Text::make('Tiêu đề', 'courses_heading')
                 ->helperText('Ví dụ: Đào Tạo Chuyên Sâu')

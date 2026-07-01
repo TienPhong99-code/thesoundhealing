@@ -17,15 +17,8 @@
     var sb = document.getElementById('search-booking');
     if (!sb) return;
 
-    var guestCounts = {
-        adult: parseInt((document.getElementById('sb-input-adult') || {}).value) || 0,
-        child: parseInt((document.getElementById('sb-input-child') || {}).value) || 0,
-    };
-
-    var guestInputMap = {
-        adult: 'sb-input-adult',
-        child: 'sb-input-child',
-    };
+    // Mức giá — chọn 1 (radio)
+    var priceValue = ((document.getElementById('sb-input-price') || {}).value) || '';
 
     // ── Helpers ───────────────────────────────────────────────────────────
     function closeAllPanels() {
@@ -133,64 +126,64 @@
             if (window._sbFlatpickr) window._sbFlatpickr.clear();
 
             updateMobileSummary();
-            openPanel('guest');
+            openPanel('price');
         });
     });
 
-    // ── Guest counters — delegation ───────────────────────────────────────
-    var guestPanel = document.getElementById('sb-panel-guest');
-    if (guestPanel) {
-        guestPanel.addEventListener('click', function (e) {
-            var btn = e.target.closest('.sb-counter-btn');
-            if (!btn) return;
+    // ── Mức giá — chọn 1 (radio) ─────────────────────────────────────────
+    var pricePanel = document.getElementById('sb-panel-price');
+    if (pricePanel) {
+        pricePanel.addEventListener('click', function (e) {
+            var item = e.target.closest('.sb-price-item');
+            if (!item) return;
 
-            var target  = btn.dataset.target;
-            var isMinus = btn.classList.contains('sb-counter-minus');
-            var current = guestCounts[target] || 0;
+            var val   = item.dataset.value;
+            var label = item.dataset.label || item.textContent.trim();
 
-            current = isMinus ? Math.max(0, current - 1) : Math.min(10, current + 1);
-            guestCounts[target] = current;
+            // Bấm lại option đang chọn → bỏ chọn
+            if (priceValue === val) {
+                priceValue = '';
+                item.classList.remove('is-active');
+            } else {
+                priceValue = val;
+                pricePanel.querySelectorAll('.sb-price-item').forEach(function (i) { i.classList.remove('is-active'); });
+                item.classList.add('is-active');
+            }
 
-            var countEl  = document.getElementById('sb-count-' + target);
-            if (countEl) countEl.textContent = current;
+            var hiddenInput = document.getElementById('sb-input-price');
+            if (hiddenInput) hiddenInput.value = priceValue;
 
-            var minusBtn = btn.closest('.sb-guest-counter').querySelector('.sb-counter-minus');
-            if (minusBtn) minusBtn.disabled = (current === 0);
-
-            var hiddenInput = document.getElementById(guestInputMap[target]);
-            if (hiddenInput) hiddenInput.value = current;
-
-            updateGuestSummary();
+            updatePriceSummary();
             updateMobileSummary();
         });
     }
 
-    function updateGuestSummary() {
-        var parts = [];
-        if (guestCounts.adult > 0) parts.push(guestCounts.adult + ' người lớn');
-        if (guestCounts.child > 0) parts.push(guestCounts.child + ' trẻ em');
-        var valEl = document.getElementById('sb-val-guest');
-        if (valEl) valEl.textContent = parts.length > 0 ? parts.join(', ') : 'Thêm khách';
+    function updatePriceSummary() {
+        var valEl = document.getElementById('sb-val-price');
+        if (!valEl) return;
+        if (priceValue) {
+            var active = pricePanel ? pricePanel.querySelector('.sb-price-item.is-active') : null;
+            valEl.textContent = active ? (active.dataset.label || active.textContent.trim()) : 'Chọn mức giá';
+        } else {
+            valEl.textContent = 'Chọn mức giá';
+        }
     }
 
-    // ── Guest footer: Clear all + Apply (mobile) ──────────────────────────
-    var clearBtn = document.getElementById('sb-guest-clear');
-    var applyBtn = document.getElementById('sb-guest-apply');
+    // ── Price footer: Xóa + Áp dụng (mobile) ──────────────────────────────
+    var clearBtn = document.getElementById('sb-price-clear');
+    var applyBtn = document.getElementById('sb-price-apply');
+
+    function clearPrice() {
+        priceValue = '';
+        if (pricePanel) pricePanel.querySelectorAll('.sb-price-item').forEach(function (i) { i.classList.remove('is-active'); });
+        var hiddenInput = document.getElementById('sb-input-price');
+        if (hiddenInput) hiddenInput.value = '';
+        updatePriceSummary();
+        updateMobileSummary();
+    }
 
     if (clearBtn) {
-        clearBtn.addEventListener('click', function () {
-            ['adult', 'child'].forEach(function (key) {
-                guestCounts[key] = 0;
-                var countEl = document.getElementById('sb-count-' + key);
-                if (countEl) countEl.textContent = '0';
-                var minusBtn = guestPanel.querySelector('[data-target="' + key + '"].sb-counter-minus');
-                if (minusBtn) minusBtn.disabled = true;
-                var hiddenInput = document.getElementById(guestInputMap[key]);
-                if (hiddenInput) hiddenInput.value = 0;
-            });
-            updateGuestSummary();
-            updateMobileSummary();
-        });
+        clearBtn.addEventListener('click', clearPrice);
     }
 
     if (applyBtn) {
@@ -231,9 +224,9 @@
                            !!(document.getElementById('sb-input-subterm') || {}).value;
             var hasTime  = !!(document.getElementById('sb-input-time')    || {}).value ||
                            !!(document.getElementById('sb-input-date')    || {}).value;
-            var hasGuest = (guestCounts.adult + guestCounts.child) > 0;
+            var hasPrice = !!(document.getElementById('sb-input-price') || {}).value;
 
-            if (!hasType && !hasTime && !hasGuest) {
+            if (!hasType && !hasTime && !hasPrice) {
                 e.preventDefault();
                 showToast('Vui lòng chọn ít nhất một tiêu chí tìm kiếm');
                 return;
@@ -264,7 +257,7 @@
                     sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
 
                     updateMobileSummary();
-                    setTimeout(function () { openPanel('guest'); }, 300);
+                    setTimeout(function () { openPanel('price'); }, 300);
                 },
             });
         }
@@ -341,18 +334,8 @@
             sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
             if (window._sbFlatpickr) window._sbFlatpickr.clear();
 
-            // Xóa khách
-            ['adult', 'child'].forEach(function (key) {
-                guestCounts[key] = 0;
-                var countEl = document.getElementById('sb-count-' + key);
-                if (countEl) countEl.textContent = '0';
-                var minus = sb.querySelector('[data-target="' + key + '"].sb-counter-minus');
-                if (minus) minus.disabled = true;
-                var hidden = document.getElementById(guestInputMap[key]);
-                if (hidden) hidden.value = 0;
-            });
-            updateGuestSummary();
-            updateMobileSummary();
+            // Xóa mức giá
+            clearPrice();
         });
     }
 
@@ -376,10 +359,14 @@
             if (timeText && timeText !== 'Ngày đặt lịch') parts.push(timeText);
         }
 
-        var totalGuest = (guestCounts.adult || 0) + (guestCounts.child || 0);
-        if (totalGuest > 0) parts.push(totalGuest + ' khách');
+        var priceInput = document.getElementById('sb-input-price');
+        var valPrice   = document.getElementById('sb-val-price');
+        if (priceInput && priceInput.value) {
+            var priceText = valPrice ? valPrice.textContent.trim() : '';
+            if (priceText && priceText !== 'Chọn mức giá') parts.push(priceText);
+        }
 
-        summaryEl.textContent = parts.length > 0 ? parts.join(' · ') : 'Loại hình · Thời gian · Khách';
+        summaryEl.textContent = parts.length > 0 ? parts.join(' · ') : 'Loại hình · Thời gian · Mức giá';
     }
 
 })();

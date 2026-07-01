@@ -35,23 +35,7 @@ $ws_exp_desc  = get_field('ws_exp_desc',  $post_id);
 // ── Lộ trình ──
 $ws_rm_label   = get_field('ws_roadmap_label',   $post_id) ?: 'LỘ TRÌNH TRẢI NGHIỆM';
 $ws_rm_heading = get_field('ws_roadmap_heading', $post_id) ?: 'Hành trình';
-$ws_rm_items   = get_field('ws_roadmap_items',   $post_id) ?: [
-    [
-        'ws_week_title' => 'Phần 1 – Kết nối với hơi thở',
-        'ws_week_desc'  => 'Khởi đầu buổi workshop bằng các kỹ thuật thở có chủ đích, giúp thư giãn hệ thần kinh và đưa cơ thể về trạng thái cân bằng.',
-        'ws_week_tags'  => 'Thở có ý thức, Pranayama cơ bản, Thư giãn hệ thần kinh',
-    ],
-    [
-        'ws_week_title' => 'Phần 2 – Đắm mình trong Sound Bath',
-        'ws_week_desc'  => 'Trải nghiệm tắm âm toàn thân với singing bowl và các nhạc cụ trị liệu, cảm nhận sóng âm lan toả qua từng tế bào.',
-        'ws_week_tags'  => 'Singing Bowl, Sound Bath, Âm điều trị',
-    ],
-    [
-        'ws_week_title' => 'Phần 3 – Thiền định & Tích hợp',
-        'ws_week_desc'  => 'Kết hợp âm thanh và hơi thở vào thiền định, chia sẻ trải nghiệm và nhận hướng dẫn thực hành tại nhà.',
-        'ws_week_tags'  => 'Thiền định, Tích hợp thực hành, Chăm sóc bản thân',
-    ],
-];
+$ws_rm_items   = get_field('ws_roadmap_items',   $post_id) ?: [];
 
 // ── Người hướng dẫn ──
 $ws_ins_label     = get_field('ws_instructor_label',     $post_id) ?: 'NGƯỜI HƯỚNG DẪN';

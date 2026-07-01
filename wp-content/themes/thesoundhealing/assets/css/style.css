@@ -2518,6 +2518,56 @@ form .wpcf7-not-valid-tip {
   display: none;
 }
 
+/* Price panel */
+.sb-panel--price {
+  min-width: 260px;
+  padding: 8px;
+}
+.sb-price-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sb-price-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.16s;
+}
+.sb-price-item:hover {
+  background: rgba(192, 200, 198, 0.16);
+}
+.sb-price-item__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-sec);
+}
+.sb-price-item.is-active .sb-price-item__label {
+  font-weight: 600;
+  color: var(--color-pri);
+}
+.sb-price-item__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-pri);
+  opacity: 0;
+  transition: opacity 0.16s;
+  flex-shrink: 0;
+}
+.sb-price-item.is-active .sb-price-item__check {
+  opacity: 1;
+}
+
 /* Submit button */
 .sb-submit {
   display: flex;
@@ -2890,6 +2940,12 @@ form .wpcf7-not-valid-tip {
   /* Guest panel in popup */
   .sb-popup-overlay .sb-panel--guest {
     padding: 0 20px !important;
+  }
+
+  /* Price panel in popup */
+  .sb-popup-overlay .sb-panel--price {
+    min-width: unset !important;
+    padding: 8px 12px !important;
   }
 
   /* Hide guest sub-footer inside popup (use main popup footer instead) */
@@ -3322,34 +3378,55 @@ form .wpcf7-not-valid-tip {
 }
 
 #payment ul.wc_payment_methods {
-  border: 1px solid #e4e2dd;
-  border-radius: 10px;
-  padding: 12px 16px;
-  background: #faf8f4;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
   list-style: none;
   margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-#payment ul.wc_payment_methods li {
-  padding: 4px 0;
+/* Mỗi phương thức = 1 card vuông vức */
+#payment ul.wc_payment_methods li.wc_payment_method {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 16px 18px;
+  border: 1.5px solid #e4e2dd;
+  border-radius: 12px;
+  background: #fff;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+#payment ul.wc_payment_methods li.wc_payment_method:has(input[type="radio"]:checked) {
+  border-color: var(--color-pri);
+  background: #faf8f4;
+  box-shadow: 0 2px 12px -5px rgba(194, 160, 86, 0.5);
 }
 #payment ul.wc_payment_methods li label {
   font-size: 16px;
   color: var(--color-sec);
   cursor: pointer;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 10px;
-  position: relative;
-  top: -2px;
-  font-weight: 500;
+  font-weight: 600;
+  flex: 1;
+  margin: 0;
+  min-width: 0;
 }
 #payment ul.wc_payment_methods li input[type="radio"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
-  border: 2px solid #ddd;
+  border: 2px solid #ccc;
   border-radius: 50%;
   background: transparent;
   cursor: pointer;
@@ -3362,12 +3439,25 @@ form .wpcf7-not-valid-tip {
   background: var(--color-pri);
   box-shadow: inset 0 0 0 3px #fff;
 }
+/* Icon mô tả bên phải mỗi phương thức */
+.tsh-pay-ic {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-pri);
+  flex-shrink: 0;
+}
+.tsh-pay-ic svg {
+  display: block;
+}
 #payment .payment_box {
+  flex: 0 0 100%;
   background: #f0ede6;
-  border-radius: 6px;
-  padding: 6px 10px;
+  border-radius: 8px;
+  padding: 14px 16px;
   font-size: 13px;
-  margin-top: 6px;
+  margin-top: 4px;
   display: none !important;
 }
 #payment_method_bacs:checked ~ .payment_box {
@@ -3377,7 +3467,7 @@ form .wpcf7-not-valid-tip {
   display: block !important;
 }
 #payment_method_tsh_cash:checked ~ .payment_box {
-  display: block !important;
+  display: none !important;
 }
 .tsh-paypal-desc {
   margin: 0 0 10px;
@@ -3648,6 +3738,48 @@ form .wpcf7-not-valid-tip {
   max-width: 960px;
   margin: 0 auto;
 }
+/* Ẩn cột phải → card full width, canh giữa */
+.tsh-ty-body--single {
+  grid-template-columns: 1fr;
+  max-width: 720px;
+}
+
+/* ── Hỗ trợ / liên hệ ── */
+.tsh-ty-support {
+  max-width: 720px;
+  margin: 4px auto 24px;
+  text-align: center;
+  padding: 18px 22px;
+  background: #faf8f4;
+  border: 1px solid #ece8e0;
+  border-radius: 12px;
+}
+.tsh-ty-support-lead {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+.tsh-ty-support-nums {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-sec);
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  justify-content: center;
+}
+.tsh-ty-support-nums a {
+  color: var(--color-pri);
+  text-decoration: none;
+}
+.tsh-ty-support-nums a:hover {
+  text-decoration: underline;
+}
+.tsh-ty-support-sep {
+  color: #cfc9bf;
+}
 .tsh-ty-payment .tsh-bacs-qr--ty {
   margin: 0;
   max-width: none;
@@ -3756,6 +3888,7 @@ form .wpcf7-not-valid-tip {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  min-width: 0;
 }
 .tsh-ty-detail-item:nth-last-child(-n + 2) {
   border-bottom: none;
@@ -3779,6 +3912,13 @@ form .wpcf7-not-valid-tip {
   color: var(--color-pri);
   font-weight: 700;
   font-size: 15px;
+}
+.tsh-ty-detail-val--ellipsis {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ── Notice ── */
@@ -3872,17 +4012,20 @@ form .wpcf7-not-valid-tip {
     font-size: 22px;
   }
   .tsh-ty-quick {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   .tsh-ty-quick-item {
-    border-right: none;
+    border-right: 1px solid #edeae4;
     border-bottom: 1px solid #edeae4;
+  }
+  .tsh-ty-quick-item:nth-child(2n) {
+    border-right: none;
   }
   .tsh-ty-quick-item:last-child {
     border-bottom: none;
   }
   .tsh-ty-detail-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   .tsh-ty-actions {
     flex-direction: column;

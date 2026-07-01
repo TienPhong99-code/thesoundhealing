@@ -147,8 +147,7 @@ foreach ($raw_objects as $post) {
 }
 
 $data = [
-    'label'   => get_field('service_label', $page_id),
-    'heading' => get_field('service_heading', $page_id),
+    'heading' => get_field('service_heading', $page_id) ?: 'Trải Nghiệm Dịch Vụ',
     'desc'    => get_field('service_desc', $page_id),
     'link'    => $raw_link  ?: $sample['link'],
     'items'   => $acf_items ?: $sample['items'],
@@ -161,11 +160,6 @@ $data = [
         <!-- Header -->
         <div class="flex md:items-end justify-between mb-8 max-md:flex-col gap-4">
             <div>
-                <?php if (!empty($data['label'])) : ?>
-                    <p class="text-pri text-[16px] font-semibold uppercase tracking-[1.2px] mb-2">
-                        <?php echo esc_html($data['label']); ?>
-                    </p>
-                <?php endif; ?>
                 <?php if (!empty($data['heading'])) : ?>
                     <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px] mb-3">
                         <?php echo esc_html($data['heading']); ?>

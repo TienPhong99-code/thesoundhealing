@@ -43,6 +43,26 @@ class TSH_WooCommerce_Hook
                 WC()->session->set('chosen_payment_method', 'bacs');
             }
         });
+        add_filter('woocommerce_gateway_icon', [$this, 'payment_method_icon'], 20, 2);
+    }
+
+    /**
+     * Icon mô tả cạnh mỗi phương thức thanh toán ở checkout.
+     */
+    public function payment_method_icon($icon, $gateway_id): string
+    {
+        $icons = [
+            // Chuyển khoản ngân hàng — icon ngân hàng
+            'bacs' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10"/><path d="M9 21V10"/><path d="M15 21V10"/><path d="M19 21V10"/><path d="M12 3 3 8h18z"/></svg>',
+            // PayPal — icon thẻ trực tuyến
+            'tsh_paypal_qr' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>',
+            // Thanh toán khác — icon ví
+            'tsh_cash' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V8H6a2 2 0 0 1 0-4h13v4"/><path d="M3 6v12a2 2 0 0 0 2 2h16v-6"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>',
+        ];
+
+        return isset($icons[$gateway_id])
+            ? '<span class="tsh-pay-ic">' . $icons[$gateway_id] . '</span>'
+            : $icon;
     }
 
     public function redirect_cart_to_home(): void

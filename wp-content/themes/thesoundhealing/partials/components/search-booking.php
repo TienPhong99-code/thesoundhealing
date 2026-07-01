@@ -27,17 +27,21 @@ $_dow = (int) $_td->format('N');
 $_dts = ($_dow <= 6) ? (6 - $_dow) : 0;
 $_sat = (clone $_td)->modify("+{$_dts} days");
 $_sun = (clone $_sat)->modify('+1 day');
+$_eom = (clone $_td)->modify('last day of this month');
 
 $_thg = __('thg', 'monamedia');
 $time_opts = [
     'today'   => ['label' => __('Hôm nay', 'monamedia'),      'sub' => $_td->format('j') . ' ' . $_thg . ' ' . $_td->format('n')],
     'tomorrow' => ['label' => __('Ngày mai', 'monamedia'),     'sub' => $_tm->format('j') . ' ' . $_thg . ' ' . $_tm->format('n')],
     'weekend' => ['label' => __('Cuối tuần này', 'monamedia'), 'sub' => $_sat->format('j') . ' – ' . $_sun->format('j') . ' ' . $_thg . ' ' . $_sat->format('n')],
+    'month'   => ['label' => __('Trong tháng này', 'monamedia'), 'sub' => $_td->format('j') . ' – ' . $_eom->format('j') . ' ' . $_thg . ' ' . $_td->format('n')],
 ];
 
-$guest_types = [
-    'adult' => ['label' => __('Người lớn (13+)', 'monamedia'), 'desc' => ''],
-    'child' => ['label' => __('Trẻ em (6–12)',   'monamedia'), 'desc' => ''],
+// Mức giá (VNĐ) — đơn vị nghìn cho 2 mốc đầu, mốc cuối 3 triệu
+$price_opts = [
+    'r1' => ['label' => __('Từ 0 - 499.000', 'monamedia'),          'min' => 0,       'max' => 499999],
+    'r2' => ['label' => __('Từ 500.000 - 2.999.000', 'monamedia'),  'min' => 500000,  'max' => 2999999],
+    'r3' => ['label' => __('Từ 3.000.000 trở lên', 'monamedia'),    'min' => 3000000, 'max' => PHP_INT_MAX],
 ];
 
 // Pre-fill from GET if rendered on results page
@@ -45,8 +49,7 @@ $pre_loai_hinh  = sanitize_text_field($_GET['loai-hinh']  ?? '');
 $pre_chuyen_mon = sanitize_text_field($_GET['chuyen-mon'] ?? '');
 $pre_thoi_gian  = sanitize_text_field($_GET['thoi-gian']  ?? '');
 $pre_ngay       = sanitize_text_field($_GET['ngay']       ?? '');
-$pre_nguoi_lon  = (int) ($_GET['nguoi-lon'] ?? 0);
-$pre_tre_em     = (int) ($_GET['tre-em']    ?? 0);
+$pre_muc_gia    = sanitize_text_field($_GET['muc-gia'] ?? '');
 
 // Display value cho field Loại hình
 $display_type = __('Chọn loại hình', 'monamedia');
@@ -64,11 +67,10 @@ if (!empty($pre_thoi_gian) && isset($time_opts[$pre_thoi_gian])) {
 } elseif (!empty($pre_ngay)) {
     $mobile_parts[] = date_i18n('j/m/Y', strtotime($pre_ngay));
 }
-$tong_guest = $pre_nguoi_lon + $pre_tre_em;
-if ($tong_guest > 0) {
-    $mobile_parts[] = $tong_guest . ' ' . __('khách', 'monamedia');
+if (!empty($pre_muc_gia) && isset($price_opts[$pre_muc_gia])) {
+    $mobile_parts[] = $price_opts[$pre_muc_gia]['label'];
 }
-$mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : __('Loại hình · Thời gian · Khách', 'monamedia');
+$mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : __('Loại hình · Thời gian · Mức giá', 'monamedia');
 ?>
 
 <div class="search-booking" id="search-booking">
@@ -177,57 +179,41 @@ $mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : __('L
 
             <span class="sb-sep" aria-hidden="true"></span>
 
-            <!-- Field: Khách -->
-            <div class="sb-field sb-field--last" id="sb-field-guest">
+            <!-- Field: Mức giá -->
+            <div class="sb-field sb-field--last" id="sb-field-price">
                 <button type="button" class="sb-field__btn"
                     aria-expanded="false"
-                    aria-controls="sb-panel-guest"
-                    data-sb-toggle="guest">
-                    <span class="sb-field__label"><?php esc_html_e('Khách', 'monamedia'); ?></span>
-                    <span class="sb-field__value" id="sb-val-guest">
+                    aria-controls="sb-panel-price"
+                    data-sb-toggle="price">
+                    <span class="sb-field__label"><?php esc_html_e('Mức giá (VNĐ)', 'monamedia'); ?></span>
+                    <span class="sb-field__value" id="sb-val-price">
                         <?php
-                        $tong = $pre_nguoi_lon + $pre_tre_em;
-                        if ($tong > 0) {
-                            $parts = [];
-                            if ($pre_nguoi_lon > 0) $parts[] = $pre_nguoi_lon . ' ' . __('người lớn', 'monamedia');
-                            if ($pre_tre_em    > 0) $parts[] = $pre_tre_em    . ' ' . __('trẻ em', 'monamedia');
-                            echo esc_html(implode(', ', $parts));
+                        if (!empty($pre_muc_gia) && isset($price_opts[$pre_muc_gia])) {
+                            echo esc_html($price_opts[$pre_muc_gia]['label']);
                         } else {
-                            esc_html_e('Số lượng khách', 'monamedia');
+                            esc_html_e('Chọn mức giá', 'monamedia');
                         }
                         ?>
                     </span>
                 </button>
-                <input type="hidden" name="nguoi-lon" id="sb-input-adult" value="<?php echo esc_attr($pre_nguoi_lon); ?>">
-                <input type="hidden" name="tre-em" id="sb-input-child" value="<?php echo esc_attr($pre_tre_em); ?>">
-                <div class="sb-panel sb-panel--guest" id="sb-panel-guest" aria-hidden="true">
-                    <?php
-                    $pre_counts = ['adult' => $pre_nguoi_lon, 'child' => $pre_tre_em];
-                    foreach ($guest_types as $key => $g) :
-                        $count = $pre_counts[$key] ?? 0;
-                    ?>
-                        <div class="sb-guest-row">
-                            <div class="sb-guest-info">
-                                <span class="sb-guest-name"><?php echo esc_html($g['label']); ?></span>
-                                <span class="sb-guest-desc"><?php echo esc_html($g['desc']); ?></span>
-                            </div>
-                            <div class="sb-guest-counter">
-                                <button type="button"
-                                    class="sb-counter-btn sb-counter-minus"
-                                    data-target="<?php echo esc_attr($key); ?>"
-                                    aria-label="Giảm số <?php echo esc_attr(mb_strtolower($g['label'])); ?>"
-                                    <?php echo $count === 0 ? 'disabled' : ''; ?>>−</button>
-                                <span class="sb-counter-val" id="sb-count-<?php echo esc_attr($key); ?>"><?php echo $count; ?></span>
-                                <button type="button"
-                                    class="sb-counter-btn sb-counter-plus"
-                                    data-target="<?php echo esc_attr($key); ?>"
-                                    aria-label="Tăng số <?php echo esc_attr(mb_strtolower($g['label'])); ?>">+</button>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+                <input type="hidden" name="muc-gia" id="sb-input-price" value="<?php echo esc_attr($pre_muc_gia); ?>">
+                <div class="sb-panel sb-panel--price" id="sb-panel-price" aria-hidden="true">
+                    <div class="sb-price-list">
+                        <?php foreach ($price_opts as $key => $opt) : ?>
+                            <button type="button"
+                                class="sb-price-item<?php echo $pre_muc_gia === $key ? ' is-active' : ''; ?>"
+                                data-value="<?php echo esc_attr($key); ?>"
+                                data-label="<?php echo esc_attr($opt['label']); ?>">
+                                <span class="sb-price-item__label"><?php echo esc_html($opt['label']); ?></span>
+                                <span class="sb-price-item__check" aria-hidden="true">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
                     <div class="sb-guest-footer">
-                        <button type="button" class="sb-guest-clear" id="sb-guest-clear"><?php esc_html_e('Xóa tất cả', 'monamedia'); ?></button>
-                        <button type="button" class="sb-guest-apply" id="sb-guest-apply"><?php esc_html_e('Áp dụng', 'monamedia'); ?></button>
+                        <button type="button" class="sb-guest-clear" id="sb-price-clear"><?php esc_html_e('Xóa', 'monamedia'); ?></button>
+                        <button type="button" class="sb-guest-apply" id="sb-price-apply"><?php esc_html_e('Áp dụng', 'monamedia'); ?></button>
                     </div>
                 </div>
             </div>

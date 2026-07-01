@@ -9,7 +9,7 @@ $raw_objects = get_field('featured_items', $page_id);
 if (empty($raw_objects)) return;
 
 $data = [
-    'heading' => get_field('featured_heading', $page_id),
+    'heading' => get_field('featured_heading', $page_id) ?: 'Các Sự Kiện Nổi Bật',
     'desc'    => get_field('featured_desc',    $page_id),
     'link'    => $raw_link ?: null,
     'items'   => [],
@@ -84,7 +84,7 @@ foreach ($raw_objects as $post) {
 if (empty($data['items'])) return;
 ?>
 
-<section class="sec-featured section-pd-t">
+<section class="sec-featured section-pd-t pb-(--pd-sc) bg-[#f5f3ee]">
     <div class="container">
 
         <!-- Header -->

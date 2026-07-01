@@ -33,23 +33,7 @@ $dv_exp_desc  = get_field('dv_exp_desc',  $post_id) ?: 'Mỗi buổi Tắm Âm �
 // ── Lộ trình ──
 $dv_rm_label   = get_field('dv_roadmap_label',   $post_id) ?: 'LỘ TRÌNH TRỊ LIỆU';
 $dv_rm_heading = get_field('dv_roadmap_heading', $post_id) ?: 'Hành trình';
-$dv_rm_items   = get_field('dv_roadmap_items',   $post_id) ?: [
-    [
-        'dv_week_title' => 'Bước 1 – Ổn định & Kết nối hơi thở',
-        'dv_week_desc'  => 'Bạn được hướng dẫn nằm thoải mái trên thảm với gối lót và chăn ấm, sau đó đưa cơ thể về trạng thái thư giãn qua các kỹ thuật thở có chủ đích.',
-        'dv_week_tags'  => 'Thở có ý thức, Thư giãn hệ thần kinh, Grounding',
-    ],
-    [
-        'dv_week_title' => 'Bước 2 – Đắm mình trong sóng âm',
-        'dv_week_desc'  => 'Những rung động tinh khiết từ bộ chuông pha lê bao bọc cơ thể, giúp giải phóng các tắc nghẽn năng lượng và đưa sóng não về trạng thái thư giãn sâu.',
-        'dv_week_tags'  => 'Singing Bowl, Sound Bath, Âm điều trị',
-    ],
-    [
-        'dv_week_title' => 'Bước 3 – Tích hợp & Trở về',
-        'dv_week_desc'  => 'Nhẹ nhàng đưa cơ thể trở lại trạng thái tỉnh thức, lắng nghe cảm nhận và nhận hướng dẫn chăm sóc bản thân sau buổi trị liệu.',
-        'dv_week_tags'  => 'Thiền định, Tích hợp thực hành, Chăm sóc bản thân',
-    ],
-];
+$dv_rm_items   = get_field('dv_roadmap_items',   $post_id) ?: [];
 
 // ── Lợi ích ──
 $dv_bn_heading = get_field('dv_benefits_heading', $post_id) ?: 'Lợi ích của liệu pháp';

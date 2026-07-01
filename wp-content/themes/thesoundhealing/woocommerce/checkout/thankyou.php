@@ -9,8 +9,8 @@ $order = isset($order) ? $order : false;
 
         <?php if (!$order) : ?>
         <div class="tsh-ty-empty">
-            <p>Không tìm thấy thông tin đơn hàng.</p>
-            <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri">← Về trang chủ</a>
+            <p><?php esc_html_e('Không tìm thấy thông tin đơn hàng.', 'monamedia'); ?></p>
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri">← <?php esc_html_e('Về trang chủ', 'monamedia'); ?></a>
         </div>
         <?php else :
             $order_id   = $order->get_id();
@@ -40,12 +40,22 @@ $order = isset($order) ? $order : false;
                     <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <h1 class="tsh-ty-title">Đặt lịch thành công!</h1>
-            <p class="tsh-ty-sub">Cảm ơn bạn đã tin tưởng lựa chọn dịch vụ của The Sound Healing.<br>Chúng tôi đã nhận được yêu cầu của bạn.</p>
+            <h1 class="tsh-ty-title"><?php esc_html_e('Đặt lịch thành công!', 'monamedia'); ?></h1>
+            <p class="tsh-ty-sub"><?php esc_html_e('Cảm ơn bạn đã tin tưởng lựa chọn dịch vụ của The Sound Healing.', 'monamedia'); ?><br><?php echo wp_kses_post(__('Chúng tôi đã nhận được yêu cầu đặt lịch của bạn và sẽ xác nhận trong vòng <strong>2 giờ</strong>.', 'monamedia')); ?></p>
         </div>
 
-        <!-- Grid: card trái + QR phải -->
-        <div class="tsh-ty-body">
+        <!-- Hỗ trợ / liên hệ -->
+        <div class="tsh-ty-support">
+            <p class="tsh-ty-support-lead"><?php esc_html_e('Nếu cần hỗ trợ hoặc có bất kỳ thắc mắc nào, vui lòng liên hệ qua số Zalo / Whatsapp', 'monamedia'); ?></p>
+            <p class="tsh-ty-support-nums">
+                <span>* <?php esc_html_e('English', 'monamedia'); ?>: <a href="tel:0939624684">0939 624 684</a></span>
+                <span class="tsh-ty-support-sep">|</span>
+                <span><?php esc_html_e('Tiếng Việt', 'monamedia'); ?>: <a href="tel:0906502582">0906 502 582</a></span>
+            </p>
+        </div>
+
+        <!-- Grid: card trái + QR phải (QR tạm ẩn cho 3 phương thức thủ công) -->
+        <div class="tsh-ty-body tsh-ty-body--single">
 
         <!-- Card -->
         <div class="tsh-ty-card">
@@ -53,7 +63,7 @@ $order = isset($order) ? $order : false;
             <!-- Confirmation code -->
             <div class="tsh-ty-code-row">
                 <div>
-                    <span class="tsh-ty-code-label">Mã xác nhận</span>
+                    <span class="tsh-ty-code-label"><?php esc_html_e('Mã xác nhận', 'monamedia'); ?></span>
                     <span class="tsh-ty-code-val">#<?php echo esc_html(str_pad($order_id, 5, '0', STR_PAD_LEFT)); ?></span>
                 </div>
                 <div class="tsh-ty-code-icon" aria-hidden="true">
@@ -71,7 +81,7 @@ $order = isset($order) ? $order : false;
                 <div class="tsh-ty-quick-item">
                     <span class="tsh-ty-quick-label">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                        Ngày đặt
+                        <?php esc_html_e('Ngày đặt', 'monamedia'); ?>
                     </span>
                     <span class="tsh-ty-quick-val"><?php echo esc_html($b_date); ?></span>
                 </div>
@@ -80,7 +90,7 @@ $order = isset($order) ? $order : false;
                 <div class="tsh-ty-quick-item">
                     <span class="tsh-ty-quick-label">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                        Khung giờ
+                        <?php esc_html_e('Khung giờ', 'monamedia'); ?>
                     </span>
                     <span class="tsh-ty-quick-val"><?php echo esc_html($b_time); ?></span>
                 </div>
@@ -89,7 +99,7 @@ $order = isset($order) ? $order : false;
                 <div class="tsh-ty-quick-item">
                     <span class="tsh-ty-quick-label">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
-                        Chi nhánh
+                        <?php esc_html_e('Chi nhánh', 'monamedia'); ?>
                     </span>
                     <span class="tsh-ty-quick-val"><?php echo esc_html($b_location); ?></span>
                 </div>
@@ -104,41 +114,41 @@ $order = isset($order) ? $order : false;
 
                 <!-- Thông tin người đặt -->
                 <div class="tsh-ty-detail-group">
-                    <h4 class="tsh-ty-detail-title">Thông tin người đặt</h4>
+                    <h4 class="tsh-ty-detail-title"><?php esc_html_e('Thông tin người đặt', 'monamedia'); ?></h4>
                     <div class="tsh-ty-detail-grid">
                         <?php if ($name) : ?>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Họ và tên</span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Họ và tên', 'monamedia'); ?></span>
                             <span class="tsh-ty-detail-val"><?php echo esc_html($name); ?></span>
                         </div>
                         <?php endif; ?>
                         <?php if ($phone) : ?>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Số điện thoại</span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Số điện thoại', 'monamedia'); ?></span>
                             <span class="tsh-ty-detail-val"><?php echo esc_html($phone); ?></span>
                         </div>
                         <?php endif; ?>
                         <?php if ($email) : ?>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Email</span>
-                            <span class="tsh-ty-detail-val"><?php echo esc_html($email); ?></span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Email', 'monamedia'); ?></span>
+                            <span class="tsh-ty-detail-val tsh-ty-detail-val--ellipsis" title="<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></span>
                         </div>
                         <?php endif; ?>
                         <?php if ($b_guests) : ?>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Số người tham gia</span>
-                            <span class="tsh-ty-detail-val"><?php echo esc_html($b_guests . ' người'); ?></span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Số người tham gia', 'monamedia'); ?></span>
+                            <span class="tsh-ty-detail-val"><?php echo esc_html($b_guests) . ' ' . esc_html__('người', 'monamedia'); ?></span>
                         </div>
                         <?php endif; ?>
                         <?php if ($b_children) : ?>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Trẻ em tham gia</span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Trẻ em tham gia', 'monamedia'); ?></span>
                             <span class="tsh-ty-detail-val"><?php echo esc_html($b_children); ?></span>
                         </div>
                         <?php endif; ?>
                         <?php if ($b_instructor) : ?>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Người hướng dẫn</span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Người hướng dẫn', 'monamedia'); ?></span>
                             <span class="tsh-ty-detail-val"><?php echo esc_html($b_instructor); ?></span>
                         </div>
                         <?php endif; ?>
@@ -147,20 +157,20 @@ $order = isset($order) ? $order : false;
 
                 <!-- Dịch vụ & Thanh toán -->
                 <div class="tsh-ty-detail-group">
-                    <h4 class="tsh-ty-detail-title">Dịch vụ & Thanh toán</h4>
+                    <h4 class="tsh-ty-detail-title"><?php esc_html_e('Dịch vụ & Thanh toán', 'monamedia'); ?></h4>
                     <div class="tsh-ty-detail-grid">
                         <?php if ($service_name) : ?>
                         <div class="tsh-ty-detail-item tsh-ty-detail-item--full">
-                            <span class="tsh-ty-detail-label">Dịch vụ</span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Dịch vụ', 'monamedia'); ?></span>
                             <span class="tsh-ty-detail-val"><?php echo esc_html($service_name); ?></span>
                         </div>
                         <?php endif; ?>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Tổng thanh toán</span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Tổng thanh toán', 'monamedia'); ?></span>
                             <span class="tsh-ty-detail-val tsh-ty-detail-val--gold"><?php echo wp_kses_post($total); ?></span>
                         </div>
                         <div class="tsh-ty-detail-item">
-                            <span class="tsh-ty-detail-label">Phương thức</span>
+                            <span class="tsh-ty-detail-label"><?php esc_html_e('Phương thức', 'monamedia'); ?></span>
                             <span class="tsh-ty-detail-val"><?php echo esc_html($order->get_payment_method_title()); ?></span>
                         </div>
                     </div>
@@ -174,21 +184,23 @@ $order = isset($order) ? $order : false;
                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
                     <path d="M12 8v4m0 4h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                 </svg>
-                <p>Chúng tôi sẽ liên hệ xác nhận lịch hẹn sớm nhất. Quý khách vui lòng đến sớm 10 phút để được phục vụ tốt nhất.</p>
+                <p><?php esc_html_e('Chúng tôi sẽ liên hệ xác nhận lịch hẹn sớm nhất. Quý khách vui lòng đến sớm 10 phút để được phục vụ tốt nhất.', 'monamedia'); ?></p>
             </div>
 
         </div><!-- /.tsh-ty-card -->
 
-        <!-- Cột phải: QR + xác nhận -->
+        <?php // Cột phải QR/xác nhận — tạm ẩn cho 3 phương thức thanh toán thủ công ?>
+        <?php if (false) : ?>
         <div class="tsh-ty-payment">
             <?php do_action('woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id()); ?>
         </div>
+        <?php endif; ?>
 
         </div><!-- /.tsh-ty-body -->
 
         <!-- Actions -->
         <div class="tsh-ty-actions">
-            <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri">Về trang chủ</a>
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri"><?php esc_html_e('Về trang chủ', 'monamedia'); ?></a>
         </div>
 
         <?php endif; ?>

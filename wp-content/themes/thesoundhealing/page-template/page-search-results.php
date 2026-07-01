@@ -15,9 +15,14 @@ $loai_hinh  = sanitize_text_field($_GET['loai-hinh']  ?? '');
 $chuyen_mon = sanitize_text_field($_GET['chuyen-mon'] ?? '');
 $thoi_gian  = sanitize_text_field($_GET['thoi-gian']  ?? '');
 $ngay       = sanitize_text_field($_GET['ngay']       ?? '');
-$nguoi_lon = max(0, (int) ($_GET['nguoi-lon'] ?? 0));
-$tre_em    = max(0, (int) ($_GET['tre-em']    ?? 0));
-$tong_khach = $nguoi_lon + $tre_em;
+$muc_gia   = sanitize_text_field($_GET['muc-gia'] ?? '');
+
+// Mức giá (VNĐ) — đơn vị nghìn cho 2 mốc đầu, mốc cuối 3 triệu
+$price_ranges = [
+    'r1' => ['label' => 'Từ 0 - 499.000',           'min' => 0,       'max' => 499999],
+    'r2' => ['label' => 'Từ 500.000 - 2.999.000',   'min' => 500000,  'max' => 2999999],
+    'r3' => ['label' => 'Từ 3.000.000 trở lên',     'min' => 3000000, 'max' => PHP_INT_MAX],
+];
 
 // ── Map loai-hinh → post_type(s) ─────────────────────────────────────────
 $pt_map = [
@@ -52,6 +57,11 @@ if (!empty($thoi_gian)) {
             $sun = (clone $sat)->modify('+1 day');
             $date_from = $sat->format('Ymd');
             $date_to   = $sun->format('Ymd');
+            break;
+        case 'month':
+            $now = new DateTime();
+            $date_from = $now->format('Ymd');
+            $date_to   = (clone $now)->modify('last day of this month')->format('Ymd');
             break;
     }
 } elseif (!empty($ngay)) {
@@ -210,22 +220,6 @@ foreach ($post_types as $pt) {
         }
     }
 
-    // Lọc theo số khách (dựa trên spots)
-    if ($tong_khach > 0) {
-        $spots_key = ($pt === 'dich_vu') ? 'dv_spots' : (($pt === 'khoa_hoc') ? 'kh_spots' : 'ws_spots');
-        $spots_clause = [
-            'key'     => $spots_key,
-            'value'   => $tong_khach,
-            'compare' => '>=',
-            'type'    => 'NUMERIC',
-        ];
-        if (!empty($query_args['meta_query'])) {
-            $query_args['meta_query'][] = $spots_clause;
-        } else {
-            $query_args['meta_query'] = [$spots_clause];
-        }
-    }
-
     $q = new WP_Query($query_args);
     if ($q->have_posts()) {
         while ($q->have_posts()) {
@@ -237,6 +231,20 @@ foreach ($post_types as $pt) {
                 $date_field  = ($pt === 'workshop') ? 'ws_date' : 'start_date';
                 $post_date_ts = sr_parse_date_ts(get_field($date_field, $post->ID));
                 if ($post_date_ts === null || $post_date_ts < $date_from_ts || $post_date_ts > $date_to_ts) {
+                    continue;
+                }
+            }
+
+            // Lọc theo mức giá (PHP-side, giá lưu dạng chuỗi "800.000 VNĐ")
+            if ($muc_gia !== '' && isset($price_ranges[$muc_gia])) {
+                $price_field = ($pt === 'dich_vu') ? 'dv_price' : (($pt === 'khoa_hoc') ? 'price' : 'ws_price');
+                $raw_price   = (string) get_field($price_field, $post->ID);
+                $price_val   = class_exists('TSH_WC_Product_Sync')
+                    ? TSH_WC_Product_Sync::parse_price($raw_price)
+                    : (float) preg_replace('/[^\d]/', '', $raw_price);
+                $rng = $price_ranges[$muc_gia];
+                // Bỏ qua item không có giá rõ ràng (0 = "liên hệ"/trống) hoặc ngoài khoảng
+                if ($price_val <= 0 || $price_val < $rng['min'] || $price_val > $rng['max']) {
                     continue;
                 }
             }
@@ -260,7 +268,7 @@ $label_map = [
     'khoa-hoc'      => 'Khoá Học',
     'workshop'      => 'Workshop',
 ];
-$time_label_map = ['today'   => 'Hôm nay', 'tomorrow' => 'Ngày mai', 'weekend'  => 'Cuối tuần này'];
+$time_label_map = ['today'   => 'Hôm nay', 'tomorrow' => 'Ngày mai', 'weekend'  => 'Cuối tuần này', 'month' => 'Trong tháng này'];
 
 // Lấy tên sub-term để hiển thị trong active tags
 $chuyen_mon_label = '';
@@ -296,8 +304,8 @@ get_header();
             $active_tags[] = $time_label_map[$thoi_gian];
         elseif (!empty($ngay))
             $active_tags[] = date_i18n('j/m/Y', strtotime($ngay));
-        if ($tong_khach > 0)
-            $active_tags[] = $tong_khach . ' ' . __('khách', 'monamedia');
+        if ($muc_gia !== '' && isset($price_ranges[$muc_gia]))
+            $active_tags[] = $price_ranges[$muc_gia]['label'];
         ?>
         <div class="sr-meta">
             <p class="sr-count">

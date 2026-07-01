@@ -118,7 +118,7 @@ $dat_lich_url  = $_dv_has_wc
 
         <div class="flex items-center gap-2">
             <?php if (!empty($price)) : ?>
-                <span class="text-[#1b1c19] text-[15px] font-semibold">
+                <span class="text-[#1b1c19] text-[15px] font-semibold truncate min-w-0">
                     <?php echo esc_html($price); ?><?php if (strtolower(trim($price)) !== 'liên hệ') : ?> <?php esc_html_e('/ khách', 'monamedia'); ?><?php endif; ?>
                 </span>
             <?php endif; ?>
