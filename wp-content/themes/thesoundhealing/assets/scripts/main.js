@@ -49,6 +49,37 @@
         }
     });
 
+    // Copy thông tin chuyển khoản ngân hàng
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.tsh-copy-btn');
+        if (!btn) return;
+        var val = btn.closest('.tsh-bacs-qr__val');
+        var strong = val ? val.querySelector('strong') : null;
+        var text = strong ? strong.textContent.trim() : '';
+        if (!text || text === '—') return;
+        function showCopied() {
+            btn.classList.add('is-copied');
+            setTimeout(function () { btn.classList.remove('is-copied'); }, 1500);
+        }
+        function fallback() {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try { document.execCommand('copy'); } catch (err) {}
+            document.body.removeChild(ta);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(showCopied, function () { fallback(); showCopied(); });
+        } else {
+            fallback();
+            showCopied();
+        }
+    });
+
     document.addEventListener('click', function (e) {
         var btn = e.target.closest('.share-qr-btn');
         if (!btn) return;

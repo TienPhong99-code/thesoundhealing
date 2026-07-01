@@ -268,6 +268,15 @@ class TSH_WooCommerce_Hook
         ]);
     }
 
+    // Nút copy dùng chung cho các dòng thông tin chuyển khoản
+    private function copy_btn(): string
+    {
+        return '<button type="button" class="tsh-copy-btn" aria-label="Sao chép" title="Sao chép">'
+            . '<svg class="tsh-copy-btn__ico tsh-copy-btn__ico--copy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'
+            . '<svg class="tsh-copy-btn__ico tsh-copy-btn__ico--check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+            . '</button>';
+    }
+
     public function add_bacs_qr_checkout(string $description, string $payment_id): string
     {
         if (is_admin()) return $description;
@@ -291,9 +300,9 @@ class TSH_WooCommerce_Hook
             <div class="tsh-bacs-checkout-wrap">
                 <div class="tsh-bacs-checkout-info">
                     <div class="tsh-bacs-qr__row"><span>Ngân hàng</span><strong><?= esc_html(TSH_BANK_ID) ?></strong></div>
-                    <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong></div>
-                    <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><strong><?= esc_html(TSH_BANK_NAME) ?></strong></div>
-                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><strong id="tsh-bacs-addinfo"><?= esc_html($info) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_NAME) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><span class="tsh-bacs-qr__val"><strong id="tsh-bacs-addinfo"><?= esc_html($info) ?></strong><?= $this->copy_btn() ?></span></div>
                     <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong id="tsh-bacs-amount"><?= $total > 0 ? number_format($total, 0, ',', '.') . 'đ' : '—' ?></strong></div>
                 </div>
                 <div class="tsh-bacs-qr">
@@ -399,10 +408,10 @@ class TSH_WooCommerce_Hook
             <img src="<?= esc_url($url) ?>" alt="QR chuyển khoản ACB">
             <div class="tsh-bacs-qr__info">
                 <div class="tsh-bacs-qr__row"><span>Ngân hàng</span><strong><?= esc_html(TSH_BANK_ID) ?></strong></div>
-                <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong></div>
-                <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><strong><?= esc_html(TSH_BANK_NAME) ?></strong></div>
+                <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong><?= $this->copy_btn() ?></span></div>
+                <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_NAME) ?></strong><?= $this->copy_btn() ?></span></div>
                 <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong><?= wc_price($amount) ?></strong></div>
-                <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><strong><?= esc_html($info) ?></strong></div>
+                <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($info) ?></strong><?= $this->copy_btn() ?></span></div>
             </div>
             <button type="button" id="tsh-confirm-transfer"
                 data-order="<?= (int) $order_id ?>"

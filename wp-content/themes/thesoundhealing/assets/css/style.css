@@ -3212,7 +3212,7 @@ form .wpcf7-not-valid-tip {
 
 /* ── Section chung ── */
 .tsh-co-section {
-  padding: 28px 32px;
+  padding: 12px;
 }
 .tsh-co-section__hd {
   display: flex;
@@ -3365,8 +3365,8 @@ form .wpcf7-not-valid-tip {
 #payment .payment_box {
   background: #f0ede6;
   border-radius: 6px;
-  padding: 9px 13px;
-  font-size: 14px;
+  padding: 6px 10px;
+  font-size: 13px;
   margin-top: 6px;
   display: none !important;
 }
@@ -3374,24 +3374,43 @@ form .wpcf7-not-valid-tip {
   display: block !important;
 }
 #payment_method_tsh_paypal_qr:checked ~ .payment_box {
-  display: grid !important;
-  grid-template-columns: 1fr 140px;
-  gap: 14px;
-  align-items: center;
+  display: block !important;
 }
-#payment_method_tsh_paypal_qr:checked ~ .payment_box .tsh-bacs-qr {
-  margin-top: 0;
-  order: 2;
+#payment_method_tsh_cash:checked ~ .payment_box {
+  display: block !important;
 }
-#payment_method_tsh_paypal_qr:checked ~ .payment_box .tsh-bacs-qr img {
-  width: 140px;
+.tsh-paypal-desc {
+  margin: 0 0 10px;
+  color: #666;
+  font-size: 13px;
 }
-#payment_method_tsh_paypal_qr:checked ~ .payment_box .tsh-bacs-qr__note {
-  display: none;
+.tsh-cash-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
 }
-#payment_method_tsh_paypal_qr:checked ~ .payment_box > p {
-  order: 1;
+.tsh-cash-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-pri);
+}
+.tsh-cash-note p {
   margin: 0;
+}
+.tsh-cash-ty__body {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+.tsh-cash-ty__body p {
+  margin: 0 0 10px;
+}
+.tsh-cash-ty__note {
+  font-size: 13px;
+  color: #666;
 }
 
 /* BACS: info table + QR side by side */
@@ -3558,7 +3577,7 @@ form .wpcf7-not-valid-tip {
     padding: 32px 0 60px;
   }
   .tsh-co-section {
-    padding: 22px 20px;
+    padding: 12px;
   }
   .tsh-co-info-grid {
     grid-template-columns: 1fr 1fr;
@@ -3916,8 +3935,8 @@ form .wpcf7-not-valid-tip {
 .tsh-bacs-qr__row {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
-  padding: 6px 0;
+  font-size: 13px;
+  padding: 4px 0;
   border-bottom: 1px solid var(--cl-border);
 }
 .tsh-bacs-qr__row:last-child {
@@ -3928,7 +3947,53 @@ form .wpcf7-not-valid-tip {
 }
 .tsh-bacs-qr__row--ref strong {
   color: var(--color-pri);
-  font-size: 15px;
+  font-size: 14px;
+}
+.tsh-bacs-qr__val {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.tsh-bacs-qr__val strong {
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.tsh-copy-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--cl-border, #e5e5e5);
+  border-radius: 5px;
+  background: #fff;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.tsh-copy-btn:hover {
+  color: var(--color-pri);
+  border-color: var(--color-pri);
+}
+.tsh-copy-btn__ico {
+  display: block;
+}
+.tsh-copy-btn__ico--check {
+  display: none;
+}
+.tsh-copy-btn.is-copied {
+  color: #2e7d32;
+  border-color: #2e7d32;
+  background: #edf7ed;
+}
+.tsh-copy-btn.is-copied .tsh-copy-btn__ico--copy {
+  display: none;
+}
+.tsh-copy-btn.is-copied .tsh-copy-btn__ico--check {
+  display: block;
 }
 .tsh-payment-waiting {
   text-align: center;

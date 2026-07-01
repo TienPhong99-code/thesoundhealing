@@ -67,16 +67,36 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
         ];
     }
 
+    // Nút copy dùng chung cho các dòng thông tin PayPal
+    private function copy_btn(): string {
+        return '<button type="button" class="tsh-copy-btn" aria-label="Sao chép" title="Sao chép">'
+            . '<svg class="tsh-copy-btn__ico tsh-copy-btn__ico--copy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'
+            . '<svg class="tsh-copy-btn__ico tsh-copy-btn__ico--check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+            . '</button>';
+    }
+
     public function payment_fields(): void {
-        if ($this->description) {
-            echo '<p class="tsh-paypal-desc">' . esc_html($this->description) . '</p>';
-        }
-        if ($this->qr_image) {
-            echo '<div class="tsh-bacs-qr tsh-paypal-qr">
-                <img src="' . esc_url($this->qr_image) . '" alt="PayPal QR">
-                ' . ($this->paypal_email ? '<p class="tsh-bacs-qr__note">' . esc_html($this->paypal_email) . '</p>' : '') . '
-            </div>';
-        }
+        ob_start(); ?>
+        <div class="tsh-bacs-checkout-wrap tsh-paypal-checkout-wrap">
+            <div class="tsh-bacs-checkout-info">
+                <?php if ($this->description) : ?>
+                    <p class="tsh-paypal-desc"><?= esc_html($this->description) ?></p>
+                <?php endif; ?>
+                <?php if ($this->paypal_name) : ?>
+                    <div class="tsh-bacs-qr__row"><span>Tên tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_name) ?></strong><?= $this->copy_btn() ?></span></div>
+                <?php endif; ?>
+                <?php if ($this->paypal_email) : ?>
+                    <div class="tsh-bacs-qr__row"><span>Email PayPal</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_email) ?></strong><?= $this->copy_btn() ?></span></div>
+                <?php endif; ?>
+            </div>
+            <?php if ($this->qr_image) : ?>
+            <div class="tsh-bacs-qr tsh-paypal-qr">
+                <img src="<?= esc_url($this->qr_image) ?>" alt="PayPal QR">
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php
+        echo ob_get_clean();
     }
 
     public function process_payment($order_id): array {
@@ -112,10 +132,10 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
             <?php endif; ?>
             <div class="tsh-bacs-qr__info">
                 <?php if ($this->paypal_name) : ?>
-                <div class="tsh-bacs-qr__row"><span>Tên tài khoản</span><strong><?= esc_html($this->paypal_name) ?></strong></div>
+                <div class="tsh-bacs-qr__row"><span>Tên tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_name) ?></strong><?= $this->copy_btn() ?></span></div>
                 <?php endif; ?>
                 <?php if ($this->paypal_email) : ?>
-                <div class="tsh-bacs-qr__row"><span>Email PayPal</span><strong><?= esc_html($this->paypal_email) ?></strong></div>
+                <div class="tsh-bacs-qr__row"><span>Email PayPal</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_email) ?></strong><?= $this->copy_btn() ?></span></div>
                 <?php endif; ?>
                 <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong><?= wc_price($order->get_total()) ?></strong></div>
             </div>
