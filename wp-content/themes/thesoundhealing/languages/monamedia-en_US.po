@@ -147,6 +147,16 @@ msgstr "This weekend"
 msgid "Chọn ngày"
 msgstr "Select date"
 
+# --- CF7 booking form: select placeholders ---
+msgid "Chọn người hướng dẫn"
+msgstr "Select instructor"
+
+msgid "Chọn khung giờ"
+msgstr "Select time slot"
+
+msgid "Chọn chi nhánh"
+msgstr "Select branch"
+
 # --- Search booking: guest labels ---
 msgid "Người lớn (13+)"
 msgstr "Adults (13+)"

@@ -36,6 +36,13 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_get_cart_item_from_session', [$this, 'restore_guests_cart_item'], 10, 2);
         add_action('woocommerce_before_calculate_totals',    [$this, 'apply_guests_price']);
         add_filter('woocommerce_get_item_data',              [$this, 'display_guests_in_cart'], 10, 2);
+        add_filter('woocommerce_available_payment_gateways', [$this, 'set_bacs_first']);
+        add_filter('pre_option_woocommerce_default_gateway', fn() => 'bacs');
+        add_action('woocommerce_checkout_init', function() {
+            if (WC()->session) {
+                WC()->session->set('chosen_payment_method', 'bacs');
+            }
+        });
     }
 
     public function redirect_cart_to_home(): void
@@ -44,6 +51,16 @@ class TSH_WooCommerce_Hook
             wp_safe_redirect(home_url('/'));
             exit;
         }
+    }
+
+    public function set_bacs_first(array $gateways): array
+    {
+        if (isset($gateways['bacs'])) {
+            $bacs = $gateways['bacs'];
+            unset($gateways['bacs']);
+            $gateways = array_merge(['bacs' => $bacs], $gateways);
+        }
+        return $gateways;
     }
 
     public function declare_support(): void
@@ -271,9 +288,17 @@ class TSH_WooCommerce_Hook
             $src = $base . '&amount=' . $total . '&addInfo=' . rawurlencode($info);
 
             ob_start(); ?>
-            <div class="tsh-bacs-qr">
-                <img src="<?= esc_url($src) ?>" data-base="<?= esc_url($base) ?>" alt="QR chuyển khoản <?= esc_attr(TSH_BANK_ID) ?>">
-                <p class="tsh-bacs-qr__note">Quét mã QR bằng app ngân hàng để thanh toán tự động</p>
+            <div class="tsh-bacs-checkout-wrap">
+                <div class="tsh-bacs-checkout-info">
+                    <div class="tsh-bacs-qr__row"><span>Ngân hàng</span><strong><?= esc_html(TSH_BANK_ID) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><strong><?= esc_html(TSH_BANK_NAME) ?></strong></div>
+                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><strong id="tsh-bacs-addinfo"><?= esc_html($info) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong id="tsh-bacs-amount"><?= $total > 0 ? number_format($total, 0, ',', '.') . 'đ' : '—' ?></strong></div>
+                </div>
+                <div class="tsh-bacs-qr">
+                    <img src="<?= esc_url($src) ?>" data-base="<?= esc_url($base) ?>" alt="QR chuyển khoản <?= esc_attr(TSH_BANK_ID) ?>">
+                </div>
             </div>
             <script>
                 jQuery(function($) {
@@ -291,13 +316,17 @@ class TSH_WooCommerce_Hook
                         var amountK = amount > 0 ? Math.round(amount / 1000) + 'K' : '';
                         var addInfo = 'HEAL' + (name ? '-' + name : '') + (phone ? '-' + phone : '') + (amountK ? '-' + amountK : '');
                         $img.attr('src', $img.data('base') + '&amount=' + amount + '&addInfo=' + encodeURIComponent(addInfo));
+                        $('#tsh-bacs-addinfo').text(addInfo);
+                        if (amount > 0) {
+                            $('#tsh-bacs-amount').text(amount.toLocaleString('vi-VN') + 'đ');
+                        }
                     }
                     $(document.body).on('updated_checkout', updateBacsQr);
                     $(document).on('input', '#billing_first_name, #billing_last_name, #billing_phone', updateBacsQr);
                 });
             </script>
         <?php
-            return $description . ob_get_clean();
+            return ob_get_clean();
         }
 
         // ── SePay ─────────────────────────────────────────────────────────

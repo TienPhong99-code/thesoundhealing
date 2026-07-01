@@ -11,6 +11,7 @@
   body{margin:0;padding:0;background:#f5f3ee;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
   img{border:0;outline:none;text-decoration:none;display:block}
   a{color:#c2a056}
+  p,td,th,span,div{word-break:break-word;overflow-wrap:break-word}
   @media only screen and (max-width:600px){
     .email-wrap{width:100%!important}
     .email-body{padding:28px 20px!important}
@@ -25,8 +26,8 @@
 
         <!-- Header -->
         <tr>
-          <td style="background:#1b1c19;padding:28px 36px;text-align:center">
-            <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.45)">THE SOUND</p>
+          <td style="background:#ffffff;padding:28px 36px;text-align:center">
+            <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(27,28,25,0.45)">THE SOUND</p>
             <p style="margin:0;font-size:22px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#c2a056">HEALING</p>
           </td>
         </tr>
@@ -34,7 +35,7 @@
         <!-- Heading band -->
         <tr>
           <td style="background:#c2a056;padding:18px 36px;text-align:center">
-            <h1 style="margin:0;font-size:16px;font-weight:600;letter-spacing:1px;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;text-transform:uppercase"><?php echo esc_html($email_heading); ?></h1>
+            <h1 style="margin:0;font-size:16px;font-weight:600;letter-spacing:1px;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;text-transform:uppercase;text-align:center"><?php echo esc_html($email_heading); ?></h1>
           </td>
         </tr>
 

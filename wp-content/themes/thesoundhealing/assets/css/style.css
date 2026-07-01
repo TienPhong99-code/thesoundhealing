@@ -3190,8 +3190,15 @@ form .wpcf7-not-valid-tip {
   padding: 52px 0 80px;
 }
 .tsh-co-form {
-  max-width: 560px;
-  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* ── 2-column grid ── */
+.tsh-co-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
 /* ── Card ── */
@@ -3206,12 +3213,6 @@ form .wpcf7-not-valid-tip {
 /* ── Section chung ── */
 .tsh-co-section {
   padding: 28px 32px;
-}
-.tsh-co-section--booking {
-  border-bottom: 1px solid #edeae4;
-}
-.tsh-co-section--order {
-  padding-top: 24px;
 }
 .tsh-co-section__hd {
   display: flex;
@@ -3266,6 +3267,7 @@ form .wpcf7-not-valid-tip {
   font-weight: 500;
   color: var(--color-sec);
   line-height: 1.4;
+  word-break: break-all;
 }
 
 /* ── Order review table ── */
@@ -3366,13 +3368,59 @@ form .wpcf7-not-valid-tip {
   padding: 9px 13px;
   font-size: 14px;
   margin-top: 6px;
-  flex-direction: column;
-  gap: 12px;
   display: none !important;
 }
-#payment_method_bacs:checked ~ .payment_box,
+#payment_method_bacs:checked ~ .payment_box {
+  display: block !important;
+}
 #payment_method_tsh_paypal_qr:checked ~ .payment_box {
-  display: flex !important;
+  display: grid !important;
+  grid-template-columns: 1fr 140px;
+  gap: 14px;
+  align-items: center;
+}
+#payment_method_tsh_paypal_qr:checked ~ .payment_box .tsh-bacs-qr {
+  margin-top: 0;
+  order: 2;
+}
+#payment_method_tsh_paypal_qr:checked ~ .payment_box .tsh-bacs-qr img {
+  width: 140px;
+}
+#payment_method_tsh_paypal_qr:checked ~ .payment_box .tsh-bacs-qr__note {
+  display: none;
+}
+#payment_method_tsh_paypal_qr:checked ~ .payment_box > p {
+  order: 1;
+  margin: 0;
+}
+
+/* BACS: info table + QR side by side */
+.tsh-bacs-checkout-wrap {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 16px;
+  align-items: center;
+}
+.tsh-bacs-checkout-info {
+  display: flex;
+  flex-direction: column;
+}
+.tsh-bacs-checkout-wrap .tsh-bacs-qr {
+  margin-top: 0;
+}
+.tsh-bacs-checkout-wrap .tsh-bacs-qr img {
+  width: 160px;
+}
+@media (max-width: 640px) {
+  .tsh-bacs-checkout-wrap {
+    grid-template-columns: 1fr;
+  }
+  .tsh-bacs-checkout-wrap .tsh-bacs-qr {
+    justify-self: center;
+  }
+  .tsh-bacs-checkout-wrap .tsh-bacs-qr img {
+    width: 200px;
+  }
 }
 #payment .form-row {
   margin: 0;
@@ -3413,6 +3461,52 @@ form .wpcf7-not-valid-tip {
   box-shadow: 0 6px 20px -4px rgba(194, 160, 86, 0.5);
 }
 
+/* ── Checkout notes ── */
+.tsh-co-notes {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #edeae4;
+}
+.tsh-co-notes__title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--color-sec);
+  margin: 0 0 10px;
+}
+.tsh-co-notes__title--sub {
+  margin-top: 16px;
+}
+.tsh-co-notes__list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tsh-co-notes__list li {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  padding-left: 18px;
+  position: relative;
+}
+.tsh-co-notes__list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--color-pri);
+  font-size: 16px;
+  line-height: 1.4;
+}
+.tsh-co-notes__list li strong {
+  color: var(--color-sec);
+  font-weight: 600;
+}
+
 /* ── WC notices ── */
 .woocommerce-error {
   background: #fff5f5;
@@ -3448,6 +3542,16 @@ form .wpcf7-not-valid-tip {
   text-decoration: none;
 }
 
+/* ── Tablet: stack thành 1 cột ── */
+@media (max-width: 768px) {
+  .tsh-co-grid {
+    grid-template-columns: 1fr;
+  }
+  .tsh-co-grid .tsh-co-box:last-child {
+    order: -1;
+  }
+}
+
 /* ── Mobile ── */
 @media (max-width: 640px) {
   .tsh-checkout-wrap {
@@ -3457,12 +3561,20 @@ form .wpcf7-not-valid-tip {
     padding: 22px 20px;
   }
   .tsh-co-info-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   .tsh-co-info-row {
-    padding-right: 0;
+    padding: 16px 0;
+    border-bottom: 1px solid #edeae4;
   }
-  .tsh-co-info-row:last-child {
+  .tsh-co-info-row:nth-child(odd) {
+    padding-right: 16px;
+    border-right: 1px solid #edeae4;
+  }
+  .tsh-co-info-row:nth-child(even) {
+    padding-left: 16px;
+  }
+  .tsh-co-info-row:nth-last-child(-n + 2) {
     border-bottom: none;
   }
 }

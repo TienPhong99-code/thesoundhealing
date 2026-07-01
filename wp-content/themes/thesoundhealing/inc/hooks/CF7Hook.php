@@ -187,7 +187,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($ins_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="dv-instructor"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn người hướng dẫn', $ins_values, $pre_instr) . '$3',
+                '$1' . $build_options(__('Chọn người hướng dẫn', 'monamedia'), $ins_values, $pre_instr) . '$3',
                 $html
             );
         }
@@ -204,7 +204,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($branch_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="dv-branch"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn chi nhánh', $branch_values, $pre_location) . '$3',
+                '$1' . $build_options(__('Chọn chi nhánh', 'monamedia'), $branch_values, $pre_location) . '$3',
                 $html
             );
         }
@@ -223,7 +223,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         $html = preg_replace(
             '/(<select[^>]*\bname="dv-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
-            '$1' . $build_options('Chọn khung giờ', $time_values, $pre_time) . '$3',
+            '$1' . $build_options(__('Chọn khung giờ', 'monamedia'), $time_values, $pre_time) . '$3',
             $html
         );
     } elseif ($post_type === 'khoa_hoc') {
@@ -250,7 +250,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($ins_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="kh-instructor"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn người hướng dẫn', $ins_values, $pre_instr) . '$3',
+                '$1' . $build_options(__('Chọn người hướng dẫn', 'monamedia'), $ins_values, $pre_instr) . '$3',
                 $html
             );
         }
@@ -267,7 +267,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($branch_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="kh-location"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn chi nhánh', $branch_values, $pre_location) . '$3',
+                '$1' . $build_options(__('Chọn chi nhánh', 'monamedia'), $branch_values, $pre_location) . '$3',
                 $html
             );
         }
@@ -286,7 +286,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         $html = preg_replace(
             '/(<select[^>]*\bname="kh-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
-            '$1' . $build_options('Chọn khung giờ', $time_values, $pre_time) . '$3',
+            '$1' . $build_options(__('Chọn khung giờ', 'monamedia'), $time_values, $pre_time) . '$3',
             $html
         );
     } elseif ($post_type === 'workshop') {
@@ -314,7 +314,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($ins_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="ws-instructor"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn người hướng dẫn', $ins_values, $pre_instr) . '$3',
+                '$1' . $build_options(__('Chọn người hướng dẫn', 'monamedia'), $ins_values, $pre_instr) . '$3',
                 $html
             );
         }
@@ -331,7 +331,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         if ($branch_values) {
             $html = preg_replace(
                 '/(<select[^>]*\bname="ws-location"[^>]*>)([\s\S]*?)(<\/select>)/i',
-                '$1' . $build_options('Chọn chi nhánh', $branch_values, $pre_location) . '$3',
+                '$1' . $build_options(__('Chọn chi nhánh', 'monamedia'), $branch_values, $pre_location) . '$3',
                 $html
             );
         }
@@ -350,10 +350,25 @@ add_filter('wpcf7_form_elements', function ($html) {
         }
         $html = preg_replace(
             '/(<select[^>]*\bname="ws-time"[^>]*>)([\s\S]*?)(<\/select>)/i',
-            '$1' . $build_options('Chọn khung giờ', $time_values, $pre_time) . '$3',
+            '$1' . $build_options(__('Chọn khung giờ', 'monamedia'), $time_values, $pre_time) . '$3',
             $html
         );
     }
+
+    // Đẩy chuỗi đã dịch (gettext) xuống JS qua data-attribute trên input date.
+    // JS (khoa-hoc/dich-vu/ws.js) đọc JSON này để hiển thị "Chọn ngày" + các pill.
+    $cf7_i18n = wp_json_encode([
+        'selectDate'  => __('Chọn ngày', 'monamedia'),
+        'today'       => __('Hôm nay', 'monamedia'),
+        'tomorrow'    => __('Ngày mai', 'monamedia'),
+        'thisWeekend' => __('Cuối tuần này', 'monamedia'),
+        'monthAbbr'   => __('thg', 'monamedia'),
+    ]);
+    $html = preg_replace(
+        '/(<input\b(?![^>]*\bdata-mona-i18n=)[^>]*\btype="date"[^>]*)(>)/i',
+        '$1 data-mona-i18n="' . esc_attr($cf7_i18n) . '"$2',
+        $html
+    );
 
     return $html;
 });

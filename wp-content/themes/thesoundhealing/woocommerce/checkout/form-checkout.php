@@ -53,35 +53,57 @@ $_info_rows = [
                 action="<?php echo esc_url(wc_get_checkout_url()); ?>"
                 enctype="multipart/form-data">
 
-                <div class="tsh-co-box">
+                <div class="tsh-co-grid">
 
-                    <!-- ── PHẦN 1: Thông tin đặt lịch ── -->
-                    <div class="tsh-co-section tsh-co-section--booking">
-                        <div class="tsh-co-section__hd">
-                            <h3 class="tsh-co-section__title">Thông tin đặt lịch</h3>
-                            <a href="<?php echo esc_url($_source_url ?: 'javascript:history.back()'); ?>" class="tsh-co-edit-link">Chỉnh sửa</a>
-                        </div>
-                        <div class="tsh-co-info-grid">
-                            <?php foreach ($_info_rows as $row) : ?>
-                                <?php if (trim($row['value'])) : ?>
-                                    <div class="tsh-co-info-row">
-                                        <span class="tsh-co-info-label"><?php echo esc_html($row['label']); ?></span>
-                                        <span class="tsh-co-info-val"><?php echo esc_html($row['value']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
+                    <!-- ── CỘT TRÁI: Thông tin đặt lịch ── -->
+                    <div class="tsh-co-box">
+                        <div class="tsh-co-section">
+                            <div class="tsh-co-section__hd">
+                                <h3 class="tsh-co-section__title">Thông tin đặt lịch</h3>
+                                <a href="<?php echo esc_url($_source_url ?: 'javascript:history.back()'); ?>" class="tsh-co-edit-link">Chỉnh sửa</a>
+                            </div>
+                            <div class="tsh-co-info-grid">
+                                <?php foreach ($_info_rows as $row) : ?>
+                                    <?php if (trim($row['value'])) : ?>
+                                        <div class="tsh-co-info-row">
+                                            <span class="tsh-co-info-label"><?php echo esc_html($row['label']); ?></span>
+                                            <span class="tsh-co-info-val"><?php echo esc_html($row['value']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </div>
 
-                    <!-- ── PHẦN 2: Đơn hàng + Thanh toán ── -->
-                    <div class="tsh-co-section tsh-co-section--order">
-                        <div class="tsh-co-section__hd">
-                            <h3 class="tsh-co-section__title">Đơn hàng của bạn</h3>
+                            <!-- Lưu ý -->
+                            <div class="tsh-co-notes">
+                                <h4 class="tsh-co-notes__title">Lưu ý</h4>
+                                <ul class="tsh-co-notes__list">
+                                    <li>Vui lòng mặc trang phục thoải mái, phù hợp cho việc nằm thiền và thư giãn.</li>
+                                    <li>Có mặt trước giờ bắt đầu <strong>15 phút</strong> để check-in và ổn định vị trí. Khách đến muộn quá 10 phút mà không báo trước sẽ được xem là vắng mặt.</li>
+                                    <li>Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi phiên diễn ra.</li>
+                                    <li>Vé đã mua được phép chuyển nhượng, nhưng <strong>không hoàn tiền</strong> dưới bất kỳ hình thức nào.</li>
+                                    <li>Sound Healing và các bộ môn Năng lượng là liệu pháp hỗ trợ thư giãn và cân bằng, không thay thế cho chẩn đoán hoặc điều trị y khoa.</li>
+                                </ul>
+                                <h4 class="tsh-co-notes__title tsh-co-notes__title--sub">Để có trải nghiệm tốt hơn</h4>
+                                <ul class="tsh-co-notes__list">
+                                    <li>Hạn chế sử dụng rượu bia hoặc chất kích thích trước phiên.</li>
+                                    <li>Uống đủ nước trước và sau khi tham gia.</li>
+                                    <li>Đến với một tâm thế cởi mở, thư giãn và không kỳ vọng vào một trải nghiệm cụ thể. Mỗi người sẽ có hành trình cảm nhận riêng.</li>
+                                </ul>
+                            </div>
                         </div>
-                        <?php do_action('woocommerce_checkout_order_review'); ?>
-                    </div>
+                    </div><!-- /.tsh-co-box left -->
 
-                </div><!-- .tsh-co-box -->
+                    <!-- ── CỘT PHẢI: Đơn hàng + Thanh toán ── -->
+                    <div class="tsh-co-box">
+                        <div class="tsh-co-section">
+                            <div class="tsh-co-section__hd">
+                                <h3 class="tsh-co-section__title">Đơn hàng của bạn</h3>
+                            </div>
+                            <?php do_action('woocommerce_checkout_order_review'); ?>
+                        </div>
+                    </div><!-- /.tsh-co-box right -->
+
+                </div><!-- .tsh-co-grid -->
 
                 <!-- Hidden billing fields -->
                 <input type="hidden" name="billing_first_name" value="<?php echo esc_attr($_first); ?>">

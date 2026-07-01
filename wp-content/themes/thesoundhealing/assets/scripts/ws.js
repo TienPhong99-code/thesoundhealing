@@ -17,6 +17,9 @@
         if (!dateInput || typeof flatpickr === 'undefined') return;
         dateInput.type = 'hidden';
 
+        var I18N = { selectDate: 'Chọn ngày', today: 'Hôm nay', tomorrow: 'Ngày mai', thisWeekend: 'Cuối tuần này', monthAbbr: 'thg' };
+        try { Object.assign(I18N, JSON.parse(dateInput.getAttribute('data-mona-i18n') || '{}')); } catch (e) {}
+
         var availDates = (window.wsSchedule && Array.isArray(window.wsSchedule.availDates) && window.wsSchedule.availDates.length)
             ? window.wsSchedule.availDates : [];
         var firstDate = availDates.length ? availDates[0] : null;
@@ -38,11 +41,11 @@
             var _dToSat   = _dow === 0 ? 6 : (6 - _dow);
             var _sat      = new Date(_today); _sat.setDate(_today.getDate() + _dToSat);
             var _sun      = new Date(_sat);   _sun.setDate(_sat.getDate() + 1);
-            function fmtDate(d) { return d.getDate() + ' thg ' + (d.getMonth() + 1); }
+            function fmtDate(d) { return d.getDate() + ' ' + I18N.monthAbbr + ' ' + (d.getMonth() + 1); }
             quickOpts = [
-                { label: 'Hôm nay',       sub: fmtDate(_today),    date: _today },
-                { label: 'Ngày mai',      sub: fmtDate(_tomorrow), date: _tomorrow },
-                { label: 'Cuối tuần này', sub: _sat.getDate() + ' – ' + _sun.getDate() + ' thg ' + (_sat.getMonth() + 1), date: _sat },
+                { label: I18N.today,       sub: fmtDate(_today),    date: _today },
+                { label: I18N.tomorrow,    sub: fmtDate(_tomorrow), date: _tomorrow },
+                { label: I18N.thisWeekend, sub: _sat.getDate() + ' – ' + _sun.getDate() + ' ' + I18N.monthAbbr + ' ' + (_sat.getMonth() + 1), date: _sat },
             ];
         }
 
@@ -53,7 +56,7 @@
         triggerBtn.type = 'button';
         triggerBtn.className = 'cf7-date-trigger';
         triggerBtn.innerHTML =
-            '<span class="cf7-date-trigger__val">Chọn ngày</span>' +
+            '<span class="cf7-date-trigger__val">' + I18N.selectDate + '</span>' +
             '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="17" height="17" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" /></svg>';
 
         var panel   = document.createElement('div');  panel.className = 'cf7-date-panel'; panel.setAttribute('aria-hidden', 'true');
