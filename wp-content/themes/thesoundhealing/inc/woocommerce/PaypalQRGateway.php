@@ -69,7 +69,7 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
 
     // Nút copy dùng chung cho các dòng thông tin PayPal
     private function copy_btn(): string {
-        return '<button type="button" class="tsh-copy-btn" aria-label="Sao chép" title="Sao chép">'
+        return '<button type="button" class="tsh-copy-btn" aria-label="' . esc_attr__('Sao chép', 'monamedia') . '" title="' . esc_attr__('Sao chép', 'monamedia') . '">'
             . '<svg class="tsh-copy-btn__ico tsh-copy-btn__ico--copy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'
             . '<svg class="tsh-copy-btn__ico tsh-copy-btn__ico--check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
             . '</button>';
@@ -83,10 +83,10 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
                     <p class="tsh-paypal-desc"><?= esc_html($this->description) ?></p>
                 <?php endif; ?>
                 <?php if ($this->paypal_name) : ?>
-                    <div class="tsh-bacs-qr__row"><span>Tên tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_name) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Tên tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_name) ?></strong><?= $this->copy_btn() ?></span></div>
                 <?php endif; ?>
                 <?php if ($this->paypal_email) : ?>
-                    <div class="tsh-bacs-qr__row"><span>Email PayPal</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_email) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Email PayPal', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_email) ?></strong><?= $this->copy_btn() ?></span></div>
                 <?php endif; ?>
             </div>
             <?php if ($this->qr_image) : ?>
@@ -116,8 +116,8 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
                 <div class="tsh-payment-confirmed tsh-payment-confirmed--full">
                     <span>✓</span>
                     <div>
-                        <p>Thanh toán thành công!</p>
-                        <p class="tsh-payment-confirmed__sub">Email xác nhận đã gửi đến <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
+                        <p><?php esc_html_e('Thanh toán thành công!', 'monamedia'); ?></p>
+                        <p class="tsh-payment-confirmed__sub"><?php esc_html_e('Email xác nhận đã gửi đến', 'monamedia'); ?> <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
                     </div>
                 </div>
             </div>
@@ -126,28 +126,28 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
         }
         ?>
         <div class="tsh-bacs-qr tsh-bacs-qr--ty">
-            <h3 class="tsh-bacs-qr__title">Hoàn tất thanh toán PayPal</h3>
+            <h3 class="tsh-bacs-qr__title"><?php esc_html_e('Hoàn tất thanh toán PayPal', 'monamedia'); ?></h3>
             <?php if ($this->qr_image) : ?>
             <img src="<?= esc_url($this->qr_image) ?>" alt="PayPal QR">
             <?php endif; ?>
             <div class="tsh-bacs-qr__info">
                 <?php if ($this->paypal_name) : ?>
-                <div class="tsh-bacs-qr__row"><span>Tên tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_name) ?></strong><?= $this->copy_btn() ?></span></div>
+                <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Tên tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_name) ?></strong><?= $this->copy_btn() ?></span></div>
                 <?php endif; ?>
                 <?php if ($this->paypal_email) : ?>
-                <div class="tsh-bacs-qr__row"><span>Email PayPal</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_email) ?></strong><?= $this->copy_btn() ?></span></div>
+                <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Email PayPal', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_email) ?></strong><?= $this->copy_btn() ?></span></div>
                 <?php endif; ?>
-                <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong><?= wc_price($order->get_total()) ?></strong></div>
+                <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong><?= wc_price($order->get_total()) ?></strong></div>
             </div>
             <button type="button" id="tsh-confirm-transfer"
                 data-order="<?= (int) $order_id ?>"
                 data-key="<?= esc_attr($order->get_order_key()) ?>"
                 class="tsh-confirm-btn">
-                Tôi đã thanh toán xong
+                <?php esc_html_e('Tôi đã thanh toán xong', 'monamedia'); ?>
             </button>
             <div id="tsh-transfer-msg" style="display:none" class="tsh-transfer-msg">
-                <p>Cảm ơn bạn! Chúng tôi sẽ kiểm tra và xác nhận đặt lịch trong vòng <strong>2 giờ</strong>.</p>
-                <p>Email xác nhận gửi đến: <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
+                <p><?php echo wp_kses_post(__('Cảm ơn bạn! Chúng tôi sẽ kiểm tra và xác nhận đặt lịch trong vòng <strong>2 giờ</strong>.', 'monamedia')); ?></p>
+                <p><?php esc_html_e('Email xác nhận gửi đến:', 'monamedia'); ?> <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
             </div>
         </div>
         <?php

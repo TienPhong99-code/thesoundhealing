@@ -7,7 +7,7 @@ $sample = [
     'label'   => 'TRẢI NGHIỆM & TRỊ LIỆU',
     'heading' => 'Dịch Vụ',
     'desc'    => 'Khám phá các liệu pháp chữa lành cá nhân hóa, từ trị liệu âm thanh đến năng lượng, được thiết kế để mang lại sự an lạc tuyệt đối.',
-    'link'    => ['url' => home_url('/dich-vu'), 'title' => 'XEM TẤT CẢ', 'target' => ''],
+    'link'    => ['url' => home_url('/dich-vu'), 'title' => __('XEM TẤT CẢ', 'monamedia'), 'target' => ''],
     'items'   => [
         [
             'image'          => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-tam-am-ngu-ngon-nhom.jpg', 'alt' => 'Tắm Âm Ngủ Ngon (Nhóm)'],
@@ -115,6 +115,7 @@ if (empty($raw_objects)) {
     $raw_objects = get_posts([
         'post_type'      => 'dich_vu',
         'post_status'    => 'publish',
+        'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
         'posts_per_page' => 6,
         'orderby'        => 'menu_order date',
         'order'          => 'ASC',

@@ -14,11 +14,11 @@ $_sb_imgs = [
 ];
 
 $loai_hinh_opts = [
-    'best-seller'   => ['label' => 'Best Seller',   'desc' => 'Được yêu thích nhất',              'image' => $_sb_imgs['best-seller']],
-    'sound-healing' => ['label' => 'Sound Healing', 'desc' => 'Liệu pháp âm thanh chữa lành',    'image' => $_sb_imgs['sound-healing']],
-    'usui-reiki'    => ['label' => 'Usui Reiki',    'desc' => 'Năng lượng chữa lành Reiki',       'image' => $_sb_imgs['usui-reiki']],
-    'khoa-hoc'      => ['label' => 'Khoá Học',      'desc' => 'Chương trình đào tạo chuyên sâu',  'image' => $_sb_imgs['khoa-hoc']],
-    'workshop'      => ['label' => 'Workshop',      'desc' => 'Sự kiện trải nghiệm ngắn hạn',     'image' => $_sb_imgs['workshop']],
+    'best-seller'   => ['label' => __('Best Seller', 'monamedia'),   'desc' => __('Được yêu thích nhất', 'monamedia'),             'image' => $_sb_imgs['best-seller']],
+    'sound-healing' => ['label' => __('Sound Healing', 'monamedia'), 'desc' => __('Liệu pháp âm thanh chữa lành', 'monamedia'),   'image' => $_sb_imgs['sound-healing']],
+    'usui-reiki'    => ['label' => __('Usui Reiki', 'monamedia'),    'desc' => __('Năng lượng chữa lành Reiki', 'monamedia'),      'image' => $_sb_imgs['usui-reiki']],
+    'khoa-hoc'      => ['label' => __('Khoá Học', 'monamedia'),      'desc' => __('Chương trình đào tạo chuyên sâu', 'monamedia'), 'image' => $_sb_imgs['khoa-hoc']],
+    'workshop'      => ['label' => __('Workshop', 'monamedia'),      'desc' => __('Sự kiện trải nghiệm ngắn hạn', 'monamedia'),    'image' => $_sb_imgs['workshop']],
 ];
 
 $_td  = new DateTime();
@@ -73,7 +73,12 @@ if (!empty($pre_muc_gia) && isset($price_opts[$pre_muc_gia])) {
 $mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : __('Loại hình · Thời gian · Mức giá', 'monamedia');
 ?>
 
-<div class="search-booking" id="search-booking">
+<div class="search-booking" id="search-booking"
+    data-i18n-type="<?php echo esc_attr__('Chọn loại hình', 'monamedia'); ?>"
+    data-i18n-time="<?php echo esc_attr__('Ngày đặt lịch', 'monamedia'); ?>"
+    data-i18n-price="<?php echo esc_attr__('Chọn mức giá', 'monamedia'); ?>"
+    data-i18n-summary="<?php echo esc_attr__('Loại hình · Thời gian · Mức giá', 'monamedia'); ?>"
+    data-i18n-toast="<?php echo esc_attr__('Vui lòng chọn ít nhất một tiêu chí tìm kiếm', 'monamedia'); ?>">
 
     <!-- Mobile compact trigger (ẩn trên desktop) -->
     <button class="sb-mobile-trigger" id="sb-mobile-trigger" type="button">
@@ -219,7 +224,7 @@ $mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : __('L
             </div>
 
             <!-- Submit (desktop only — mobile dùng sb-popup-footer) -->
-            <button type="submit" class="sb-submit" aria-label="Tìm kiếm">
+            <button type="submit" class="sb-submit" aria-label="<?php echo esc_attr__('Tìm kiếm', 'monamedia'); ?>">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2.2" />
                     <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
@@ -231,7 +236,7 @@ $mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : __('L
 
         <!-- Popup footer (chỉ hiện trên mobile) -->
         <div class="sb-popup-footer">
-            <button class="sb-popup-close" id="sb-popup-close" type="button" aria-label="Đóng">
+            <button class="sb-popup-close" id="sb-popup-close" type="button" aria-label="<?php echo esc_attr__('Đóng', 'monamedia'); ?>">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
                 </svg>

@@ -33,6 +33,12 @@ $order = isset($order) ? $order : false;
             $service_name = $first_item ? $first_item->get_name() : '';
         ?>
 
+        <!-- Grid: content trái + banner phải -->
+        <div class="tsh-ty-body tsh-ty-body--banner">
+
+        <!-- Cột trái: toàn bộ content -->
+        <div class="tsh-ty-content">
+
         <!-- Checkmark header -->
         <div class="tsh-ty-header">
             <div class="tsh-ty-check">
@@ -53,9 +59,6 @@ $order = isset($order) ? $order : false;
                 <span><?php esc_html_e('Tiếng Việt', 'monamedia'); ?>: <a href="tel:0906502582">0906 502 582</a></span>
             </p>
         </div>
-
-        <!-- Grid: card trái + QR phải (QR tạm ẩn cho 3 phương thức thủ công) -->
-        <div class="tsh-ty-body tsh-ty-body--single">
 
         <!-- Card -->
         <div class="tsh-ty-card">
@@ -184,24 +187,25 @@ $order = isset($order) ? $order : false;
                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
                     <path d="M12 8v4m0 4h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                 </svg>
-                <p><?php esc_html_e('Chúng tôi sẽ liên hệ xác nhận lịch hẹn sớm nhất. Quý khách vui lòng đến sớm 10 phút để được phục vụ tốt nhất.', 'monamedia'); ?></p>
+                <p><?php esc_html_e('Chúng tôi sẽ liên hệ xác nhận lịch hẹn sớm nhất. Quý khách vui lòng đến sớm 15 phút để được phục vụ tốt nhất.', 'monamedia'); ?></p>
             </div>
 
         </div><!-- /.tsh-ty-card -->
 
-        <?php // Cột phải QR/xác nhận — tạm ẩn cho 3 phương thức thanh toán thủ công ?>
-        <?php if (false) : ?>
-        <div class="tsh-ty-payment">
-            <?php do_action('woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id()); ?>
-        </div>
-        <?php endif; ?>
-
-        </div><!-- /.tsh-ty-body -->
-
-        <!-- Actions -->
+        <!-- Actions (trong cột content) -->
         <div class="tsh-ty-actions">
+            <button type="button" class="tsh-ty-btn tsh-ty-btn--ghost" disabled aria-disabled="true" title="<?php esc_attr_e('Tính năng sắp ra mắt', 'monamedia'); ?>"><?php esc_html_e('E-TICKET LÀM QUÀ TẶNG', 'monamedia'); ?></button>
             <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri"><?php esc_html_e('Về trang chủ', 'monamedia'); ?></a>
         </div>
+
+        </div><!-- /.tsh-ty-content -->
+
+        <!-- Cột phải: banner -->
+        <div class="tsh-ty-banner">
+            <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png'); ?>" alt="<?php esc_attr_e('Đặt lịch thành công', 'monamedia'); ?>" loading="lazy">
+        </div>
+
+        </div><!-- /.tsh-ty-body -->
 
         <?php endif; ?>
 

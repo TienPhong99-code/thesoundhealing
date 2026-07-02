@@ -22,15 +22,15 @@ $_last      = $_parts[1] ?? $_first;
 
 // Danh sách field hiển thị (chỉ render dòng nào có giá trị)
 $_info_rows = [
-    ['label' => 'Họ và tên',           'value' => $_name],
-    ['label' => 'Số điện thoại',       'value' => $_phone],
-    ['label' => 'Email',               'value' => $_email],
-    ['label' => 'Ngày đặt hẹn',        'value' => $_date],
-    ['label' => 'Khung giờ',           'value' => $_time],
-    ['label' => 'Chi nhánh',           'value' => $_location],
-    ['label' => 'Số người tham gia',   'value' => $_guests ? $_guests . ' người' : ''],
-    ['label' => 'Người hướng dẫn',     'value' => $_instructor],
-    ['label' => 'Trẻ em tham gia',     'value' => $_children],
+    ['label' => __('Họ và tên', 'monamedia'),         'value' => $_name],
+    ['label' => __('Số điện thoại', 'monamedia'),     'value' => $_phone],
+    ['label' => __('Email', 'monamedia'),             'value' => $_email],
+    ['label' => __('Ngày đặt hẹn', 'monamedia'),      'value' => $_date],
+    ['label' => __('Khung giờ', 'monamedia'),         'value' => $_time],
+    ['label' => __('Chi nhánh', 'monamedia'),         'value' => $_location],
+    ['label' => __('Số người tham gia', 'monamedia'), 'value' => $_guests ? $_guests . ' ' . __('người', 'monamedia') : ''],
+    ['label' => __('Người hướng dẫn', 'monamedia'),   'value' => $_instructor],
+    ['label' => __('Trẻ em tham gia', 'monamedia'),   'value' => $_children],
 ];
 ?>
 
@@ -43,8 +43,8 @@ $_info_rows = [
 
         <?php if (empty($_booking)) : ?>
             <div class="tsh-co-empty">
-                <p>Không tìm thấy thông tin đặt lịch. Vui lòng quay lại và điền form đặt lịch.</p>
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-co-back-btn">← Về trang chủ</a>
+                <p><?php esc_html_e('Không tìm thấy thông tin đặt lịch. Vui lòng quay lại và điền form đặt lịch.', 'monamedia'); ?></p>
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-co-back-btn">← <?php esc_html_e('Về trang chủ', 'monamedia'); ?></a>
             </div>
         <?php else : ?>
 
@@ -59,8 +59,8 @@ $_info_rows = [
                     <div class="tsh-co-box">
                         <div class="tsh-co-section">
                             <div class="tsh-co-section__hd">
-                                <h3 class="tsh-co-section__title">Thông tin đặt lịch</h3>
-                                <a href="<?php echo esc_url($_source_url ?: 'javascript:history.back()'); ?>" class="tsh-co-edit-link">Chỉnh sửa</a>
+                                <h3 class="tsh-co-section__title"><?php esc_html_e('Thông tin đặt lịch', 'monamedia'); ?></h3>
+                                <a href="<?php echo esc_url($_source_url ?: 'javascript:history.back()'); ?>" class="tsh-co-edit-link"><?php esc_html_e('Chỉnh sửa', 'monamedia'); ?></a>
                             </div>
                             <div class="tsh-co-info-grid">
                                 <?php foreach ($_info_rows as $row) : ?>
@@ -75,19 +75,19 @@ $_info_rows = [
 
                             <!-- Lưu ý -->
                             <div class="tsh-co-notes">
-                                <h4 class="tsh-co-notes__title">Lưu ý</h4>
+                                <h4 class="tsh-co-notes__title"><?php esc_html_e('Lưu ý', 'monamedia'); ?></h4>
                                 <ul class="tsh-co-notes__list">
-                                    <li>Vui lòng mặc trang phục thoải mái, phù hợp cho việc nằm thiền và thư giãn.</li>
-                                    <li>Có mặt trước giờ bắt đầu <strong>15 phút</strong> để check-in và ổn định vị trí. Khách đến muộn quá 10 phút mà không báo trước sẽ được xem là vắng mặt.</li>
-                                    <li>Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi phiên diễn ra.</li>
-                                    <li>Vé đã mua được phép chuyển nhượng, nhưng <strong>không hoàn tiền</strong> dưới bất kỳ hình thức nào.</li>
-                                    <li>Sound Healing và các bộ môn Năng lượng là liệu pháp hỗ trợ thư giãn và cân bằng, không thay thế cho chẩn đoán hoặc điều trị y khoa.</li>
+                                    <li><?php esc_html_e('Vui lòng mặc trang phục thoải mái, phù hợp cho việc nằm thiền và thư giãn.', 'monamedia'); ?></li>
+                                    <li><?php echo wp_kses_post(__('Có mặt trước giờ bắt đầu <strong>15 phút</strong> để check-in và ổn định vị trí. Khách đến muộn quá 10 phút mà không báo trước sẽ được xem là vắng mặt.', 'monamedia')); ?></li>
+                                    <li><?php echo wp_kses_post(__('Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi phiên diễn ra.', 'monamedia')); ?></li>
+                                    <li><?php echo wp_kses_post(__('Vé đã mua được phép chuyển nhượng, nhưng <strong>không hoàn tiền</strong> dưới bất kỳ hình thức nào.', 'monamedia')); ?></li>
+                                    <li><?php esc_html_e('Sound Healing và các bộ môn Năng lượng là liệu pháp hỗ trợ thư giãn và cân bằng, không thay thế cho chẩn đoán hoặc điều trị y khoa.', 'monamedia'); ?></li>
                                 </ul>
-                                <h4 class="tsh-co-notes__title tsh-co-notes__title--sub">Để có trải nghiệm tốt hơn</h4>
+                                <h4 class="tsh-co-notes__title tsh-co-notes__title--sub"><?php esc_html_e('Để có trải nghiệm tốt hơn', 'monamedia'); ?></h4>
                                 <ul class="tsh-co-notes__list">
-                                    <li>Hạn chế sử dụng rượu bia hoặc chất kích thích trước phiên.</li>
-                                    <li>Uống đủ nước trước và sau khi tham gia.</li>
-                                    <li>Đến với một tâm thế cởi mở, thư giãn và không kỳ vọng vào một trải nghiệm cụ thể. Mỗi người sẽ có hành trình cảm nhận riêng.</li>
+                                    <li><?php esc_html_e('Hạn chế sử dụng rượu bia hoặc chất kích thích trước phiên.', 'monamedia'); ?></li>
+                                    <li><?php esc_html_e('Uống đủ nước trước và sau khi tham gia.', 'monamedia'); ?></li>
+                                    <li><?php esc_html_e('Đến với một tâm thế cởi mở, thư giãn và không kỳ vọng vào một trải nghiệm cụ thể. Mỗi người sẽ có hành trình cảm nhận riêng.', 'monamedia'); ?></li>
                                 </ul>
                             </div>
                         </div>
@@ -97,7 +97,7 @@ $_info_rows = [
                     <div class="tsh-co-box">
                         <div class="tsh-co-section">
                             <div class="tsh-co-section__hd">
-                                <h3 class="tsh-co-section__title">Đơn hàng của bạn</h3>
+                                <h3 class="tsh-co-section__title"><?php esc_html_e('Đơn hàng của bạn', 'monamedia'); ?></h3>
                             </div>
                             <?php do_action('woocommerce_checkout_order_review'); ?>
                         </div>

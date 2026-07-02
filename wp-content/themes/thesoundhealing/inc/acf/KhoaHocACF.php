@@ -52,7 +52,8 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: 09:00 – 17:00'),
 
             Text::make('Ngày khai giảng', 'start_date')
-                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Form sẽ tự chọn ngày đầu tiên và chỉ cho phép chọn các ngày đã nhập.'),
+                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Form sẽ tự chọn ngày đầu tiên và chỉ cho phép chọn các ngày đã nhập. Bắt buộc nhập.')
+                ->required(),
 
             Text::make('Thời lượng', 'duration')
                 ->helperText('Ví dụ: 4 TUẦN, 2 NGÀY, CUỐI TUẦN'),

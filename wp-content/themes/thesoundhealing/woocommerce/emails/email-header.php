@@ -26,9 +26,14 @@
 
         <!-- Header -->
         <tr>
-          <td style="background:#ffffff;padding:28px 36px;text-align:center">
-            <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(27,28,25,0.45)">THE SOUND</p>
-            <p style="margin:0;font-size:22px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#c2a056">HEALING</p>
+          <td style="background:#ffffff;padding:26px 36px;text-align:center">
+            <?php
+            $_logo_id  = get_theme_mod('custom_logo');
+            $_logo_url = $_logo_id
+                ? wp_get_attachment_image_url($_logo_id, 'full')
+                : MONA_THEME_PATH_URI . '/assets/images/logo2.png';
+            ?>
+            <img src="<?php echo esc_url($_logo_url); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" width="150" style="display:block;width:150px;max-width:60%;height:auto;margin:0 auto">
           </td>
         </tr>
 

@@ -73,6 +73,7 @@ if (empty($raw_objects)) {
     $raw_objects = get_posts([
         'post_type'      => 'khoa_hoc',
         'post_status'    => 'publish',
+        'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
         'posts_per_page' => 6,
         'orderby'        => 'date',
         'order'          => 'DESC',

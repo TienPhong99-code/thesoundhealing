@@ -15,9 +15,9 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
-        add_filter('woocommerce_order_button_text', fn() => 'Đặt lịch ngay');
-        add_filter('woocommerce_email_heading_customer_processing_order', fn() => 'Cảm ơn bạn đã đặt lịch hẹn');
-        add_filter('woocommerce_email_heading_customer_on_hold_order',    fn() => 'Cảm ơn bạn đã đặt lịch hẹn');
+        add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
+        add_filter('woocommerce_email_heading_customer_processing_order', fn() => __('Cảm ơn bạn đã đặt lịch hẹn', 'monamedia'));
+        add_filter('woocommerce_email_heading_customer_on_hold_order',    fn() => __('Cảm ơn bạn đã đặt lịch hẹn', 'monamedia'));
         add_filter('woocommerce_email_subject_customer_processing_order', [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
@@ -37,13 +37,72 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_before_calculate_totals',    [$this, 'apply_guests_price']);
         add_filter('woocommerce_get_item_data',              [$this, 'display_guests_in_cart'], 10, 2);
         add_filter('woocommerce_available_payment_gateways', [$this, 'set_bacs_first']);
-        add_filter('pre_option_woocommerce_default_gateway', fn() => 'bacs');
+        // Không ép chọn sẵn cổng nào — khách phải tự click chọn (xử lý ở checkout_bacs_js)
         add_action('woocommerce_checkout_init', function() {
             if (WC()->session) {
-                WC()->session->set('chosen_payment_method', 'bacs');
+                WC()->session->set('chosen_payment_method', '');
             }
         });
         add_filter('woocommerce_gateway_icon', [$this, 'payment_method_icon'], 20, 2);
+        add_action('woocommerce_review_order_before_payment', [$this, 'payment_section_title']);
+        // Dịch tiêu đề cổng + label bảng đơn hàng WooCommerce sang EN theo ngôn ngữ hiện tại
+        add_filter('woocommerce_gateway_title', [$this, 'i18n_gateway_title'], 20, 2);
+        add_filter('gettext_woocommerce', [$this, 'i18n_wc_core_labels'], 20, 2);
+        // Dịch tên phương thức thanh toán trong đơn/email (title đã lưu lúc đặt là tiếng Việt)
+        add_filter('woocommerce_order_get_payment_method_title', [$this, 'i18n_order_payment_title'], 20, 2);
+    }
+
+    /**
+     * Đổi tên phương thức thanh toán của đơn (dùng ở email/thankyou) sang EN khi locale EN.
+     */
+    public function i18n_order_payment_title($title, $order)
+    {
+        if (!$this->is_en_locale() || !is_object($order)) return $title;
+        $en = [
+            'sepay'         => 'Bank Transfer (QR)',
+            'tsh_paypal_qr' => 'Pay with PayPal',
+            'tsh_cash'      => 'Other Payment',
+        ];
+        $id = $order->get_payment_method();
+        return $en[$id] ?? $title;
+    }
+
+    private function is_en_locale(): bool
+    {
+        return function_exists('determine_locale') && strpos(determine_locale(), 'en') === 0;
+    }
+
+    /**
+     * Đổi tiêu đề cổng thanh toán sang tiếng Anh khi đang xem bản EN.
+     */
+    public function i18n_gateway_title($title, $gateway_id)
+    {
+        if (!$this->is_en_locale()) return $title;
+        $en = [
+            'sepay'         => 'Bank Transfer (QR)',
+            'tsh_paypal_qr' => 'Pay with PayPal',
+            'tsh_cash'      => 'Other Payment',
+        ];
+        return $en[$gateway_id] ?? $title;
+    }
+
+    /**
+     * Ép chuỗi lõi WooCommerce (Product/Subtotal/Total) về tiếng Anh gốc khi xem bản EN
+     * (tránh bị kẹt bản dịch tiếng Việt trên trang tiếng Anh).
+     */
+    public function i18n_wc_core_labels($translation, $text)
+    {
+        if (!$this->is_en_locale()) return $translation;
+        static $keys = ['Product' => 1, 'Subtotal' => 1, 'Total' => 1];
+        return isset($keys[$text]) ? $text : $translation;
+    }
+
+    /**
+     * Tiêu đề phía trên khối chọn phương thức thanh toán ở checkout.
+     */
+    public function payment_section_title(): void
+    {
+        echo '<h3 class="tsh-co-payment-title">' . esc_html__('Lựa chọn phương thức thanh toán', 'monamedia') . '</h3>';
     }
 
     /**
@@ -54,10 +113,14 @@ class TSH_WooCommerce_Hook
         $icons = [
             // Chuyển khoản ngân hàng — icon ngân hàng
             'bacs' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10"/><path d="M9 21V10"/><path d="M15 21V10"/><path d="M19 21V10"/><path d="M12 3 3 8h18z"/></svg>',
+            // QR chuyển khoản (SePay) — icon mã QR
+            'sepay' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7M14 21h3"/></svg>',
             // PayPal — icon thẻ trực tuyến
             'tsh_paypal_qr' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>',
             // Thanh toán khác — icon ví
             'tsh_cash' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V8H6a2 2 0 0 1 0-4h13v4"/><path d="M3 6v12a2 2 0 0 0 2 2h16v-6"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>',
+            // SePay Credit Card — icon thẻ
+            'tsh_sepay_credit' => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>',
         ];
 
         return isset($icons[$gateway_id])
@@ -75,12 +138,20 @@ class TSH_WooCommerce_Hook
 
     public function set_bacs_first(array $gateways): array
     {
-        if (isset($gateways['bacs'])) {
-            $bacs = $gateways['bacs'];
-            unset($gateways['bacs']);
-            $gateways = array_merge(['bacs' => $bacs], $gateways);
+        // Ẩn chuyển khoản ngân hàng thủ công (BACS) — thay bằng SePay (tự xác nhận)
+        unset($gateways['bacs']);
+
+        // Thứ tự hiển thị mong muốn
+        $order  = ['tsh_sepay_credit', 'sepay', 'tsh_paypal_qr', 'tsh_cash'];
+        $sorted = [];
+        foreach ($order as $id) {
+            if (isset($gateways[$id])) {
+                $sorted[$id] = $gateways[$id];
+                unset($gateways[$id]);
+            }
         }
-        return $gateways;
+        // Giữ các cổng khác (nếu có) ở cuối
+        return $sorted + $gateways;
     }
 
     public function declare_support(): void
@@ -102,12 +173,12 @@ class TSH_WooCommerce_Hook
         $nonce      = sanitize_text_field($_GET['nonce'] ?? '');
 
         if (!$product_id || !wp_verify_nonce($nonce, 'tsh_buy_now')) {
-            wp_die('Yêu cầu không hợp lệ.', '', ['response' => 400]);
+            wp_die(esc_html__('Yêu cầu không hợp lệ.', 'monamedia'), '', ['response' => 400]);
         }
 
         $product = wc_get_product($product_id);
         if (!$product || !$product->is_purchasable()) {
-            wp_die('Sản phẩm không tồn tại.', '', ['response' => 404]);
+            wp_die(esc_html__('Sản phẩm không tồn tại.', 'monamedia'), '', ['response' => 404]);
         }
 
         $booking = $this->get_booking();
@@ -116,7 +187,7 @@ class TSH_WooCommerce_Hook
         WC()->cart->empty_cart();
         $added = WC()->cart->add_to_cart($product_id, 1, 0, [], ['tsh_guests' => $guests]);
         if (!$added) {
-            wp_die('Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.', '', ['response' => 400]);
+            wp_die(esc_html__('Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.', 'monamedia'), '', ['response' => 400]);
         }
         wp_safe_redirect(wc_get_checkout_url());
         exit;
@@ -319,11 +390,11 @@ class TSH_WooCommerce_Hook
             ob_start(); ?>
             <div class="tsh-bacs-checkout-wrap">
                 <div class="tsh-bacs-checkout-info">
-                    <div class="tsh-bacs-qr__row"><span>Ngân hàng</span><strong><?= esc_html(TSH_BANK_ID) ?></strong></div>
-                    <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong><?= $this->copy_btn() ?></span></div>
-                    <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_NAME) ?></strong><?= $this->copy_btn() ?></span></div>
-                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><span class="tsh-bacs-qr__val"><strong id="tsh-bacs-addinfo"><?= esc_html($info) ?></strong><?= $this->copy_btn() ?></span></div>
-                    <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong id="tsh-bacs-amount"><?= $total > 0 ? number_format($total, 0, ',', '.') . 'đ' : '—' ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Ngân hàng', 'monamedia'); ?></span><strong><?= esc_html(TSH_BANK_ID) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Chủ tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_NAME) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span><?php esc_html_e('Nội dung CK', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong id="tsh-bacs-addinfo"><?= esc_html($info) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong id="tsh-bacs-amount"><?= $total > 0 ? number_format($total, 0, ',', '.') . 'đ' : '—' ?></strong></div>
                 </div>
                 <div class="tsh-bacs-qr">
                     <img src="<?= esc_url($src) ?>" data-base="<?= esc_url($base) ?>" alt="QR chuyển khoản <?= esc_attr(TSH_BANK_ID) ?>">
@@ -372,23 +443,40 @@ class TSH_WooCommerce_Hook
             }
 
             $add_info = 'TSHCK' . $token;
-            $base     = 'https://img.vietqr.io/image/' . TSH_BANK_ID . '-' . TSH_BANK_ACCOUNT . '-compact2.png?' . http_build_query([
-                'accountName' => TSH_BANK_NAME,
+
+            // Lấy thông tin tài khoản từ cài đặt cổng SePay (nguồn duy nhất — chỉnh trong admin),
+            // fallback về hằng số nếu chưa cấu hình.
+            $sepay_cfg = get_option('woocommerce_sepay_settings', []);
+            $bank_id   = strtoupper($sepay_cfg['bank_select'] ?? '')       ?: TSH_BANK_ID;
+            $bank_acc  = ($sepay_cfg['bank_account_number'] ?? '')          ?: TSH_BANK_ACCOUNT;
+            $bank_name = ($sepay_cfg['bank_account_holder'] ?? '')          ?: TSH_BANK_NAME;
+
+            $base = 'https://img.vietqr.io/image/' . $bank_id . '-' . $bank_acc . '-compact2.png?' . http_build_query([
+                'accountName' => $bank_name,
             ]);
             $src = $base . '&amount=' . $total . '&addInfo=' . rawurlencode($add_info);
 
             ob_start(); ?>
-            <div class="tsh-bacs-qr tsh-sepay-checkout-qr"
-                data-token="<?= esc_attr($token) ?>"
-                data-base="<?= esc_url($base) ?>"
-                data-addinfo="<?= esc_attr($add_info) ?>">
-                <img src="<?= esc_url($src) ?>" alt="QR SePay">
-                <div class="tsh-payment-waiting">
-                    <p>Quét mã QR để thanh toán<br><span>Trang sẽ tự chuyển sau khi xác nhận</span></p>
+            <div class="tsh-bacs-checkout-wrap">
+                <div class="tsh-bacs-checkout-info">
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Ngân hàng', 'monamedia'); ?></span><strong><?= esc_html($bank_id) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($bank_acc) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Chủ tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($bank_name) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span><?php esc_html_e('Nội dung CK', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($add_info) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong id="tsh-sepay-amount"><?= $total > 0 ? number_format($total, 0, ',', '.') . 'đ' : '—' ?></strong></div>
+                </div>
+                <div class="tsh-bacs-qr tsh-sepay-checkout-qr"
+                    data-token="<?= esc_attr($token) ?>"
+                    data-base="<?= esc_url($base) ?>"
+                    data-addinfo="<?= esc_attr($add_info) ?>">
+                    <img src="<?= esc_url($src) ?>" alt="QR SePay">
                 </div>
             </div>
+            <div class="tsh-payment-waiting">
+                <p><?php esc_html_e('Quét mã QR để thanh toán', 'monamedia'); ?><br><span><?php esc_html_e('Trang sẽ tự chuyển sau khi xác nhận', 'monamedia'); ?></span></p>
+            </div>
         <?php
-            return $description . ob_get_clean();
+            return ob_get_clean();
         }
 
         return $description;
@@ -595,7 +683,7 @@ class TSH_WooCommerce_Hook
         <script>
             jQuery(function($) {
                 var $orig = $('#place_order');
-                var $fake = $('<button type="button" id="tsh-place-order">Xác nhận đặt lịch</button>');
+                var $fake = $('<button type="button" id="tsh-place-order"><?= esc_js(__('Xác nhận đặt lịch', 'monamedia')) ?></button>');
                 var ajaxUrl = '<?= esc_js($ajax_url) ?>';
                 var sepayTimer;
                 $orig.after($fake);
@@ -638,6 +726,7 @@ class TSH_WooCommerce_Hook
                     if (!$qr.length) return;
                     var amount = parseInt($('.order-total .amount').first().text().replace(/\D/g, '')) || 0;
                     $qr.find('img').attr('src', $qr.data('base') + '&amount=' + amount + '&addInfo=' + encodeURIComponent($qr.data('addinfo')));
+                    if (amount > 0) $('#tsh-sepay-amount').text(amount.toLocaleString('vi-VN') + 'đ');
                 });
 
                 function showPaymentBox(method) {
@@ -653,7 +742,7 @@ class TSH_WooCommerce_Hook
                         $fake.show();
                     } else if (method === 'sepay') {
                         $orig.hide();
-                        $fake.hide();
+                        $fake.show();
                         startSepayPoll();
                     } else {
                         $orig.show();
@@ -661,10 +750,46 @@ class TSH_WooCommerce_Hook
                     }
                 }
 
-                toggle($('input[name="payment_method"]:checked').val());
-                $(document.body).on('payment_method_selected updated_checkout', function() {
-                    toggle($('input[name="payment_method"]:checked').val());
+                // Master/Credit Card — placeholder chờ BCT: disable radio, không cho chọn
+                function disableMasterCard() {
+                    var $mc = $('#payment_method_tsh_sepay_credit');
+                    if (!$mc.length) return;
+                    $mc.prop('disabled', true).closest('li').addClass('tsh-pm-disabled');
+                    var $label = $mc.closest('li').find('label[for="payment_method_tsh_sepay_credit"]');
+                    if ($label.length && !$label.find('.tsh-soon-badge').length) {
+                        var $badge = $('<span class="tsh-soon-badge"><?= esc_js(__('Sắp ra mắt', 'monamedia')) ?></span>');
+                        var $icon = $label.find('.tsh-pay-ic');
+                        $icon.length ? $badge.insertBefore($icon) : $label.append(' ', $badge);
+                    }
+                    // Nếu lỡ bị chọn (WC auto-check cổng đầu) → bỏ chọn
+                    if ($mc.is(':checked')) $mc.prop('checked', false);
+                }
+
+                // Không active cổng nào khi mới vào — khách phải tự click chọn
+                var userPicked = false;
+                $(document.body).on('click change', 'input[name="payment_method"]:not(:disabled)', function() {
+                    userPicked = true;
                 });
+
+                function deselectPayments() {
+                    $('input[name="payment_method"]').prop('checked', false);
+                    $('.payment_box').hide();
+                    // Giữ nút "Xác nhận đặt lịch" luôn hiện (bấm khi chưa chọn cổng → WC báo chọn phương thức)
+                    $orig.hide();
+                    $fake.show();
+                }
+
+                function refreshPayments() {
+                    disableMasterCard();
+                    if (!userPicked || !$('input[name="payment_method"]:checked').length) {
+                        deselectPayments();
+                        return;
+                    }
+                    toggle($('input[name="payment_method"]:checked').val());
+                }
+
+                refreshPayments();
+                $(document.body).on('payment_method_selected updated_checkout', refreshPayments);
             });
         </script>
     <?php
@@ -801,8 +926,8 @@ class TSH_WooCommerce_Hook
         $guests = (int) ($cart_item['tsh_guests'] ?? 1);
         if ($guests > 1) {
             $item_data[] = [
-                'key'   => 'Số người tham gia',
-                'value' => $guests . ' người',
+                'key'   => __('Số người tham gia', 'monamedia'),
+                'value' => $guests . ' ' . __('người', 'monamedia'),
             ];
         }
         return $item_data;

@@ -12,6 +12,10 @@
         ordinal: function () { return ''; },
     };
 
+
+    // Ngôn ngữ theo <html lang>: VI dùng locale tiếng Việt, còn lại English mặc định của Flatpickr
+    var isVi = (document.documentElement.lang || 'vi').toLowerCase().indexOf('vi') === 0;
+
     function initDatePicker() {
         var dateInput = document.querySelector('.cf7-workshop input[type="date"]');
         if (!dateInput || typeof flatpickr === 'undefined') return;
@@ -29,8 +33,8 @@
             quickOpts = availDates.slice(0, 3).map(function (ds) {
                 var d = new Date(ds + 'T00:00:00');
                 return {
-                    label: d.toLocaleDateString('vi-VN', { day: 'numeric', month: 'long' }),
-                    sub:   d.toLocaleDateString('vi-VN', { weekday: 'long' }),
+                    label: d.toLocaleDateString((isVi ? 'vi-VN' : 'en-GB'), { day: 'numeric', month: 'long' }),
+                    sub:   d.toLocaleDateString((isVi ? 'vi-VN' : 'en-GB'), { weekday: 'long' }),
                     date:  d,
                 };
             });
@@ -87,14 +91,14 @@
 
         var fpConfig = {
             inline: true,
-            locale: viLocale,
+            locale: isVi ? viLocale : 'default',
             dateFormat: 'Y-m-d',
             minDate: 'today',
             onChange: function (selectedDates, dateStr) {
                 dateInput.value = dateStr;
                 var valEl = triggerBtn.querySelector('.cf7-date-trigger__val');
                 if (valEl && selectedDates[0]) {
-                    valEl.textContent = selectedDates[0].toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    valEl.textContent = selectedDates[0].toLocaleDateString((isVi ? 'vi-VN' : 'en-GB'), { day: 'numeric', month: 'short', year: 'numeric' });
                     valEl.classList.add('has-value');
                 }
                 pillRefs.forEach(function (p) { p.btn.classList.remove('is-active'); });
@@ -140,7 +144,7 @@
             dateInput.value = dateStr;
             var valEl = triggerBtn.querySelector('.cf7-date-trigger__val');
             if (valEl) {
-                valEl.textContent = d.toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' });
+                valEl.textContent = d.toLocaleDateString((isVi ? 'vi-VN' : 'en-GB'), { day: 'numeric', month: 'short', year: 'numeric' });
                 valEl.classList.add('has-value');
             }
             pillRefs.forEach(function (p) {

@@ -66,6 +66,7 @@ if (empty($raw_objects)) {
     $raw_objects = get_posts([
         'post_type'      => 'workshop',
         'post_status'    => 'publish',
+        'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
         'posts_per_page' => 3,
         'orderby'        => 'menu_order date',
         'order'          => 'ASC',

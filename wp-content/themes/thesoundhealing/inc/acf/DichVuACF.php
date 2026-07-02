@@ -61,7 +61,8 @@ add_action('acf/init', function () {
                 ->rows(3),
 
             Text::make('Ngày diễn ra', 'dv_available_days')
-                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Dùng cho cả hiển thị trên trang lẫn lịch đặt chỗ trong form. Để trống = cho phép chọn tự do từ hôm nay.'),
+                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Dùng cho cả hiển thị trên trang lẫn lịch đặt chỗ trong form. Bắt buộc nhập.')
+                ->required(),
 
             Text::make('Số khách / phiên', 'dv_guests')
                 ->helperText('Ví dụ: 1-2 khách / phiên · Tối đa 1 người'),

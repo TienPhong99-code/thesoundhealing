@@ -9,27 +9,19 @@
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td style="background:#faf8f4;border-radius:8px;padding:14px 18px">
-                  <p style="margin:0;font-size:12px;color:#999;line-height:1.7">
-                    Bạn cần hỗ trợ? Liên hệ chúng tôi qua email
+                  <p style="margin:0 0 6px;font-size:12px;color:#999;line-height:1.7">
+                    <?php esc_html_e('Bạn cần hỗ trợ? Liên hệ chúng tôi qua email', 'monamedia'); ?>
                     <a href="mailto:<?php echo esc_attr(get_option('admin_email')); ?>" style="color:#c2a056;text-decoration:none"><?php echo esc_html(get_option('admin_email')); ?></a>
-                    hoặc gọi hotline. Chúng tôi luôn sẵn sàng phục vụ bạn.
+                    <?php esc_html_e('hoặc gọi hotline. Chúng tôi luôn sẵn sàng phục vụ bạn.', 'monamedia'); ?>
+                  </p>
+                  <p style="margin:0;font-size:12px;font-weight:600;color:#1b1c19;line-height:1.7">
+                    English: <a href="tel:0939624684" style="color:#c2a056;text-decoration:none">0939 624 684</a>
+                    &nbsp;|&nbsp;
+                    Tiếng Việt: <a href="tel:0906502582" style="color:#c2a056;text-decoration:none">0906 502 582</a>
                   </p>
                 </td>
               </tr>
             </table>
-          </td>
-        </tr>
-
-        <!-- Footer -->
-        <tr>
-          <td style="padding:28px 36px;text-align:center;border-top:1px solid #edeae4;margin-top:28px">
-            <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#1b1c19;letter-spacing:2px;text-transform:uppercase">The Sound Healing</p>
-            <p style="margin:0 0 12px;font-size:12px;color:#aaa;line-height:1.6">
-              <?php echo wp_kses_post(wpautop(wptexturize(apply_filters('woocommerce_email_footer_text', get_option('woocommerce_email_footer_text'))))); ?>
-            </p>
-            <p style="margin:0;font-size:11px;color:#ccc">
-              © <?php echo esc_html(date('Y')); ?> The Sound Healing. All rights reserved.
-            </p>
           </td>
         </tr>
 

@@ -40,7 +40,7 @@ define('TSH_BANK_NAME',    'CONG TY CO PHAN HEALIVERSE');
 
 // SePay credentials (test) — đổi sang production khi go-live
 define('TSH_SEPAY_MERCHANT_ID', 'SP-TEST-HT7A66B5');
-define('TSH_SEPAY_API_KEY',     '624f16a405a87871ff709a55ce9a2a477b2d94e938502512');
+define('TSH_SEPAY_API_KEY',     'vFLYXkHOfHaJ0Pj7JV4BSG9684hofgUT');
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/inc/init.php';

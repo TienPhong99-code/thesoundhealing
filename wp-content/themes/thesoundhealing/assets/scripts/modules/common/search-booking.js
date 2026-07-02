@@ -17,6 +17,19 @@
     var sb = document.getElementById('search-booking');
     if (!sb) return;
 
+    // Chuỗi dịch lấy từ data-attribute (PHP render theo ngôn ngữ hiện tại)
+    var i18n = {
+        type:    sb.getAttribute('data-i18n-type')    || 'Chọn loại hình',
+        time:    sb.getAttribute('data-i18n-time')    || 'Ngày đặt lịch',
+        price:   sb.getAttribute('data-i18n-price')   || 'Chọn mức giá',
+        summary: sb.getAttribute('data-i18n-summary') || 'Loại hình · Thời gian · Mức giá',
+        toast:   sb.getAttribute('data-i18n-toast')   || 'Vui lòng chọn ít nhất một tiêu chí tìm kiếm',
+    };
+
+    // Ngôn ngữ hiện tại theo <html lang>: chỉ áp locale tiếng Việt khi site là VI,
+    // còn lại dùng English mặc định có sẵn của Flatpickr.
+    var isVi = (document.documentElement.lang || 'vi').toLowerCase().indexOf('vi') === 0;
+
     // Mức giá — chọn 1 (radio)
     var priceValue = ((document.getElementById('sb-input-price') || {}).value) || '';
 
@@ -123,7 +136,9 @@
             sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
             this.classList.add('is-active');
 
-            if (window._sbFlatpickr) window._sbFlatpickr.clear();
+            // clear(false): xoá lựa chọn lịch nhưng KHÔNG kích hoạt onChange
+            // (onChange sẽ reset sb-input-time về rỗng → mất giá trị vừa chọn)
+            if (window._sbFlatpickr) window._sbFlatpickr.clear(false);
 
             updateMobileSummary();
             openPanel('price');
@@ -163,9 +178,9 @@
         if (!valEl) return;
         if (priceValue) {
             var active = pricePanel ? pricePanel.querySelector('.sb-price-item.is-active') : null;
-            valEl.textContent = active ? (active.dataset.label || active.textContent.trim()) : 'Chọn mức giá';
+            valEl.textContent = active ? (active.dataset.label || active.textContent.trim()) : i18n.price;
         } else {
-            valEl.textContent = 'Chọn mức giá';
+            valEl.textContent = i18n.price;
         }
     }
 
@@ -228,7 +243,7 @@
 
             if (!hasType && !hasTime && !hasPrice) {
                 e.preventDefault();
-                showToast('Vui lòng chọn ít nhất một tiêu chí tìm kiếm');
+                showToast(i18n.toast);
                 return;
             }
         });
@@ -241,7 +256,7 @@
             window._sbFlatpickr = flatpickr(fpTrigger, {
                 inline:  true,
                 minDate: 'today',
-                locale: viLocale,
+                locale: isVi ? viLocale : 'default',
                 onChange: function (selectedDates, dateStr) {
                     var timeInput = document.getElementById('sb-input-time');
                     var dateInput = document.getElementById('sb-input-date');
@@ -251,7 +266,7 @@
                     if (dateInput) dateInput.value = dateStr;
 
                     if (valEl && selectedDates[0]) {
-                        valEl.textContent = selectedDates[0].toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' });
+                        valEl.textContent = selectedDates[0].toLocaleDateString(isVi ? 'vi-VN' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
                     }
 
                     sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
@@ -321,7 +336,7 @@
             var valType      = document.getElementById('sb-val-type');
             if (typeInput)    typeInput.value    = '';
             if (subtermInput) subtermInput.value = '';
-            if (valType)      valType.textContent = 'Chọn loại hình';
+            if (valType)      valType.textContent = i18n.type;
             sb.querySelectorAll('.sb-type-item').forEach(function (i) { i.classList.remove('is-active'); });
 
             // Xóa thời gian
@@ -330,7 +345,7 @@
             var valTime   = document.getElementById('sb-val-time');
             if (timeInput) timeInput.value     = '';
             if (dateInput) dateInput.value     = '';
-            if (valTime)   valTime.textContent = 'Ngày đặt lịch';
+            if (valTime)   valTime.textContent = i18n.time;
             sb.querySelectorAll('.sb-time-pill').forEach(function (p) { p.classList.remove('is-active'); });
             if (window._sbFlatpickr) window._sbFlatpickr.clear();
 
@@ -348,7 +363,7 @@
         var valType   = document.getElementById('sb-val-type');
         if (typeInput && typeInput.value) {
             var typeText = valType ? valType.textContent.trim() : typeInput.value;
-            if (typeText && typeText !== 'Chọn loại hình') parts.push(typeText);
+            if (typeText && typeText !== i18n.type) parts.push(typeText);
         }
 
         var timeInput = document.getElementById('sb-input-time');
@@ -356,17 +371,17 @@
         var valTime   = document.getElementById('sb-val-time');
         if ((timeInput && timeInput.value) || (dateInput && dateInput.value)) {
             var timeText = valTime ? valTime.textContent.trim() : '';
-            if (timeText && timeText !== 'Ngày đặt lịch') parts.push(timeText);
+            if (timeText && timeText !== i18n.time) parts.push(timeText);
         }
 
         var priceInput = document.getElementById('sb-input-price');
         var valPrice   = document.getElementById('sb-val-price');
         if (priceInput && priceInput.value) {
             var priceText = valPrice ? valPrice.textContent.trim() : '';
-            if (priceText && priceText !== 'Chọn mức giá') parts.push(priceText);
+            if (priceText && priceText !== i18n.price) parts.push(priceText);
         }
 
-        summaryEl.textContent = parts.length > 0 ? parts.join(' · ') : 'Loại hình · Thời gian · Mức giá';
+        summaryEl.textContent = parts.length > 0 ? parts.join(' · ') : i18n.summary;
     }
 
 })();

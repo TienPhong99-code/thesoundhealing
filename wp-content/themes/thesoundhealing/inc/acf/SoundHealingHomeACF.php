@@ -122,6 +122,21 @@ add_action('acf/init', function () {
                 ->multiple()
                 ->format('object'),
 
+            // ─── TAB: KHÓA HỌC & WORKSHOP (mục gộp) ───────────────────────
+            Tab::make('Khóa Học & Workshop')->placement('left'),
+
+            Text::make('Tiêu đề', 'cwlist_heading')
+                ->helperText('Ví dụ: Khóa Học & Workshop')
+                ->default('Khóa Học & Workshop'),
+
+            Textarea::make('Mô tả', 'cwlist_desc')
+                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
+                ->rows(2)
+                ->default('Tham gia các khóa học và workshop được thiết kế để dẫn dắt bạn qua từng giai đoạn chuyển hóa tâm thức sâu sắc.'),
+
+            Link::make('Link "Xem tất cả"', 'cwlist_link_all')
+                ->helperText('Link dẫn đến trang tổng hợp Khóa học & Workshop.'),
+
             // ─── TAB: GALLERY ─────────────────────────────────────────────
             Tab::make('Học viên & Trải nghiệm')->placement('left'),
 

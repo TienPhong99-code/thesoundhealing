@@ -7,6 +7,7 @@ $page_id = MONA_PAGE_HOME;
 $course_posts = get_posts([
     'post_type'      => 'khoa_hoc',
     'post_status'    => 'publish',
+    'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
     'posts_per_page' => -1,
     'orderby'        => 'date',
     'order'          => 'DESC',
@@ -44,6 +45,7 @@ foreach ($course_posts as $post) {
 $workshop_posts = get_posts([
     'post_type'      => 'workshop',
     'post_status'    => 'publish',
+    'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
     'posts_per_page' => -1,
     'orderby'        => 'menu_order date',
     'order'          => 'ASC',
@@ -82,9 +84,8 @@ usort($all_items, function ($a, $b) {
 });
 
 $data = [
-    'label'           => get_field('cwlist_label', $page_id)   ?: 'ĐÀO TẠO & SỰ KIỆN',
-    'heading'         => get_field('cwlist_heading', $page_id) ?: 'Khóa Học & Workshop',
-    'desc'            => get_field('cwlist_desc', $page_id)    ?: 'Tham gia các khóa học và workshop được thiết kế để dẫn dắt bạn qua từng giai đoạn chuyển hóa tâm thức sâu sắc.',
+    'heading'         => get_field('cwlist_heading', $page_id),
+    'desc'            => get_field('cwlist_desc', $page_id),
     'link_all'        => get_field('cwlist_link_all', $page_id) ?: ['url' => home_url('/khoa-hoc-workshop'), 'title' => __('Xem tất cả', 'monamedia'), 'target' => ''],
     'items'           => $all_items,
 ];
@@ -96,9 +97,11 @@ $data = [
         <!-- Header -->
         <div class="flex md:items-end justify-between mb-8 max-md:flex-col gap-4">
             <div>
-                <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px] mb-3">
-                    <?php echo esc_html($data['heading']); ?>
-                </h2>
+                <?php if (!empty($data['heading'])) : ?>
+                    <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px] mb-3">
+                        <?php echo esc_html($data['heading']); ?>
+                    </h2>
+                <?php endif; ?>
                 <?php if (!empty($data['desc'])) : ?>
                     <p class="text-[#414847]">
                         <?php echo wp_kses_post($data['desc']); ?>

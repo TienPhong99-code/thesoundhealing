@@ -372,3 +372,24 @@ add_filter('wpcf7_form_elements', function ($html) {
 
     return $html;
 });
+
+/**
+ * Ép dịch các chuỗi theme (domain monamedia) sang tiếng Anh khi xem bản EN.
+ * Lý do: các chuỗi này bị WPML can thiệp nên __()/.mo không trả bản dịch,
+ * dù .po/.mo đã có. Filter chạy priority cao (sau WPML) để ghi đè.
+ */
+add_filter('gettext_monamedia', function ($translation, $text) {
+    if (function_exists('determine_locale') && strpos(determine_locale(), 'en') === 0) {
+        static $map = [
+            // Placeholder select booking
+            'Chọn khung giờ'       => 'Select time slot',
+            'Chọn chi nhánh'        => 'Select branch',
+            'Chọn người hướng dẫn' => 'Select instructor',
+            // Trang đặt lịch thành công
+            'E-TICKET LÀM QUÀ TẶNG' => 'Gift E-ticket',
+            'Tính năng sắp ra mắt' => 'Coming soon',
+        ];
+        if (isset($map[$text])) return $map[$text];
+    }
+    return $translation;
+}, 99, 2);

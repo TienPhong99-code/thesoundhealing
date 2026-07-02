@@ -3371,6 +3371,13 @@ form .wpcf7-not-valid-tip {
 }
 
 /* ── Payment ── */
+.tsh-co-payment-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-sec);
+  letter-spacing: 0.2px;
+  margin: 4px 0 14px;
+}
 #payment {
   background: transparent !important;
   border: none !important;
@@ -3451,6 +3458,26 @@ form .wpcf7-not-valid-tip {
 .tsh-pay-ic svg {
   display: block;
 }
+/* Cổng bị disable (placeholder chờ ra mắt) */
+#payment ul.wc_payment_methods li.tsh-pm-disabled {
+  opacity: 0.55;
+}
+#payment ul.wc_payment_methods li.tsh-pm-disabled label,
+#payment ul.wc_payment_methods li.tsh-pm-disabled input[type="radio"] {
+  cursor: not-allowed;
+}
+.tsh-soon-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #b8922e;
+  background: #f7efd8;
+  border-radius: 99px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
 #payment .payment_box {
   flex: 0 0 100%;
   background: #f0ede6;
@@ -3460,12 +3487,17 @@ form .wpcf7-not-valid-tip {
   margin-top: 4px;
   display: none !important;
 }
-#payment_method_bacs:checked ~ .payment_box {
+/* ── Cổng HIỂN THỊ payment_box khi được chọn ──
+   Thêm gateway mới cần hiện box vào danh sách selector bên dưới,
+   vd sau này thêm SePay Credit Card:
+   #payment_method_sepay_card:checked ~ .payment_box */
+#payment_method_bacs:checked ~ .payment_box,
+#payment_method_tsh_paypal_qr:checked ~ .payment_box,
+#payment_method_sepay:checked ~ .payment_box {
   display: block !important;
 }
-#payment_method_tsh_paypal_qr:checked ~ .payment_box {
-  display: block !important;
-}
+
+/* ── Cổng KHÔNG hiện box khi chọn (giữ ẩn) ── */
 #payment_method_tsh_cash:checked ~ .payment_box {
   display: none !important;
 }
@@ -3743,6 +3775,48 @@ form .wpcf7-not-valid-tip {
   grid-template-columns: 1fr;
   max-width: 720px;
 }
+/* Content trái + banner phải */
+.tsh-ty-body--banner {
+  grid-template-columns: 1fr 400px;
+}
+.tsh-ty-banner {
+  position: sticky;
+  top: calc(var(--size-hd) + 16px);
+  align-self: start;
+}
+.tsh-ty-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+/* Cột content: dồn header + support + card + nút về bên trái, căn trái */
+.tsh-ty-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+.tsh-ty-content .tsh-ty-header {
+  text-align: left;
+  margin-bottom: 0;
+}
+.tsh-ty-content .tsh-ty-check {
+  margin: 0 0 14px;
+}
+.tsh-ty-content .tsh-ty-support {
+  max-width: none;
+  margin: 0;
+  text-align: left;
+}
+.tsh-ty-content .tsh-ty-support-nums {
+  justify-content: flex-start;
+}
+.tsh-ty-content .tsh-ty-actions {
+  max-width: none;
+  margin: 0;
+  justify-content: flex-start;
+}
 
 /* ── Hỗ trợ / liên hệ ── */
 .tsh-ty-support {
@@ -3799,7 +3873,7 @@ form .wpcf7-not-valid-tip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 14px 18px;
   background: #faf8f4;
   border-bottom: 1px solid #edeae4;
 }
@@ -3831,7 +3905,7 @@ form .wpcf7-not-valid-tip {
   padding: 0;
 }
 .tsh-ty-quick-item {
-  padding: 18px 20px;
+  padding: 12px 16px;
   border-right: 1px solid #edeae4;
 }
 .tsh-ty-quick-item:last-child {
@@ -3863,10 +3937,10 @@ form .wpcf7-not-valid-tip {
 
 /* ── Detail groups ── */
 .tsh-ty-details {
-  padding: 22px 24px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 .tsh-ty-detail-group {
 }
@@ -3884,7 +3958,7 @@ form .wpcf7-not-valid-tip {
   gap: 0;
 }
 .tsh-ty-detail-item {
-  padding: 10px 12px 10px 0;
+  padding: 6px 12px 6px 0;
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -3926,10 +4000,10 @@ form .wpcf7-not-valid-tip {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin: 0 24px 24px;
+  margin: 0 18px 16px;
   background: #f5f3ee;
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 10px 14px;
 }
 .tsh-ty-notice-icon {
   flex-shrink: 0;
@@ -3987,6 +4061,12 @@ form .wpcf7-not-valid-tip {
 .tsh-ty-btn--ghost:hover {
   border-color: var(--color-sec);
 }
+.tsh-ty-btn:disabled,
+.tsh-ty-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 /* ── Empty state ── */
 .tsh-ty-empty {
@@ -3997,11 +4077,12 @@ form .wpcf7-not-valid-tip {
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
-  .tsh-ty-body {
+  .tsh-ty-body,
+  .tsh-ty-body--banner {
     grid-template-columns: 1fr;
   }
-  .tsh-ty-payment {
-    order: -1;
+  .tsh-ty-banner {
+    position: static;
   }
 }
 @media (max-width: 640px) {

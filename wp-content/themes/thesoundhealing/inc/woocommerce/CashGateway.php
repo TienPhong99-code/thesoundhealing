@@ -74,8 +74,8 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
                 <div class="tsh-payment-confirmed tsh-payment-confirmed--full">
                     <span>✓</span>
                     <div>
-                        <p>Đặt lịch thành công!</p>
-                        <p class="tsh-payment-confirmed__sub">Email xác nhận đã gửi đến <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
+                        <p><?php esc_html_e('Đặt lịch thành công!', 'monamedia'); ?></p>
+                        <p class="tsh-payment-confirmed__sub"><?php esc_html_e('Email xác nhận đã gửi đến', 'monamedia'); ?> <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
                     </div>
                 </div>
             </div>
@@ -84,14 +84,14 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
         }
         ?>
         <div class="tsh-bacs-qr tsh-bacs-qr--ty tsh-cash-ty">
-            <h3 class="tsh-bacs-qr__title">Đặt lịch thành công</h3>
+            <h3 class="tsh-bacs-qr__title"><?php esc_html_e('Đặt lịch thành công', 'monamedia'); ?></h3>
             <div class="tsh-cash-ty__body">
-                <p>Bạn đã chọn thanh toán bằng <strong>tiền mặt</strong>. Vui lòng thanh toán trực tiếp khi đến sử dụng dịch vụ.</p>
-                <p>Chúng tôi sẽ liên hệ xác nhận lịch hẹn trong vòng <strong>2 giờ</strong>.</p>
+                <p><?php echo wp_kses_post(__('Bạn đã chọn thanh toán bằng <strong>tiền mặt</strong>. Vui lòng thanh toán trực tiếp khi đến sử dụng dịch vụ.', 'monamedia')); ?></p>
+                <p><?php echo wp_kses_post(__('Chúng tôi sẽ liên hệ xác nhận lịch hẹn trong vòng <strong>2 giờ</strong>.', 'monamedia')); ?></p>
                 <div class="tsh-bacs-qr__info">
-                    <div class="tsh-bacs-qr__row"><span>Số tiền cần thanh toán</span><strong><?= wc_price($order->get_total()) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền cần thanh toán', 'monamedia'); ?></span><strong><?= wc_price($order->get_total()) ?></strong></div>
                 </div>
-                <p class="tsh-cash-ty__note">Email xác nhận gửi đến: <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
+                <p class="tsh-cash-ty__note"><?php esc_html_e('Email xác nhận gửi đến:', 'monamedia'); ?> <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
             </div>
         </div>
         <?php
