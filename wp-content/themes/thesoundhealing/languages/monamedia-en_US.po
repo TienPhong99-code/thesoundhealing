@@ -450,3 +450,7 @@ msgstr "Projects"
 msgid "Tuyển dụng"
 msgstr "Careers"
 
+# --- Checkout thank-you page ---
+msgid "E-TICKET LÀM QUÀ TẶNG"
+msgstr "Gift This Session"
+
