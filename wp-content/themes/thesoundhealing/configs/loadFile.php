@@ -18,6 +18,7 @@ return [
     MONA_THEME_INC_PATH . '/functions/TaxonomyFunction.php',
     MONA_THEME_INC_PATH . '/functions/CommentFunction.php',
     MONA_THEME_INC_PATH . '/functions/ACFFunction.php',
+    MONA_THEME_INC_PATH . '/functions/ScheduleFunction.php',
 
     // Hooks
     MONA_THEME_INC_PATH . '/hooks/SearchHook.php',

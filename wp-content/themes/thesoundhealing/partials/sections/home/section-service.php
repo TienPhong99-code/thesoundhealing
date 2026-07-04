@@ -134,7 +134,7 @@ foreach ($raw_objects as $post) {
         'format'         => get_field('dv_format',         $post->ID) ?: 'Onsite',
         'title'          => $post->post_title,
         'desc'           => get_field('dv_short_desc',     $post->ID),
-        'available_days' => get_field('dv_available_days', $post->ID) ?: 'Thứ 2 – Chủ nhật',
+        'available_days' => mona_schedule_label($post->ID) ?: 'Thứ 2 – Chủ nhật',
         'duration'       => get_field('dv_duration',       $post->ID) ?: '60 - 90 phút mỗi phiên',
         'branch'         => get_field('dv_branch',         $post->ID),
         'location'       => get_field('dv_location',       $post->ID),

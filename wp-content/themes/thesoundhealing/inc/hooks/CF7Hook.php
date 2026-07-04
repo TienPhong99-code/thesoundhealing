@@ -84,9 +84,16 @@ add_filter('wpcf7_posted_data', function ($data) {
  * Giữ lại wpcf7_validate_select hooks để tương thích CF7 phiên bản cũ hơn.
  */
 $_tsh_dynamic_selects = [
-    'kh-instructor', 'kh-time', 'kh-location',
-    'ws-instructor', 'ws-time', 'ws-location', 'ws-guests',
-    'dv-instructor', 'dv-time', 'dv-branch',
+    'kh-instructor',
+    'kh-time',
+    'kh-location',
+    'ws-instructor',
+    'ws-time',
+    'ws-location',
+    'ws-guests',
+    'dv-instructor',
+    'dv-time',
+    'dv-branch',
 ];
 
 // CF7 mới: inject vào tag trước khi SWV enum schema được build
@@ -123,7 +130,8 @@ $_tsh_reflection_fn = function ($result, $tag) use ($_tsh_dynamic_selects) {
         $fields = (array) $prop->getValue($result);
         unset($fields[$tag->name]);
         $prop->setValue($result, $fields);
-    } catch (\Throwable $e) {}
+    } catch (\Throwable $e) {
+    }
     return $result;
 };
 add_filter('wpcf7_validate_select',  $_tsh_reflection_fn, 20, 2);
@@ -386,7 +394,7 @@ add_filter('gettext_monamedia', function ($translation, $text) {
             'Chọn chi nhánh'        => 'Select branch',
             'Chọn người hướng dẫn' => 'Select instructor',
             // Trang đặt lịch thành công
-            'E-TICKET LÀM QUÀ TẶNG' => 'Gift E-ticket',
+            'E-TICKET LÀM QUÀ TẶNG' => 'Gift This Session',
             'Tính năng sắp ra mắt' => 'Coming soon',
         ];
         if (isset($map[$text])) return $map[$text];

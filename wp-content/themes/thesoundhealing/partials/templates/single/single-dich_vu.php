@@ -6,7 +6,8 @@ $post_id = get_the_ID();
 // ── Thông tin ──
 $dv_duration    = get_field('dv_duration',    $post_id) ?: '60 - 90 phút mỗi phiên';
 $dv_location    = get_field('dv_location',    $post_id) ?: 'Aetheria Sanctuary, Level 4, Thảo Điền';
-$dv_avail_days  = get_field('dv_available_days', $post_id) ?: 'Thứ 2 – Chủ nhật';
+$dv_sched       = mona_expand_schedule($post_id);
+$dv_avail_days  = $dv_sched['summary'] ?: 'Thứ 2 – Chủ nhật';
 $dv_branch      = get_field('dv_branch',      $post_id) ?: 'Thảo Điền · Quận 1';
 $dv_short_desc  = get_field('dv_short_desc',  $post_id);
 $dv_price       = get_field('dv_price',       $post_id) ?: '800.000 VNĐ';
@@ -498,6 +499,17 @@ get_header();
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
+                                    <?php if ($dv_sched['type'] === 'recurring' && count($dv_sched['dates']) > 1) : ?>
+                                        <div class="dv-schedule-list mt-4 pt-4 border-t border-[#e4e2dd]">
+                                            <p class="text-[11px] font-medium text-[#717171] mb-2"><?php esc_html_e('LỊCH DIỄN RA', 'monamedia'); ?></p>
+                                            <p class="text-[#1b1c19] font-medium text-[13px] mb-2"><?php echo esc_html($dv_sched['summary']); ?></p>
+                                            <ul class="flex flex-wrap gap-1.5">
+                                                <?php foreach ($dv_sched['dates'] as $_d) : ?>
+                                                    <li class="px-2 py-1 rounded bg-[#f7f5f0] text-[12px] text-[#1b1c19]"><?php echo esc_html(date('d/m/Y', strtotime($_d))); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
 
@@ -535,31 +547,10 @@ get_header();
         slot.appendChild(widget);
     })();
 </script>
-<?php
-$_dv_dates = [];
-if ($dv_avail_days) {
-    foreach (preg_split('/\s*,\s*/', trim($dv_avail_days)) as $_part) {
-        $_part = trim($_part);
-        if (!$_part) continue;
-        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_part)) {
-            $_dv_dates[] = $_part;
-        } elseif (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_part, $_m)) {
-            $_dv_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-        } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_part, $_m)) {
-            $_dv_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-        } elseif (($_ts = strtotime($_part)) && $_ts > 0) {
-            $_dv_dates[] = date('Y-m-d', $_ts);
-        }
-    }
-    sort($_dv_dates);
-    $_dv_dates = array_values(array_unique($_dv_dates));
-}
-$_dv_future = array_values(array_filter($_dv_dates, fn($d) => $d >= date('Y-m-d')));
-?>
 <script>
     window.dvSchedule = <?php echo json_encode([
-        'availDates' => $_dv_future,
-        'isPast'     => empty($_dv_future),
+        'availDates' => $dv_sched['future'],
+        'isPast'     => $dv_sched['is_past'],
     ]); ?>;
 </script>
 <?php get_footer(); ?>

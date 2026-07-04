@@ -31,7 +31,6 @@ $data = [
 <footer class="site-footer bg-[#f5f3ee] py-5 border-t border-[rgba(192,200,198,0.25)]">
    <div class="container">
       <div class="flex items-center justify-between gap-4 max-lg:flex-col max-lg:items-start max-lg:gap-5">
-
          <!-- Logo + Socials -->
          <div class="flex items-center gap-2 shrink-0">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="block">

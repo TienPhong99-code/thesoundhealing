@@ -130,7 +130,7 @@ if ($use_sample) {
             'format'         => get_field('dv_format',          $post_id) ?: 'Onsite',
             'title'          => get_the_title($post_id),
             'desc'           => get_field('dv_short_desc',      $post_id),
-            'available_days' => get_field('dv_available_days',  $post_id) ?: 'Thứ 2 – Chủ nhật',
+            'available_days' => mona_schedule_label($post_id) ?: 'Thứ 2 – Chủ nhật',
             'duration'       => get_field('dv_duration',        $post_id) ?: '60 - 90 phút mỗi phiên',
             'branch'         => get_field('dv_branch',          $post_id),
             'location'       => get_field('dv_location',        $post_id),

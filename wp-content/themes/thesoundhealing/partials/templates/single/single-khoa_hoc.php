@@ -5,7 +5,8 @@ $post_id = get_the_ID();
 
 // ── Thông tin ──
 $level       = get_field('level',      $post_id) ?: 'KHOÁ HỌC CHUYÊN SÂU';
-$start_date  = get_field('start_date', $post_id) ?: '20 THÁNG 7, 2025';
+$kh_sched    = mona_expand_schedule($post_id);
+$start_date  = $kh_sched['summary'] ?: '20 THÁNG 7, 2025';
 $kh_time     = get_field('kh_time',    $post_id) ?: '09:00 – 17:00';
 $duration    = get_field('duration',   $post_id) ?: '2 ngày · Cuối tuần';
 $short_desc     = get_field('short_desc',    $post_id);
@@ -501,6 +502,17 @@ get_header();
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
+                                    <?php if ($kh_sched['type'] === 'recurring' && count($kh_sched['dates']) > 1) : ?>
+                                        <div class="kh-schedule-list mt-4 pt-4 border-t border-[#e4e2dd]">
+                                            <p class="text-[11px] font-medium text-[#717171] mb-2"><?php esc_html_e('LỊCH DIỄN RA', 'monamedia'); ?></p>
+                                            <p class="text-[#1b1c19] font-medium text-[13px] mb-2"><?php echo esc_html($kh_sched['summary']); ?></p>
+                                            <ul class="flex flex-wrap gap-1.5">
+                                                <?php foreach ($kh_sched['dates'] as $_d) : ?>
+                                                    <li class="px-2 py-1 rounded bg-[#f7f5f0] text-[12px] text-[#1b1c19]"><?php echo esc_html(date('d/m/Y', strtotime($_d))); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
 
@@ -538,31 +550,10 @@ get_header();
         slot.appendChild(widget);
     })();
 </script>
-<?php
-$_kh_dates = [];
-if ($start_date) {
-    foreach (preg_split('/\s*,\s*/', trim($start_date)) as $_part) {
-        $_part = trim($_part);
-        if (!$_part) continue;
-        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_part)) {
-            $_kh_dates[] = $_part;
-        } elseif (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_part, $_m)) {
-            $_kh_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-        } elseif (preg_match('/(\d{1,2})\s+[Tt]háng\s+(\d{1,2})[,\s]+(\d{4})/u', $_part, $_m)) {
-            $_kh_dates[] = sprintf('%04d-%02d-%02d', $_m[3], $_m[2], $_m[1]);
-        } elseif (($_ts = strtotime($_part)) && $_ts > 0) {
-            $_kh_dates[] = date('Y-m-d', $_ts);
-        }
-    }
-    sort($_kh_dates);
-    $_kh_dates = array_values(array_unique($_kh_dates));
-}
-$_kh_future = array_values(array_filter($_kh_dates, fn($d) => $d >= date('Y-m-d')));
-?>
 <script>
     window.khSchedule = <?php echo json_encode([
-        'availDates' => $_kh_future,
-        'isPast'     => empty($_kh_future),
+        'availDates' => $kh_sched['future'],
+        'isPast'     => $kh_sched['is_past'],
     ]); ?>;
 </script>
 <?php get_footer(); ?>

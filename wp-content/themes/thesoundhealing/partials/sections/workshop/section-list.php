@@ -126,7 +126,7 @@ if ($use_sample) {
             'type'       => $type_name,
             'format'     => get_field('ws_format',        $post_id) ?: 'Onsite',
             'status'     => get_field('ws_status',        $post_id) ?: 'open',
-            'date'       => get_field('ws_date',          $post_id) ?: 'Sắp diễn ra',
+            'date'       => mona_schedule_label($post_id) ?: 'Sắp diễn ra',
             'time'       => get_field('ws_time',          $post_id) ?: '09:00 – 12:00',
             'duration'   => get_field('ws_duration',      $post_id) ?: '3 giờ',
             'title'      => get_the_title($post_id),

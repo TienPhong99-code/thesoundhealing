@@ -1,5 +1,8 @@
 <?php
 
+use Extended\ACF\Fields\ButtonGroup;
+use Extended\ACF\Fields\Checkbox;
+use Extended\ACF\Fields\DatePicker;
 use Extended\ACF\Fields\Image;
 use Extended\ACF\Fields\Number;
 use Extended\ACF\Fields\Repeater;
@@ -8,6 +11,7 @@ use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
 use Extended\ACF\Fields\TrueFalse;
+use Extended\ACF\ConditionalLogic;
 use Extended\ACF\Location;
 
 defined('ABSPATH') || exit;
@@ -48,9 +52,37 @@ add_action('acf/init', function () {
                 ])
                 ->default('Onsite'),
 
-            Text::make('Ngày tổ chức', 'ws_date')
-                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Form sẽ tự chọn ngày đầu tiên và chỉ cho phép chọn các ngày đã nhập. Bắt buộc nhập.')
-                ->required(),
+            ButtonGroup::make('Loại lịch', 'ws_schedule_type')
+                ->helperText('Cố định: chỉ 1 ngày tổ chức. Định kỳ: lặp theo thứ trong một khoảng ngày.')
+                ->choices([
+                    'single'    => 'Cố định 1 ngày',
+                    'recurring' => 'Định kỳ',
+                ])
+                ->default('single'),
+
+            DatePicker::make('Ngày tổ chức', 'ws_date_single')
+                ->helperText('Ngày tổ chức cố định.')
+                ->format('Y-m-d')
+                ->displayFormat('d/m/Y')
+                ->conditionalLogic([ConditionalLogic::where('ws_schedule_type', '==', 'single')]),
+
+            DatePicker::make('Ngày bắt đầu', 'ws_date_start')
+                ->format('Y-m-d')
+                ->displayFormat('d/m/Y')
+                ->conditionalLogic([ConditionalLogic::where('ws_schedule_type', '==', 'recurring')]),
+
+            DatePicker::make('Ngày kết thúc', 'ws_date_end')
+                ->format('Y-m-d')
+                ->displayFormat('d/m/Y')
+                ->conditionalLogic([ConditionalLogic::where('ws_schedule_type', '==', 'recurring')]),
+
+            Checkbox::make('Các thứ diễn ra', 'ws_weekdays')
+                ->helperText('Tick các thứ workshop diễn ra hàng tuần.')
+                ->choices([
+                    '1' => 'Thứ 2', '2' => 'Thứ 3', '3' => 'Thứ 4', '4' => 'Thứ 5',
+                    '5' => 'Thứ 6', '6' => 'Thứ 7', '7' => 'Chủ Nhật',
+                ])
+                ->conditionalLogic([ConditionalLogic::where('ws_schedule_type', '==', 'recurring')]),
 
             Text::make('Thời gian', 'ws_time')
                 ->helperText('Ví dụ: 09:00 – 17:00'),

@@ -85,7 +85,7 @@ foreach ($raw_objects as $post) {
         'type'       => $type_name,
         'format'     => get_field('ws_format',       $post->ID) ?: 'Onsite',
         'status'     => get_field('ws_status',       $post->ID) ?: 'open',
-        'date'       => get_field('ws_date',         $post->ID) ?: 'Sắp diễn ra',
+        'date'       => mona_schedule_label($post->ID) ?: 'Sắp diễn ra',
         'time'       => get_field('ws_time',         $post->ID) ?: '09:00 – 12:00',
         'duration'   => get_field('ws_duration',     $post->ID) ?: '3 giờ',
         'title'      => $post->post_title,

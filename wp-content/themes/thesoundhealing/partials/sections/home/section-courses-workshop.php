@@ -28,7 +28,7 @@ foreach ($course_posts as $post) {
         'title'      => $post->post_title,
         'desc'       => get_field('short_desc',      $post->ID),
         'time'       => get_field('kh_time',         $post->ID) ?: '09:00 – 17:00',
-        'start_date' => get_field('start_date',      $post->ID) ?: 'Sắp khai giảng',
+        'start_date' => mona_schedule_label($post->ID) ?: 'Sắp khai giảng',
         'duration'   => get_field('duration',        $post->ID) ?: 'Cuối tuần',
         'instructor' => get_field('instructor_name', $post->ID),
         'location'   => get_field('location',        $post->ID),
@@ -37,7 +37,7 @@ foreach ($course_posts as $post) {
         'price'      => get_field('price',           $post->ID) ?: 'Liên hệ',
         'spots'      => get_field('kh_spots',        $post->ID),
         'url'        => get_permalink($post->ID),
-        '_date_sort' => get_field('start_date', $post->ID) ?: $post->post_date,
+        '_date_sort' => (mona_expand_schedule($post->ID)['dates'][0] ?? null) ?: $post->post_date,
     ];
 }
 
@@ -63,7 +63,7 @@ foreach ($workshop_posts as $post) {
         'type'       => $type_name,
         'format'     => get_field('ws_format',        $post->ID) ?: 'Onsite',
         'status'     => get_field('ws_status',        $post->ID) ?: 'open',
-        'date'       => get_field('ws_date',          $post->ID) ?: 'Sắp diễn ra',
+        'date'       => mona_schedule_label($post->ID) ?: 'Sắp diễn ra',
         'time'       => get_field('ws_time',          $post->ID) ?: '09:00 – 12:00',
         'duration'   => get_field('ws_duration',      $post->ID) ?: '3 giờ',
         'title'      => $post->post_title,
@@ -73,7 +73,7 @@ foreach ($workshop_posts as $post) {
         'price'      => get_field('ws_price',         $post->ID) ?: 'Liên hệ',
         'spots'      => get_field('ws_spots',         $post->ID),
         'url'        => get_permalink($post->ID),
-        '_date_sort' => get_field('ws_date', $post->ID) ?: $post->post_date,
+        '_date_sort' => (mona_expand_schedule($post->ID)['dates'][0] ?? null) ?: $post->post_date,
     ];
 }
 

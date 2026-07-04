@@ -87,7 +87,7 @@ if ($use_sample) {
             'title'      => get_the_title($post_id),
             'desc'       => get_field('short_desc',      $post_id),
             'time'       => get_field('kh_time',         $post_id) ?: '09:00 – 17:00',
-            'start_date' => get_field('start_date',      $post_id) ?: 'Sắp khai giảng',
+            'start_date' => mona_schedule_label($post_id) ?: 'Sắp khai giảng',
             'duration'   => get_field('duration',        $post_id) ?: 'Cuối tuần',
             'instructor' => get_field('instructor_name', $post_id),
             'location'   => get_field('location',        $post_id),

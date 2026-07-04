@@ -1,5 +1,8 @@
 <?php
 
+use Extended\ACF\Fields\ButtonGroup;
+use Extended\ACF\Fields\Checkbox;
+use Extended\ACF\Fields\DatePicker;
 use Extended\ACF\Fields\Image;
 use Extended\ACF\Fields\Number;
 use Extended\ACF\Fields\Repeater;
@@ -8,6 +11,7 @@ use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
 use Extended\ACF\Fields\TrueFalse;
+use Extended\ACF\ConditionalLogic;
 use Extended\ACF\Location;
 
 defined('ABSPATH') || exit;
@@ -60,9 +64,37 @@ add_action('acf/init', function () {
                 ->helperText('Nhập mỗi địa điểm trên một dòng. Ví dụ: 104/20 Mai Thị Lựu, Tân Định (Quận 1)')
                 ->rows(3),
 
-            Text::make('Ngày diễn ra', 'dv_available_days')
-                ->helperText('Nhập 1 hoặc nhiều ngày, định dạng DD-MM-YYYY, cách nhau bằng dấu phẩy. Ví dụ: 12-08-2026, 13-08-2026. Dùng cho cả hiển thị trên trang lẫn lịch đặt chỗ trong form. Bắt buộc nhập.')
-                ->required(),
+            ButtonGroup::make('Loại lịch', 'dv_schedule_type')
+                ->helperText('Cố định: chỉ 1 ngày diễn ra. Định kỳ: lặp theo thứ trong một khoảng ngày.')
+                ->choices([
+                    'single'    => 'Cố định 1 ngày',
+                    'recurring' => 'Định kỳ',
+                ])
+                ->default('single'),
+
+            DatePicker::make('Ngày diễn ra', 'dv_date_single')
+                ->helperText('Ngày diễn ra cố định.')
+                ->format('Y-m-d')
+                ->displayFormat('d/m/Y')
+                ->conditionalLogic([ConditionalLogic::where('dv_schedule_type', '==', 'single')]),
+
+            DatePicker::make('Ngày bắt đầu', 'dv_date_start')
+                ->format('Y-m-d')
+                ->displayFormat('d/m/Y')
+                ->conditionalLogic([ConditionalLogic::where('dv_schedule_type', '==', 'recurring')]),
+
+            DatePicker::make('Ngày kết thúc', 'dv_date_end')
+                ->format('Y-m-d')
+                ->displayFormat('d/m/Y')
+                ->conditionalLogic([ConditionalLogic::where('dv_schedule_type', '==', 'recurring')]),
+
+            Checkbox::make('Các thứ diễn ra', 'dv_weekdays')
+                ->helperText('Tick các thứ dịch vụ diễn ra hàng tuần.')
+                ->choices([
+                    '1' => 'Thứ 2', '2' => 'Thứ 3', '3' => 'Thứ 4', '4' => 'Thứ 5',
+                    '5' => 'Thứ 6', '6' => 'Thứ 7', '7' => 'Chủ Nhật',
+                ])
+                ->conditionalLogic([ConditionalLogic::where('dv_schedule_type', '==', 'recurring')]),
 
             Text::make('Số khách / phiên', 'dv_guests')
                 ->helperText('Ví dụ: 1-2 khách / phiên · Tối đa 1 người'),
