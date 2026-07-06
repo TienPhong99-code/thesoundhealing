@@ -551,21 +551,12 @@ class TSH_WooCommerce_Hook
             return;
         }
 
-        // PayPal → info + nút "Tôi đã thanh toán"
+        // PayPal → tái dùng thankyou_page() sẵn có của gateway (QR + tên TK + email + nút xác nhận)
         if ($method === 'tsh_paypal_qr') {
-            ?>
-            <div class="tsh-bacs-qr tsh-bacs-qr--ty">
-                <h3 class="tsh-bacs-qr__title"><?php esc_html_e('Thanh toán qua PayPal', 'monamedia'); ?></h3>
-                <div class="tsh-bacs-qr__info">
-                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong><?= wc_price((float) $order->get_total()) ?></strong></div>
-                </div>
-                <button type="button" id="tsh-confirm-transfer" data-order="<?= (int) $order_id ?>" data-key="<?= esc_attr($order->get_order_key()) ?>" class="tsh-confirm-btn"><?php esc_html_e('Tôi đã thanh toán', 'monamedia'); ?></button>
-                <div id="tsh-transfer-msg" style="display:none" class="tsh-transfer-msg">
-                    <p><?php esc_html_e('Cảm ơn bạn! Chúng tôi sẽ kiểm tra và xác nhận trong vòng 2 giờ.', 'monamedia'); ?></p>
-                    <p><?php esc_html_e('Email xác nhận gửi đến:', 'monamedia'); ?> <strong><?= esc_html($email) ?></strong></p>
-                </div>
-            </div>
-            <?php
+            $gateways = WC()->payment_gateways() ? WC()->payment_gateways()->payment_gateways() : [];
+            if (isset($gateways['tsh_paypal_qr']) && method_exists($gateways['tsh_paypal_qr'], 'thankyou_page')) {
+                $gateways['tsh_paypal_qr']->thankyou_page($order_id);
+            }
             return;
         }
     }

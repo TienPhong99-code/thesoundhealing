@@ -76,27 +76,8 @@ class WC_Gateway_TSH_Paypal extends WC_Payment_Gateway {
     }
 
     public function payment_fields(): void {
-        ob_start(); ?>
-        <div class="tsh-bacs-checkout-wrap tsh-paypal-checkout-wrap">
-            <div class="tsh-bacs-checkout-info">
-                <?php if ($this->description) : ?>
-                    <p class="tsh-paypal-desc"><?= esc_html($this->description) ?></p>
-                <?php endif; ?>
-                <?php if ($this->paypal_name) : ?>
-                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Tên tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_name) ?></strong><?= $this->copy_btn() ?></span></div>
-                <?php endif; ?>
-                <?php if ($this->paypal_email) : ?>
-                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Email PayPal', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($this->paypal_email) ?></strong><?= $this->copy_btn() ?></span></div>
-                <?php endif; ?>
-            </div>
-            <?php if ($this->qr_image) : ?>
-            <div class="tsh-bacs-qr tsh-paypal-qr">
-                <img src="<?= esc_url($this->qr_image) ?>" alt="PayPal QR">
-            </div>
-            <?php endif; ?>
-        </div>
-        <?php
-        echo ob_get_clean();
+        // Ẩn QR/thông tin PayPal ở checkout — thông tin thanh toán hiện ở trang cảm ơn.
+        echo '<p class="tsh-paypal-desc">' . esc_html__('Mã QR PayPal sẽ hiển thị ở trang xác nhận sau khi bạn bấm "Đặt lịch ngay".', 'monamedia') . '</p>';
     }
 
     public function process_payment($order_id): array {
