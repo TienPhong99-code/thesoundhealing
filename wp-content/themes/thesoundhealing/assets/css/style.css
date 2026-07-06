@@ -4322,3 +4322,13 @@ form .wpcf7-not-valid-tip {
 .tsh-transfer-msg p:last-child {
   margin: 0;
 }
+
+/* ── Checkout: lựa chọn cọc 50% / 100% ───────────────────────────── */
+.tsh-paytype{margin:0 0 20px}
+.tsh-paytype__opt{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px 12px;
+  padding:14px 16px;margin-bottom:10px;border:1px solid #e5e0d3;border-radius:12px;cursor:pointer;transition:.2s}
+.tsh-paytype__opt.is-active{border-color:var(--color-pri);background:#fbf8f0}
+.tsh-paytype__opt input{width:18px;height:18px;accent-color:var(--color-pri);margin:0}
+.tsh-paytype__main{font-weight:600;color:var(--color-sec)}
+.tsh-paytype__amt{font-weight:700;color:var(--color-pri);white-space:nowrap}
+.tsh-paytype__note{grid-column:2/-1;font-size:13px;color:#8a8577}

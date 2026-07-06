@@ -47,6 +47,7 @@ class TSH_WooCommerce_Hook
             }
         });
         add_filter('woocommerce_gateway_icon', [$this, 'payment_method_icon'], 20, 2);
+        add_action('woocommerce_review_order_before_payment', [$this, 'payment_type_options'], 5);
         add_action('woocommerce_review_order_before_payment', [$this, 'payment_section_title']);
         // Dịch tiêu đề cổng + label bảng đơn hàng WooCommerce sang EN theo ngôn ngữ hiện tại
         add_filter('woocommerce_gateway_title', [$this, 'i18n_gateway_title'], 20, 2);
@@ -106,6 +107,40 @@ class TSH_WooCommerce_Hook
     public function payment_section_title(): void
     {
         echo '<h3 class="tsh-co-payment-title">' . esc_html__('Lựa chọn phương thức thanh toán', 'monamedia') . '</h3>';
+    }
+
+    /**
+     * 2 lựa chọn: thanh toán 100% (mặc định) hoặc đặt cọc 50%.
+     * Chỉ hiện khi giỏ có tổng > 0. Nằm trong fragment order review nên tự
+     * re-render (và giữ đúng lựa chọn từ session) mỗi lần update_checkout.
+     */
+    public function payment_type_options(): void
+    {
+        $cart = WC()->cart;
+        if (!$cart) return;
+        $full = (float) $cart->get_subtotal();
+        if ($full <= 0) return;
+
+        $remaining = round($full * 0.5);
+        $deposit   = $full - $remaining;
+        $type      = $this->get_payment_type();
+        $nonce     = wp_create_nonce('tsh_payment_type');
+        ?>
+        <div class="tsh-paytype" data-nonce="<?= esc_attr($nonce) ?>">
+            <h3 class="tsh-co-payment-title"><?php esc_html_e('Lựa chọn thanh toán', 'monamedia'); ?></h3>
+            <label class="tsh-paytype__opt<?= $type === 'full' ? ' is-active' : '' ?>">
+                <input type="radio" name="tsh_paytype" value="full" <?php checked($type, 'full'); ?>>
+                <span class="tsh-paytype__main"><?php esc_html_e('Thanh toán 100%', 'monamedia'); ?></span>
+                <span class="tsh-paytype__amt"><?= wc_price($full) ?></span>
+            </label>
+            <label class="tsh-paytype__opt<?= $type === 'deposit' ? ' is-active' : '' ?>">
+                <input type="radio" name="tsh_paytype" value="deposit" <?php checked($type, 'deposit'); ?>>
+                <span class="tsh-paytype__main"><?php esc_html_e('Đặt cọc 50%', 'monamedia'); ?></span>
+                <span class="tsh-paytype__amt"><?= wc_price($deposit) ?></span>
+                <span class="tsh-paytype__note"><?php printf(esc_html__('Còn lại %s thu tại cơ sở', 'monamedia'), wp_kses_post(wc_price($remaining))); ?></span>
+            </label>
+        </div>
+        <?php
     }
 
     /**
