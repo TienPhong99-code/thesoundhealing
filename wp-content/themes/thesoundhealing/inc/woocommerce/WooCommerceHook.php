@@ -15,6 +15,9 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_checkout_create_order', [$this, 'save_payment_type_meta'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
+        add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_deposit_admin']);
+        add_action('woocommerce_order_details_after_order_table',        [$this, 'display_deposit_thankyou']);
+        add_action('woocommerce_email_after_order_table',                [$this, 'email_deposit_notice'], 10, 4);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
         add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
         add_filter('woocommerce_email_heading_customer_processing_order', fn() => __('Cảm ơn bạn đã đặt lịch hẹn', 'monamedia'));
@@ -1094,6 +1097,48 @@ class TSH_WooCommerce_Hook
         if (!$rows) return;
 
         echo '<div class="tsh-booking-meta" style="margin-top:12px"><h4>Thông tin đặt lịch</h4><p>' . implode('<br>', $rows) . '</p></div>';
+    }
+
+    // ── Hiển thị số tiền còn lại (đơn đặt cọc) ────────────────────────────
+
+    private function deposit_notice_html(\WC_Order $order): string
+    {
+        if ($order->get_meta('_tsh_payment_type') !== 'deposit') return '';
+        $deposit   = (float) $order->get_meta('_tsh_deposit_amount');
+        $remaining = (float) $order->get_meta('_tsh_remaining_amount');
+        if ($remaining <= 0) return '';
+
+        return sprintf(
+            /* translators: 1: số đã cọc, 2: số còn lại */
+            __('Đã đặt cọc %1$s. Còn lại %2$s thu tại cơ sở khi tham gia.', 'monamedia'),
+            wp_strip_all_tags(wc_price($deposit)),
+            wp_strip_all_tags(wc_price($remaining))
+        );
+    }
+
+    public function display_deposit_admin(\WC_Order $order): void
+    {
+        $msg = $this->deposit_notice_html($order);
+        if (!$msg) return;
+        echo '<div class="tsh-deposit-admin" style="margin-top:12px;padding:10px 12px;background:#fff8e1;border-left:4px solid #c2a056"><strong>' . esc_html__('Đặt cọc', 'monamedia') . ':</strong> ' . esc_html($msg) . '</div>';
+    }
+
+    public function display_deposit_thankyou(\WC_Order $order): void
+    {
+        $msg = $this->deposit_notice_html($order);
+        if (!$msg) return;
+        echo '<div class="tsh-deposit-notice" style="margin:16px 0;padding:14px 16px;background:#fbf8f0;border:1px solid var(--color-pri, #c2a056);border-radius:12px;color:#1b1c19">' . esc_html($msg) . '</div>';
+    }
+
+    public function email_deposit_notice(\WC_Order $order, bool $sent_to_admin, bool $plain_text, \WC_Email $email): void
+    {
+        $msg = $this->deposit_notice_html($order);
+        if (!$msg) return;
+        if ($plain_text) {
+            echo "\n" . $msg . "\n";
+            return;
+        }
+        echo '<div style="margin:16px 0;padding:14px 16px;background:#fff8e1;border-left:4px solid #c2a056;font-family:sans-serif;color:#1b1c19">' . esc_html($msg) . '</div>';
     }
 }
 
