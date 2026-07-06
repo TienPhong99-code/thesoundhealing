@@ -26,6 +26,9 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
         add_action('woocommerce_thankyou',                   [$this, 'render_thankyou_payment'], 5);
+        // Ẩn bảng "Chi tiết đơn hàng" + địa chỉ mặc định của WooCommerce trên trang cảm ơn
+        // (card tuỳ chỉnh đã hiển thị đủ). Cũng gỡ luôn hộp "đã đặt cọc..." hiện sớm khi chưa trả.
+        remove_action('woocommerce_thankyou', 'woocommerce_order_details_table', 10);
         add_action('wp_footer',                              [$this, 'checkout_bacs_js']);
         add_action('wp_footer', [$this, 'payment_type_js']);
         add_action('wp_footer',                              [$this, 'thankyou_polling_js']);
