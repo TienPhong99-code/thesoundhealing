@@ -528,9 +528,12 @@ class TSH_WooCommerce_Hook
 
         // SePay → QR TSH{order_id}, số tiền = tổng đơn
         if ($method === 'sepay') {
-            $amount = (int) round((float) $order->get_total());
-            $info   = 'TSH' . $order_id;
-            $url    = $this->vietqr_url($amount, $info);
+            $amount   = (int) round((float) $order->get_total());
+            // Nội dung CK: HEAL-TÊN-SĐT-MÃĐƠN. Mã đơn ở cuối để webhook tự khớp đơn.
+            $name_asc = str_replace(' ', '', $this->to_ascii(trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name()))) ?: 'TSH';
+            $phone    = preg_replace('/\D/', '', $order->get_billing_phone());
+            $info     = 'HEAL-' . $name_asc . ($phone ? '-' . $phone : '') . '-' . $order_id;
+            $url      = $this->vietqr_url($amount, $info);
             ?>
             <div class="tsh-bacs-qr tsh-bacs-qr--ty" id="tsh-ty-sepay">
                 <h3 class="tsh-bacs-qr__title"><?php esc_html_e('Quét mã để hoàn tất thanh toán', 'monamedia'); ?></h3>

@@ -35,10 +35,16 @@ class TSH_Sepay_Webhook {
         $content     = $body['content'] ?? '';
         $transferred = (float) ($body['transferAmount'] ?? 0);
 
-        // Trường hợp 1: QR thank you — nội dung chứa "TSH[order_id]"
-        if (preg_match('/TSH\s*(\d+)/i', $content, $matches)) {
+        // Trường hợp 1: QR thank you — nội dung "HEAL-TÊN-SĐT-[order_id]" (mã đơn ở cuối)
+        // hoặc "TSH[order_id]" (tương thích ngược). Mã đơn là nhóm số cuối chuỗi.
+        $order_id = 0;
+        if (preg_match('/HEAL.*?(\d+)\s*$/i', $content, $matches)) {
             $order_id = (int) $matches[1];
-            $order    = wc_get_order($order_id);
+        } elseif (preg_match('/TSH\s*(\d+)/i', $content, $matches)) {
+            $order_id = (int) $matches[1];
+        }
+        if ($order_id) {
+            $order = wc_get_order($order_id);
 
             if (!$order) {
                 return new WP_REST_Response(['error' => 'Order not found'], 404);
