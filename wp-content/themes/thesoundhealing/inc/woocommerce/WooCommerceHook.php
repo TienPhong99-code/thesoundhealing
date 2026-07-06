@@ -16,7 +16,6 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_checkout_create_order', [$this, 'save_payment_type_meta'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_deposit_admin']);
-        add_action('woocommerce_order_details_after_order_table',        [$this, 'display_deposit_thankyou']);
         add_action('woocommerce_email_after_order_table',                [$this, 'email_deposit_notice'], 10, 4);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
         add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
@@ -989,13 +988,6 @@ class TSH_WooCommerce_Hook
         $msg = $this->deposit_notice_html($order);
         if (!$msg) return;
         echo '<div class="tsh-deposit-admin" style="margin-top:12px;padding:10px 12px;background:#fff8e1;border-left:4px solid #c2a056"><strong>' . esc_html__('Đặt cọc', 'monamedia') . ':</strong> ' . esc_html($msg) . '</div>';
-    }
-
-    public function display_deposit_thankyou(\WC_Order $order): void
-    {
-        $msg = $this->deposit_notice_html($order);
-        if (!$msg) return;
-        echo '<div class="tsh-deposit-notice" style="margin:16px 0;padding:14px 16px;background:#fbf8f0;border:1px solid var(--color-pri, #c2a056);border-radius:12px;color:#1b1c19">' . esc_html($msg) . '</div>';
     }
 
     public function email_deposit_notice(\WC_Order $order, bool $sent_to_admin, bool $plain_text, \WC_Email $email): void
