@@ -331,6 +331,7 @@ class TSH_WooCommerce_Hook
 
         $cpt = get_posts([
             'post_type'      => ['khoa_hoc', 'workshop', 'dich_vu'],
+            'post_status'    => 'any',
             'meta_key'       => '_wc_product_id',
             'meta_value'     => $product_id,
             'posts_per_page' => 1,

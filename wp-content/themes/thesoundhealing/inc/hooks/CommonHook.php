@@ -181,9 +181,15 @@ add_action('wp_enqueue_scripts', function () {
       wp_enqueue_script('mona-hoat-dong-cong-dong', MONA_THEME_PATH_URI . '/assets/scripts/hoat-dong-cong-dong.js', array('jquery', 'mona-main', 'mona-fancybox', 'masonry'), filemtime(MONA_THEME_PATH . '/assets/scripts/hoat-dong-cong-dong.js'), array('in_footer' => true));
    }
 
-   if (function_exists('is_order_received_page') && is_order_received_page()) {
-      wp_enqueue_script('html2canvas', MONA_THEME_PATH_URI . '/assets/library/html2canvas/html2canvas.min.js', array(), '1.4.1', array('in_footer' => true));
-      wp_enqueue_script('tsh-eticket', MONA_THEME_PATH_URI . '/assets/scripts/eticket.js', array('html2canvas'), filemtime(MONA_THEME_PATH . '/assets/scripts/eticket.js'), array('in_footer' => true));
+   if (is_order_received_page()) {
+      global $wp;
+      $tsh_oid   = absint($wp->query_vars['order-received'] ?? 0);
+      $tsh_order = $tsh_oid ? wc_get_order($tsh_oid) : null;
+      // Chỉ nạp html2canvas khi đơn có e-ticket (tránh tải ~200KB thừa trên mọi trang cảm ơn).
+      if ($tsh_order && $tsh_order->get_meta('_tsh_eticket_expiry')) {
+         wp_enqueue_script('html2canvas', MONA_THEME_PATH_URI . '/assets/library/html2canvas/html2canvas.min.js', array(), '1.4.1', array('in_footer' => true));
+         wp_enqueue_script('tsh-eticket', MONA_THEME_PATH_URI . '/assets/scripts/eticket.js', array('html2canvas'), filemtime(MONA_THEME_PATH . '/assets/scripts/eticket.js'), array('in_footer' => true));
+      }
    }
 }, 10);
 
