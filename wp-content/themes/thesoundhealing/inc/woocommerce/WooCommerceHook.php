@@ -513,10 +513,9 @@ class TSH_WooCommerce_Hook
         $paid   = in_array($order->get_status(), ['processing', 'completed'], true);
         $email  = $order->get_billing_email();
 
-        // Thanh toán khác (tiền mặt) → luôn báo đặt lịch thành công + NV liên hệ.
-        // KHÔNG hiện box xanh "Thanh toán thành công" (khách trả tiền mặt tại chỗ, chưa trả online).
+        // Thanh toán khác (tiền mặt) → không hiện box thanh toán nào
+        // (card đầu trang đã có "Đặt lịch thành công"). Cũng không hiện box xanh "Thanh toán thành công".
         if ($method === 'tsh_cash') {
-            echo '<div class="tsh-deposit-notice" style="margin:16px 0;padding:16px 18px;background:#fbf8f0;border:1px solid #c2a056;border-radius:12px;color:#1b1c19"><p style="margin:0;font-weight:600">' . esc_html__('Đặt lịch thành công!', 'monamedia') . '</p><p style="margin:6px 0 0">' . esc_html__('Nhân viên sẽ liên hệ với bạn để xác nhận thanh toán.', 'monamedia') . '</p></div>';
             return;
         }
 
