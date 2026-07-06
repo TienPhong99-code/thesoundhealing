@@ -17,6 +17,7 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_checkout_create_order', [$this, 'save_eticket_meta'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_deposit_admin']);
+        add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_eticket_admin']);
         add_action('woocommerce_email_after_order_table',                [$this, 'email_deposit_notice'], 10, 4);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
         add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
@@ -1000,6 +1001,21 @@ class TSH_WooCommerce_Hook
         if (!$rows) return;
 
         echo '<div class="tsh-booking-meta" style="margin-top:12px"><h4>Thông tin đặt lịch</h4><p>' . implode('<br>', $rows) . '</p></div>';
+    }
+
+    /**
+     * Hiển thị trạng thái e-ticket trong đơn (admin). Luôn hiện 1 dòng để dễ kiểm tra:
+     * có hạn → "hết hạn dd/mm/yyyy"; không có → "chưa phát hành".
+     */
+    public function display_eticket_admin(\WC_Order $order): void
+    {
+        $expiry = $order->get_meta('_tsh_eticket_expiry');
+        if ($expiry) {
+            $days = (int) $order->get_meta('_tsh_eticket_days');
+            echo '<div class="tsh-eticket-admin" style="margin-top:12px;padding:10px 12px;background:#eef6ff;border-left:4px solid #2271b1"><strong>E-ticket quà tặng:</strong> hết hạn <strong>' . esc_html(date_i18n('d/m/Y', strtotime($expiry))) . '</strong>' . ($days ? ' (' . (int) $days . ' ngày)' : '') . '</div>';
+        } else {
+            echo '<div class="tsh-eticket-admin" style="margin-top:12px;padding:10px 12px;background:#f6f7f7;border-left:4px solid #c3c4c7;color:#777"><strong>E-ticket quà tặng:</strong> chưa phát hành (dịch vụ chưa set số ngày, hoặc đơn tạo trước khi set).</div>';
+        }
     }
 
     // ── Hiển thị số tiền còn lại (đơn đặt cọc) ────────────────────────────
