@@ -775,56 +775,45 @@ class TSH_WooCommerce_Hook
     public function thankyou_polling_js(): void
     {
         if (!is_order_received_page()) return;
-
         global $wp;
         $order_id = absint($wp->query_vars['order-received'] ?? 0);
         $order    = $order_id ? wc_get_order($order_id) : null;
-
-        if (!$order || !in_array($order->get_payment_method(), ['bacs', 'sepay', 'tsh_paypal_qr'], true)) return;
+        if (!$order || !in_array($order->get_payment_method(), ['sepay', 'tsh_paypal_qr'], true)) return;
         if (!in_array($order->get_status(), ['pending', 'on-hold'], true)) return;
-    ?>
+        $email = $order->get_billing_email();
+        ?>
         <script>
             jQuery(function($) {
                 var ajaxUrl = '<?= esc_js(admin_url('admin-ajax.php')) ?>';
                 var orderId = <?= (int) $order_id ?>;
                 var orderKey = '<?= esc_js($order->get_order_key()) ?>';
+                var successHtml = '<div class="tsh-bacs-qr tsh-bacs-qr--ty tsh-bacs-qr--success"><div class="tsh-payment-confirmed tsh-payment-confirmed--full"><span>✓</span><div><p><?= esc_js(__('Thanh toán thành công!', 'monamedia')) ?></p><p class="tsh-payment-confirmed__sub"><?= esc_js(__('Email xác nhận đã gửi đến', 'monamedia')) ?> <strong><?= esc_js($email) ?></strong></p></div></div></div>';
                 var timer;
 
-                // Nút "Tôi đã chuyển khoản"
+                // PayPal: nút "Tôi đã thanh toán"
                 $('#tsh-confirm-transfer').on('click', function() {
                     var $btn = $(this);
-                    $btn.prop('disabled', true).text('Đang gửi xác nhận...');
-                    $.post(ajaxUrl, {
-                        action: 'tsh_confirm_transfer',
-                        order_id: orderId,
-                        order_key: orderKey
-                    }).always(function() {
-                        $btn.hide();
-                        $('#tsh-transfer-msg').show();
-                    });
+                    $btn.prop('disabled', true).text('<?= esc_js(__('Đang gửi xác nhận...', 'monamedia')) ?>');
+                    $.post(ajaxUrl, { action: 'tsh_confirm_transfer', order_id: orderId, order_key: orderKey })
+                        .always(function() { $btn.hide(); $('#tsh-transfer-msg').show(); });
                 });
 
-                // Polling — khi SePay xác nhận thì reload trang
+                // SePay: polling → swap tại chỗ (không reload)
                 function check() {
-                    $.get(ajaxUrl, {
-                            action: 'tsh_order_status',
-                            order_id: orderId,
-                            order_key: orderKey
-                        })
+                    $.get(ajaxUrl, { action: 'tsh_order_status', order_id: orderId, order_key: orderKey })
                         .done(function(res) {
                             if (!res.success) return;
                             var s = res.data.status;
                             if (s === 'processing' || s === 'completed') {
                                 clearInterval(timer);
-                                window.location.reload();
+                                $('#tsh-ty-sepay').replaceWith(successHtml);
                             }
                         });
                 }
-
-                timer = setInterval(check, 5000);
+                if ($('#tsh-ty-sepay').length) timer = setInterval(check, 5000);
             });
         </script>
-<?php
+        <?php
     }
 
     // ── Admin new order email ─────────────────────────────────────────────
