@@ -496,56 +496,6 @@ class TSH_WooCommerce_Hook
             return ob_get_clean();
         }
 
-        // ── SePay ─────────────────────────────────────────────────────────
-        if ($payment_id === 'sepay') {
-            $cart  = WC()->cart;
-            $total = $cart ? (int) round((float) $cart->get_total('edit')) : 0;
-
-            // Token duy nhất per session — để webhook xác định thanh toán
-            $session = WC()->session;
-            $token   = $session ? $session->get('tsh_sepay_token') : '';
-            if (!$token) {
-                $token = strtoupper(bin2hex(random_bytes(4))); // 8 ký tự hex
-                if ($session) $session->set('tsh_sepay_token', $token);
-            }
-
-            $add_info = 'TSHCK' . $token;
-
-            // Lấy thông tin tài khoản từ cài đặt cổng SePay (nguồn duy nhất — chỉnh trong admin),
-            // fallback về hằng số nếu chưa cấu hình.
-            $sepay_cfg = get_option('woocommerce_sepay_settings', []);
-            $bank_id   = strtoupper($sepay_cfg['bank_select'] ?? '')       ?: TSH_BANK_ID;
-            $bank_acc  = ($sepay_cfg['bank_account_number'] ?? '')          ?: TSH_BANK_ACCOUNT;
-            $bank_name = ($sepay_cfg['bank_account_holder'] ?? '')          ?: TSH_BANK_NAME;
-
-            $base = 'https://img.vietqr.io/image/' . $bank_id . '-' . $bank_acc . '-compact2.png?' . http_build_query([
-                'accountName' => $bank_name,
-            ]);
-            $src = $base . '&amount=' . $total . '&addInfo=' . rawurlencode($add_info);
-
-            ob_start(); ?>
-            <div class="tsh-bacs-checkout-wrap">
-                <div class="tsh-bacs-checkout-info">
-                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Ngân hàng', 'monamedia'); ?></span><strong><?= esc_html($bank_id) ?></strong></div>
-                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($bank_acc) ?></strong><?= $this->copy_btn() ?></span></div>
-                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Chủ tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($bank_name) ?></strong><?= $this->copy_btn() ?></span></div>
-                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span><?php esc_html_e('Nội dung CK', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($add_info) ?></strong><?= $this->copy_btn() ?></span></div>
-                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong id="tsh-sepay-amount"><?= $total > 0 ? number_format($total, 0, ',', '.') . 'đ' : '—' ?></strong></div>
-                </div>
-                <div class="tsh-bacs-qr tsh-sepay-checkout-qr"
-                    data-token="<?= esc_attr($token) ?>"
-                    data-base="<?= esc_url($base) ?>"
-                    data-addinfo="<?= esc_attr($add_info) ?>">
-                    <img src="<?= esc_url($src) ?>" alt="QR SePay">
-                </div>
-            </div>
-            <div class="tsh-payment-waiting">
-                <p><?php esc_html_e('Quét mã QR để thanh toán', 'monamedia'); ?><br><span><?php esc_html_e('Trang sẽ tự chuyển sau khi xác nhận', 'monamedia'); ?></span></p>
-            </div>
-        <?php
-            return ob_get_clean();
-        }
-
         return $description;
     }
 
@@ -745,79 +695,15 @@ class TSH_WooCommerce_Hook
     public function checkout_bacs_js(): void
     {
         if (!is_checkout() || is_order_received_page()) return;
-        $ajax_url = admin_url('admin-ajax.php');
-    ?>
+        ?>
         <script>
             jQuery(function($) {
-                var $orig = $('#place_order');
-                var $fake = $('<button type="button" id="tsh-place-order"><?= esc_js(__('Xác nhận đặt lịch', 'monamedia')) ?></button>');
-                var ajaxUrl = '<?= esc_js($ajax_url) ?>';
-                var sepayTimer;
-                $orig.after($fake);
-                $fake.on('click', function() {
-                    $orig[0].click();
-                });
-
-                function stopSepayPoll() {
-                    clearTimeout(sepayTimer);
-                }
-
-                function startSepayPoll() {
-                    var $qr = $('.tsh-sepay-checkout-qr');
-                    var token = $qr.data('token');
-                    if (!token) return;
-
-                    function poll() {
-                        $.get(ajaxUrl, {
-                                action: 'tsh_sepay_paid',
-                                token: token
-                            })
-                            .done(function(res) {
-                                if (res.success && res.data && res.data.paid) {
-                                    history.replaceState(null, '', '/');
-                                    $orig[0].click();
-                                } else {
-                                    sepayTimer = setTimeout(poll, 5000);
-                                }
-                            })
-                            .fail(function() {
-                                sepayTimer = setTimeout(poll, 5000);
-                            });
-                    }
-                    poll();
-                }
-
-                // Cập nhật số tiền QR SePay khi cart thay đổi
-                $(document.body).on('updated_checkout', function() {
-                    var $qr = $('.tsh-sepay-checkout-qr');
-                    if (!$qr.length) return;
-                    var amount = parseInt($('.order-total .amount').first().text().replace(/\D/g, '')) || 0;
-                    $qr.find('img').attr('src', $qr.data('base') + '&amount=' + amount + '&addInfo=' + encodeURIComponent($qr.data('addinfo')));
-                    if (amount > 0) $('#tsh-sepay-amount').text(amount.toLocaleString('vi-VN') + 'đ');
-                });
-
                 function showPaymentBox(method) {
                     $('.payment_box').hide();
                     $('.payment_box.payment_method_' + method).show();
                 }
 
-                function toggle(method) {
-                    stopSepayPoll();
-                    showPaymentBox(method);
-                    if (method === 'bacs') {
-                        $orig.hide();
-                        $fake.show();
-                    } else if (method === 'sepay') {
-                        $orig.hide();
-                        $fake.show();
-                        startSepayPoll();
-                    } else {
-                        $orig.show();
-                        $fake.hide();
-                    }
-                }
-
-                // Master/Credit Card — placeholder chờ BCT: disable radio, không cho chọn
+                // Master/Credit Card — placeholder chờ BCT: disable radio
                 function disableMasterCard() {
                     var $mc = $('#payment_method_tsh_sepay_credit');
                     if (!$mc.length) return;
@@ -828,7 +714,6 @@ class TSH_WooCommerce_Hook
                         var $icon = $label.find('.tsh-pay-ic');
                         $icon.length ? $badge.insertBefore($icon) : $label.append(' ', $badge);
                     }
-                    // Nếu lỡ bị chọn (WC auto-check cổng đầu) → bỏ chọn
                     if ($mc.is(':checked')) $mc.prop('checked', false);
                 }
 
@@ -838,28 +723,21 @@ class TSH_WooCommerce_Hook
                     userPicked = true;
                 });
 
-                function deselectPayments() {
-                    $('input[name="payment_method"]').prop('checked', false);
-                    $('.payment_box').hide();
-                    // Giữ nút "Xác nhận đặt lịch" luôn hiện (bấm khi chưa chọn cổng → WC báo chọn phương thức)
-                    $orig.hide();
-                    $fake.show();
-                }
-
                 function refreshPayments() {
                     disableMasterCard();
                     if (!userPicked || !$('input[name="payment_method"]:checked').length) {
-                        deselectPayments();
+                        $('input[name="payment_method"]').prop('checked', false);
+                        $('.payment_box').hide();
                         return;
                     }
-                    toggle($('input[name="payment_method"]:checked').val());
+                    showPaymentBox($('input[name="payment_method"]:checked').val());
                 }
 
                 refreshPayments();
                 $(document.body).on('payment_method_selected updated_checkout', refreshPayments);
             });
         </script>
-    <?php
+        <?php
     }
 
     public function payment_type_js(): void
