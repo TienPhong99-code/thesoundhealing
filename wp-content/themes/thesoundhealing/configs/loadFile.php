@@ -69,6 +69,7 @@ return [
     MONA_THEME_INC_PATH . '/acf/KhoaHocWorkshopPageACF.php',
     MONA_THEME_INC_PATH . '/acf/DichVuACF.php',
     MONA_THEME_INC_PATH . '/acf/DichVuPageACF.php',
+    MONA_THEME_INC_PATH . '/acf/EticketACF.php',
     MONA_THEME_INC_PATH . '/acf/SearchBookingACF.php',
 
     // WooCommerce
