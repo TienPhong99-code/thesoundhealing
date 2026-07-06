@@ -78,6 +78,11 @@ $order = isset($order) ? $order : false;
                 </div>
             </div>
 
+            <!-- Thanh toán: QR SePay / PayPal / cash — render_thankyou_payment() gắn vào woocommerce_thankyou.
+                 CHỈ fire hook tổng (không fire woocommerce_thankyou_{method}) để renderer riêng của
+                 các gateway không double-render. -->
+            <?php do_action('woocommerce_thankyou', $order_id); ?>
+
             <!-- 3-col quick info -->
             <div class="tsh-ty-quick">
                 <?php if ($b_date) : ?>
