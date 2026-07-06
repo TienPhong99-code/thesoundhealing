@@ -1111,8 +1111,8 @@ class TSH_WooCommerce_Hook
         return sprintf(
             /* translators: 1: số đã cọc, 2: số còn lại */
             __('Đã đặt cọc %1$s. Còn lại %2$s thu tại cơ sở khi tham gia.', 'monamedia'),
-            wp_strip_all_tags(wc_price($deposit)),
-            wp_strip_all_tags(wc_price($remaining))
+            html_entity_decode(wp_strip_all_tags(wc_price($deposit)), ENT_QUOTES, 'UTF-8'),
+            html_entity_decode(wp_strip_all_tags(wc_price($remaining)), ENT_QUOTES, 'UTF-8')
         );
     }
 
