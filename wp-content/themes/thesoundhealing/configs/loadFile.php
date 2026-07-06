@@ -12,6 +12,7 @@ return [
 
     // Functions
     MONA_THEME_INC_PATH . '/functions/CommonFunction.php',
+    MONA_THEME_INC_PATH . '/functions/EticketFunction.php',
     MONA_THEME_INC_PATH . '/functions/ImageFunction.php',
     MONA_THEME_INC_PATH . '/functions/PaginationFunction.php',
     MONA_THEME_INC_PATH . '/functions/PostFunction.php',

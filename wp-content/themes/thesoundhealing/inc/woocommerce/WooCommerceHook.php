@@ -322,13 +322,13 @@ class TSH_WooCommerce_Hook
     public function save_eticket_meta(\WC_Order $order, array $data): void
     {
         $cart = WC()->cart;
-        if (!$cart) { $order->update_meta_data('_tsh_eticket_debug', 'no_cart'); return; }
+        if (!$cart) return;
         $items = $cart->get_cart();
-        if (empty($items)) { $order->update_meta_data('_tsh_eticket_debug', 'empty_cart'); return; }
+        if (empty($items)) return;
 
         $first      = reset($items);
         $product_id = (int) ($first['product_id'] ?? 0);
-        if (!$product_id) { $order->update_meta_data('_tsh_eticket_debug', 'no_product'); return; }
+        if (!$product_id) return;
 
         $cpt = get_posts([
             'post_type'      => ['khoa_hoc', 'workshop', 'dich_vu'],
@@ -338,18 +338,14 @@ class TSH_WooCommerce_Hook
             'posts_per_page' => 1,
             'fields'         => 'ids',
         ]);
-        if (empty($cpt)) { $order->update_meta_data('_tsh_eticket_debug', 'no_cpt:pid=' . $product_id); return; }
+        if (empty($cpt)) return;
 
-        // Đọc thẳng meta (không dùng get_field) để khỏi phụ thuộc ACF field có đăng ký
-        // ở tiến trình frontend hay không.
         $days = (int) get_post_meta($cpt[0], 'eticket_days', true);
-        if ($days <= 0) { $order->update_meta_data('_tsh_eticket_debug', 'days0:cpt=' . $cpt[0] . ',pid=' . $product_id); return; }
+        if ($days <= 0) return;
 
-        // gmdate + current_time('timestamp') (giờ local) → ngày local đúng, không bị nhân đôi offset theo tz server.
         $expiry = gmdate('Y-m-d', current_time('timestamp') + $days * DAY_IN_SECONDS);
         $order->update_meta_data('_tsh_eticket_days', $days);
         $order->update_meta_data('_tsh_eticket_expiry', $expiry);
-        $order->update_meta_data('_tsh_eticket_debug', 'ok:cpt=' . $cpt[0] . ',days=' . $days);
     }
 
     public function wrap_checkout_open(): void
@@ -1012,13 +1008,12 @@ class TSH_WooCommerce_Hook
      */
     public function display_eticket_admin(\WC_Order $order): void
     {
-        $expiry = $order->get_meta('_tsh_eticket_expiry');
+        $expiry = tsh_eticket_expiry($order, false);
         if ($expiry) {
             $days = (int) $order->get_meta('_tsh_eticket_days');
             echo '<div class="tsh-eticket-admin" style="margin-top:12px;padding:10px 12px;background:#eef6ff;border-left:4px solid #2271b1"><strong>E-ticket quà tặng:</strong> hết hạn <strong>' . esc_html(date_i18n('d/m/Y', strtotime($expiry))) . '</strong>' . ($days ? ' (' . (int) $days . ' ngày)' : '') . '</div>';
         } else {
-            $dbg = $order->get_meta('_tsh_eticket_debug');
-            echo '<div class="tsh-eticket-admin" style="margin-top:12px;padding:10px 12px;background:#f6f7f7;border-left:4px solid #c3c4c7;color:#777"><strong>E-ticket quà tặng:</strong> chưa phát hành. <code>debug: ' . esc_html($dbg ?: '(trống — save_eticket_meta KHÔNG chạy lúc tạo đơn → frontend OPcache cũ)') . '</code></div>';
+            echo '<div class="tsh-eticket-admin" style="margin-top:12px;padding:10px 12px;background:#f6f7f7;border-left:4px solid #c3c4c7;color:#777"><strong>E-ticket quà tặng:</strong> không phát hành (dịch vụ chưa set số ngày).</div>';
         }
     }
 
