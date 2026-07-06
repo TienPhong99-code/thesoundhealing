@@ -14,6 +14,7 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_checkout_get_value', [$this, 'prefill_checkout'], 10, 2);
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_checkout_create_order', [$this, 'save_payment_type_meta'], 10, 2);
+        add_action('woocommerce_checkout_create_order', [$this, 'save_eticket_meta'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_deposit_admin']);
         add_action('woocommerce_email_after_order_table',                [$this, 'email_deposit_notice'], 10, 4);
@@ -310,6 +311,39 @@ class TSH_WooCommerce_Hook
         $order->update_meta_data('_tsh_full_amount', $full);
         $order->update_meta_data('_tsh_deposit_amount', $deposit);
         $order->update_meta_data('_tsh_remaining_amount', $remaining);
+    }
+
+    /**
+     * Tính hạn e-ticket khi tạo đơn: lấy sản phẩm đầu trong cart → tra CPT gốc
+     * (qua _wc_product_id) → đọc eticket_days. Nếu > 0 → lưu ngày hết hạn vào order.
+     * (order chưa có line items ở hook này → đọc từ cart.)
+     */
+    public function save_eticket_meta(\WC_Order $order, array $data): void
+    {
+        $cart = WC()->cart;
+        if (!$cart) return;
+        $items = $cart->get_cart();
+        if (empty($items)) return;
+
+        $first      = reset($items);
+        $product_id = (int) ($first['product_id'] ?? 0);
+        if (!$product_id) return;
+
+        $cpt = get_posts([
+            'post_type'      => ['khoa_hoc', 'workshop', 'dich_vu'],
+            'meta_key'       => '_wc_product_id',
+            'meta_value'     => $product_id,
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+        ]);
+        if (empty($cpt)) return;
+
+        $days = (int) get_field('eticket_days', $cpt[0]);
+        if ($days <= 0) return;
+
+        $expiry = date('Y-m-d', current_time('timestamp') + $days * DAY_IN_SECONDS);
+        $order->update_meta_data('_tsh_eticket_days', $days);
+        $order->update_meta_data('_tsh_eticket_expiry', $expiry);
     }
 
     public function wrap_checkout_open(): void
