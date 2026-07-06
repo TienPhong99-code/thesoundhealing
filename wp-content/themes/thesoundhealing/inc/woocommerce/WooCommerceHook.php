@@ -30,6 +30,8 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_order_status_on-hold',        [$this, 'auto_complete_sepay'], 20, 2);
         add_action('wp_ajax_nopriv_tsh_sepay_paid',          [$this, 'ajax_sepay_paid']);
         add_action('wp_ajax_tsh_sepay_paid',                 [$this, 'ajax_sepay_paid']);
+        add_action('wp_ajax_nopriv_tsh_set_payment_type', [$this, 'ajax_set_payment_type']);
+        add_action('wp_ajax_tsh_set_payment_type',        [$this, 'ajax_set_payment_type']);
         add_filter('woocommerce_email_enabled_new_order',   [$this, 'prevent_duplicate_new_order_email'], 10, 3);
         add_filter('woocommerce_email_heading_new_order',   [$this, 'new_order_email_heading'], 10, 2);
         add_filter('woocommerce_email_subject_new_order',   [$this, 'new_order_email_subject'], 10, 2);
@@ -948,6 +950,23 @@ class TSH_WooCommerce_Hook
         if ($remaining <= 0) return;
 
         $cart->add_fee(__('Đặt cọc 50% (thanh toán phần còn lại tại cơ sở)', 'monamedia'), -$remaining);
+    }
+
+    /**
+     * AJAX: khách chọn cọc 50% hoặc thanh toán 100% ở checkout — lưu vào session.
+     */
+    public function ajax_set_payment_type(): void
+    {
+        $nonce = sanitize_text_field($_POST['nonce'] ?? '');
+        if (!wp_verify_nonce($nonce, 'tsh_payment_type')) {
+            wp_send_json_error(['msg' => 'invalid_nonce'], 403);
+        }
+
+        $type = ($_POST['type'] ?? '') === 'deposit' ? 'deposit' : 'full';
+        if (WC()->session) {
+            WC()->session->set('tsh_payment_type', $type);
+        }
+        wp_send_json_success(['type' => $type]);
     }
 
     public function display_guests_in_cart(array $item_data, array $cart_item): array
