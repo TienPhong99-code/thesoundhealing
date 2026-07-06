@@ -341,7 +341,8 @@ class TSH_WooCommerce_Hook
         $days = (int) get_field('eticket_days', $cpt[0]);
         if ($days <= 0) return;
 
-        $expiry = date('Y-m-d', current_time('timestamp') + $days * DAY_IN_SECONDS);
+        // gmdate + current_time('timestamp') (giờ local) → ngày local đúng, không bị nhân đôi offset theo tz server.
+        $expiry = gmdate('Y-m-d', current_time('timestamp') + $days * DAY_IN_SECONDS);
         $order->update_meta_data('_tsh_eticket_days', $days);
         $order->update_meta_data('_tsh_eticket_expiry', $expiry);
     }
