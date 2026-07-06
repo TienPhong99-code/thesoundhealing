@@ -4164,8 +4164,7 @@ form .wpcf7-not-valid-tip {
   border: 1px solid var(--cl-border);
   border-radius: 12px;
   padding: 24px;
-  margin: 24px auto;
-  max-width: 440px;
+  margin: 12px;
 }
 .tsh-bacs-qr__title {
   font-size: 16px;
@@ -4408,4 +4407,76 @@ form .wpcf7-not-valid-tip {
   grid-column: 2/-1;
   font-size: 13px;
   color: #8a8577;
+}
+
+/* ── E-ticket voucher (html2canvas chụp — đặt ngoài màn hình) ───────── */
+.tsh-voucher {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 900px;
+  display: flex;
+  background: #fff;
+  border: 1px solid #e4e2dd;
+  border-radius: 16px;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+}
+.tsh-voucher__content {
+  flex: 1;
+  padding: 36px 40px;
+}
+.tsh-voucher__brand {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--color-pri);
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+.tsh-voucher__title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-sec);
+  margin: 0 0 20px;
+}
+.tsh-voucher__code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #faf8f4;
+  border: 1px dashed var(--color-pri);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+.tsh-voucher__code span { color: #717171; font-size: 13px; }
+.tsh-voucher__code strong { color: var(--color-pri); font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+.tsh-voucher__rows { margin-bottom: 20px; }
+.tsh-voucher__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0ede6;
+}
+.tsh-voucher__row span { color: #717171; font-size: 14px; }
+.tsh-voucher__row strong { color: var(--color-sec); font-size: 14px; font-weight: 600; text-align: right; }
+.tsh-voucher__hotline {
+  padding: 14px 16px;
+  background: #fbf8f0;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.tsh-voucher__hotline p { margin: 0; font-size: 14px; color: var(--color-sec); }
+.tsh-voucher__hotline p:first-child { color: #717171; font-size: 12px; margin-bottom: 4px; }
+.tsh-voucher__note { margin: 0; font-size: 12px; color: #8a8577; font-style: italic; }
+.tsh-voucher__banner {
+  width: 320px;
+  flex-shrink: 0;
+}
+.tsh-voucher__banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }

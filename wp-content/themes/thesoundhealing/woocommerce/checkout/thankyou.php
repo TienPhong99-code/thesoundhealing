@@ -35,6 +35,7 @@ $order = isset($order) ? $order : false;
             $items = $order->get_items();
             $first_item = !empty($items) ? reset($items) : null;
             $service_name = $first_item ? $first_item->get_name() : '';
+            $eticket_expiry = $order->get_meta('_tsh_eticket_expiry');
         ?>
 
         <!-- Grid: content trái + banner phải -->
@@ -206,7 +207,9 @@ $order = isset($order) ? $order : false;
 
         <!-- Actions (trong cột content) -->
         <div class="tsh-ty-actions">
-            <button type="button" class="tsh-ty-btn tsh-ty-btn--ghost" disabled aria-disabled="true" title="<?php esc_attr_e('Tính năng sắp ra mắt', 'monamedia'); ?>"><?php esc_html_e('E-TICKET LÀM QUÀ TẶNG', 'monamedia'); ?></button>
+            <?php if ($eticket_expiry) : ?>
+            <button type="button" id="tsh-eticket-btn" class="tsh-ty-btn tsh-ty-btn--ghost" data-order="<?php echo esc_attr(str_pad($order_id, 5, '0', STR_PAD_LEFT)); ?>"><?php esc_html_e('E-TICKET LÀM QUÀ TẶNG', 'monamedia'); ?></button>
+            <?php endif; ?>
             <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri"><?php esc_html_e('Về trang chủ', 'monamedia'); ?></a>
         </div>
 
@@ -216,6 +219,33 @@ $order = isset($order) ? $order : false;
         <div class="tsh-ty-banner">
             <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png'); ?>" alt="<?php esc_attr_e('Đặt lịch thành công', 'monamedia'); ?>" loading="lazy">
         </div>
+
+        <?php if ($eticket_expiry) : ?>
+        <!-- Voucher e-ticket (ẩn ngoài màn hình, html2canvas chụp) -->
+        <div class="tsh-voucher" aria-hidden="true">
+            <div class="tsh-voucher__content">
+                <p class="tsh-voucher__brand">THE SOUND HEALING</p>
+                <h2 class="tsh-voucher__title"><?php esc_html_e('E-TICKET QUÀ TẶNG', 'monamedia'); ?></h2>
+                <div class="tsh-voucher__code">
+                    <span><?php esc_html_e('Mã e-ticket', 'monamedia'); ?></span>
+                    <strong>#<?php echo esc_html(str_pad($order_id, 5, '0', STR_PAD_LEFT)); ?></strong>
+                </div>
+                <div class="tsh-voucher__rows">
+                    <div class="tsh-voucher__row"><span><?php esc_html_e('Dịch vụ', 'monamedia'); ?></span><strong><?php echo esc_html($service_name); ?></strong></div>
+                    <div class="tsh-voucher__row"><span><?php esc_html_e('Số người', 'monamedia'); ?></span><strong><?php echo esc_html(($b_guests ?: '1') . ' ' . __('người', 'monamedia')); ?></strong></div>
+                    <div class="tsh-voucher__row"><span><?php esc_html_e('Ngày hết hạn', 'monamedia'); ?></span><strong><?php echo esc_html(date_i18n('d/m/Y', strtotime($eticket_expiry))); ?></strong></div>
+                </div>
+                <div class="tsh-voucher__hotline">
+                    <p><?php esc_html_e('Liên hệ hotline để đặt lịch:', 'monamedia'); ?></p>
+                    <p><strong>English:</strong> 0939 624 684 &nbsp; | &nbsp; <strong>Tiếng Việt:</strong> 0906 502 582</p>
+                </div>
+                <p class="tsh-voucher__note"><?php esc_html_e('Vui lòng xuất trình mã e-ticket khi sử dụng dịch vụ.', 'monamedia'); ?></p>
+            </div>
+            <div class="tsh-voucher__banner">
+                <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png'); ?>" alt="" crossorigin="anonymous">
+            </div>
+        </div>
+        <?php endif; ?>
 
         </div><!-- /.tsh-ty-body -->
 
