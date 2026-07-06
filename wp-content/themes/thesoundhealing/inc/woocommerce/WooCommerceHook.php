@@ -15,6 +15,8 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_checkout_create_order', [$this, 'save_payment_type_meta'], 10, 2);
         add_action('woocommerce_checkout_create_order', [$this, 'save_eticket_meta'], 10, 2);
+        add_action('woocommerce_order_status_processing', [$this, 'send_eticket_email'], 20, 2);
+        add_action('woocommerce_order_status_completed',  [$this, 'send_eticket_email'], 20, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_deposit_admin']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_eticket_admin']);
@@ -346,6 +348,53 @@ class TSH_WooCommerce_Hook
         $expiry = gmdate('Y-m-d', current_time('timestamp') + $days * DAY_IN_SECONDS);
         $order->update_meta_data('_tsh_eticket_days', $days);
         $order->update_meta_data('_tsh_eticket_expiry', $expiry);
+    }
+
+    /**
+     * Gửi email e-ticket riêng cho khách khi đơn được xác nhận thanh toán
+     * (processing/completed). Chỉ gửi khi đơn có e-ticket và chưa gửi lần nào.
+     */
+    public function send_eticket_email(int $order_id, $order = null): void
+    {
+        if (!$order) $order = wc_get_order($order_id);
+        if (!$order) return;
+        if ($order->get_meta('_tsh_eticket_email_sent')) return;
+
+        $expiry = tsh_eticket_expiry($order);
+        if (!$expiry) return;
+
+        $code       = '#' . str_pad($order_id, 5, '0', STR_PAD_LEFT);
+        $expiry_fmt = date_i18n('d/m/Y', strtotime($expiry));
+        $guests     = $order->get_meta('_booking_guests') ?: '1';
+        $items      = $order->get_items();
+        $service    = $items ? reset($items)->get_name() : '';
+        $email      = $order->get_billing_email();
+        if (!$email) return;
+
+        $html = '<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#1b1c19">'
+            . '<div style="border:1px solid #e4e2dd;border-radius:12px;overflow:hidden">'
+            . '<div style="background:#1b1c19;color:#c2a056;padding:18px 24px;font-weight:bold;letter-spacing:1px">THE SOUND HEALING — E-TICKET QUÀ TẶNG</div>'
+            . '<div style="padding:24px">'
+            . '<div style="padding:14px 18px;background:#faf8f4;border:1px dashed #c2a056;border-radius:10px;margin-bottom:18px">'
+            . '<span style="color:#717171;font-size:13px">Mã e-ticket</span><br><strong style="color:#c2a056;font-size:22px;letter-spacing:1px">' . esc_html($code) . '</strong></div>'
+            . '<table style="width:100%;border-collapse:collapse;font-size:14px">'
+            . '<tr><td style="padding:8px 0;color:#717171">Dịch vụ</td><td style="padding:8px 0;text-align:right;font-weight:600">' . esc_html($service) . '</td></tr>'
+            . '<tr><td style="padding:8px 0;color:#717171">Số người</td><td style="padding:8px 0;text-align:right;font-weight:600">' . esc_html($guests) . ' người</td></tr>'
+            . '<tr><td style="padding:8px 0;color:#717171">Ngày hết hạn</td><td style="padding:8px 0;text-align:right;font-weight:700;color:#c2a056">' . esc_html($expiry_fmt) . '</td></tr>'
+            . '</table>'
+            . '<div style="margin-top:18px;padding:14px 16px;background:#fbf8f0;border-radius:10px;font-size:14px">'
+            . '<p style="margin:0 0 6px;color:#717171;font-size:12px">Liên hệ hotline để đặt lịch:</p>'
+            . '<p style="margin:0"><strong>English:</strong> 0939 624 684 &nbsp;|&nbsp; <strong>Tiếng Việt:</strong> 0906 502 582</p></div>'
+            . '<p style="margin:14px 0 0;font-size:12px;color:#8a8577;font-style:italic">Vui lòng xuất trình mã e-ticket khi sử dụng dịch vụ.</p>'
+            . '</div></div></div>';
+
+        $subject = 'E-ticket quà tặng của bạn — ' . $code;
+        $headers = ['Content-Type: text/html; charset=UTF-8'];
+
+        wp_mail($email, $subject, $html, $headers);
+
+        $order->update_meta_data('_tsh_eticket_email_sent', '1');
+        $order->save();
     }
 
     public function wrap_checkout_open(): void
