@@ -35,6 +35,7 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_email_subject_new_order',   [$this, 'new_order_email_subject'], 10, 2);
         add_filter('woocommerce_get_cart_item_from_session', [$this, 'restore_guests_cart_item'], 10, 2);
         add_action('woocommerce_before_calculate_totals',    [$this, 'apply_guests_price']);
+        add_action('woocommerce_cart_calculate_fees', [$this, 'apply_deposit_fee']);
         add_filter('woocommerce_get_item_data',              [$this, 'display_guests_in_cart'], 10, 2);
         add_filter('woocommerce_available_payment_gateways', [$this, 'set_bacs_first']);
         // Không ép chọn sẵn cổng nào — khách phải tự click chọn (xử lý ở checkout_bacs_js)
@@ -919,6 +920,34 @@ class TSH_WooCommerce_Hook
                 $item['data']->set_price($base * $guests);
             }
         }
+    }
+
+    // ── Đặt cọc 50% / thanh toán 100% ─────────────────────────────────────
+
+    private function get_payment_type(): string
+    {
+        $session = WC()->session;
+        $type = $session ? (string) $session->get('tsh_payment_type') : '';
+        return $type === 'deposit' ? 'deposit' : 'full';
+    }
+
+    /**
+     * Khi chọn cọc 50%: thêm phí âm = -round(subtotal*0.5) để tổng đơn còn 50%.
+     * subtotal ở đây đã gồm giá×số người (apply_guests_price chạy trước ở
+     * woocommerce_before_calculate_totals).
+     */
+    public function apply_deposit_fee(\WC_Cart $cart): void
+    {
+        if (is_admin() && !defined('DOING_AJAX')) return;
+        if ($this->get_payment_type() !== 'deposit') return;
+
+        $full = (float) $cart->get_subtotal();
+        if ($full <= 0) return;
+
+        $remaining = round($full * 0.5);
+        if ($remaining <= 0) return;
+
+        $cart->add_fee(__('Đặt cọc 50% (thanh toán phần còn lại tại cơ sở)', 'monamedia'), -$remaining);
     }
 
     public function display_guests_in_cart(array $item_data, array $cart_item): array
