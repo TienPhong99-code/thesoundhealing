@@ -36,6 +36,44 @@ $order = isset($order) ? $order : false;
             $first_item = !empty($items) ? reset($items) : null;
             $service_name = $first_item ? $first_item->get_name() : '';
             $eticket_expiry = $order->get_meta('_tsh_eticket_expiry');
+            $eticket_dbg2   = '';
+            // Fallback: nếu chưa có (save_eticket_meta không chạy lúc tạo đơn do OPcache lệch worker),
+            // tính ngay tại đây từ item của đơn rồi lưu lại — tự chữa, lần sau đọc thẳng.
+            if (!$eticket_expiry) {
+                $e_items = $order->get_items();
+                $e_first = $e_items ? reset($e_items) : null;
+                $e_pid   = $e_first ? (int) $e_first->get_product_id() : 0;
+                if (!$e_pid) {
+                    $eticket_dbg2 = 'no_product_in_order';
+                } else {
+                    $e_cpt = get_posts([
+                        'post_type'      => ['khoa_hoc', 'workshop', 'dich_vu'],
+                        'post_status'    => 'any',
+                        'meta_key'       => '_wc_product_id',
+                        'meta_value'     => $e_pid,
+                        'posts_per_page' => 1,
+                        'fields'         => 'ids',
+                    ]);
+                    if (empty($e_cpt)) {
+                        $eticket_dbg2 = 'no_cpt:pid=' . $e_pid;
+                    } else {
+                        $e_days = (int) get_post_meta($e_cpt[0], 'eticket_days', true);
+                        if ($e_days <= 0) {
+                            $eticket_dbg2 = 'days0:cpt=' . $e_cpt[0] . ',pid=' . $e_pid;
+                        } else {
+                            $e_created = $order->get_date_created();
+                            $e_base = $e_created
+                                ? ($e_created->getTimestamp() + (int) round(((float) get_option('gmt_offset', 0)) * 3600))
+                                : current_time('timestamp');
+                            $eticket_expiry = gmdate('Y-m-d', $e_base + $e_days * DAY_IN_SECONDS);
+                            $order->update_meta_data('_tsh_eticket_expiry', $eticket_expiry);
+                            $order->update_meta_data('_tsh_eticket_days', $e_days);
+                            $order->save();
+                            $eticket_dbg2 = 'computed_ok:cpt=' . $e_cpt[0] . ',days=' . $e_days;
+                        }
+                    }
+                }
+            }
         ?>
 
         <!-- Grid: content trái + banner phải -->
@@ -49,7 +87,8 @@ $order = isset($order) ? $order : false;
             <strong>DEBUG e-ticket</strong> (chỉ admin thấy)<br>
             _tsh_eticket_expiry: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_expiry') ?: '(rỗng)'); ?></strong><br>
             _tsh_eticket_days: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_days') ?: '(rỗng)'); ?></strong><br>
-            _tsh_eticket_debug: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_debug') ?: '(rỗng — save_eticket_meta không chạy lúc tạo đơn)'); ?></strong>
+            _tsh_eticket_debug: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_debug') ?: '(rỗng — save_eticket_meta không chạy lúc tạo đơn)'); ?></strong><br>
+            fallback tại trang cảm ơn: <strong><?php echo esc_html($eticket_dbg2 ?: '(không cần — đã có sẵn)'); ?></strong>
         </div>
         <?php endif; ?>
 
