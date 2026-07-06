@@ -46,7 +46,7 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_get_item_data',              [$this, 'display_guests_in_cart'], 10, 2);
         add_filter('woocommerce_available_payment_gateways', [$this, 'set_bacs_first']);
         // Không ép chọn sẵn cổng nào — khách phải tự click chọn (xử lý ở checkout_bacs_js)
-        add_action('woocommerce_checkout_init', function() {
+        add_action('woocommerce_checkout_init', function () {
             if (WC()->session) {
                 WC()->session->set('chosen_payment_method', '');
             }
@@ -130,7 +130,7 @@ class TSH_WooCommerce_Hook
         $deposit   = $full - $remaining;
         $type      = $this->get_payment_type();
         $nonce     = wp_create_nonce('tsh_payment_type');
-        ?>
+?>
         <div class="tsh-paytype" data-nonce="<?= esc_attr($nonce) ?>">
             <h3 class="tsh-co-payment-title"><?php esc_html_e('Lựa chọn thanh toán', 'monamedia'); ?></h3>
             <label class="tsh-paytype__opt<?= $type === 'full' ? ' is-active' : '' ?>">
@@ -865,14 +865,14 @@ class TSH_WooCommerce_Hook
     {
         if (!is_checkout() || is_order_received_page()) return;
         $ajax_url = admin_url('admin-ajax.php');
-        ?>
+    ?>
         <script>
             jQuery(function($) {
                 var ajaxUrl = '<?= esc_js($ajax_url) ?>';
 
                 // Đổi radio cọc/full → lưu session rồi cập nhật lại toàn bộ đơn.
                 $(document.body).on('change', 'input[name="tsh_paytype"]', function() {
-                    var type  = $(this).val();
+                    var type = $(this).val();
                     var nonce = $(this).closest('.tsh-paytype').data('nonce') || '';
                     $('.tsh-paytype__opt').removeClass('is-active');
                     $(this).closest('.tsh-paytype__opt').addClass('is-active');
@@ -889,7 +889,7 @@ class TSH_WooCommerce_Hook
                 });
             });
         </script>
-        <?php
+    <?php
     }
 
     // ── Thank you: polling tự động xác nhận SePay ────────────────────────
@@ -951,7 +951,8 @@ class TSH_WooCommerce_Hook
 
     // ── Admin new order email ─────────────────────────────────────────────
 
-    public function prevent_duplicate_new_order_email(bool $enabled, $order, $email): bool {
+    public function prevent_duplicate_new_order_email(bool $enabled, $order, $email): bool
+    {
         if (!$enabled || !$order instanceof \WC_Order) return $enabled;
 
         if ($order->get_meta('_tsh_new_order_email_sent')) {
@@ -962,7 +963,8 @@ class TSH_WooCommerce_Hook
         return true;
     }
 
-    private function order_booking_heading(\WC_Order $order): string {
+    private function order_booking_heading(\WC_Order $order): string
+    {
         $items   = $order->get_items();
         $service = $items ? reset($items)->get_name() : '';
         $name    = trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name());
@@ -972,19 +974,22 @@ class TSH_WooCommerce_Hook
         return implode(' — ', $parts);
     }
 
-    public function new_order_email_heading($heading, $order): string {
+    public function new_order_email_heading($heading, $order): string
+    {
         if (!$order instanceof \WC_Order) return $heading;
         $custom = $this->order_booking_heading($order);
         return $custom ?: $heading;
     }
 
-    public function new_order_email_subject($subject, $order): string {
+    public function new_order_email_subject($subject, $order): string
+    {
         if (!$order instanceof \WC_Order) return $subject;
         $custom = $this->order_booking_heading($order);
         return $custom ? '[Đặt lịch] ' . $custom : $subject;
     }
 
-    public function customer_email_subject($subject, $order): string {
+    public function customer_email_subject($subject, $order): string
+    {
         if (!$order instanceof \WC_Order) return $subject;
         $items   = $order->get_items();
         $service = $items ? reset($items)->get_name() : '';
@@ -1028,8 +1033,24 @@ class TSH_WooCommerce_Hook
     }
 
     /**
+     * Tính subtotal (giá×số người×số lượng) từ item ngay trong hook fee.
+     * KHÔNG dùng $cart->get_subtotal() ở đây: trong woocommerce_cart_calculate_fees,
+     * reset_totals() đã zero toàn bộ totals và subtotal chưa được ghi lại → luôn = 0.
+     * Đọc trực tiếp giá item (đã gồm giá×số người do apply_guests_price set trước đó).
+     */
+    private function cart_items_subtotal(\WC_Cart $cart): float
+    {
+        $subtotal = 0.0;
+        foreach ($cart->get_cart() as $item) {
+            if (empty($item['data']) || !is_object($item['data'])) continue;
+            $subtotal += (float) $item['data']->get_price() * (int) ($item['quantity'] ?? 1);
+        }
+        return $subtotal;
+    }
+
+    /**
      * Khi chọn cọc 50%: thêm phí âm = -round(subtotal*0.5) để tổng đơn còn 50%.
-     * subtotal ở đây đã gồm giá×số người (apply_guests_price chạy trước ở
+     * subtotal đã gồm giá×số người (apply_guests_price chạy trước ở
      * woocommerce_before_calculate_totals).
      */
     public function apply_deposit_fee(\WC_Cart $cart): void
@@ -1037,7 +1058,7 @@ class TSH_WooCommerce_Hook
         if (is_admin() && !defined('DOING_AJAX')) return;
         if ($this->get_payment_type() !== 'deposit') return;
 
-        $full = (float) $cart->get_subtotal();
+        $full = $this->cart_items_subtotal($cart);
         if ($full <= 0) return;
 
         $remaining = round($full * 0.5);
