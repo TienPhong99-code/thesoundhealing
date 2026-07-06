@@ -183,9 +183,6 @@ $order = isset($order) ? $order : false;
                                 <?php echo wp_kses_post($total); ?>
                                 <?php if ($is_deposit) : ?><span class="tsh-ty-deposit-tag"><?php esc_html_e('Đặt cọc 50%', 'monamedia'); ?></span><?php endif; ?>
                             </span>
-                            <?php if ($is_deposit && $remaining > 0) : ?>
-                            <span class="tsh-ty-deposit-note"><?php printf(esc_html__('Còn lại %s thu tại cơ sở khi tham gia', 'monamedia'), wp_kses_post(wc_price($remaining))); ?></span>
-                            <?php endif; ?>
                         </div>
                         <div class="tsh-ty-detail-item">
                             <span class="tsh-ty-detail-label"><?php esc_html_e('Phương thức', 'monamedia'); ?></span>
