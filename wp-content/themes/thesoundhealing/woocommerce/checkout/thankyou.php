@@ -35,45 +35,7 @@ $order = isset($order) ? $order : false;
             $items = $order->get_items();
             $first_item = !empty($items) ? reset($items) : null;
             $service_name = $first_item ? $first_item->get_name() : '';
-            $eticket_expiry = $order->get_meta('_tsh_eticket_expiry');
-            $eticket_dbg2   = '';
-            // Fallback: nếu chưa có (save_eticket_meta không chạy lúc tạo đơn do OPcache lệch worker),
-            // tính ngay tại đây từ item của đơn rồi lưu lại — tự chữa, lần sau đọc thẳng.
-            if (!$eticket_expiry) {
-                $e_items = $order->get_items();
-                $e_first = $e_items ? reset($e_items) : null;
-                $e_pid   = $e_first ? (int) $e_first->get_product_id() : 0;
-                if (!$e_pid) {
-                    $eticket_dbg2 = 'no_product_in_order';
-                } else {
-                    $e_cpt = get_posts([
-                        'post_type'      => ['khoa_hoc', 'workshop', 'dich_vu'],
-                        'post_status'    => 'any',
-                        'meta_key'       => '_wc_product_id',
-                        'meta_value'     => $e_pid,
-                        'posts_per_page' => 1,
-                        'fields'         => 'ids',
-                    ]);
-                    if (empty($e_cpt)) {
-                        $eticket_dbg2 = 'no_cpt:pid=' . $e_pid;
-                    } else {
-                        $e_days = (int) get_post_meta($e_cpt[0], 'eticket_days', true);
-                        if ($e_days <= 0) {
-                            $eticket_dbg2 = 'days0:cpt=' . $e_cpt[0] . ',pid=' . $e_pid;
-                        } else {
-                            $e_created = $order->get_date_created();
-                            $e_base = $e_created
-                                ? ($e_created->getTimestamp() + (int) round(((float) get_option('gmt_offset', 0)) * 3600))
-                                : current_time('timestamp');
-                            $eticket_expiry = gmdate('Y-m-d', $e_base + $e_days * DAY_IN_SECONDS);
-                            $order->update_meta_data('_tsh_eticket_expiry', $eticket_expiry);
-                            $order->update_meta_data('_tsh_eticket_days', $e_days);
-                            $order->save();
-                            $eticket_dbg2 = 'computed_ok:cpt=' . $e_cpt[0] . ',days=' . $e_days;
-                        }
-                    }
-                }
-            }
+            $eticket_expiry = tsh_eticket_expiry($order);
         ?>
 
         <!-- Grid: content trái + banner phải -->
@@ -81,16 +43,6 @@ $order = isset($order) ? $order : false;
 
         <!-- Cột trái: toàn bộ content -->
         <div class="tsh-ty-content">
-
-        <?php if (current_user_can('manage_options') || isset($_GET['ticketdebug'])) : ?>
-        <div style="margin:0 0 16px;padding:12px 14px;background:#fffbe6;border:1px solid #e0c060;border-radius:8px;font-size:13px;color:#333;line-height:1.6">
-            <strong>DEBUG e-ticket</strong> (chỉ admin thấy)<br>
-            _tsh_eticket_expiry: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_expiry') ?: '(rỗng)'); ?></strong><br>
-            _tsh_eticket_days: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_days') ?: '(rỗng)'); ?></strong><br>
-            _tsh_eticket_debug: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_debug') ?: '(rỗng — save_eticket_meta không chạy lúc tạo đơn)'); ?></strong><br>
-            fallback tại trang cảm ơn: <strong><?php echo esc_html($eticket_dbg2 ?: '(không cần — đã có sẵn)'); ?></strong>
-        </div>
-        <?php endif; ?>
 
         <!-- Checkmark header -->
         <div class="tsh-ty-header">
@@ -251,13 +203,16 @@ $order = isset($order) ? $order : false;
                 <p><?php esc_html_e('Chúng tôi sẽ liên hệ xác nhận lịch hẹn sớm nhất. Quý khách vui lòng đến sớm 15 phút để được phục vụ tốt nhất.', 'monamedia'); ?></p>
             </div>
 
+            <?php if ($eticket_expiry) : ?>
+            <p class="tsh-ty-eticket-note" style="margin:16px 0 0;padding:12px 14px;background:#faf8f4;border:1px solid #e4e2dd;border-radius:10px;font-size:13px;color:#717171">
+                <?php esc_html_e('E-ticket quà tặng sẽ được gửi qua email sau khi thanh toán được xác nhận.', 'monamedia'); ?>
+            </p>
+            <?php endif; ?>
+
         </div><!-- /.tsh-ty-card -->
 
         <!-- Actions (trong cột content) -->
         <div class="tsh-ty-actions">
-            <?php if ($eticket_expiry) : ?>
-            <button type="button" id="tsh-eticket-btn" class="tsh-ty-btn tsh-ty-btn--ghost" data-order="<?php echo esc_attr(str_pad($order_id, 5, '0', STR_PAD_LEFT)); ?>"><?php esc_html_e('E-TICKET LÀM QUÀ TẶNG', 'monamedia'); ?></button>
-            <?php endif; ?>
             <a href="<?php echo esc_url(home_url('/')); ?>" class="tsh-ty-btn tsh-ty-btn--pri"><?php esc_html_e('Về trang chủ', 'monamedia'); ?></a>
         </div>
 
@@ -267,33 +222,6 @@ $order = isset($order) ? $order : false;
         <div class="tsh-ty-banner">
             <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png'); ?>" alt="<?php esc_attr_e('Đặt lịch thành công', 'monamedia'); ?>" loading="lazy">
         </div>
-
-        <?php if ($eticket_expiry) : ?>
-        <!-- Voucher e-ticket (ẩn ngoài màn hình, html2canvas chụp) -->
-        <div class="tsh-voucher" aria-hidden="true">
-            <div class="tsh-voucher__content">
-                <p class="tsh-voucher__brand">THE SOUND HEALING</p>
-                <h2 class="tsh-voucher__title"><?php esc_html_e('E-TICKET QUÀ TẶNG', 'monamedia'); ?></h2>
-                <div class="tsh-voucher__code">
-                    <span><?php esc_html_e('Mã e-ticket', 'monamedia'); ?></span>
-                    <strong>#<?php echo esc_html(str_pad($order_id, 5, '0', STR_PAD_LEFT)); ?></strong>
-                </div>
-                <div class="tsh-voucher__rows">
-                    <div class="tsh-voucher__row"><span><?php esc_html_e('Dịch vụ', 'monamedia'); ?></span><strong><?php echo esc_html($service_name); ?></strong></div>
-                    <div class="tsh-voucher__row"><span><?php esc_html_e('Số người', 'monamedia'); ?></span><strong><?php echo esc_html(($b_guests ?: '1') . ' ' . __('người', 'monamedia')); ?></strong></div>
-                    <div class="tsh-voucher__row"><span><?php esc_html_e('Ngày hết hạn', 'monamedia'); ?></span><strong><?php echo esc_html(date_i18n('d/m/Y', strtotime($eticket_expiry))); ?></strong></div>
-                </div>
-                <div class="tsh-voucher__hotline">
-                    <p><?php esc_html_e('Liên hệ hotline để đặt lịch:', 'monamedia'); ?></p>
-                    <p><strong>English:</strong> 0939 624 684 &nbsp; | &nbsp; <strong>Tiếng Việt:</strong> 0906 502 582</p>
-                </div>
-                <p class="tsh-voucher__note"><?php esc_html_e('Vui lòng xuất trình mã e-ticket khi sử dụng dịch vụ.', 'monamedia'); ?></p>
-            </div>
-            <div class="tsh-voucher__banner">
-                <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png'); ?>" alt="" crossorigin="anonymous">
-            </div>
-        </div>
-        <?php endif; ?>
 
         </div><!-- /.tsh-ty-body -->
 
