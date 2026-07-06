@@ -35,12 +35,11 @@ class TSH_Sepay_Webhook {
         $content     = $body['content'] ?? '';
         $transferred = (float) ($body['transferAmount'] ?? 0);
 
-        // Trường hợp 1: QR thank you — nội dung "HEAL-TÊN-SĐT-[order_id]" (mã đơn ở cuối)
-        // hoặc "TSH[order_id]" (tương thích ngược). Mã đơn là nhóm số cuối chuỗi.
+        // Trường hợp 1: QR thank you — nội dung có mốc "TSH{order_id}" (nằm trong
+        // "HEAL-TÊN-SĐT-TSH{mãđơn}"). Mốc chữ "TSH" tách mã đơn khỏi SĐT nên đọc đúng
+        // kể cả khi ngân hàng bỏ dấu "-".
         $order_id = 0;
-        if (preg_match('/HEAL.*?(\d+)\s*$/i', $content, $matches)) {
-            $order_id = (int) $matches[1];
-        } elseif (preg_match('/TSH\s*(\d+)/i', $content, $matches)) {
+        if (preg_match('/TSH\s*(\d+)/i', $content, $matches)) {
             $order_id = (int) $matches[1];
         }
         if ($order_id) {
