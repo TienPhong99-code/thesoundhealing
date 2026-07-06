@@ -35,14 +35,14 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_order_status_on-hold',        [$this, 'auto_complete_sepay'], 20, 2);
         add_action('wp_ajax_nopriv_tsh_sepay_paid',          [$this, 'ajax_sepay_paid']);
         add_action('wp_ajax_tsh_sepay_paid',                 [$this, 'ajax_sepay_paid']);
-        add_action('wp_ajax_nopriv_tsh_set_payment_type', [$this, 'ajax_set_payment_type']);
-        add_action('wp_ajax_tsh_set_payment_type',        [$this, 'ajax_set_payment_type']);
         add_filter('woocommerce_email_enabled_new_order',   [$this, 'prevent_duplicate_new_order_email'], 10, 3);
         add_filter('woocommerce_email_heading_new_order',   [$this, 'new_order_email_heading'], 10, 2);
         add_filter('woocommerce_email_subject_new_order',   [$this, 'new_order_email_subject'], 10, 2);
         add_filter('woocommerce_get_cart_item_from_session', [$this, 'restore_guests_cart_item'], 10, 2);
         add_action('woocommerce_before_calculate_totals',    [$this, 'apply_guests_price']);
         add_action('woocommerce_cart_calculate_fees', [$this, 'apply_deposit_fee']);
+        add_action('woocommerce_checkout_update_order_review', [$this, 'sync_payment_type_from_post']);
+        add_action('woocommerce_checkout_process',             [$this, 'sync_payment_type_on_process']);
         add_filter('woocommerce_get_item_data',              [$this, 'display_guests_in_cart'], 10, 2);
         add_filter('woocommerce_available_payment_gateways', [$this, 'set_bacs_first']);
         // Không ép chọn sẵn cổng nào — khách phải tự click chọn (xử lý ở checkout_bacs_js)
@@ -131,9 +131,8 @@ class TSH_WooCommerce_Hook
         $remaining = round($full * 0.5);
         $deposit   = $full - $remaining;
         $type      = $this->get_payment_type();
-        $nonce     = wp_create_nonce('tsh_payment_type');
 ?>
-        <div class="tsh-paytype" data-nonce="<?= esc_attr($nonce) ?>">
+        <div class="tsh-paytype">
             <h3 class="tsh-co-payment-title"><?php esc_html_e('Lựa chọn thanh toán', 'monamedia'); ?></h3>
             <label class="tsh-paytype__opt<?= $type === 'full' ? ' is-active' : '' ?>">
                 <input type="radio" name="tsh_paytype" value="full" <?php checked($type, 'full'); ?>>
@@ -866,32 +865,18 @@ class TSH_WooCommerce_Hook
     public function payment_type_js(): void
     {
         if (!is_checkout() || is_order_received_page()) return;
-        $ajax_url = admin_url('admin-ajax.php');
-    ?>
+        ?>
         <script>
             jQuery(function($) {
-                var ajaxUrl = '<?= esc_js($ajax_url) ?>';
-
-                // Đổi radio cọc/full → lưu session rồi cập nhật lại toàn bộ đơn.
+                // Đổi radio cọc/full → WooCommerce tính lại tổng (fee đọc từ post_data).
                 $(document.body).on('change', 'input[name="tsh_paytype"]', function() {
-                    var type = $(this).val();
-                    var nonce = $(this).closest('.tsh-paytype').data('nonce') || '';
                     $('.tsh-paytype__opt').removeClass('is-active');
                     $(this).closest('.tsh-paytype__opt').addClass('is-active');
-                    $.post(ajaxUrl, {
-                        action: 'tsh_set_payment_type',
-                        type: type,
-                        nonce: nonce
-                    }).always(function() {
-                        // update_checkout: tính lại fee/tổng → fragment order review
-                        // + payment (QR) render lại; listener updated_checkout sẵn có
-                        // rewrite QR src + #tsh-sepay-amount theo tổng mới.
-                        $(document.body).trigger('update_checkout');
-                    });
+                    $(document.body).trigger('update_checkout');
                 });
             });
         </script>
-    <?php
+        <?php
     }
 
     // ── Thank you: polling tự động xác nhận SePay ────────────────────────
@@ -1035,6 +1020,31 @@ class TSH_WooCommerce_Hook
     }
 
     /**
+     * Đọc lựa chọn cọc từ post_data của update_order_review (field tsh_paytype
+     * trong form checkout) → set session. Thay cho ajax tsh_set_payment_type.
+     */
+    public function sync_payment_type_from_post(string $posted_data): void
+    {
+        parse_str($posted_data, $arr);
+        $type = ($arr['tsh_paytype'] ?? '') === 'deposit' ? 'deposit' : 'full';
+        if (WC()->session) {
+            WC()->session->set('tsh_payment_type', $type);
+        }
+    }
+
+    /**
+     * Lúc submit đặt lịch: chốt lại session theo field tsh_paytype đã post,
+     * để apply_deposit_fee tính đúng khi tạo đơn.
+     */
+    public function sync_payment_type_on_process(): void
+    {
+        $type = ($_POST['tsh_paytype'] ?? '') === 'deposit' ? 'deposit' : 'full';
+        if (WC()->session) {
+            WC()->session->set('tsh_payment_type', $type);
+        }
+    }
+
+    /**
      * Tính subtotal (giá×số người×số lượng) từ item ngay trong hook fee.
      * KHÔNG dùng $cart->get_subtotal() ở đây: trong woocommerce_cart_calculate_fees,
      * reset_totals() đã zero toàn bộ totals và subtotal chưa được ghi lại → luôn = 0.
@@ -1067,23 +1077,6 @@ class TSH_WooCommerce_Hook
         if ($remaining <= 0) return;
 
         $cart->add_fee(__('Đặt cọc 50% (thanh toán phần còn lại tại cơ sở)', 'monamedia'), -$remaining);
-    }
-
-    /**
-     * AJAX: khách chọn cọc 50% hoặc thanh toán 100% ở checkout — lưu vào session.
-     */
-    public function ajax_set_payment_type(): void
-    {
-        $nonce = sanitize_text_field($_POST['nonce'] ?? '');
-        if (!wp_verify_nonce($nonce, 'tsh_payment_type')) {
-            wp_send_json_error(['msg' => 'invalid_nonce'], 403);
-        }
-
-        $type = ($_POST['type'] ?? '') === 'deposit' ? 'deposit' : 'full';
-        if (WC()->session) {
-            WC()->session->set('tsh_payment_type', $type);
-        }
-        wp_send_json_success(['type' => $type]);
     }
 
     public function display_guests_in_cart(array $item_data, array $cart_item): array
