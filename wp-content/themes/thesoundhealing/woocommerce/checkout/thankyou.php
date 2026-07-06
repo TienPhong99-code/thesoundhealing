@@ -44,6 +44,15 @@ $order = isset($order) ? $order : false;
         <!-- Cột trái: toàn bộ content -->
         <div class="tsh-ty-content">
 
+        <?php if (current_user_can('manage_options') || isset($_GET['ticketdebug'])) : ?>
+        <div style="margin:0 0 16px;padding:12px 14px;background:#fffbe6;border:1px solid #e0c060;border-radius:8px;font-size:13px;color:#333;line-height:1.6">
+            <strong>DEBUG e-ticket</strong> (chỉ admin thấy)<br>
+            _tsh_eticket_expiry: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_expiry') ?: '(rỗng)'); ?></strong><br>
+            _tsh_eticket_days: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_days') ?: '(rỗng)'); ?></strong><br>
+            _tsh_eticket_debug: <strong><?php echo esc_html($order->get_meta('_tsh_eticket_debug') ?: '(rỗng — save_eticket_meta không chạy lúc tạo đơn)'); ?></strong>
+        </div>
+        <?php endif; ?>
+
         <!-- Checkmark header -->
         <div class="tsh-ty-header">
             <div class="tsh-ty-check">
