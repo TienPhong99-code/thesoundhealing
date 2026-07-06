@@ -23,6 +23,7 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
         add_action('woocommerce_thankyou_bacs',              [$this, 'show_bacs_qr_thankyou']);
         add_action('wp_footer',                              [$this, 'checkout_bacs_js']);
+        add_action('wp_footer', [$this, 'payment_type_js']);
         add_action('wp_footer',                              [$this, 'thankyou_polling_js']);
         add_action('woocommerce_email_after_order_table',    [$this, 'email_bacs_ref'], 10, 4);
         add_action('wp_ajax_nopriv_tsh_confirm_transfer',    [$this, 'ajax_confirm_transfer']);
@@ -831,6 +832,37 @@ class TSH_WooCommerce_Hook
             });
         </script>
     <?php
+    }
+
+    public function payment_type_js(): void
+    {
+        if (!is_checkout() || is_order_received_page()) return;
+        $ajax_url = admin_url('admin-ajax.php');
+        ?>
+        <script>
+            jQuery(function($) {
+                var ajaxUrl = '<?= esc_js($ajax_url) ?>';
+
+                // Đổi radio cọc/full → lưu session rồi cập nhật lại toàn bộ đơn.
+                $(document.body).on('change', 'input[name="tsh_paytype"]', function() {
+                    var type  = $(this).val();
+                    var nonce = $(this).closest('.tsh-paytype').data('nonce') || '';
+                    $('.tsh-paytype__opt').removeClass('is-active');
+                    $(this).closest('.tsh-paytype__opt').addClass('is-active');
+                    $.post(ajaxUrl, {
+                        action: 'tsh_set_payment_type',
+                        type: type,
+                        nonce: nonce
+                    }).always(function() {
+                        // update_checkout: tính lại fee/tổng → fragment order review
+                        // + payment (QR) render lại; listener updated_checkout sẵn có
+                        // rewrite QR src + #tsh-sepay-amount theo tổng mới.
+                        $(document.body).trigger('update_checkout');
+                    });
+                });
+            });
+        </script>
+        <?php
     }
 
     // ── Thank you: polling tự động xác nhận SePay ────────────────────────
