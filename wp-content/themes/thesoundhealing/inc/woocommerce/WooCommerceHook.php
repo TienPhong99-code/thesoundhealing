@@ -513,15 +513,16 @@ class TSH_WooCommerce_Hook
         $paid   = in_array($order->get_status(), ['processing', 'completed'], true);
         $email  = $order->get_billing_email();
 
-        // Đã thanh toán → success (mọi phương thức)
-        if ($paid) {
-            echo '<div class="tsh-bacs-qr tsh-bacs-qr--ty tsh-bacs-qr--success"><div class="tsh-payment-confirmed tsh-payment-confirmed--full"><span>✓</span><div><p>' . esc_html__('Thanh toán thành công!', 'monamedia') . '</p><p class="tsh-payment-confirmed__sub">' . esc_html__('Email xác nhận đã gửi đến', 'monamedia') . ' <strong>' . esc_html($email) . '</strong></p></div></div></div>';
+        // Thanh toán khác (tiền mặt) → luôn báo đặt lịch thành công + NV liên hệ.
+        // KHÔNG hiện box xanh "Thanh toán thành công" (khách trả tiền mặt tại chỗ, chưa trả online).
+        if ($method === 'tsh_cash') {
+            echo '<div class="tsh-deposit-notice" style="margin:16px 0;padding:16px 18px;background:#fbf8f0;border:1px solid #c2a056;border-radius:12px;color:#1b1c19"><p style="margin:0;font-weight:600">' . esc_html__('Đặt lịch thành công!', 'monamedia') . '</p><p style="margin:6px 0 0">' . esc_html__('Nhân viên sẽ liên hệ với bạn để xác nhận thanh toán.', 'monamedia') . '</p></div>';
             return;
         }
 
-        // Thanh toán khác → chỉ báo thành công, NV liên hệ
-        if ($method === 'tsh_cash') {
-            echo '<div class="tsh-deposit-notice" style="margin:16px 0;padding:16px 18px;background:#fbf8f0;border:1px solid #c2a056;border-radius:12px;color:#1b1c19"><p style="margin:0;font-weight:600">' . esc_html__('Đặt lịch thành công!', 'monamedia') . '</p><p style="margin:6px 0 0">' . esc_html__('Nhân viên sẽ liên hệ với bạn để xác nhận thanh toán.', 'monamedia') . '</p></div>';
+        // Đã thanh toán (SePay/PayPal) → success
+        if ($paid) {
+            echo '<div class="tsh-bacs-qr tsh-bacs-qr--ty tsh-bacs-qr--success"><div class="tsh-payment-confirmed tsh-payment-confirmed--full"><span>✓</span><div><p>' . esc_html__('Thanh toán thành công!', 'monamedia') . '</p><p class="tsh-payment-confirmed__sub">' . esc_html__('Email xác nhận đã gửi đến', 'monamedia') . ' <strong>' . esc_html($email) . '</strong></p></div></div></div>';
             return;
         }
 
