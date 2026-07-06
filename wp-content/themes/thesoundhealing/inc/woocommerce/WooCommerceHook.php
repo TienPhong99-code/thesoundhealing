@@ -340,7 +340,9 @@ class TSH_WooCommerce_Hook
         ]);
         if (empty($cpt)) return;
 
-        $days = (int) get_field('eticket_days', $cpt[0]);
+        // Đọc thẳng meta (không dùng get_field) để khỏi phụ thuộc ACF field có đăng ký
+        // ở tiến trình frontend hay không.
+        $days = (int) get_post_meta($cpt[0], 'eticket_days', true);
         if ($days <= 0) return;
 
         // gmdate + current_time('timestamp') (giờ local) → ngày local đúng, không bị nhân đôi offset theo tz server.
