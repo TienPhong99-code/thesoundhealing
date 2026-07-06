@@ -36,6 +36,7 @@ class TSH_WooCommerce_Hook
         add_action('wp_ajax_nopriv_tsh_sepay_paid',          [$this, 'ajax_sepay_paid']);
         add_action('wp_ajax_tsh_sepay_paid',                 [$this, 'ajax_sepay_paid']);
         add_filter('woocommerce_email_enabled_new_order',   [$this, 'prevent_duplicate_new_order_email'], 10, 3);
+        add_filter('woocommerce_email_enabled_customer_on_hold_order', [$this, 'disable_customer_onhold_email'], 10, 2);
         add_filter('woocommerce_email_heading_new_order',   [$this, 'new_order_email_heading'], 10, 2);
         add_filter('woocommerce_email_subject_new_order',   [$this, 'new_order_email_subject'], 10, 2);
         add_filter('woocommerce_get_cart_item_from_session', [$this, 'restore_guests_cart_item'], 10, 2);
@@ -828,6 +829,15 @@ class TSH_WooCommerce_Hook
         $order->update_meta_data('_tsh_new_order_email_sent', '1');
         $order->save_meta_data();
         return true;
+    }
+
+    /**
+     * Không gửi email on-hold cho KHÁCH (đơn chưa thanh toán). Email "cảm ơn"
+     * chỉ gửi khi payment_complete() (customer processing email).
+     */
+    public function disable_customer_onhold_email(bool $enabled, $order): bool
+    {
+        return false;
     }
 
     private function order_booking_heading(\WC_Order $order): string
