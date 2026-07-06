@@ -46,9 +46,11 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_get_item_data',              [$this, 'display_guests_in_cart'], 10, 2);
         add_filter('woocommerce_available_payment_gateways', [$this, 'set_bacs_first']);
         // Không ép chọn sẵn cổng nào — khách phải tự click chọn (xử lý ở checkout_bacs_js)
+        // Mỗi lần mở checkout: reset loại thanh toán về 100% (mặc định) — cọc chỉ áp khi khách tự chọn.
         add_action('woocommerce_checkout_init', function () {
             if (WC()->session) {
                 WC()->session->set('chosen_payment_method', '');
+                WC()->session->set('tsh_payment_type', 'full');
             }
         });
         add_filter('woocommerce_gateway_icon', [$this, 'payment_method_icon'], 20, 2);
