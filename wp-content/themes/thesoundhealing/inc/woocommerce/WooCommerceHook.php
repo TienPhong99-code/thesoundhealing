@@ -13,6 +13,7 @@ class TSH_WooCommerce_Hook
         add_action('template_redirect',   [$this, 'handle_buy_now']);
         add_filter('woocommerce_checkout_get_value', [$this, 'prefill_checkout'], 10, 2);
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
+        add_action('woocommerce_checkout_create_order', [$this, 'save_payment_type_meta'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
         add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
@@ -282,6 +283,29 @@ class TSH_WooCommerce_Hook
 
         delete_transient('tsh_booking_' . $token);
         setcookie('tsh_booking_token', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+    }
+
+    /**
+     * Ghi loại thanh toán + số tiền cọc/còn lại vào đơn.
+     * Chạy khi tạo order (trước khi tính total), nên đọc subtotal từ cart.
+     */
+    public function save_payment_type_meta(\WC_Order $order, array $data): void
+    {
+        $type = $this->get_payment_type();
+        $order->update_meta_data('_tsh_payment_type', $type);
+
+        if ($type !== 'deposit') return;
+
+        $cart = WC()->cart;
+        $full = $cart ? (float) $cart->get_subtotal() : 0.0;
+        if ($full <= 0) return;
+
+        $remaining = round($full * 0.5);
+        $deposit   = $full - $remaining;
+
+        $order->update_meta_data('_tsh_full_amount', $full);
+        $order->update_meta_data('_tsh_deposit_amount', $deposit);
+        $order->update_meta_data('_tsh_remaining_amount', $remaining);
     }
 
     public function wrap_checkout_open(): void
