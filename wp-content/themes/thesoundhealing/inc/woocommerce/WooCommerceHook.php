@@ -25,7 +25,7 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_email_subject_customer_processing_order', [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
-        add_action('woocommerce_thankyou_bacs',              [$this, 'show_bacs_qr_thankyou']);
+        add_action('woocommerce_thankyou',                   [$this, 'render_thankyou_payment'], 5);
         add_action('wp_footer',                              [$this, 'checkout_bacs_js']);
         add_action('wp_footer', [$this, 'payment_type_js']);
         add_action('wp_footer',                              [$this, 'thankyou_polling_js']);
@@ -499,57 +499,70 @@ class TSH_WooCommerce_Hook
         return $description;
     }
 
-    public function show_bacs_qr_thankyou(int $order_id): void
+    /**
+     * Hiện khối thanh toán ở trang cảm ơn theo phương thức đã chọn.
+     * Đơn đã thanh toán → success (mọi phương thức). Chưa thanh toán →
+     * QR SePay (nội dung TSH{order_id}), thông tin PayPal, hoặc thông báo
+     * "thanh toán khác" (nhân viên liên hệ xác nhận).
+     */
+    public function render_thankyou_payment(int $order_id): void
     {
         $order = wc_get_order($order_id);
         if (!$order) return;
+        $method = $order->get_payment_method();
+        $paid   = in_array($order->get_status(), ['processing', 'completed'], true);
+        $email  = $order->get_billing_email();
 
-        // Đơn đã thanh toán (SePay đã xác nhận) → hiện success state
-        if (in_array($order->get_status(), ['processing', 'completed'], true)) {
-        ?>
-            <div class="tsh-bacs-qr tsh-bacs-qr--ty tsh-bacs-qr--success">
-                <div class="tsh-payment-confirmed tsh-payment-confirmed--full">
-                    <span>✓</span>
-                    <div>
-                        <p>Thanh toán thành công!</p>
-                        <p class="tsh-payment-confirmed__sub">Email xác nhận đã gửi đến <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
-                    </div>
-                </div>
-            </div>
-        <?php
+        // Đã thanh toán → success (mọi phương thức)
+        if ($paid) {
+            echo '<div class="tsh-bacs-qr tsh-bacs-qr--ty tsh-bacs-qr--success"><div class="tsh-payment-confirmed tsh-payment-confirmed--full"><span>✓</span><div><p>' . esc_html__('Thanh toán thành công!', 'monamedia') . '</p><p class="tsh-payment-confirmed__sub">' . esc_html__('Email xác nhận đã gửi đến', 'monamedia') . ' <strong>' . esc_html($email) . '</strong></p></div></div></div>';
             return;
         }
 
-        // Chờ thanh toán → hiện QR
-        $amount    = (int) round((float) $order->get_total());
-        $name_asc  = str_replace(' ', '', $this->to_ascii(trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name()))) ?: 'TSH';
-        $phone     = preg_replace('/\D/', '', $order->get_billing_phone());
-        $amount_k  = round($amount / 1000) . 'K';
-        $info      = 'HEAL-' . $name_asc . ($phone ? '-' . $phone : '') . '-' . $amount_k;
-        $url       = $this->vietqr_url($amount, $info);
-        ?>
-        <div class="tsh-bacs-qr tsh-bacs-qr--ty">
-            <h3 class="tsh-bacs-qr__title">Hoàn tất thanh toán</h3>
-            <img src="<?= esc_url($url) ?>" alt="QR chuyển khoản ACB">
-            <div class="tsh-bacs-qr__info">
-                <div class="tsh-bacs-qr__row"><span>Ngân hàng</span><strong><?= esc_html(TSH_BANK_ID) ?></strong></div>
-                <div class="tsh-bacs-qr__row"><span>Số tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong><?= $this->copy_btn() ?></span></div>
-                <div class="tsh-bacs-qr__row"><span>Chủ tài khoản</span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_NAME) ?></strong><?= $this->copy_btn() ?></span></div>
-                <div class="tsh-bacs-qr__row"><span>Số tiền</span><strong><?= wc_price($amount) ?></strong></div>
-                <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span>Nội dung CK</span><span class="tsh-bacs-qr__val"><strong><?= esc_html($info) ?></strong><?= $this->copy_btn() ?></span></div>
+        // Thanh toán khác → chỉ báo thành công, NV liên hệ
+        if ($method === 'tsh_cash') {
+            echo '<div class="tsh-deposit-notice" style="margin:16px 0;padding:16px 18px;background:#fbf8f0;border:1px solid #c2a056;border-radius:12px;color:#1b1c19"><p style="margin:0;font-weight:600">' . esc_html__('Đặt lịch thành công!', 'monamedia') . '</p><p style="margin:6px 0 0">' . esc_html__('Nhân viên sẽ liên hệ với bạn để xác nhận thanh toán.', 'monamedia') . '</p></div>';
+            return;
+        }
+
+        // SePay → QR TSH{order_id}, số tiền = tổng đơn
+        if ($method === 'sepay') {
+            $amount = (int) round((float) $order->get_total());
+            $info   = 'TSH' . $order_id;
+            $url    = $this->vietqr_url($amount, $info);
+            ?>
+            <div class="tsh-bacs-qr tsh-bacs-qr--ty" id="tsh-ty-sepay">
+                <h3 class="tsh-bacs-qr__title"><?php esc_html_e('Quét mã để hoàn tất thanh toán', 'monamedia'); ?></h3>
+                <img src="<?= esc_url($url) ?>" alt="QR SePay">
+                <div class="tsh-bacs-qr__info">
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Ngân hàng', 'monamedia'); ?></span><strong><?= esc_html(TSH_BANK_ID) ?></strong></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tài khoản', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html(TSH_BANK_ACCOUNT) ?></strong><?= $this->copy_btn() ?></span></div>
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong><?= wc_price($amount) ?></strong></div>
+                    <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span><?php esc_html_e('Nội dung CK', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($info) ?></strong><?= $this->copy_btn() ?></span></div>
+                </div>
+                <div class="tsh-payment-waiting"><p><?php esc_html_e('Trang sẽ tự cập nhật sau khi nhận được thanh toán', 'monamedia'); ?></p></div>
             </div>
-            <button type="button" id="tsh-confirm-transfer"
-                data-order="<?= (int) $order_id ?>"
-                data-key="<?= esc_attr($order->get_order_key()) ?>"
-                class="tsh-confirm-btn">
-                Tôi đã chuyển khoản xong
-            </button>
-            <div id="tsh-transfer-msg" style="display:none" class="tsh-transfer-msg">
-                <p>Cảm ơn bạn! Chúng tôi sẽ kiểm tra và xác nhận đặt lịch trong vòng <strong>2 giờ</strong>.</p>
-                <p>Email xác nhận gửi đến: <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
+            <?php
+            return;
+        }
+
+        // PayPal → info + nút "Tôi đã thanh toán"
+        if ($method === 'tsh_paypal_qr') {
+            ?>
+            <div class="tsh-bacs-qr tsh-bacs-qr--ty">
+                <h3 class="tsh-bacs-qr__title"><?php esc_html_e('Thanh toán qua PayPal', 'monamedia'); ?></h3>
+                <div class="tsh-bacs-qr__info">
+                    <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong><?= wc_price((float) $order->get_total()) ?></strong></div>
+                </div>
+                <button type="button" id="tsh-confirm-transfer" data-order="<?= (int) $order_id ?>" data-key="<?= esc_attr($order->get_order_key()) ?>" class="tsh-confirm-btn"><?php esc_html_e('Tôi đã thanh toán', 'monamedia'); ?></button>
+                <div id="tsh-transfer-msg" style="display:none" class="tsh-transfer-msg">
+                    <p><?php esc_html_e('Cảm ơn bạn! Chúng tôi sẽ kiểm tra và xác nhận trong vòng 2 giờ.', 'monamedia'); ?></p>
+                    <p><?php esc_html_e('Email xác nhận gửi đến:', 'monamedia'); ?> <strong><?= esc_html($email) ?></strong></p>
+                </div>
             </div>
-        </div>
-    <?php
+            <?php
+            return;
+        }
     }
 
     // ── Booking meta ──────────────────────────────────────────────────────
