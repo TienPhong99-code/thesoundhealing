@@ -32,9 +32,6 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_email_after_order_table',    [$this, 'email_bacs_ref'], 10, 4);
         add_action('wp_ajax_nopriv_tsh_confirm_transfer',    [$this, 'ajax_confirm_transfer']);
         add_action('wp_ajax_tsh_confirm_transfer',           [$this, 'ajax_confirm_transfer']);
-        add_action('woocommerce_order_status_on-hold',        [$this, 'auto_complete_sepay'], 20, 2);
-        add_action('wp_ajax_nopriv_tsh_sepay_paid',          [$this, 'ajax_sepay_paid']);
-        add_action('wp_ajax_tsh_sepay_paid',                 [$this, 'ajax_sepay_paid']);
         add_filter('woocommerce_email_enabled_new_order',   [$this, 'prevent_duplicate_new_order_email'], 10, 3);
         add_filter('woocommerce_email_enabled_customer_on_hold_order', [$this, 'disable_customer_onhold_email'], 10, 2);
         add_filter('woocommerce_email_heading_new_order',   [$this, 'new_order_email_heading'], 10, 2);
@@ -587,39 +584,6 @@ class TSH_WooCommerce_Hook
     }
 
     // ── AJAX: khách xác nhận đã chuyển khoản ─────────────────────────────
-
-    // ── SePay checkout: polling token + auto-complete ─────────────────────
-
-    public function ajax_sepay_paid(): void
-    {
-        $token = sanitize_text_field($_GET['token'] ?? '');
-        if (!$token) {
-            wp_send_json_error();
-            return;
-        }
-
-        $data = get_transient('tsh_sepay_tk_' . $token);
-        wp_send_json_success(['paid' => !empty($data['paid'])]);
-    }
-
-    public function auto_complete_sepay(int $order_id, $order = null): void
-    {
-        if (!$order) $order = wc_get_order($order_id);
-        if (!$order || $order->get_payment_method() !== 'sepay') return;
-
-        $session = WC()->session;
-        $token   = $session ? $session->get('tsh_sepay_token') : '';
-        if (!$token) return;
-
-        $data = get_transient('tsh_sepay_tk_' . $token);
-        if (!$data || empty($data['paid'])) return;
-
-        // Hook fires khi SePay plugin đặt on-hold — ta override ngay sang processing
-        $order->payment_complete();
-        $order->add_order_note('SePay xác nhận thanh toán — tự động chuyển sang đang xử lý.');
-        delete_transient('tsh_sepay_tk_' . $token);
-        $session->__unset('tsh_sepay_token');
-    }
 
     public function ajax_confirm_transfer(): void
     {
