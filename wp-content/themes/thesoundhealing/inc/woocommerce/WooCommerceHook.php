@@ -391,10 +391,12 @@ class TSH_WooCommerce_Hook
         $subject = 'E-ticket quà tặng của bạn — ' . $code;
         $headers = ['Content-Type: text/html; charset=UTF-8'];
 
-        wp_mail($email, $subject, $html, $headers);
-
+        // Đánh dấu đã gửi TRƯỚC khi wp_mail → đóng race gửi trùng nếu 2 request đổi
+        // trạng thái đơn gần như đồng thời.
         $order->update_meta_data('_tsh_eticket_email_sent', '1');
         $order->save();
+
+        wp_mail($email, $subject, $html, $headers);
     }
 
     public function wrap_checkout_open(): void
