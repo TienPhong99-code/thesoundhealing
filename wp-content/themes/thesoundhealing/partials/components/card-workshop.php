@@ -13,15 +13,16 @@ $location    = $item['location']     ?? '';
 $best_seller = $item['best_seller']  ?? false;
 
 $_ws_date_raw = $item['date'] ?? '';
-$_is_past = false;
-if ($_ws_date_raw && $_ws_date_raw !== 'Sắp diễn ra') {
-    $_parts = array_map('trim', explode(',', $_ws_date_raw));
-    $_sd    = end($_parts);
-    if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $_sd, $_m)) {
-        $_is_past = mktime(0, 0, 0, (int)$_m[2], (int)$_m[1], (int)$_m[3]) < strtotime('today midnight');
-    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $_sd)) {
-        $_is_past = strtotime($_sd) < strtotime('today midnight');
-    }
+// Card cho gọn: bỏ đoạn "Thứ ...", chỉ giữ ngày.
+$schedule_display = mona_schedule_dates_only($_ws_date_raw);
+// Hết hạn khi lịch không còn ngày tương lai. Lấy từ mona_expand_schedule (nguồn chân lý),
+// KHÔNG parse lại chuỗi ngày hiển thị (chuỗi dạng "d/m/Y" hoặc "Thứ … · dd/mm" không đủ dữ liệu).
+if (array_key_exists('is_past', $item)) {
+    $_is_past = (bool) $item['is_past'];
+} elseif (!empty($item['post_id'])) {
+    $_is_past = mona_schedule_is_past((int) $item['post_id']);
+} else {
+    $_is_past = false;
 }
 
 // Buy Now URL
@@ -87,7 +88,7 @@ $dat_lich_url  = $_ws_has_wc
                 <?php echo esc_html($item['title']); ?>
             </h3>
 
-            <?php if (!empty($item['date']) || !empty($item['time'])) : ?>
+            <?php if (!empty($schedule_display) || !empty($item['time'])) : ?>
                 <p class="flex items-start gap-1.5 text-[#414847] text-[13px] leading-[18px]">
                     <svg class="shrink-0 mt-px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -96,8 +97,8 @@ $dat_lich_url  = $_ws_has_wc
                         <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
                     <span>
-                        <?php if (!empty($item['date'])) echo esc_html($item['date']); ?>
-                        <?php if (!empty($item['date']) && !empty($item['time'])) echo ' · '; ?>
+                        <?php if (!empty($schedule_display)) echo esc_html($schedule_display); ?>
+                        <?php if (!empty($schedule_display) && !empty($item['time'])) echo ' · '; ?>
                         <?php if (!empty($item['time'])) echo esc_html($item['time']); ?>
                     </span>
                 </p>

@@ -135,6 +135,7 @@ foreach ($raw_objects as $post) {
         'title'          => $post->post_title,
         'desc'           => get_field('dv_short_desc',     $post->ID),
         'available_days' => mona_schedule_label($post->ID) ?: 'Thứ 2 – Chủ nhật',
+        'is_past'        => mona_schedule_is_past($post->ID),
         'duration'       => get_field('dv_duration',       $post->ID) ?: '60 - 90 phút mỗi phiên',
         'branch'         => get_field('dv_branch',         $post->ID),
         'location'       => get_field('dv_location',       $post->ID),

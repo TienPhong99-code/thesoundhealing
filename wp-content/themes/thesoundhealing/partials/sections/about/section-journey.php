@@ -147,7 +147,7 @@ if ($eco_raw_items) {
                             <?php if (!empty($item['logo']['url'])) : ?>
                                 <img src="<?php echo esc_url($item['logo']['url']); ?>"
                                     alt="<?php echo esc_attr($item['logo']['alt']); ?>"
-                                    class="max-w-[70%] max-h-[60%] object-contain">
+                                    class="block object-contain">
                             <?php else : ?>
                                 <span class="text-[#b0a890] text-[14px]">LOGO</span>
                             <?php endif; ?>

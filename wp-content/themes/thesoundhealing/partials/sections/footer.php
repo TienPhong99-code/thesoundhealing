@@ -14,7 +14,7 @@ $sample = [
    'address'   => '123 Thảo Điền, Quận 2, TP. Hồ Chí Minh',
    'email'     => 'hello@aetheria.vn',
    'phone'     => '+84 90 123 4567',
-   'copyright' => '© 2024 AETHERIA SPIRITUAL EDUCATION. ALL RIGHTS RESERVED.',
+   'copyright' => 'Copyright © 2026 HEALIVERSE HOLDINGS., JSC | The Sound Healing',
 ];
 
 $data = [
@@ -82,5 +82,12 @@ $data = [
          </div>
 
       </div>
+
+      <!-- Copyright -->
+      <?php if (!empty($data['copyright'])) : ?>
+         <p class="mt-4 pt-4 border-t border-[rgba(192,200,198,0.25)] text-center text-[#717171] text-[12px] max-lg:text-left">
+            <?php echo esc_html($data['copyright']); ?>
+         </p>
+      <?php endif; ?>
    </div>
 </footer>

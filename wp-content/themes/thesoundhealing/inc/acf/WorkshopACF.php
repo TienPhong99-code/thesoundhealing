@@ -97,6 +97,10 @@ add_action('acf/init', function () {
             Text::make('Số lượng khách', 'ws_guests')
                 ->helperText('Ví dụ: 20 người · Tối đa 15 khách'),
 
+            Textarea::make('Lựa chọn số lượng người (form đăng ký)', 'ws_guest_options')
+                ->helperText('Mỗi dòng một lựa chọn cho dropdown "Số lượng người" trong form. Mỗi dòng nên chứa 1 con số (vd: 1 người / 2 người / 5 người) vì giá = giá gốc × số người. Tránh dạng khoảng như "3-5". Để trống = giữ lựa chọn mặc định.')
+                ->rows(4),
+
             Textarea::make('Mô tả ngắn', 'ws_short_desc')
                 ->helperText('Hiển thị trên card và hero trang chi tiết.')
                 ->rows(3),
@@ -293,16 +297,6 @@ add_action('acf/init', function () {
                         ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                         ->format('array'),
                 ]),
-
-            // ─── TAB: CTA ────────────────────────────────────────────────
-            Tab::make('CTA')->placement('left'),
-
-            Text::make('Tiêu đề CTA', 'ws_cta_title')
-                ->default('Đăng ký trước khi hết chỗ'),
-
-            Textarea::make('Mô tả CTA', 'ws_cta_desc')
-                ->rows(2)
-                ->default('Số lượng chỗ giới hạn để đảm bảo chất lượng trải nghiệm tốt nhất cho mỗi người tham dự.'),
         ],
     ], false);
 }, 10);

@@ -118,6 +118,7 @@ function sr_build_dich_vu(WP_Post $post): array
         'title'          => $post->post_title,
         'category'       => (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '',
         'available_days' => mona_schedule_label($post->ID),
+        'is_past'        => mona_schedule_is_past($post->ID),
         'duration'       => get_field('dv_duration',        $post->ID),
         'branch'         => get_field('dv_branch',          $post->ID),
         'location'       => get_field('dv_location',        $post->ID),
@@ -139,6 +140,7 @@ function sr_build_khoa_hoc(WP_Post $post): array
         'title'      => $post->post_title,
         'level'      => get_field('level',           $post->ID),
         'start_date' => mona_schedule_label($post->ID),
+        'is_past'    => mona_schedule_is_past($post->ID),
         'duration'   => get_field('duration',        $post->ID),
         'instructor' => get_field('instructor_name', $post->ID),
         'location'   => get_field('location',        $post->ID),
@@ -161,6 +163,7 @@ function sr_build_workshop(WP_Post $post): array
         'type'     => (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '',
         'status'      => get_field('ws_status',           $post->ID) ?: 'open',
         'date'        => mona_schedule_label($post->ID),
+        'is_past'     => mona_schedule_is_past($post->ID),
         'time'        => get_field('ws_time',             $post->ID),
         'location'    => get_field('ws_location',         $post->ID),
         'duration'    => get_field('ws_duration',         $post->ID),
@@ -226,11 +229,20 @@ foreach ($post_types as $pt) {
             $q->the_post();
             $post = get_post();
 
-            // Lọc theo ngày (PHP-side, hỗ trợ DD-MM-YYYY, Ymd, YYYY-MM-DD)
-            if ($date_from_ts !== null && in_array($pt, ['workshop', 'khoa_hoc'], true)) {
-                $date_field  = ($pt === 'workshop') ? 'ws_date' : 'start_date';
-                $post_date_ts = sr_parse_date_ts(get_field($date_field, $post->ID));
-                if ($post_date_ts === null || $post_date_ts < $date_from_ts || $post_date_ts > $date_to_ts) {
+            // Lọc theo ngày: khớp nếu lịch của bài có buổi rơi vào [date_from, date_to].
+            // Dùng mona_expand_schedule (định kỳ/đơn/legacy) cho CẢ 3 post type — kể cả
+            // dich_vu (trước đây bị bỏ qua nên "Hôm nay" trả về cả bài không có buổi hôm nay).
+            if ($date_from_ts !== null) {
+                $sched_dates = mona_expand_schedule($post->ID)['dates'];
+                $has_match = false;
+                foreach ($sched_dates as $d) {
+                    $ts = strtotime($d);
+                    if ($ts !== false && $ts >= $date_from_ts && $ts <= $date_to_ts) {
+                        $has_match = true;
+                        break;
+                    }
+                }
+                if (!$has_match) {
                     continue;
                 }
             }

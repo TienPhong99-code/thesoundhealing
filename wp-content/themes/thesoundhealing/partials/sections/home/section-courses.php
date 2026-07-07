@@ -97,6 +97,7 @@ foreach ($raw_objects as $post) {
         'desc'       => get_field('short_desc',      $post->ID),
         'time'       => get_field('kh_time',         $post->ID) ?: '09:00 – 17:00',
         'start_date' => mona_schedule_label($post->ID) ?: 'Sắp khai giảng',
+        'is_past'    => mona_schedule_is_past($post->ID),
         'duration'   => get_field('duration',        $post->ID) ?: 'Cuối tuần',
         'instructor' => get_field('instructor_name', $post->ID),
         'location'   => get_field('location',        $post->ID),

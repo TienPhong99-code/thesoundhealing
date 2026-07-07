@@ -358,10 +358,14 @@ add_action('wp_footer', function () {
    $token = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
    if (!$token)
       return;
-   $booking = get_transient('tsh_booking_' . $token);
+   $booking = (array) get_transient('tsh_booking_' . $token);
    if (!$booking)
       return;
-   echo '<script>window.tshPrefill = ' . wp_json_encode((array) $booking) . ';</script>';
+   // Chỉ prefill khi booking thuộc đúng post đang xem (khớp logic CF7Hook),
+   // tránh khôi phục ngày/giờ cũ của bài khác lên form.
+   if ((int) ($booking['post_id'] ?? 0) !== (int) get_queried_object_id())
+      return;
+   echo '<script>window.tshPrefill = ' . wp_json_encode($booking) . ';</script>';
 }, 5);
 
 // Dịch text WooCommerce sang tiếng Việt

@@ -208,7 +208,7 @@ add_action('acf/init', function () {
                 ->minRows(1)
                 ->fields([
                     Image::make('Logo', 'logo')
-                        ->helperText('Kích thước đề xuất: 160×48px. Định dạng SVG/PNG/WEBP.')
+                        ->helperText('Kích thước đề xuất: 260×100px. Định dạng SVG/PNG/WEBP.')
                         ->acceptedFileTypes(['svg', 'png', 'webp', 'jpg', 'jpeg'])
                         ->format('url'),
                 ]),

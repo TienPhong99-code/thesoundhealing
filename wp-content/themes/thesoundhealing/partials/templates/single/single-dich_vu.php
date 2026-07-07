@@ -4,18 +4,18 @@ defined('ABSPATH') || exit;
 $post_id = get_the_ID();
 
 // ── Thông tin ──
-$dv_duration    = get_field('dv_duration',    $post_id) ?: '60 - 90 phút mỗi phiên';
-$dv_location    = get_field('dv_location',    $post_id) ?: 'Aetheria Sanctuary, Level 4, Thảo Điền';
+$dv_duration    = get_field('dv_duration',    $post_id);
+$dv_location    = get_field('dv_location',    $post_id);
 $dv_sched       = mona_expand_schedule($post_id);
-$dv_avail_days  = $dv_sched['summary'] ?: 'Thứ 2 – Chủ nhật';
-$dv_branch      = get_field('dv_branch',      $post_id) ?: 'Thảo Điền · Quận 1';
+$dv_avail_days  = $dv_sched['summary'];
+$dv_branch      = get_field('dv_branch',      $post_id);
 $dv_short_desc  = get_field('dv_short_desc',  $post_id);
-$dv_price       = get_field('dv_price',       $post_id) ?: '800.000 VNĐ';
+$dv_price       = get_field('dv_price',       $post_id);
 $dv_spots_raw   = get_field('dv_spots',       $post_id);
-$dv_spots       = ($dv_spots_raw !== '' && $dv_spots_raw !== null) ? (int) $dv_spots_raw : 20;
-$dv_guests      = get_field('dv_guests', $post_id) ?: '1 – 2 khách / phiên';
+$dv_spots       = ($dv_spots_raw !== '' && $dv_spots_raw !== null) ? (int) $dv_spots_raw : null;
+$dv_guests      = get_field('dv_guests', $post_id);
 
-// ── Gallery ──
+// ── Gallery ── (chỉ dùng ảnh thật)
 $thumb      = get_the_post_thumbnail_url($post_id, 'full');
 $thumb_alt  = get_the_title($post_id);
 $banner_img = get_field('dv_banner_image', $post_id);
@@ -27,36 +27,44 @@ $gal_7      = get_field('dv_gallery_7',    $post_id);
 $gal_8      = get_field('dv_gallery_8',    $post_id);
 $gal_9      = get_field('dv_gallery_9',    $post_id);
 
+// Ảnh phụ có thật (bỏ ô trống)
+$gallery_subs = array_values(array_filter(
+    [$banner_img, $gal_3, $gal_4, $gal_5, $gal_6, $gal_7, $gal_8, $gal_9],
+    fn($img) => !empty($img['url'])
+));
+// Ảnh chính: featured image, nếu chưa có thì lấy ảnh phụ đầu tiên
+$gallery_main = null;
+if ($thumb) {
+    $gallery_main = ['url' => $thumb, 'alt' => $thumb_alt];
+} elseif (!empty($gallery_subs)) {
+    $first        = array_shift($gallery_subs);
+    $gallery_main = ['url' => $first['url'], 'alt' => $first['alt'] ?? ''];
+}
+$has_gallery = (bool) $gallery_main;
+$thumbs      = array_slice($gallery_subs, 0, 3); // tối đa 3 thumbnail hiển thị
+$extra       = array_slice($gallery_subs, 3);    // ảnh còn lại cho nút "Xem tất cả"
+
 // ── Mô tả / Trải nghiệm ──
-$dv_exp_title = get_field('dv_exp_title', $post_id) ?: 'Hành trình Trải nghiệm';
-$dv_exp_desc  = get_field('dv_exp_desc',  $post_id) ?: 'Mỗi buổi Tắm Âm được thiết kế như một nghi lễ thanh tẩy. Bạn sẽ được nằm thoải mái trên thảm, hỗ trợ bởi gối lót và chăn ấm. Trong không gian tĩnh lặng, những rung động tinh khiết từ bộ chuông pha lê sẽ bao bọc cơ thể, giúp giải phóng các tắc nghẽn năng lượng.';
+$dv_exp_title = get_field('dv_exp_title', $post_id);
+$dv_exp_desc  = get_field('dv_exp_desc',  $post_id);
 
 // ── Lộ trình ──
-$dv_rm_label   = get_field('dv_roadmap_label',   $post_id) ?: 'LỘ TRÌNH TRỊ LIỆU';
-$dv_rm_heading = get_field('dv_roadmap_heading', $post_id) ?: 'Hành trình';
+$dv_rm_label   = get_field('dv_roadmap_label',   $post_id);
+$dv_rm_heading = get_field('dv_roadmap_heading', $post_id);
 $dv_rm_items   = get_field('dv_roadmap_items',   $post_id) ?: [];
 
 // ── Lợi ích ──
-$dv_bn_heading = get_field('dv_benefits_heading', $post_id) ?: 'Lợi ích của liệu pháp';
-$dv_bn_items   = get_field('dv_benefits_items',   $post_id) ?: [
-    ['dv_benefit_title' => 'CẢI THIỆN GIẤC NGỦ',      'dv_benefit_desc' => 'Giúp đưa sóng não về trạng thái Delta và Theta, hỗ trợ ngủ sâu và ngon hơn.'],
-    ['dv_benefit_title' => 'GIẢM STRESS & CĂNG THẲNG', 'dv_benefit_desc' => 'Hạ mức cortisol trong máu, làm dịu hệ thống thần kinh thực vật sau những giờ làm việc mệt mỏi.'],
-    ['dv_benefit_title' => 'MINH MẪN TÂM TRÍ',         'dv_benefit_desc' => 'Giải phóng những suy nghĩ thừa thãi, giúp bạn tập trung và sáng tạo hơn.'],
-];
+$dv_bn_heading = get_field('dv_benefits_heading', $post_id);
+$dv_bn_items   = get_field('dv_benefits_items',   $post_id) ?: [];
 
 // ── Lợi ích nhận được ──
-$dv_receive_items = get_field('dv_receive_items', $post_id) ?: [
-    ['dv_receive_title' => '100% Trải nghiệm cá nhân hóa | Personalized Experience',         'dv_receive_desc' => 'Mỗi buổi trị liệu được điều chỉnh theo trạng thái cơ thể và cảm xúc của bạn, đảm bảo trải nghiệm chữa lành trọn vẹn nhất.'],
-    ['dv_receive_title' => 'Thư giãn cơ thể, ngủ sâu hơn | Relax your body, sleep deeper',   'dv_receive_desc' => 'Rung động từ chuông pha lê giúp giải phóng căng thẳng, làm dịu tâm trí và hỗ trợ giấc ngủ sâu, sự tập trung tốt hơn.'],
-    ['dv_receive_title' => 'Lịch linh hoạt, dễ dàng đặt chỗ | Flexible schedule',            'dv_receive_desc' => 'Nhiều khung giờ trong tuần phù hợp với lịch trình bận rộn. Đặt lịch nhanh chóng qua form hoặc liên hệ trực tiếp.'],
-    ['dv_receive_title' => 'Ưu đãi 15% cho lần trị liệu tiếp theo | 15% off next session',   'dv_receive_desc' => 'Nhận ưu đãi 15% khi đặt buổi trị liệu tiếp theo — duy trì hành trình chăm sóc thân tâm với chi phí tốt hơn.'],
-];
+$dv_receive_items = get_field('dv_receive_items', $post_id) ?: [];
 
 // ── Người hướng dẫn ──
-$dv_ins_label     = get_field('dv_instructor_label',     $post_id) ?: 'NGƯỜI HƯỚNG DẪN';
+$dv_ins_label     = get_field('dv_instructor_label',     $post_id);
 $dv_ins_image     = get_field('dv_instructor_image',     $post_id);
-$dv_ins_name      = get_field('dv_instructor_name',      $post_id) ?: 'Linh Tâm';
-$dv_ins_bio       = get_field('dv_instructor_bio',       $post_id) ?: 'Hơn 10 năm nghiên cứu và thực hành Sound Healing, Yoga & Thiền định. Được đào tạo tại Rishikesh (Ấn Độ) và các trung tâm trị liệu âm thanh tại Châu Á.';
+$dv_ins_name      = get_field('dv_instructor_name',      $post_id);
+$dv_ins_bio       = get_field('dv_instructor_bio',       $post_id);
 $dv_ins_instagram = get_field('dv_instructor_instagram', $post_id);
 $dv_ins_facebook  = get_field('dv_instructor_facebook',  $post_id);
 $dv_ins_whatsapp  = get_field('dv_instructor_whatsapp',  $post_id);
@@ -64,13 +72,7 @@ $dv_ins_messenger = get_field('dv_instructor_messenger', $post_id);
 
 // ── Terms ──
 $terms     = get_the_terms($post_id, 'loai_dich_vu');
-$term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : 'HEALING MODALITY';
-
-// ── Fallbacks ──
-$fb_main  = MONA_THEME_PATH_URI . '/assets/images/dv-hero-bg2.jpg';
-$fb_sub   = MONA_THEME_PATH_URI . '/assets/images/dv-exp-main.jpg';
-$fb_ins   = MONA_THEME_PATH_URI . '/assets/images/kh-instructor.jpg';
-$ic_check = MONA_THEME_PATH_URI . '/assets/images/ic-check-pri.svg';
+$term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
 
 // Buy Now
 $_dv_wc_id  = (int) get_post_meta($post_id, '_wc_product_id', true);
@@ -168,54 +170,58 @@ get_header();
                             </div>
 
                             <!-- ── GALLERY ──────────────────────────────────────────── -->
-                            <div class="aspect-[4/3] max-md:aspect-square overflow-hidden rounded-[12px] grid gap-[2px]"
-                                style="grid-template-columns: 3fr 1fr; grid-template-rows: repeat(3, 1fr);">
+                            <?php if ($has_gallery) : ?>
+                                <div class="aspect-[4/3] max-md:aspect-square overflow-hidden rounded-[12px] flex gap-[2px]">
 
-                                <!-- Left: main image spans all 3 rows -->
-                                <a href="<?php echo esc_url($thumb ?: $fb_main); ?>"
-                                    data-fancybox="gallery-dv"
-                                    data-caption="<?php echo esc_attr($thumb_alt); ?>"
-                                    class="row-span-3 max-md:col-span-2 overflow-hidden block aspect-square">
-                                    <img src="<?php echo esc_url($thumb ?: $fb_main); ?>"
-                                        class="block w-full h-full object-cover cursor-zoom-in"
-                                        alt="<?php echo esc_attr($thumb_alt); ?>">
-                                </a>
+                                    <!-- Left: main image -->
+                                    <a href="<?php echo esc_url($gallery_main['url']); ?>"
+                                        data-fancybox="gallery-dv"
+                                        data-caption="<?php echo esc_attr($gallery_main['alt']); ?>"
+                                        class="<?php echo $thumbs ? 'flex-[3]' : 'flex-1'; ?> max-md:!flex-1 min-w-0 overflow-hidden block">
+                                        <img src="<?php echo esc_url($gallery_main['url']); ?>"
+                                            class="block w-full h-full object-cover cursor-zoom-in"
+                                            alt="<?php echo esc_attr($gallery_main['alt']); ?>">
+                                    </a>
 
-                                <!-- Right col: thumbnail 1 -->
-                                <a href="<?php echo esc_url($banner_img['url'] ?? $fb_sub); ?>"
-                                    data-fancybox="gallery-dv"
-                                    class="overflow-hidden block aspect-square max-md:hidden">
-                                    <img src="<?php echo esc_url($banner_img['url'] ?? $fb_sub); ?>"
-                                        class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
-                                        alt="<?php echo esc_attr($banner_img['alt'] ?? ''); ?>">
-                                </a>
+                                    <?php if ($thumbs) : ?>
+                                        <!-- Right col: thumbnails có thật -->
+                                        <div class="flex-1 flex flex-col gap-[2px] max-md:hidden">
+                                            <?php foreach ($thumbs as $idx => $t) :
+                                                $is_last  = ($idx === count($thumbs) - 1);
+                                                $show_all = $is_last && !empty($extra);
+                                            ?>
+                                                <?php if ($show_all) : ?>
+                                                    <div class="relative flex-1 overflow-hidden">
+                                                        <img src="<?php echo esc_url($t['url']); ?>"
+                                                            class="block w-full h-full object-cover"
+                                                            alt="<?php echo esc_attr($t['alt'] ?? ''); ?>">
+                                                        <a href="<?php echo esc_url($t['url']); ?>" data-fancybox="gallery-dv" class="hidden" aria-hidden="true"></a>
+                                                        <?php foreach ($extra as $ex) : ?>
+                                                            <a href="<?php echo esc_url($ex['url']); ?>" data-fancybox="gallery-dv" class="hidden" aria-hidden="true"></a>
+                                                        <?php endforeach; ?>
+                                                        <button data-fancybox-trigger="gallery-dv"
+                                                            class="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/50 text-white hover:bg-black/60 transition-colors">
+                                                            <svg class="size-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                                            </svg>
+                                                            <span class="text-[11px] font-semibold leading-tight text-center"><?php esc_html_e('Xem tất cả', 'monamedia'); ?></span>
+                                                        </button>
+                                                    </div>
+                                                <?php else : ?>
+                                                    <a href="<?php echo esc_url($t['url']); ?>"
+                                                        data-fancybox="gallery-dv"
+                                                        class="flex-1 overflow-hidden block">
+                                                        <img src="<?php echo esc_url($t['url']); ?>"
+                                                            class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
+                                                            alt="<?php echo esc_attr($t['alt'] ?? ''); ?>">
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
 
-                                <!-- Right col: thumbnail 2 -->
-                                <a href="<?php echo esc_url($gal_3['url'] ?? $fb_sub); ?>"
-                                    data-fancybox="gallery-dv"
-                                    class="overflow-hidden block aspect-square max-md:hidden">
-                                    <img src="<?php echo esc_url($gal_3['url'] ?? $fb_sub); ?>"
-                                        class="block w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
-                                        alt="<?php echo esc_attr($gal_3['alt'] ?? ''); ?>">
-                                </a>
-
-                                <!-- Right col: thumbnail 3 with "Xem tất cả" overlay -->
-                                <div class="relative overflow-hidden aspect-square max-md:hidden">
-                                    <img src="<?php echo esc_url($gal_4['url'] ?? $fb_sub); ?>"
-                                        class="block w-full h-full object-cover"
-                                        alt="<?php echo esc_attr($gal_4['alt'] ?? ''); ?>">
-                                    <a href="<?php echo esc_url($gal_4['url'] ?? $fb_sub); ?>" data-fancybox="gallery-dv" class="hidden" aria-hidden="true"></a>
-                                    <?php if (!empty($gal_5['url'])) : ?><a href="<?php echo esc_url($gal_5['url']); ?>" data-fancybox="gallery-dv" class="hidden" aria-hidden="true"></a><?php endif; ?>
-                                    <button data-fancybox-trigger="gallery-dv"
-                                        class="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/50 text-white hover:bg-black/60 transition-colors">
-                                        <svg class="size-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                        </svg>
-                                        <span class="text-[11px] font-semibold leading-tight text-center"><?php esc_html_e('Xem tất cả', 'monamedia'); ?></span>
-                                    </button>
                                 </div>
-
-                            </div>
+                            <?php endif; ?>
 
                         </div><!-- end PAGE HEADER + GALLERY wrapper -->
 
@@ -225,21 +231,23 @@ get_header();
                         <div class="flex flex-col divide-y divide-[#e4e2dd]">
 
                             <!-- 1. About the service -->
-                            <div class="pb-10">
-                                <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-5">
-                                    <?php esc_html_e('Về dịch vụ', 'monamedia'); ?>
-                                </h2>
-                                <?php if ($dv_short_desc) : ?>
-                                    <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
-                                        <?php echo wp_kses_post(nl2br(esc_html($dv_short_desc))); ?>
-                                    </p>
-                                <?php endif; ?>
-                                <?php if ($dv_exp_desc) : ?>
-                                    <div class="text-[#414847] text-[16px] leading-[26px]">
-                                        <?php echo wp_kses_post(nl2br(esc_html($dv_exp_desc))); ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
+                            <?php if ($dv_short_desc || $dv_exp_desc) : ?>
+                                <div class="pb-10">
+                                    <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-5">
+                                        <?php esc_html_e('Về dịch vụ', 'monamedia'); ?>
+                                    </h2>
+                                    <?php if ($dv_short_desc) : ?>
+                                        <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
+                                            <?php echo wp_kses_post(nl2br(esc_html($dv_short_desc))); ?>
+                                        </p>
+                                    <?php endif; ?>
+                                    <?php if ($dv_exp_desc) : ?>
+                                        <div class="text-[#414847] text-[16px] leading-[26px]">
+                                            <?php echo wp_kses_post(nl2br(esc_html($dv_exp_desc))); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
 
                             <!-- 2. Benefits & Intentions -->
                             <?php if (!empty($dv_bn_items)) : ?>
@@ -333,11 +341,13 @@ get_header();
                                         <?php esc_html_e('Về giảng viên', 'monamedia'); ?>
                                     </h2>
                                     <div class="flex gap-5 items-start">
-                                        <div class="size-16 rounded-full overflow-hidden shrink-0">
-                                            <img src="<?php echo esc_url($dv_ins_image['url'] ?? $fb_ins); ?>"
-                                                class="block w-full h-full object-cover"
-                                                alt="<?php echo esc_attr($dv_ins_image['alt'] ?? $dv_ins_name); ?>">
-                                        </div>
+                                        <?php if (!empty($dv_ins_image['url'])) : ?>
+                                            <div class="size-16 rounded-full overflow-hidden shrink-0">
+                                                <img src="<?php echo esc_url($dv_ins_image['url']); ?>"
+                                                    class="block w-full h-full object-cover"
+                                                    alt="<?php echo esc_attr($dv_ins_image['alt'] ?? $dv_ins_name); ?>">
+                                            </div>
+                                        <?php endif; ?>
                                         <div>
                                             <h3 class="font-title text-pri text-[20px] leading-[28px] font-semibold">
                                                 <?php echo esc_html($dv_ins_name); ?>
@@ -391,14 +401,7 @@ get_header();
                             <!-- 6. Testimonials -->
                             <?php
                             $fb_heading = get_field('dv_feedbacks_heading', $post_id) ?: 'Testimonials';
-                            $fb_items   = get_field('dv_feedbacks', $post_id) ?: [
-                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-exp-main.jpg',             'alt' => '']],
-                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-exp-detail.jpg',           'alt' => '']],
-                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/dv-chua-lanh-reiki-nhom.jpg', 'alt' => '']],
-                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-1.jpg',           'alt' => '']],
-                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/gallery-img-2.jpg',           'alt' => '']],
-                                ['dv_fb_image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/about-gallery-1.jpg',         'alt' => '']],
-                            ];
+                            $fb_items   = get_field('dv_feedbacks', $post_id) ?: [];
                             if (!empty($fb_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px]  font-bold mb-6">
@@ -428,7 +431,7 @@ get_header();
                     <!-- Right: Booking widget -->
                     <div class="col col-5 max-md:hidden">
                         <div id="form-dat-lich"
-                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)]  flex flex-col md:max-h-[calc(100vh-100px)]">
+                            class="sticky top-[100px] bg-white border border-[#e4e2dd] rounded-[12px] shadow-[0_6px_20px_rgba(19,58,53,0.08)]  flex flex-col">
 
                             <!-- Meta box -->
                             <?php
@@ -499,32 +502,21 @@ get_header();
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if ($dv_sched['type'] === 'recurring' && count($dv_sched['dates']) > 1) : ?>
-                                        <div class="dv-schedule-list mt-4 pt-4 border-t border-[#e4e2dd]">
-                                            <p class="text-[11px] font-medium text-[#717171] mb-2"><?php esc_html_e('LỊCH DIỄN RA', 'monamedia'); ?></p>
-                                            <p class="text-[#1b1c19] font-medium text-[13px] mb-2"><?php echo esc_html($dv_sched['summary']); ?></p>
-                                            <ul class="flex flex-wrap gap-1.5">
-                                                <?php foreach ($dv_sched['dates'] as $_d) : ?>
-                                                    <li class="px-2 py-1 rounded bg-[#f7f5f0] text-[12px] text-[#1b1c19]"><?php echo esc_html(date('d/m/Y', strtotime($_d))); ?></li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        </div>
-                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
 
                             <!-- CF7 Form / Buy Now -->
-                            <div id="dv-form-inner" class="flex p-6 max-md:p-4 overflow-y-auto flex-col gap-3">
+                            <div id="dv-form-inner" class="flex p-6 max-md:p-4 flex-col gap-3">
                                 <h3 class="font-title text-pri text-[28px] max-md:text-[20px] font-bold">
                                     <?php esc_html_e('Đăng ký', 'monamedia'); ?>
                                 </h3>
                                 <?php
-                                    $dv_cf7_id = defined('DV_CF7_FORM_ID') ? DV_CF7_FORM_ID : (defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '');
-                                    if ($dv_cf7_id) : ?>
-                                        <div class="cf7-dich-vu"<?php if ($_dv_has_wc) : ?> data-buy-url="<?php echo esc_url($_dv_buy_url); ?>"<?php endif; ?>>
-                                            <?php echo do_shortcode('[contact-form-7 id="' . esc_attr($dv_cf7_id) . '"]'); ?>
-                                        </div>
-                                    <?php endif; ?>
+                                $dv_cf7_id = defined('DV_CF7_FORM_ID') ? DV_CF7_FORM_ID : (defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '');
+                                if ($dv_cf7_id) : ?>
+                                    <div class="cf7-dich-vu" <?php if ($_dv_has_wc) : ?> data-buy-url="<?php echo esc_url($_dv_buy_url); ?>" <?php endif; ?>>
+                                        <?php echo do_shortcode('[contact-form-7 id="' . esc_attr($dv_cf7_id) . '"]'); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                         </div>
@@ -549,8 +541,8 @@ get_header();
 </script>
 <script>
     window.dvSchedule = <?php echo json_encode([
-        'availDates' => $dv_sched['future'],
-        'isPast'     => $dv_sched['is_past'],
-    ]); ?>;
+                            'availDates' => $dv_sched['future'],
+                            'isPast'     => $dv_sched['is_past'],
+                        ]); ?>;
 </script>
 <?php get_footer(); ?>

@@ -79,6 +79,7 @@ if ($use_sample) {
             'format'     => get_field('ws_format',        $post_id) ?: 'Onsite',
             'status'     => get_field('ws_status',        $post_id) ?: 'open',
             'date'       => mona_schedule_label($post_id) ?: 'Sắp diễn ra',
+            'is_past'    => mona_schedule_is_past($post_id),
             'time'       => get_field('ws_time',          $post_id) ?: '09:00 – 12:00',
             'duration'   => get_field('ws_duration',      $post_id) ?: '3 giờ',
             'title'      => get_the_title($post_id),

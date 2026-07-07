@@ -39,24 +39,27 @@ do_action('woocommerce_email_header', $email_heading, $email);
     </tr>
 </table>
 
-<?php if ($b_date || $b_time || $b_location) : ?>
+<?php if ($b_date || $b_time || $b_location) :
+    // Cột cuối cùng thực tế được render → bỏ viền dưới khi stack trên mobile.
+    $q_last = $b_location ? 'location' : ($b_time ? 'time' : 'date');
+?>
 <!-- Booking quick info -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;border:1px solid #e8e4db;border-radius:8px;overflow:hidden">
     <tr>
         <?php if ($b_date) : ?>
-        <td width="33%" style="padding:14px 16px;border-right:1px solid #e8e4db;vertical-align:top">
+        <td width="33%" class="tsh-qcol<?php echo $q_last === 'date' ? ' tsh-qcol--last' : ''; ?>" style="padding:14px 16px;border-right:1px solid #e8e4db;vertical-align:top">
             <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Ngày đặt', 'monamedia'); ?></p>
             <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_date); ?></p>
         </td>
         <?php endif; ?>
         <?php if ($b_time) : ?>
-        <td width="33%" style="padding:14px 16px;<?php echo $b_location ? 'border-right:1px solid #e8e4db;' : ''; ?>vertical-align:top">
+        <td width="33%" class="tsh-qcol<?php echo $q_last === 'time' ? ' tsh-qcol--last' : ''; ?>" style="padding:14px 16px;<?php echo $b_location ? 'border-right:1px solid #e8e4db;' : ''; ?>vertical-align:top">
             <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Khung giờ', 'monamedia'); ?></p>
             <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_time); ?></p>
         </td>
         <?php endif; ?>
         <?php if ($b_location) : ?>
-        <td width="34%" style="padding:14px 16px;vertical-align:top">
+        <td width="34%" class="tsh-qcol tsh-qcol--last" style="padding:14px 16px;vertical-align:top">
             <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Chi nhánh', 'monamedia'); ?></p>
             <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_location); ?></p>
         </td>

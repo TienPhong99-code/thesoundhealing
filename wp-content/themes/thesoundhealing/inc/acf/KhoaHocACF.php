@@ -104,6 +104,10 @@ add_action('acf/init', function () {
             Text::make('Số lượng học viên', 'kh_capacity')
                 ->helperText('Ví dụ: 20 học viên · Tối đa 15 người'),
 
+            Textarea::make('Lựa chọn số lượng người (form đăng ký)', 'kh_guest_options')
+                ->helperText('Mỗi dòng một lựa chọn cho dropdown "Số lượng người" trong form. Mỗi dòng nên chứa 1 con số (vd: 1 người / 2 người / 5 người) vì giá = giá gốc × số người. Tránh dạng khoảng như "3-5". Để trống = giữ lựa chọn mặc định.')
+                ->rows(4),
+
             Number::make('Số chỗ còn lại', 'kh_spots')
                 ->helperText('Nhập số chỗ còn trống. 0 = Hết chỗ. Để trống = không hiển thị badge. Dùng cho bộ lọc tìm kiếm.')
                 ->min(0),
@@ -290,16 +294,6 @@ add_action('acf/init', function () {
                         ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp'])
                         ->format('array'),
                 ]),
-
-            // ─── TAB: CTA ────────────────────────────────────────────────
-            Tab::make('CTA')->placement('left'),
-
-            Text::make('Tiêu đề CTA', 'cta_title')
-                ->default('Bắt đầu hành trình của bạn'),
-
-            Textarea::make('Mô tả CTA', 'cta_desc')
-                ->rows(2)
-                ->default('Lớp học giới hạn số lượng học viên để đảm bảo chất lượng hướng dẫn tốt nhất. Vui lòng đăng ký sớm để giữ chỗ.'),
         ],
     ], false);
 }, 10);

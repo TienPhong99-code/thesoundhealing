@@ -47,6 +47,8 @@ add_action('wpcf7_mail_sent', function ($cf7) {
         'instructor' => $pick(['kh-instructor', 'ws-instructor', 'dv-instructor']),
         'children'   => $pick(['kh-children']),
         'source_url' => esc_url_raw(wp_get_referer() ?: ''),
+        // Post đang đặt — để prefill chỉ khôi phục đúng bài, không tràn sang bài khác.
+        'post_id'    => (int) url_to_postid(wp_get_referer() ?: ''),
     ];
 
     $token = wp_generate_password(32, false);
@@ -152,6 +154,12 @@ add_filter('wpcf7_form_elements', function ($html) {
     $token   = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
     $booking = $token ? (array) get_transient('tsh_booking_' . $token) : [];
 
+    // Chỉ prefill khi booking thuộc đúng post đang xem — tránh ngày/giờ của phiên
+    // đặt trước (hoặc bài khác) tràn sang, ép chọn sai ngày trên lịch.
+    if ((int) ($booking['post_id'] ?? 0) !== $post_id) {
+        $booking = [];
+    }
+
     $build_options = function (string $placeholder, array $values, string $selected_val = ''): string {
         $out = '<option value="">' . esc_html($placeholder) . '</option>';
         foreach ($values as $v) {
@@ -177,6 +185,7 @@ add_filter('wpcf7_form_elements', function ($html) {
         $pre_time     = $booking['time']       ?? '';
         $pre_location = $booking['location']   ?? '';
         $pre_instr    = $booking['instructor'] ?? '';
+        $pre_guests   = $booking['guests']     ?? '';
 
         $html = $set_input_value($html, 'dv-date', $pre_date);
 
@@ -234,12 +243,30 @@ add_filter('wpcf7_form_elements', function ($html) {
             '$1' . $build_options(__('Chọn khung giờ', 'monamedia'), $time_values, $pre_time) . '$3',
             $html
         );
+
+        // ── guests (select tên "ws-guests" dùng chung cho cả 3 form) ───────
+        $guest_values = [];
+        $guests_raw   = get_field('dv_guest_options', $post_id);
+        if (!empty($guests_raw)) {
+            foreach (explode("\n", $guests_raw) as $line) {
+                $line = trim($line);
+                if ($line !== '') $guest_values[] = $line;
+            }
+        }
+        if ($guest_values) {
+            $html = preg_replace(
+                '/(<select[^>]*\bname="ws-guests"[^>]*>)([\s\S]*?)(<\/select>)/i',
+                '$1' . $build_options(__('Số lượng người tham gia', 'monamedia'), $guest_values, $pre_guests) . '$3',
+                $html
+            );
+        }
     } elseif ($post_type === 'khoa_hoc') {
 
         $pre_date     = $booking['date']       ?? '';
         $pre_time     = $booking['time']       ?? '';
         $pre_location = $booking['location']   ?? '';
         $pre_instr    = $booking['instructor'] ?? '';
+        $pre_guests   = $booking['guests']     ?? '';
 
         $html = $set_input_value($html, 'kh-date', $pre_date);
 
@@ -297,6 +324,23 @@ add_filter('wpcf7_form_elements', function ($html) {
             '$1' . $build_options(__('Chọn khung giờ', 'monamedia'), $time_values, $pre_time) . '$3',
             $html
         );
+
+        // ── guests (select tên "ws-guests" dùng chung cho cả 3 form) ───────
+        $guest_values = [];
+        $guests_raw   = get_field('kh_guest_options', $post_id);
+        if (!empty($guests_raw)) {
+            foreach (explode("\n", $guests_raw) as $line) {
+                $line = trim($line);
+                if ($line !== '') $guest_values[] = $line;
+            }
+        }
+        if ($guest_values) {
+            $html = preg_replace(
+                '/(<select[^>]*\bname="ws-guests"[^>]*>)([\s\S]*?)(<\/select>)/i',
+                '$1' . $build_options(__('Số lượng người tham gia', 'monamedia'), $guest_values, $pre_guests) . '$3',
+                $html
+            );
+        }
     } elseif ($post_type === 'workshop') {
 
         $pre_time     = $booking['time']       ?? '';
@@ -361,6 +405,23 @@ add_filter('wpcf7_form_elements', function ($html) {
             '$1' . $build_options(__('Chọn khung giờ', 'monamedia'), $time_values, $pre_time) . '$3',
             $html
         );
+
+        // ── ws-guests ─────────────────────────────────────────────────────
+        $guest_values = [];
+        $guests_raw   = get_field('ws_guest_options', $post_id);
+        if (!empty($guests_raw)) {
+            foreach (explode("\n", $guests_raw) as $line) {
+                $line = trim($line);
+                if ($line !== '') $guest_values[] = $line;
+            }
+        }
+        if ($guest_values) {
+            $html = preg_replace(
+                '/(<select[^>]*\bname="ws-guests"[^>]*>)([\s\S]*?)(<\/select>)/i',
+                '$1' . $build_options(__('Số lượng người tham gia', 'monamedia'), $guest_values, $pre_guests) . '$3',
+                $html
+            );
+        }
     }
 
     // Đẩy chuỗi đã dịch (gettext) xuống JS qua data-attribute trên input date.
@@ -393,6 +454,7 @@ add_filter('gettext_monamedia', function ($translation, $text) {
             'Chọn khung giờ'       => 'Select time slot',
             'Chọn chi nhánh'        => 'Select branch',
             'Chọn người hướng dẫn' => 'Select instructor',
+            'Số lượng người tham gia' => 'Number of participants',
             // Trang đặt lịch thành công
             'E-TICKET LÀM QUÀ TẶNG' => 'Gift This Session',
             'Tính năng sắp ra mắt' => 'Coming soon',

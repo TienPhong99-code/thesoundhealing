@@ -5,17 +5,20 @@ defined('ABSPATH') || defined('MONA_SCHEDULE_TEST') || (PHP_SAPI === 'cli') || e
 /**
  * Nhãn thứ rút gọn theo key date('N'). Mon=1..Sun=7.
  */
-function mona_weekday_short_labels(): array {
+function mona_weekday_short_labels(): array
+{
     return ['1' => '2', '2' => '3', '3' => '4', '4' => '5', '5' => '6', '6' => '7', '7' => 'CN'];
 }
 
 /**
  * Sinh danh sách ngày Y-m-d cho lịch định kỳ theo thứ trong tuần.
  */
-function mona_generate_recurring_dates(string $start, string $end, array $weekdays, int $maxDays = 366): array {
+function mona_generate_recurring_dates(string $start, string $end, array $weekdays, int $maxDays = 366): array
+{
     $weekdays = array_map('strval', $weekdays);
     if (empty($weekdays)) return [];
-    $ts = strtotime($start); $te = strtotime($end);
+    $ts = strtotime($start);
+    $te = strtotime($end);
     if (!$ts || !$te || $te < $ts) return [];
     if (($te - $ts) / 86400 > $maxDays) return [];
 
@@ -33,7 +36,8 @@ function mona_generate_recurring_dates(string $start, string $end, array $weekda
  * Chuẩn hoá mảng chuỗi ngày hỗn hợp về Y-m-d, sort + unique.
  * Hỗ trợ: Y-m-d, d-m-Y, "12 Tháng 8, 2026", strtotime fallback.
  */
-function mona_normalize_date_list(array $parts): array {
+function mona_normalize_date_list(array $parts): array
+{
     $out = [];
     foreach ($parts as $part) {
         $part = trim((string) $part);
@@ -55,7 +59,8 @@ function mona_normalize_date_list(array $parts): array {
 /**
  * Câu tóm tắt cho lịch định kỳ. VD "Thứ 3, 5, 7 · 12/08 – 12/09".
  */
-function mona_recurring_summary(array $weekdays, string $start, string $end): string {
+function mona_recurring_summary(array $weekdays, string $start, string $end): string
+{
     $labels = mona_weekday_short_labels();
     $weekdays = array_map('strval', $weekdays);
     sort($weekdays);
@@ -63,7 +68,8 @@ function mona_recurring_summary(array $weekdays, string $start, string $end): st
     foreach ($weekdays as $w) {
         if (isset($labels[$w])) $names[] = $labels[$w];
     }
-    $ts = strtotime($start); $te = strtotime($end);
+    $ts = strtotime($start);
+    $te = strtotime($end);
     $range = ($ts && $te) ? date('d/m', $ts) . ' – ' . date('d/m', $te) : '';
     $wd = $names ? 'Thứ ' . implode(', ', $names) : '';
     return trim($wd . ($wd && $range ? ' · ' : '') . $range);
@@ -72,7 +78,8 @@ function mona_recurring_summary(array $weekdays, string $start, string $end): st
 /**
  * Map post_type -> tên field ACF.
  */
-function mona_schedule_field_map(int $post_id): array {
+function mona_schedule_field_map(int $post_id): array
+{
     $pt = get_post_type($post_id);
     if ($pt === 'workshop') {
         return ['type' => 'ws_schedule_type', 'single' => 'ws_date_single', 'start' => 'ws_date_start', 'end' => 'ws_date_end', 'weekdays' => 'ws_weekdays', 'legacy' => 'ws_date'];
@@ -88,7 +95,11 @@ function mona_schedule_field_map(int $post_id): array {
  *
  * @return array{type:string, dates:string[], future:string[], summary:string, is_past:bool}
  */
-function mona_expand_schedule(int $post_id): array {
+function mona_expand_schedule(int $post_id): array
+{
+    static $cache = [];
+    if (isset($cache[$post_id])) return $cache[$post_id];
+
     $f = mona_schedule_field_map($post_id);
     $sched_type = get_field($f['type'], $post_id);
 
@@ -127,7 +138,7 @@ function mona_expand_schedule(int $post_id): array {
     $today  = date('Y-m-d');
     $future = array_values(array_filter($dates, fn($d) => $d >= $today));
 
-    return [
+    return $cache[$post_id] = [
         'type'    => $type,
         'dates'   => $dates,
         'future'  => $future,
@@ -139,7 +150,36 @@ function mona_expand_schedule(int $post_id): array {
 /**
  * Chuỗi ngắn cho card. '' nếu không có lịch.
  */
-function mona_schedule_label(int $post_id): string {
+function mona_schedule_label(int $post_id): string
+{
     $s = mona_expand_schedule($post_id);
     return $s['summary'];
+}
+
+/**
+ * Lịch đã qua hết chưa -> dùng cho nút "Hết hạn" trên card.
+ * CHỈ coi là hết hạn khi CÓ ngày cụ thể nhưng tất cả đã qua.
+ * Post không cấu hình lịch (dates rỗng, VD dịch vụ định kỳ "Thứ 2 – CN") -> KHÔNG hết hạn.
+ * Nguồn chân lý duy nhất; card KHÔNG tự parse lại chuỗi ngày hiển thị.
+ */
+function mona_schedule_is_past(int $post_id): bool
+{
+    if ($post_id <= 0) return false;
+    $s = mona_expand_schedule($post_id);
+    return !empty($s['dates']) && empty($s['future']);
+}
+
+/**
+ * Bỏ đoạn "Thứ ..." ở đầu chuỗi lịch cho card gọn hơn, chỉ giữ phần ngày.
+ * VD "Thứ 3, 4, 5, 6, 7, CN · 07/07 – 31/07" -> "07/07 – 31/07".
+ * Chuỗi không bắt đầu bằng "Thứ " (ngày đơn) -> giữ nguyên.
+ */
+function mona_schedule_dates_only(string $summary): string
+{
+    $summary = trim($summary);
+    if ($summary === '' || !str_starts_with($summary, 'Thứ ')) {
+        return $summary;
+    }
+    $pos = strpos($summary, '·');
+    return $pos !== false ? trim(substr($summary, $pos + strlen('·'))) : '';
 }

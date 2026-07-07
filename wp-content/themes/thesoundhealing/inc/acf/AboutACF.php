@@ -140,39 +140,6 @@ add_action('acf/init', function () {
                         ->rows(4),
                 ]),
 
-            // ─── TAB: NGƯỜI SÁNG LẬP ─────────────────────────────────────
-            Tab::make('Người Sáng Lập')->placement('left'),
-
-            Text::make('Nhãn', 'ab_visionary_label')
-                ->helperText('Ví dụ: Người Sáng Lập')
-                ->default('Người Sáng Lập'),
-
-            Text::make('Tên', 'ab_visionary_name')
-                ->helperText('Ví dụ: Elias Thorne')
-                ->default('Elias Thorne'),
-
-            WYSIWYGEditor::make('Trích dẫn', 'ab_visionary_quote')
-                ->helperText('Quote lớn hiển thị nổi bật. Nên có dấu ngoặc kép.')
-                ->tabs('visual')
-                ->toolbar('basic')
-                ->disableMediaUpload(),
-
-            WYSIWYGEditor::make('Tiểu sử', 'ab_visionary_bio')
-                ->helperText('Đoạn mô tả ngắn về người sáng lập.')
-                ->tabs('visual')
-                ->toolbar('basic')
-                ->disableMediaUpload(),
-
-            Image::make('Ảnh chân dung', 'ab_visionary_image')
-                ->helperText('Portrait, tỉ lệ 3/4.')
-                ->format('array')
-                ->previewSize('medium'),
-
-            Image::make('Ảnh nền texture', 'ab_visionary_bg')
-                ->helperText('Texture overlay mờ phía sau section.')
-                ->format('array')
-                ->previewSize('medium'),
-
             // ─── TAB: ĐẶC ĐIỂM NỔI BẬT ───────────────────────────────────
             Tab::make('Đặc Điểm Nổi Bật')->placement('left'),
 

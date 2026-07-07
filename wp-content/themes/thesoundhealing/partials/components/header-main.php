@@ -12,7 +12,10 @@ defined('ABSPATH') || exit;
 function mona_render_lang_switcher($classes = '')
 {
    if (!function_exists('icl_get_languages')) return;
-   $langs = icl_get_languages('skip_missing=0&orderby=KEY&order=DIR&link_empty_to=str');
+   // skip_missing=0: luôn hiển thị đủ ngôn ngữ. KHÔNG đặt link_empty_to (trước đây
+   // để nguyên placeholder 'str' của tài liệu WPML → nút thiếu bản dịch trỏ về
+   // http://str/). Bỏ đi để WPML tự trỏ về trang chủ của ngôn ngữ đó.
+   $langs = icl_get_languages('skip_missing=0&orderby=KEY&order=DIR');
    if (empty($langs) || !is_array($langs)) return;
    $label_map = ['vi' => 'VN', 'en' => 'ENG'];
    $items = array_values($langs);

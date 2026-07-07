@@ -23,8 +23,8 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_email_after_order_table',                [$this, 'email_deposit_notice'], 10, 4);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
         add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
-        add_filter('woocommerce_email_heading_customer_processing_order', fn() => __('Cảm ơn bạn đã đặt lịch hẹn', 'monamedia'));
-        add_filter('woocommerce_email_heading_customer_on_hold_order',    fn() => __('Cảm ơn bạn đã đặt lịch hẹn', 'monamedia'));
+        add_filter('woocommerce_email_heading_customer_processing_order', fn() => __('Cảm ơn bạn<br>đã đặt lịch hẹn', 'monamedia'));
+        add_filter('woocommerce_email_heading_customer_on_hold_order',    fn() => __('Cảm ơn bạn<br>đã đặt lịch hẹn', 'monamedia'));
         add_filter('woocommerce_email_subject_customer_processing_order', [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
@@ -365,30 +365,82 @@ class TSH_WooCommerce_Hook
 
         $code       = '#' . str_pad($order_id, 5, '0', STR_PAD_LEFT);
         $expiry_fmt = date_i18n('d/m/Y', strtotime($expiry));
-        $guests     = $order->get_meta('_booking_guests') ?: '1';
-        $items      = $order->get_items();
-        $service    = $items ? reset($items)->get_name() : '';
         $email      = $order->get_billing_email();
         if (!$email) return;
 
-        $html = '<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#1b1c19">'
-            . '<div style="border:1px solid #e4e2dd;border-radius:12px;overflow:hidden">'
-            . '<div style="background:#1b1c19;color:#c2a056;padding:18px 24px;font-weight:bold;letter-spacing:1px">THE SOUND HEALING — E-TICKET QUÀ TẶNG</div>'
-            . '<div style="padding:24px">'
+        // Cùng bộ thông tin như mail xác nhận đặt lịch (bỏ Tổng thanh toán & Phương thức thanh toán).
+        $name         = trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name());
+        $phone        = $order->get_billing_phone();
+        $b_date       = (string) $order->get_meta('_booking_date');
+        $b_time       = (string) $order->get_meta('_booking_time');
+        $b_location   = (string) $order->get_meta('_booking_location');
+        $b_guests     = (string) $order->get_meta('_booking_guests');
+        $b_children   = (string) $order->get_meta('_booking_children');
+        $b_instructor = (string) $order->get_meta('_booking_instructor');
+        $items        = $order->get_items();
+        $service      = $items ? reset($items)->get_name() : '';
+
+        $logo_url   = MONA_THEME_PATH_URI . '/assets/images/logo2.png';
+        $banner_url = MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png';
+
+        // 1 dòng thông tin. $label_esc đã escape sẵn (esc_html__), $value còn thô sẽ escape tại đây.
+        // Value rỗng → bỏ qua dòng. $gold = true để tô vàng (dùng cho Ngày hết hạn).
+        $row = function (string $label_esc, string $value, bool $gold = false): string {
+            if ($value === '') return '';
+            $vstyle = $gold ? 'font-weight:700;color:#c2a056' : 'font-weight:600;color:#1b1c19';
+            return '<tr>'
+                . '<td style="padding:8px 12px 8px 0;color:#717171;vertical-align:top">' . $label_esc . '</td>'
+                . '<td style="padding:8px 0;text-align:right;word-break:break-word;overflow-wrap:break-word;' . $vstyle . ';vertical-align:top">' . esc_html($value) . '</td>'
+                . '</tr>';
+        };
+
+        $rows  = $row(esc_html__('Ngày đặt', 'monamedia'), $b_date);
+        $rows .= $row(esc_html__('Khung giờ', 'monamedia'), $b_time);
+        $rows .= $row(esc_html__('Chi nhánh', 'monamedia'), $b_location);
+        $rows .= $row(esc_html__('Họ và tên', 'monamedia'), $name);
+        $rows .= $row(esc_html__('Số điện thoại', 'monamedia'), $phone);
+        $rows .= $row(esc_html__('Email', 'monamedia'), $email);
+        $rows .= $row(esc_html__('Số người tham gia', 'monamedia'), $b_guests !== '' ? $b_guests . ' ' . __('người', 'monamedia') : '');
+        $rows .= $row(esc_html__('Trẻ em tham gia', 'monamedia'), $b_children);
+        $rows .= $row(esc_html__('Người hướng dẫn', 'monamedia'), $b_instructor);
+        $rows .= $row(esc_html__('Dịch vụ', 'monamedia'), $service);
+        $rows .= $row(esc_html__('Ngày hết hạn', 'monamedia'), $expiry_fmt, true);
+
+        $html = '<!DOCTYPE html><html lang="vi"><head>'
+            . '<meta charset="utf-8">'
+            . '<meta name="viewport" content="width=device-width,initial-scale=1">'
+            . '<meta name="color-scheme" content="light only">'
+            . '<style>'
+            . 'body{margin:0;padding:0;background:#f4f2ec}'
+            . '@media only screen and (max-width:600px){.tsh-col{display:block!important;width:100%!important}}'
+            . '</style></head>'
+            . '<body style="margin:0;padding:24px 12px;background:#f4f2ec;font-family:Arial,Helvetica,sans-serif;color:#1b1c19">'
+            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center">'
+            . '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:820px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(27,28,25,0.08)">'
+            // Header: nền trắng + logo
+            . '<tr><td style="background:#ffffff;padding:22px 24px;text-align:center;border-bottom:1px solid #efece4">'
+            . '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr__('The Sound Healing', 'monamedia') . '" width="180" style="display:inline-block;width:180px;max-width:58%;height:auto;border:0"></td></tr>'
+            // Body: 2 cột inline-block (nội dung trái, banner phải) — font-size:0 khử khoảng trắng giữa 2 cột
+            . '<tr><td style="padding:0;font-size:0;line-height:0">'
+            . '<div class="tsh-col" style="display:inline-block;vertical-align:top;width:58%;box-sizing:border-box;padding:26px 24px;font-size:14px;line-height:1.5;color:#1b1c19">'
             . '<div style="padding:14px 18px;background:#faf8f4;border:1px dashed #c2a056;border-radius:10px;margin-bottom:18px">'
-            . '<span style="color:#717171;font-size:13px">Mã e-ticket</span><br><strong style="color:#c2a056;font-size:22px;letter-spacing:1px">' . esc_html($code) . '</strong></div>'
-            . '<table style="width:100%;border-collapse:collapse;font-size:14px">'
-            . '<tr><td style="padding:8px 0;color:#717171">Dịch vụ</td><td style="padding:8px 0;text-align:right;font-weight:600">' . esc_html($service) . '</td></tr>'
-            . '<tr><td style="padding:8px 0;color:#717171">Số người</td><td style="padding:8px 0;text-align:right;font-weight:600">' . esc_html($guests) . ' người</td></tr>'
-            . '<tr><td style="padding:8px 0;color:#717171">Ngày hết hạn</td><td style="padding:8px 0;text-align:right;font-weight:700;color:#c2a056">' . esc_html($expiry_fmt) . '</td></tr>'
+            . '<span style="color:#717171;font-size:13px">' . esc_html__('Mã e-ticket', 'monamedia') . '</span><br><strong style="color:#c2a056;font-size:22px;letter-spacing:1px">' . esc_html($code) . '</strong></div>'
+            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px">'
+            . $rows
             . '</table>'
             . '<div style="margin-top:18px;padding:14px 16px;background:#fbf8f0;border-radius:10px;font-size:14px">'
-            . '<p style="margin:0 0 6px;color:#717171;font-size:12px">Liên hệ hotline để đặt lịch:</p>'
-            . '<p style="margin:0"><strong>English:</strong> 0939 624 684 &nbsp;|&nbsp; <strong>Tiếng Việt:</strong> 0906 502 582</p></div>'
-            . '<p style="margin:14px 0 0;font-size:12px;color:#8a8577;font-style:italic">Vui lòng xuất trình mã e-ticket khi sử dụng dịch vụ.</p>'
-            . '</div></div></div>';
+            . '<p style="margin:0 0 6px;color:#717171;font-size:12px">' . esc_html__('Liên hệ hotline để đặt lịch:', 'monamedia') . '</p>'
+            . '<p style="margin:0"><strong>' . esc_html__('English', 'monamedia') . ':</strong> 0939 624 684 &nbsp;|&nbsp; <strong>' . esc_html__('Tiếng Việt', 'monamedia') . ':</strong> 0906 502 582</p></div>'
+            . '<p style="margin:14px 0 0;font-size:12px;color:#8a8577;font-style:italic">' . esc_html__('Vui lòng xuất trình mã e-ticket khi sử dụng dịch vụ.', 'monamedia') . '</p>'
+            . '</div>'
+            . '<div class="tsh-col" style="display:inline-block;vertical-align:top;width:42%;box-sizing:border-box;font-size:0;line-height:0;background:#f4f7ee">'
+            . '<img src="' . esc_url($banner_url) . '" alt="' . esc_attr__('The Healing Universe of Việt Nam', 'monamedia') . '" width="100%" style="display:block;width:100%;height:auto;border:0"></div>'
+            . '</td></tr>'
+            . '</table>'
+            . '</td></tr></table>'
+            . '</body></html>';
 
-        $subject = 'E-ticket quà tặng của bạn — ' . $code;
+        $subject = __('E-ticket quà tặng của bạn', 'monamedia') . ' — ' . $code;
         $headers = ['Content-Type: text/html; charset=UTF-8'];
 
         // Đánh dấu đã gửi TRƯỚC khi wp_mail → đóng race gửi trùng nếu 2 request đổi
@@ -621,7 +673,7 @@ class TSH_WooCommerce_Hook
             $phone    = preg_replace('/\D/', '', $order->get_billing_phone());
             $info     = 'HEAL-' . $name_asc . ($phone ? '-' . $phone : '') . '-TSH' . $order_id;
             $url      = $this->vietqr_url($amount, $info);
-            ?>
+        ?>
             <div class="tsh-bacs-qr tsh-bacs-qr--ty" id="tsh-ty-sepay">
                 <h3 class="tsh-bacs-qr__title"><?php esc_html_e('Quét mã để hoàn tất thanh toán', 'monamedia'); ?></h3>
                 <img src="<?= esc_url($url) ?>" alt="QR SePay">
@@ -631,9 +683,11 @@ class TSH_WooCommerce_Hook
                     <div class="tsh-bacs-qr__row"><span><?php esc_html_e('Số tiền', 'monamedia'); ?></span><strong><?= wc_price($amount) ?></strong></div>
                     <div class="tsh-bacs-qr__row tsh-bacs-qr__row--ref"><span><?php esc_html_e('Nội dung CK', 'monamedia'); ?></span><span class="tsh-bacs-qr__val"><strong><?= esc_html($info) ?></strong><?= $this->copy_btn() ?></span></div>
                 </div>
-                <div class="tsh-payment-waiting"><p><?php esc_html_e('Trang sẽ tự cập nhật sau khi nhận được thanh toán', 'monamedia'); ?></p></div>
+                <div class="tsh-payment-waiting">
+                    <p><?php esc_html_e('Trang sẽ tự cập nhật sau khi nhận được thanh toán', 'monamedia'); ?></p>
+                </div>
             </div>
-            <?php
+        <?php
             return;
         }
 
@@ -799,13 +853,13 @@ class TSH_WooCommerce_Hook
                 $(document.body).on('payment_method_selected updated_checkout', refreshPayments);
             });
         </script>
-        <?php
+    <?php
     }
 
     public function payment_type_js(): void
     {
         if (!is_checkout() || is_order_received_page()) return;
-        ?>
+    ?>
         <script>
             jQuery(function($) {
                 // Đổi radio cọc/full → WooCommerce tính lại tổng (fee đọc từ post_data).
@@ -816,7 +870,7 @@ class TSH_WooCommerce_Hook
                 });
             });
         </script>
-        <?php
+    <?php
     }
 
     // ── Thank you: polling tự động xác nhận SePay ────────────────────────
@@ -830,7 +884,7 @@ class TSH_WooCommerce_Hook
         if (!$order || !in_array($order->get_payment_method(), ['sepay', 'tsh_paypal_qr'], true)) return;
         if (!in_array($order->get_status(), ['pending', 'on-hold'], true)) return;
         $email = $order->get_billing_email();
-        ?>
+    ?>
         <script>
             jQuery(function($) {
                 var ajaxUrl = '<?= esc_js(admin_url('admin-ajax.php')) ?>';
@@ -843,13 +897,24 @@ class TSH_WooCommerce_Hook
                 $('#tsh-confirm-transfer').on('click', function() {
                     var $btn = $(this);
                     $btn.prop('disabled', true).text('<?= esc_js(__('Đang gửi xác nhận...', 'monamedia')) ?>');
-                    $.post(ajaxUrl, { action: 'tsh_confirm_transfer', order_id: orderId, order_key: orderKey })
-                        .always(function() { $btn.hide(); $('#tsh-transfer-msg').show(); });
+                    $.post(ajaxUrl, {
+                            action: 'tsh_confirm_transfer',
+                            order_id: orderId,
+                            order_key: orderKey
+                        })
+                        .always(function() {
+                            $btn.hide();
+                            $('#tsh-transfer-msg').show();
+                        });
                 });
 
                 // SePay: polling → swap tại chỗ (không reload)
                 function check() {
-                    $.get(ajaxUrl, { action: 'tsh_order_status', order_id: orderId, order_key: orderKey })
+                    $.get(ajaxUrl, {
+                            action: 'tsh_order_status',
+                            order_id: orderId,
+                            order_key: orderKey
+                        })
                         .done(function(res) {
                             if (!res.success) return;
                             var s = res.data.status;
@@ -862,7 +927,7 @@ class TSH_WooCommerce_Hook
                 if ($('#tsh-ty-sepay').length) timer = setInterval(check, 5000);
             });
         </script>
-        <?php
+<?php
     }
 
     // ── Admin new order email ─────────────────────────────────────────────
