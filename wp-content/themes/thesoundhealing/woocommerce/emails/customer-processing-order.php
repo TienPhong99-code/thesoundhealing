@@ -40,32 +40,32 @@ do_action('woocommerce_email_header', $email_heading, $email);
 </table>
 
 <?php if ($b_date || $b_time || $b_location) :
-    // Ngày đặt | Khung giờ = 50/50 (giá trị ngắn, vừa mobile); Chi nhánh full 100%
-    // xuống hàng dưới (giá trị dài). Không dùng media query → chuẩn mọi client.
-    $q_inner = function (string $label, string $value): string {
-        return '<p style="margin:0 0 3px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb">' . esc_html($label) . '</p>'
-            . '<p style="margin:0;font-size:14px;font-weight:600;color:#1b1c19">' . esc_html($value) . '</p>';
-    };
-    // Viền dưới hàng ngày/giờ chỉ khi còn hàng chi nhánh phía dưới.
-    $dt_bb = $b_location ? 'border-bottom:1px solid #e8e4db;' : '';
+    // 3 cột (Ngày đặt | Khung giờ | Chi nhánh). Cột cuối thực tế được render → bỏ
+    // viền phải. Stack trên mobile qua class .tsh-qcol (media query ở email-header.php).
+    $q_last = $b_location ? 'location' : ($b_time ? 'time' : 'date');
 ?>
-    <!-- Booking quick info: ngày/giờ 50-50, chi nhánh full width -->
+    <!-- Booking quick info: 3 cột -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;border:1px solid #e8e4db;border-radius:8px;overflow:hidden">
-        <?php if ($b_date && $b_time) : ?>
-            <tr>
-                <td width="50%" style="padding:12px 16px;border-right:1px solid #e8e4db;<?php echo $dt_bb; ?>vertical-align:top"><?php echo $q_inner(__('Ngày đặt', 'monamedia'), $b_date); ?></td>
-                <td width="50%" style="padding:12px 16px;<?php echo $dt_bb; ?>vertical-align:top"><?php echo $q_inner(__('Khung giờ', 'monamedia'), $b_time); ?></td>
-            </tr>
-        <?php elseif ($b_date || $b_time) : ?>
-            <tr>
-                <td colspan="2" style="padding:12px 16px;<?php echo $dt_bb; ?>vertical-align:top"><?php echo $q_inner($b_date ? __('Ngày đặt', 'monamedia') : __('Khung giờ', 'monamedia'), $b_date ?: $b_time); ?></td>
-            </tr>
-        <?php endif; ?>
-        <?php if ($b_location) : ?>
-            <tr>
-                <td colspan="2" style="padding:12px 16px;vertical-align:top"><?php echo $q_inner(__('Chi nhánh', 'monamedia'), $b_location); ?></td>
-            </tr>
-        <?php endif; ?>
+        <tr>
+            <?php if ($b_date) : ?>
+                <td width="33%" class="tsh-qcol<?php echo $q_last === 'date' ? ' tsh-qcol--last' : ''; ?>" style="padding:14px 16px;border-right:1px solid #e8e4db;vertical-align:top">
+                    <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Ngày đặt', 'monamedia'); ?></p>
+                    <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_date); ?></p>
+                </td>
+            <?php endif; ?>
+            <?php if ($b_time) : ?>
+                <td width="33%" class="tsh-qcol<?php echo $q_last === 'time' ? ' tsh-qcol--last' : ''; ?>" style="padding:14px 16px;<?php echo $b_location ? 'border-right:1px solid #e8e4db;' : ''; ?>vertical-align:top">
+                    <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Khung giờ', 'monamedia'); ?></p>
+                    <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_time); ?></p>
+                </td>
+            <?php endif; ?>
+            <?php if ($b_location) : ?>
+                <td width="34%" class="tsh-qcol tsh-qcol--last" style="padding:14px 16px;vertical-align:top">
+                    <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Chi nhánh', 'monamedia'); ?></p>
+                    <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_location); ?></p>
+                </td>
+            <?php endif; ?>
+        </tr>
     </table>
 <?php endif; ?>
 

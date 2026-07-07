@@ -11,6 +11,7 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_enqueue_styles', '__return_empty_array');
         add_action('init',                [$this, 'register_endpoint']);
         add_action('template_redirect',   [$this, 'handle_buy_now']);
+        add_action('template_redirect',   [$this, 'handle_eticket_page']);
         add_filter('woocommerce_checkout_get_value', [$this, 'prefill_checkout'], 10, 2);
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_checkout_create_order', [$this, 'save_payment_type_meta'], 10, 2);
@@ -253,6 +254,29 @@ class TSH_WooCommerce_Hook
         exit;
     }
 
+    /**
+     * Trang e-ticket (mở từ nút trong email) → render card đặt lịch layout PC +
+     * nút tải ảnh (html2canvas). URL: /?tsh_eticket=1&order=ID&key=ORDER_KEY&lang=en|vi
+     * Dùng $_GET nên không cần flush rewrite. order_key làm token bảo mật.
+     */
+    public function handle_eticket_page(): void
+    {
+        if (empty($_GET['tsh_eticket'])) return;
+
+        $order_id = (int) ($_GET['order'] ?? 0);
+        $key      = sanitize_text_field(wp_unslash($_GET['key'] ?? ''));
+        $lang     = (isset($_GET['lang']) && strpos((string) $_GET['lang'], 'en') === 0) ? 'en' : 'vi';
+
+        $order = $order_id ? wc_get_order($order_id) : false;
+        if (!$order || !$key || !hash_equals($order->get_order_key(), $key)) {
+            wp_die(esc_html__('Liên kết không hợp lệ hoặc đã hết hạn.', 'monamedia'), '', ['response' => 403]);
+        }
+
+        // $order, $lang có sẵn trong scope của template được include.
+        include get_theme_file_path('woocommerce/eticket-download.php');
+        exit;
+    }
+
     private function get_booking(): array
     {
         $token = sanitize_text_field($_COOKIE['tsh_booking_token'] ?? '');
@@ -395,6 +419,16 @@ class TSH_WooCommerce_Hook
         $logo_url   = MONA_THEME_PATH_URI . '/assets/images/logo2.png';
         $banner_url = MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png';
 
+        // Nút tải e-ticket (mở trang layout PC + html2canvas). lang khớp ngôn ngữ email.
+        $is_en       = $this->is_en_locale();
+        $eticket_url = add_query_arg([
+            'tsh_eticket' => 1,
+            'order'       => $order_id,
+            'key'         => $order->get_order_key(),
+            'lang'        => $is_en ? 'en' : 'vi',
+        ], home_url('/'));
+        $dl_label = $is_en ? 'Download e-ticket' : 'Tải e-ticket';
+
         // 1 dòng thông tin. $label_esc đã escape sẵn (esc_html__), $value còn thô sẽ escape tại đây.
         // Value rỗng → bỏ qua dòng. $gold = true để tô vàng (dùng cho Ngày hết hạn).
         $row = function (string $label_esc, string $value, bool $gold = false): string {
@@ -444,6 +478,9 @@ class TSH_WooCommerce_Hook
             . '<p style="margin:0 0 6px;color:#717171;font-size:12px">' . esc_html__('Liên hệ hotline để đặt lịch:', 'monamedia') . '</p>'
             . '<p style="margin:0"><strong>' . esc_html__('English', 'monamedia') . ':</strong> 0939 624 684 &nbsp;|&nbsp; <strong>' . esc_html__('Tiếng Việt', 'monamedia') . ':</strong> 0906 502 582</p></div>'
             . '<p style="margin:14px 0 0;font-size:12px;color:#8a8577;font-style:italic">' . esc_html__('Vui lòng xuất trình mã e-ticket khi sử dụng dịch vụ.', 'monamedia') . '</p>'
+            . '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:18px"><tr><td>'
+            . '<a href="' . esc_url($eticket_url) . '" style="display:inline-block;background:#c2a056;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:.3px;padding:12px 28px;border-radius:8px">' . esc_html($dl_label) . '</a>'
+            . '</td></tr></table>'
             . '</div>'
             . '<div class="tsh-col" style="display:inline-block;vertical-align:top;width:42%;box-sizing:border-box;font-size:0;line-height:0;background:#f4f7ee">'
             . '<img src="' . esc_url($banner_url) . '" alt="' . esc_attr__('The Healing Universe of Việt Nam', 'monamedia') . '" width="100%" style="display:block;width:100%;height:auto;border:0"></div>'
