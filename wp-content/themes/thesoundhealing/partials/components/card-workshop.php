@@ -25,14 +25,6 @@ if (array_key_exists('is_past', $item)) {
     $_is_past = false;
 }
 
-// Buy Now URL
-$_ws_post_id   = $item['post_id'] ?? 0;
-$_ws_wc_id     = $_ws_post_id ? (int) get_post_meta($_ws_post_id, '_wc_product_id', true) : 0;
-$_ws_price_raw = $item['price'] ?? '';
-$_ws_has_wc    = $_ws_wc_id && TSH_WC_Product_Sync::parse_price($_ws_price_raw) > 0;
-$dat_lich_url  = $_ws_has_wc
-    ? add_query_arg(['product_id' => $_ws_wc_id, 'nonce' => wp_create_nonce('tsh_buy_now')], home_url('/mua-ngay/'))
-    : $card_url;
 ?>
 
 <div class="relative flex flex-col overflow-hidden group h-full max-md:bg-white max-md:p-3 max-md:rounded-2xl max-md:shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
@@ -127,7 +119,7 @@ $dat_lich_url  = $_ws_has_wc
                     <?php esc_html_e('Hết hạn', 'monamedia'); ?>
                 </span>
             <?php elseif ($status_key !== 'closed') : ?>
-                <a href="<?php echo esc_url($dat_lich_url); ?>"
+                <a href="<?php echo esc_url($card_url); ?>"
                     class="relative z-[2] ml-auto flex items-center justify-center px-4 py-2 bg-[#c2a056] text-white text-[12px] font-semibold uppercase tracking-[0.5px] rounded-full transition-opacity hover:opacity-85 whitespace-nowrap shrink-0">
                     <?php esc_html_e('ĐẶT LỊCH', 'monamedia'); ?>
                 </a>

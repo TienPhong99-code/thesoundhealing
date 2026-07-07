@@ -23,8 +23,8 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_email_after_order_table',                [$this, 'email_deposit_notice'], 10, 4);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
         add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
-        add_filter('woocommerce_email_heading_customer_processing_order', fn() => __('Cảm ơn bạn<br>đã đặt lịch hẹn', 'monamedia'));
-        add_filter('woocommerce_email_heading_customer_on_hold_order',    fn() => __('Cảm ơn bạn<br>đã đặt lịch hẹn', 'monamedia'));
+        add_filter('woocommerce_email_heading_customer_processing_order', [$this, 'booking_email_heading']);
+        add_filter('woocommerce_email_heading_customer_on_hold_order',    [$this, 'booking_email_heading']);
         add_filter('woocommerce_email_subject_customer_processing_order', [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
@@ -85,6 +85,18 @@ class TSH_WooCommerce_Hook
     private function is_en_locale(): bool
     {
         return function_exists('determine_locale') && strpos(determine_locale(), 'en') === 0;
+    }
+
+    /**
+     * Tiêu đề email đặt lịch (processing/on-hold) theo ngôn ngữ khách. Set trực
+     * tiếp theo locale — không qua __()/.mo vì chuỗi có <br> + bị WPML can thiệp
+     * nên bản EN không trả về, dẫn tới kẹt tiếng Việt trên email tiếng Anh.
+     */
+    public function booking_email_heading(): string
+    {
+        return $this->is_en_locale()
+            ? 'Thank you<br>for your booking'
+            : 'Cảm ơn bạn<br>đã đặt lịch hẹn';
     }
 
     /**

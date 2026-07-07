@@ -3,6 +3,13 @@ defined('ABSPATH') || exit;
 
 $post_id = get_the_ID();
 
+// ── Tiêu đề các mục (ACF, trống → mặc định) ──
+$kh_st_about      = get_field('kh_sectitle_about',      $post_id) ?: __('Về khóa học', 'monamedia');
+$kh_st_benefits   = get_field('kh_sectitle_benefits',   $post_id) ?: __('Mục tiêu & Lợi ích', 'monamedia');
+$kh_st_roadmap    = get_field('kh_sectitle_roadmap',    $post_id) ?: __('Lộ trình học', 'monamedia');
+$kh_st_receive    = get_field('kh_sectitle_receive',    $post_id) ?: __('Lợi ích khóa học', 'monamedia');
+$kh_st_instructor = get_field('kh_sectitle_instructor', $post_id) ?: __('Người hướng dẫn', 'monamedia');
+
 // ── Thông tin ──
 $level       = get_field('level',      $post_id);
 $kh_sched    = mona_expand_schedule($post_id);
@@ -46,16 +53,12 @@ $thumbs      = array_slice($gallery_subs, 0, 3); // tối đa 3 thumbnail hiển
 $extra       = array_slice($gallery_subs, 3);    // ảnh còn lại cho nút "Xem tất cả"
 
 // ── Mô tả ──
-$exp_title = get_field('exp_title', $post_id);
 $exp_desc  = get_field('exp_desc',  $post_id);
 
 // ── Lộ trình ──
-$rm_label   = get_field('roadmap_label',   $post_id);
-$rm_heading = get_field('roadmap_heading', $post_id);
 $rm_items   = get_field('roadmap_items',   $post_id) ?: [];
 
 // ── Người hướng dẫn ──
-$ins_label     = get_field('instructor_label',     $post_id);
 $ins_image     = get_field('instructor_image',     $post_id);
 $ins_name      = get_field('instructor_name',      $post_id);
 $ins_bio       = get_field('instructor_bio',       $post_id);
@@ -65,7 +68,6 @@ $ins_whatsapp  = get_field('instructor_whatsapp',  $post_id);
 $ins_messenger = get_field('instructor_messenger', $post_id);
 
 // ── Lợi ích ──
-$bn_heading = get_field('benefits_heading', $post_id);
 $bn_items   = get_field('benefits_items',   $post_id) ?: [];
 
 // ── Lợi ích nhận được ──
@@ -236,7 +238,7 @@ get_header();
                             <?php if ($short_desc || $exp_desc) : ?>
                                 <div class="pb-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-5">
-                                        <?php esc_html_e('Về khóa học', 'monamedia'); ?>
+                                        <?php echo esc_html($kh_st_about); ?>
                                     </h2>
                                     <?php if ($short_desc) : ?>
                                         <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
@@ -255,7 +257,7 @@ get_header();
                             <?php if (!empty($bn_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        <?php esc_html_e('Mục tiêu & Lợi ích', 'monamedia'); ?>
+                                        <?php echo esc_html($kh_st_benefits); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($bn_items as $item) : ?>
@@ -278,7 +280,7 @@ get_header();
                             <?php if (!empty($rm_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-8">
-                                        <?php esc_html_e('Hành trình chữa lành', 'monamedia'); ?>
+                                        <?php echo esc_html($kh_st_roadmap); ?>
                                     </h2>
                                     <div class="flex flex-col divide-y divide-[#e4e2dd]">
                                         <?php foreach ($rm_items as $i => $item) : ?>
@@ -317,7 +319,7 @@ get_header();
                             <?php if (!empty($receive_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        <?php esc_html_e('Lợi ích khóa học', 'monamedia'); ?>
+                                        <?php echo esc_html($kh_st_receive); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($receive_items as $item) : ?>
@@ -340,7 +342,7 @@ get_header();
                             <?php if ($ins_name) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        <?php esc_html_e('Về giảng viên', 'monamedia'); ?>
+                                        <?php echo esc_html($kh_st_instructor); ?>
                                     </h2>
                                     <div class="flex gap-5 items-start">
                                         <?php if (!empty($ins_image['url'])) : ?>

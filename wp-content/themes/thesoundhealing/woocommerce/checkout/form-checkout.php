@@ -16,9 +16,12 @@ $_instructor = $_booking['instructor'] ?? '';
 $_children   = $_booking['children']   ?? '';
 $_source_url = $_booking['source_url'] ?? '';
 
+// Tách họ tên: từ đầu → first, phần còn lại → last. Tên chỉ 1 từ thì last để RỖNG
+// (billing_last_name đã set required=false). Trước đây last fallback về first nên tên
+// 1 từ bị lặp thành "Phong Phong" ở đơn hàng + email (first . ' ' . last).
 $_parts     = explode(' ', trim($_name), 2);
 $_first     = $_parts[0] ?? $_name;
-$_last      = $_parts[1] ?? $_first;
+$_last      = $_parts[1] ?? '';
 
 // Danh sách field hiển thị (chỉ render dòng nào có giá trị)
 $_info_rows = [

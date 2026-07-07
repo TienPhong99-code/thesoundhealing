@@ -100,6 +100,11 @@
                 if (valEl && selectedDates[0]) {
                     valEl.textContent = selectedDates[0].toLocaleDateString((isVi ? 'vi-VN' : 'en-GB'), { day: 'numeric', month: 'short', year: 'numeric' });
                     valEl.classList.add('has-value');
+                } else if (valEl) {
+                    // Không có ngày được chọn (vd flatpickr bỏ chọn ngày ngoài lịch enable):
+                    // reset hiển thị về placeholder để không lệch với value rỗng của input hidden.
+                    valEl.textContent = I18N.selectDate;
+                    valEl.classList.remove('has-value');
                 }
                 pillRefs.forEach(function (p) { p.btn.classList.remove('is-active'); });
                 if (selectedDates[0]) {
@@ -195,7 +200,13 @@
         if (p.children) {
             $form.find('input[type="radio"][name="kh-children"][value="' + p.children + '"]').prop('checked', true);
         }
-        if (fp && p.date) fp.setDate(p.date, true);
+        if (fp && p.date) {
+            // Chỉ khôi phục ngày đã lưu nếu ngày đó vẫn còn đặt được (nằm trong lịch enable hiện tại).
+            // Nếu setDate một ngày ngoài danh sách enable, flatpickr bỏ chọn và onChange xoá value
+            // input hidden → CF7 báo "thiếu ngày" dù trigger vẫn hiển thị ngày cũ.
+            var _pd = new Date(p.date + 'T00:00:00');
+            if (!isNaN(_pd) && fp.isEnabled(_pd)) fp.setDate(p.date, true);
+        }
         var selMap = { 'ws-time': p.time, 'ws-location': p.location, 'ws-instructor': p.instructor, 'ws-guests': p.guests };
         Object.keys(selMap).forEach(function (name) {
             if (!selMap[name]) return;

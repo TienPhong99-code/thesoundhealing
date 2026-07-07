@@ -41,6 +41,33 @@ add_action('acf/init', function () {
         ],
         'fields' => [
 
+            // ─── TAB: TIÊU ĐỀ CÁC MỤC ────────────────────────────────────
+            Tab::make('Tiêu đề các mục')->placement('left'),
+
+            Text::make('Tiêu đề mục "Giới thiệu"', 'ws_sectitle_about')
+                ->helperText('Để trống sẽ dùng: Về workshop')
+                ->default('Về workshop'),
+
+            Text::make('Tiêu đề mục "Mục tiêu & Lợi ích"', 'ws_sectitle_benefits')
+                ->helperText('Để trống sẽ dùng: Mục tiêu & Lợi ích')
+                ->default('Mục tiêu & Lợi ích'),
+
+            Text::make('Tiêu đề mục "Lộ trình học"', 'ws_sectitle_roadmap')
+                ->helperText('Để trống sẽ dùng: Lộ trình học')
+                ->default('Lộ trình học'),
+
+            Text::make('Tiêu đề mục "Lợi ích nhận được"', 'ws_sectitle_receive')
+                ->helperText('Để trống sẽ dùng: Lợi ích workshop')
+                ->default('Lợi ích workshop'),
+
+            Text::make('Tiêu đề mục "Người hướng dẫn"', 'ws_sectitle_instructor')
+                ->helperText('Để trống sẽ dùng: Người hướng dẫn')
+                ->default('Người hướng dẫn'),
+
+            Text::make('Tiêu đề mục "Cảm nhận / Testimonials"', 'ws_feedbacks_heading')
+                ->helperText('Để trống sẽ dùng: giá trị mặc định')
+                ->default('Cảm nhận của học viên'),
+
             // ─── TAB: THÔNG TIN ───────────────────────────────────────────
             Tab::make('Thông tin')->placement('left'),
 
@@ -79,8 +106,13 @@ add_action('acf/init', function () {
             Checkbox::make('Các thứ diễn ra', 'ws_weekdays')
                 ->helperText('Tick các thứ workshop diễn ra hàng tuần.')
                 ->choices([
-                    '1' => 'Thứ 2', '2' => 'Thứ 3', '3' => 'Thứ 4', '4' => 'Thứ 5',
-                    '5' => 'Thứ 6', '6' => 'Thứ 7', '7' => 'Chủ Nhật',
+                    '1' => 'Thứ 2',
+                    '2' => 'Thứ 3',
+                    '3' => 'Thứ 4',
+                    '4' => 'Thứ 5',
+                    '5' => 'Thứ 6',
+                    '6' => 'Thứ 7',
+                    '7' => 'Chủ Nhật',
                 ])
                 ->conditionalLogic([ConditionalLogic::where('ws_schedule_type', '==', 'recurring')]),
 
@@ -126,10 +158,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: TRẢI NGHIỆM ────────────────────────────────────────
             Tab::make('Trải nghiệm')->placement('left'),
-
-            Text::make('Tiêu đề', 'ws_exp_title')
-                ->helperText('Ví dụ: Không gian chữa lành qua âm thanh')
-                ->default('Không gian chữa lành qua âm thanh'),
 
             Textarea::make('Mô tả', 'ws_exp_desc')
                 ->helperText('Đoạn văn mô tả trải nghiệm workshop.')
@@ -178,9 +206,6 @@ add_action('acf/init', function () {
             // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
             Tab::make('Lợi ích')->placement('left'),
 
-            Text::make('Tiêu đề', 'ws_benefits_heading')
-                ->default('Bạn sẽ nhận được gì?'),
-
             Repeater::make('Danh sách lợi ích', 'ws_benefits_items')
                 ->layout('block')
                 ->collapsed('ws_benefit_title')
@@ -191,14 +216,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: LỘ TRÌNH ───────────────────────────────────────────
             Tab::make('Lộ trình')->placement('left'),
-
-            Text::make('Nhãn lộ trình', 'ws_roadmap_label')
-                ->helperText('Ví dụ: LỘ TRÌNH TRẢI NGHIỆM')
-                ->default('LỘ TRÌNH TRẢI NGHIỆM'),
-
-            Text::make('Tiêu đề lộ trình', 'ws_roadmap_heading')
-                ->helperText('Ví dụ: Hành trình chữa lành')
-                ->default('Hành trình chữa lành'),
 
             Textarea::make('Mô tả lộ trình', 'ws_roadmap_desc')
                 ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
@@ -234,9 +251,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: NGƯỜI HƯỚNG DẪN ────────────────────────────────────
             Tab::make('Người hướng dẫn')->placement('left'),
-
-            Text::make('Nhãn', 'ws_instructor_label')
-                ->default('NGƯỜI HƯỚNG DẪN'),
 
             Image::make('Ảnh', 'ws_instructor_image')
                 ->helperText('Ảnh vuông 96×96px, bo tròn.')
@@ -283,9 +297,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: CẢM NHẬN ───────────────────────────────────────────
             Tab::make('Cảm nhận')->placement('left'),
-
-            Text::make('Tiêu đề', 'ws_feedbacks_heading')
-                ->default('Cảm nhận của học viên'),
 
             Repeater::make('Hình ảnh khách hàng', 'ws_feedbacks')
                 ->helperText('Thêm hình ảnh khách hàng/học viên tham dự.')

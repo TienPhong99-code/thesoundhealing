@@ -41,6 +41,33 @@ add_action('acf/init', function () {
         ],
         'fields' => [
 
+            // ─── TAB: TIÊU ĐỀ CÁC MỤC ────────────────────────────────────
+            Tab::make('Tiêu đề các mục')->placement('left'),
+
+            Text::make('Tiêu đề mục "Giới thiệu"', 'dv_sectitle_about')
+                ->helperText('Để trống sẽ dùng: Về dịch vụ')
+                ->default('Về dịch vụ'),
+
+            Text::make('Tiêu đề mục "Mục tiêu & Lợi ích"', 'dv_sectitle_benefits')
+                ->helperText('Để trống sẽ dùng: Mục tiêu & Lợi ích')
+                ->default('Mục tiêu & Lợi ích'),
+
+            Text::make('Tiêu đề mục "Lộ trình học"', 'dv_sectitle_roadmap')
+                ->helperText('Để trống sẽ dùng: Lộ trình học')
+                ->default('Lộ trình học'),
+
+            Text::make('Tiêu đề mục "Lợi ích nhận được"', 'dv_sectitle_receive')
+                ->helperText('Để trống sẽ dùng: Lợi ích dịch vụ')
+                ->default('Lợi ích dịch vụ'),
+
+            Text::make('Tiêu đề mục "Người hướng dẫn"', 'dv_sectitle_instructor')
+                ->helperText('Để trống sẽ dùng: Người hướng dẫn')
+                ->default('Người hướng dẫn'),
+
+            Text::make('Tiêu đề mục "Cảm nhận / Testimonials"', 'dv_feedbacks_heading')
+                ->helperText('Để trống sẽ dùng: Khách hàng nói gì?')
+                ->default('Khách hàng nói gì?'),
+
             // ─── TAB: THÔNG TIN ───────────────────────────────────────────
             Tab::make('Thông tin')->placement('left'),
 
@@ -91,8 +118,13 @@ add_action('acf/init', function () {
             Checkbox::make('Các thứ diễn ra', 'dv_weekdays')
                 ->helperText('Tick các thứ dịch vụ diễn ra hàng tuần.')
                 ->choices([
-                    '1' => 'Thứ 2', '2' => 'Thứ 3', '3' => 'Thứ 4', '4' => 'Thứ 5',
-                    '5' => 'Thứ 6', '6' => 'Thứ 7', '7' => 'Chủ Nhật',
+                    '1' => 'Thứ 2',
+                    '2' => 'Thứ 3',
+                    '3' => 'Thứ 4',
+                    '4' => 'Thứ 5',
+                    '5' => 'Thứ 6',
+                    '6' => 'Thứ 7',
+                    '7' => 'Chủ Nhật',
                 ])
                 ->conditionalLogic([ConditionalLogic::where('dv_schedule_type', '==', 'recurring')]),
 
@@ -125,10 +157,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: TRẢI NGHIỆM ────────────────────────────────────────
             Tab::make('Trải nghiệm')->placement('left'),
-
-            Text::make('Tiêu đề trải nghiệm', 'dv_exp_title')
-                ->helperText('Ví dụ: Hành trình Trải nghiệm')
-                ->default('Hành trình Trải nghiệm'),
 
             Textarea::make('Mô tả trải nghiệm', 'dv_exp_desc')
                 ->helperText('Đoạn văn mô tả trải nghiệm dịch vụ.')
@@ -172,9 +200,6 @@ add_action('acf/init', function () {
             // ─── TAB: LỢI ÍCH ────────────────────────────────────────────
             Tab::make('Lợi ích')->placement('left'),
 
-            Text::make('Tiêu đề', 'dv_benefits_heading')
-                ->default('Lợi ích của liệu pháp'),
-
             Repeater::make('Danh sách lợi ích', 'dv_benefits_items')
                 ->layout('block')
                 ->collapsed('dv_benefit_title')
@@ -186,14 +211,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: LỘ TRÌNH ───────────────────────────────────────────
             Tab::make('Lộ trình')->placement('left'),
-
-            Text::make('Nhãn lộ trình', 'dv_roadmap_label')
-                ->helperText('Ví dụ: LỘ TRÌNH TRỊ LIỆU')
-                ->default('LỘ TRÌNH TRỊ LIỆU'),
-
-            Text::make('Tiêu đề lộ trình', 'dv_roadmap_heading')
-                ->helperText('Ví dụ: Hành trình chữa lành')
-                ->default('Hành trình chữa lành'),
 
             Textarea::make('Mô tả lộ trình', 'dv_roadmap_desc')
                 ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
@@ -229,9 +246,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: NGƯỜI HƯỚNG DẪN ────────────────────────────────────
             Tab::make('Người hướng dẫn')->placement('left'),
-
-            Text::make('Nhãn', 'dv_instructor_label')
-                ->default('NGƯỜI HƯỚNG DẪN'),
 
             Image::make('Ảnh', 'dv_instructor_image')
                 ->helperText('Ảnh vuông 96×96px, bo tròn.')
@@ -278,9 +292,6 @@ add_action('acf/init', function () {
 
             // ─── TAB: CẢM NHẬN ───────────────────────────────────────────
             Tab::make('Cảm nhận')->placement('left'),
-
-            Text::make('Tiêu đề', 'dv_feedbacks_heading')
-                ->default('Khách hàng nói gì?'),
 
             Repeater::make('Hình ảnh khách hàng', 'dv_feedbacks')
                 ->helperText('Thêm hình ảnh khách hàng trải nghiệm dịch vụ.')

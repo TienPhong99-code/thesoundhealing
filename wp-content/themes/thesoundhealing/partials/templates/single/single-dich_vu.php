@@ -3,6 +3,13 @@ defined('ABSPATH') || exit;
 
 $post_id = get_the_ID();
 
+// ── Tiêu đề các mục (ACF, trống → mặc định) ──
+$dv_st_about      = get_field('dv_sectitle_about',      $post_id) ?: __('Về dịch vụ', 'monamedia');
+$dv_st_benefits   = get_field('dv_sectitle_benefits',   $post_id) ?: __('Mục tiêu & Lợi ích', 'monamedia');
+$dv_st_roadmap    = get_field('dv_sectitle_roadmap',    $post_id) ?: __('Lộ trình học', 'monamedia');
+$dv_st_receive    = get_field('dv_sectitle_receive',    $post_id) ?: __('Lợi ích dịch vụ', 'monamedia');
+$dv_st_instructor = get_field('dv_sectitle_instructor', $post_id) ?: __('Người hướng dẫn', 'monamedia');
+
 // ── Thông tin ──
 $dv_duration    = get_field('dv_duration',    $post_id);
 $dv_location    = get_field('dv_location',    $post_id);
@@ -45,23 +52,18 @@ $thumbs      = array_slice($gallery_subs, 0, 3); // tối đa 3 thumbnail hiển
 $extra       = array_slice($gallery_subs, 3);    // ảnh còn lại cho nút "Xem tất cả"
 
 // ── Mô tả / Trải nghiệm ──
-$dv_exp_title = get_field('dv_exp_title', $post_id);
 $dv_exp_desc  = get_field('dv_exp_desc',  $post_id);
 
 // ── Lộ trình ──
-$dv_rm_label   = get_field('dv_roadmap_label',   $post_id);
-$dv_rm_heading = get_field('dv_roadmap_heading', $post_id);
 $dv_rm_items   = get_field('dv_roadmap_items',   $post_id) ?: [];
 
 // ── Lợi ích ──
-$dv_bn_heading = get_field('dv_benefits_heading', $post_id);
 $dv_bn_items   = get_field('dv_benefits_items',   $post_id) ?: [];
 
 // ── Lợi ích nhận được ──
 $dv_receive_items = get_field('dv_receive_items', $post_id) ?: [];
 
 // ── Người hướng dẫn ──
-$dv_ins_label     = get_field('dv_instructor_label',     $post_id);
 $dv_ins_image     = get_field('dv_instructor_image',     $post_id);
 $dv_ins_name      = get_field('dv_instructor_name',      $post_id);
 $dv_ins_bio       = get_field('dv_instructor_bio',       $post_id);
@@ -234,7 +236,7 @@ get_header();
                             <?php if ($dv_short_desc || $dv_exp_desc) : ?>
                                 <div class="pb-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-5">
-                                        <?php esc_html_e('Về dịch vụ', 'monamedia'); ?>
+                                        <?php echo esc_html($dv_st_about); ?>
                                     </h2>
                                     <?php if ($dv_short_desc) : ?>
                                         <p class="text-[#414847] text-[16px] leading-[26px] mb-3">
@@ -253,7 +255,7 @@ get_header();
                             <?php if (!empty($dv_bn_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        <?php esc_html_e('Mục tiêu & Lợi ích', 'monamedia'); ?>
+                                        <?php echo esc_html($dv_st_benefits); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($dv_bn_items as $item) : ?>
@@ -276,7 +278,7 @@ get_header();
                             <?php if (!empty($dv_rm_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title font-bold text-pri text-[24px] leading-[32px] mb-8">
-                                        <?php esc_html_e('Hành trình chữa lành', 'monamedia'); ?>
+                                        <?php echo esc_html($dv_st_roadmap); ?>
                                     </h2>
                                     <div class="flex flex-col divide-y divide-[#e4e2dd]">
                                         <?php foreach ($dv_rm_items as $i => $item) : ?>
@@ -315,7 +317,7 @@ get_header();
                             <?php if (!empty($dv_receive_items)) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        <?php esc_html_e('Lợi ích dịch vụ', 'monamedia'); ?>
+                                        <?php echo esc_html($dv_st_receive); ?>
                                     </h2>
                                     <div class="grid grid-cols-2 max-md:grid-cols-1 gap-[1px] bg-[#e4e2dd] border border-[#e4e2dd] rounded-[8px] overflow-hidden">
                                         <?php foreach ($dv_receive_items as $item) : ?>
@@ -338,7 +340,7 @@ get_header();
                             <?php if ($dv_ins_name) : ?>
                                 <div class="py-10">
                                     <h2 class="font-title text-pri text-[24px] leading-[32px] font-bold mb-6">
-                                        <?php esc_html_e('Về giảng viên', 'monamedia'); ?>
+                                        <?php echo esc_html($dv_st_instructor); ?>
                                     </h2>
                                     <div class="flex gap-5 items-start">
                                         <?php if (!empty($dv_ins_image['url'])) : ?>
