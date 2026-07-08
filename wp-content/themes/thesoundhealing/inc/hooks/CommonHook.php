@@ -129,6 +129,7 @@ add_action('wp_enqueue_scripts', function () {
    if (is_front_page()) {
       wp_enqueue_script('mona-hero', MONA_THEME_PATH_URI . '/assets/scripts/modules/home/hero.js', array('mona-gsap', 'mona-MorphSVGPlugin', 'mona-SplitText'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/home/hero.js'), array('in_footer' => true));
       wp_enqueue_script('mona-home', MONA_THEME_PATH_URI . '/assets/scripts/home.js', array('jquery', 'mona-swiper', 'mona-main', 'mona-gsap', 'mona-ScrollTrigger', 'mona-MorphSVGPlugin', 'mona-SplitText', 'mona-hero'), filemtime(MONA_THEME_PATH . '/assets/scripts/home.js'), array('in_footer' => true));
+      wp_enqueue_script('mona-lang-popup', MONA_THEME_PATH_URI . '/assets/scripts/modules/common/lang-popup.js', array('mona-modal'), filemtime(MONA_THEME_PATH . '/assets/scripts/modules/common/lang-popup.js'), array('in_footer' => true));
    }
 
    if (is_singular('post')) {
