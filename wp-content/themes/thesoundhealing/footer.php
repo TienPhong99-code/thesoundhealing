@@ -25,6 +25,7 @@ if (is_singular('tuyen_dung')) {
 }
 if (is_front_page()) {
     get_template_part('partials/sections/home/section', 'popup-du-an');
+    get_template_part('partials/modals/modal-language');
 }
 ?>
 
