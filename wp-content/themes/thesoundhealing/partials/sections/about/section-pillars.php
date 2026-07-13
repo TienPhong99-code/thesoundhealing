@@ -37,12 +37,12 @@ $raw_feat_img = get_field('ab_pillars_feat_image', $page_id);
 $raw_cards    = get_field('ab_pillars_items', $page_id);
 
 $feat = [
-    'badge'     => get_field('ab_pillars_feat_badge', $page_id)      ?: $sample['feat']['badge'],
+    'badge'     => get_field('ab_pillars_feat_badge', $page_id),     // để trống = ẩn tag (không fallback text mẫu)
     'heading'   => get_field('ab_pillars_feat_heading', $page_id)    ?: $sample['feat']['heading'],
     'desc'      => get_field('ab_pillars_feat_desc', $page_id)       ?: $sample['feat']['desc'],
     'list'      => get_field('ab_pillars_feat_list', $page_id)       ?: $sample['feat']['list'],
     'image'     => $raw_feat_img                                      ?: $sample['feat']['image'],
-    'img_badge' => get_field('ab_pillars_feat_img_badge', $page_id)  ?: $sample['feat']['img_badge'],
+    'img_badge' => get_field('ab_pillars_feat_img_badge', $page_id), // để trống = ẩn badge (không fallback text mẫu)
     'link_text' => get_field('ab_pillars_feat_link_text', $page_id)  ?: $sample['feat']['link_text'],
     'link_url'  => get_field('ab_pillars_feat_link_url', $page_id)   ?: $sample['feat']['link_url'],
 ];

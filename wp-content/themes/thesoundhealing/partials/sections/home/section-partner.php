@@ -41,15 +41,15 @@ $data = [
         </div>
 
         <?php if (!empty($data['items'])) : ?>
-            <div class="swiper-partner slideSw relative">
+            <div class="swiper-partner slideSw w-[1000px] max-w-full mx-auto relative">
                 <div class="swiper row">
-                    <div class="swiper-wrapper items-center">
+                    <div class="swiper-wrapper  items-center">
                         <?php foreach ($data['items'] as $item) :
                             if (empty($item['logo'])) continue;
                             $tag  = !empty($item['url']) && $item['url'] !== '#' ? 'a' : 'div';
                             $href = !empty($item['url']) && $item['url'] !== '#' ? ' href="' . esc_url($item['url']) . '" target="_blank" rel="noopener noreferrer"' : '';
                         ?>
-                            <div class="swiper-slide col !w-[calc(100%/5)] max-lg:!w-[calc(100%/3)] max-md:!w-1/2">
+                            <div class="swiper-slide col !w-[calc(100%/3)] max-md:!w-1/2">
                                 <<?php echo $tag . $href; ?> class="flex items-center h-[100px] justify-center">
                                     <img src="<?php echo esc_url($item['logo']); ?>"
                                         alt="<?php echo esc_attr($item['name']); ?>"

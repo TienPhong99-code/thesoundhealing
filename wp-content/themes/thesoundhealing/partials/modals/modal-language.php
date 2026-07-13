@@ -19,7 +19,7 @@ $mona_lang_names = ['vi' => 'Tiếng Việt', 'en' => 'English'];
 
 <div data-modal="lang"
     class="modal-overlay fixed inset-0 z-[9999] flex items-center justify-center p-4">
-    <div class="modal-box bg-white w-full max-w-[360px] p-6 rounded-2xl relative flex flex-col gap-5">
+    <div class="modal-box bg-white w-full max-w-[430px] max-md:p-4 p-6 rounded-2xl max-md:rounded-lg relative flex flex-col gap-5">
 
         <!-- Close -->
         <button type="button" data-modal-close
@@ -32,7 +32,7 @@ $mona_lang_names = ['vi' => 'Tiếng Việt', 'en' => 'English'];
 
         <!-- Header -->
         <div class="flex flex-col gap-1.5 pr-8">
-            <h2 class="text-[22px] font-bold text-[#1b1c19]">
+            <h2 class="text-[22px] max-md:text-[16px] font-bold text-[#1b1c19]">
                 <?php esc_html_e('Chọn ngôn ngữ', 'monamedia'); ?>
                 <span class="text-[#808080] font-normal"> / Select language</span>
             </h2>

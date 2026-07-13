@@ -121,6 +121,9 @@ add_action('acf/init', function () {
                 ->format('array')
                 ->previewSize('medium'),
 
+            Text::make('Badge trên ảnh', 'ab_pillars_feat_img_badge')
+                ->helperText('Nhãn nổi trên góc ảnh. Ví dụ: Hơn 500 học viên'),
+
             // 3-column cards (bottom)
             Repeater::make('Danh sách thẻ (3 cột)', 'ab_pillars_items')
                 ->helperText('Chính xác 3 thẻ hiển thị hàng dưới.')

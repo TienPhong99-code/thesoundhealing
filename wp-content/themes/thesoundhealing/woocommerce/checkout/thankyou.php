@@ -115,7 +115,7 @@ $order = isset($order) ? $order : false;
                                 </div>
                             <?php endif; ?>
                             <?php if ($b_location) : ?>
-                                <div class="tsh-ty-quick-item">
+                                <div class="tsh-ty-quick-item tsh-ty-quick-item--full">
                                     <span class="tsh-ty-quick-label">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" stroke-width="1.8" />
@@ -229,7 +229,7 @@ $order = isset($order) ? $order : false;
 
                 <!-- Cột phải: banner -->
                 <div class="tsh-ty-banner">
-                    <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png'); ?>" alt="<?php esc_attr_e('Đặt lịch thành công', 'monamedia'); ?>" loading="lazy">
+                    <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-confirmv3.png'); ?>" alt="<?php esc_attr_e('Đặt lịch thành công', 'monamedia'); ?>" loading="lazy">
                 </div>
 
             </div><!-- /.tsh-ty-body -->

@@ -28,10 +28,24 @@ check('normalize mixed',
     ['2026-08-12', '2026-08-13']
 );
 
-// Summary
+// Summary (VN mặc định — CLI không có determine_locale())
 check('summary recurring',
     mona_recurring_summary(['2', '4', '6'], '2026-08-11', '2026-08-20'),
     'Thứ 3, 5, 7 · 11/08 – 20/08'
+);
+
+// dates_only: cắt phần thứ, giữ khoảng ngày (VN & EN)
+check('dates_only VN', mona_schedule_dates_only('Thứ 3, 5, 7 · 11/08 – 20/08'), '11/08 – 20/08');
+check('dates_only EN', mona_schedule_dates_only('Tue, Thu, Sat · 11/08 – 20/08'), '11/08 – 20/08');
+check('dates_only ngày đơn', mona_schedule_dates_only('04/07/2026'), '04/07/2026');
+
+// Summary EN — stub determine_locale() trả 'en_US' (đặt SAU test VN ở trên)
+if (!function_exists('determine_locale')) {
+    function determine_locale() { return 'en_US'; }
+}
+check('summary recurring EN',
+    mona_recurring_summary(['2', '4', '6'], '2026-08-11', '2026-08-20'),
+    'Tue, Thu, Sat · 11/08 – 20/08'
 );
 
 echo $fail === 0 ? "\nALL PASS\n" : "\n$fail FAILED\n";

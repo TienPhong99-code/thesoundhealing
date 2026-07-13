@@ -45,28 +45,22 @@ add_action('acf/init', function () {
             Tab::make('Tiêu đề các mục')->placement('left'),
 
             Text::make('Tiêu đề mục "Giới thiệu"', 'dv_sectitle_about')
-                ->helperText('Để trống sẽ dùng: Về dịch vụ')
-                ->default('Về dịch vụ'),
+                ->helperText('Để trống sẽ dùng: Về dịch vụ'),
 
             Text::make('Tiêu đề mục "Mục tiêu & Lợi ích"', 'dv_sectitle_benefits')
-                ->helperText('Để trống sẽ dùng: Mục tiêu & Lợi ích')
-                ->default('Mục tiêu & Lợi ích'),
+                ->helperText('Để trống sẽ dùng: Mục tiêu & Lợi ích'),
 
             Text::make('Tiêu đề mục "Lộ trình học"', 'dv_sectitle_roadmap')
-                ->helperText('Để trống sẽ dùng: Lộ trình học')
-                ->default('Lộ trình học'),
+                ->helperText('Để trống sẽ dùng: Lộ trình học'),
 
             Text::make('Tiêu đề mục "Lợi ích nhận được"', 'dv_sectitle_receive')
-                ->helperText('Để trống sẽ dùng: Lợi ích dịch vụ')
-                ->default('Lợi ích dịch vụ'),
+                ->helperText('Để trống sẽ dùng: Lợi ích dịch vụ'),
 
             Text::make('Tiêu đề mục "Người hướng dẫn"', 'dv_sectitle_instructor')
-                ->helperText('Để trống sẽ dùng: Người hướng dẫn')
-                ->default('Người hướng dẫn'),
+                ->helperText('Để trống sẽ dùng: Người hướng dẫn'),
 
             Text::make('Tiêu đề mục "Cảm nhận / Testimonials"', 'dv_feedbacks_heading')
-                ->helperText('Để trống sẽ dùng: Khách hàng nói gì?')
-                ->default('Khách hàng nói gì?'),
+                ->helperText('Để trống sẽ dùng: Khách hàng nói gì?'),
 
             // ─── TAB: THÔNG TIN ───────────────────────────────────────────
             Tab::make('Thông tin')->placement('left'),
@@ -233,7 +227,7 @@ add_action('acf/init', function () {
                 ]),
 
             // ─── TAB: LỢI ÍCH NHẬN ĐƯỢC ─────────────────────────────────
-            Tab::make('Lợi ích nhận được')->placement('left'),
+            Tab::make('Ưu đãi')->placement('left'),
 
             Repeater::make('Lợi ích sẽ nhận', 'dv_receive_items')
                 ->helperText('Mỗi ô gồm tiêu đề và mô tả. Ví dụ: Thư giãn sâu, Ưu đãi khách hàng thân thiết...')
@@ -264,11 +258,11 @@ add_action('acf/init', function () {
             Text::make('Facebook', 'dv_instructor_facebook')
                 ->helperText('URL Facebook đầy đủ. Ví dụ: https://facebook.com/linhtam'),
 
-            Text::make('WhatsApp', 'dv_instructor_whatsapp')
-                ->helperText('Số điện thoại hoặc link WhatsApp. Ví dụ: https://wa.me/84901234567'),
+            Text::make('YouTube', 'dv_instructor_youtube')
+                ->helperText('Link kênh YouTube. Ví dụ: https://youtube.com/@linhtam'),
 
-            Text::make('Facebook Messenger', 'dv_instructor_messenger')
-                ->helperText('Link Messenger. Ví dụ: https://m.me/linhtam'),
+            Text::make('TikTok', 'dv_instructor_tiktok')
+                ->helperText('Link TikTok. Ví dụ: https://tiktok.com/@linhtam'),
 
             Repeater::make('Danh sách người hướng dẫn (form đặt lịch)', 'dv_instructors')
                 ->helperText('Các lựa chọn hiển thị trong dropdown "Người hướng dẫn" của form đặt lịch.')

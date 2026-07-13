@@ -72,6 +72,7 @@ return [
     MONA_THEME_INC_PATH . '/acf/DichVuPageACF.php',
     MONA_THEME_INC_PATH . '/acf/EticketACF.php',
     MONA_THEME_INC_PATH . '/acf/SearchBookingACF.php',
+    MONA_THEME_INC_PATH . '/acf/CheckoutNotesACF.php',
 
     // WooCommerce
     MONA_THEME_INC_PATH . '/woocommerce/WooCommerceHook.php',

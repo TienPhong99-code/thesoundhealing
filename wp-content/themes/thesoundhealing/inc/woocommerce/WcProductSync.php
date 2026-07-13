@@ -41,6 +41,14 @@ class TSH_WC_Product_Sync
             $wc_id = 0;
         }
 
+        // Guard chống DÙNG CHUNG: khi clone/duplicate bài, meta _wc_product_id bị
+        // copy theo → bài mới trỏ product của bài GỐC (cùng ngôn ngữ nên lọt qua
+        // check trên). Nếu product đang được bài KHÁC dùng → coi như chưa có →
+        // tạo product riêng, tránh 2 bài ghi đè tên/giá lẫn nhau khi lưu.
+        if ($wc_id && $this->is_shared_with_other_post($wc_id, $post_id)) {
+            $wc_id = 0;
+        }
+
         if ($wc_id && ($product = wc_get_product($wc_id))) {
             $this->update_product($product, $post, $price);
         } else {
@@ -75,6 +83,27 @@ class TSH_WC_Product_Sync
         $post_lang = $this->element_lang($post->ID, 'post_' . $post->post_type) ?: $default;
         $prod_lang = $this->element_lang($wc_id, 'post_product') ?: $default;
         return $post_lang === $prod_lang;
+    }
+
+    /**
+     * Product $wc_id có đang được bài CPT KHÁC (khác $post_id) dùng làm
+     * _wc_product_id không. Dùng để phát hiện clone/duplicate copy meta.
+     * suppress_filters = true để không bị WPML lọc theo ngôn ngữ hiện tại.
+     */
+    private function is_shared_with_other_post(int $wc_id, int $post_id): bool
+    {
+        $others = get_posts([
+            'post_type'        => self::POST_TYPES,
+            'post_status'      => 'any',
+            'meta_key'         => self::META_KEY,
+            'meta_value'       => $wc_id,
+            'post__not_in'     => [$post_id],
+            'posts_per_page'   => 1,
+            'fields'           => 'ids',
+            'no_found_rows'    => true,
+            'suppress_filters' => true,
+        ]);
+        return !empty($others);
     }
 
     /**

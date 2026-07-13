@@ -35,6 +35,38 @@ $_info_rows = [
     ['label' => __('Người hướng dẫn', 'monamedia'),   'value' => $_instructor],
     ['label' => __('Trẻ em tham gia', 'monamedia'),   'value' => $_children],
 ];
+
+// ── Nội dung "Lưu ý" (chỉnh trong Giao diện → Theme Settings → Lưu ý – Trang thanh toán).
+// Để trống ở admin sẽ dùng nội dung mặc định bên dưới.
+$_notes_intro     = get_field('co_notes_intro', 'option') ?: __('Để có trải nghiệm thoải mái và trọn vẹn nhất, vui lòng đọc qua một số lưu ý dưới đây:', 'monamedia');
+$_notes_title     = get_field('co_notes_title', 'option') ?: __('Lưu ý', 'monamedia');
+$_notes_sub_title = get_field('co_notes_sub_title', 'option') ?: __('Để có trải nghiệm tốt hơn', 'monamedia');
+
+$_notes_main = array_filter(array_map(
+    static fn($row) => trim($row['co_notes_main_text'] ?? ''),
+    (array) get_field('co_notes_main', 'option')
+));
+if (! $_notes_main) {
+    $_notes_main = [
+        __('Vui lòng mặc trang phục thoải mái, phù hợp cho việc nằm thiền và thư giãn.', 'monamedia'),
+        __('Có mặt trước giờ bắt đầu <strong>15 phút</strong> để check-in và ổn định vị trí. Khách đến muộn quá 10 phút mà không báo trước sẽ được xem là vắng mặt.', 'monamedia'),
+        __('Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi phiên diễn ra.', 'monamedia'),
+        __('Vé đã mua được phép chuyển nhượng, nhưng <strong>không hoàn tiền</strong> dưới bất kỳ hình thức nào.', 'monamedia'),
+        __('Sound Healing và các bộ môn Năng lượng là liệu pháp hỗ trợ thư giãn và cân bằng, không thay thế cho chẩn đoán hoặc điều trị y khoa.', 'monamedia'),
+    ];
+}
+
+$_notes_sub = array_filter(array_map(
+    static fn($row) => trim($row['co_notes_sub_text'] ?? ''),
+    (array) get_field('co_notes_sub', 'option')
+));
+if (! $_notes_sub) {
+    $_notes_sub = [
+        __('Hạn chế sử dụng rượu bia hoặc chất kích thích trước phiên.', 'monamedia'),
+        __('Uống đủ nước trước và sau khi tham gia.', 'monamedia'),
+        __('Đến với một tâm thế cởi mở, thư giãn và không kỳ vọng vào một trải nghiệm cụ thể. Mỗi người sẽ có hành trình cảm nhận riêng.', 'monamedia'),
+    ];
+}
 ?>
 
 <div class="tsh-checkout-wrap">
@@ -76,22 +108,50 @@ $_info_rows = [
                                 <?php endforeach; ?>
                             </div>
 
+                            <?php
+                            // Ô Lời nhắn (lưu vào customer note → hiển thị ở mục NOTES trên E-ticket).
+                            // Dịch qua WPML String Translation (context "monamedia") — client sửa bản EN
+                            // trong WPML → String Translation, KHÔNG dùng .po/.mo.
+                            $_note_label = mona_wpml_string('Lời nhắn (tuỳ chọn)', 'Checkout – nhãn ô Lời nhắn');
+                            $_note_ph    = mona_wpml_string('Lời chúc, ghi chú riêng hoặc thông tin E-ticket (ví dụ: #00XX)…', 'Checkout – placeholder ô Lời nhắn');
+
+                            // Fallback EN tạm thời khi chưa dịch trong WPML (mona_wpml_string trả về chuỗi gốc VI).
+                            // Khi client dịch trong WPML → giá trị khác chuỗi gốc → bản WPML được giữ nguyên.
+                            $_is_en = function_exists('determine_locale') && strpos(determine_locale(), 'en') === 0;
+                            if ($_is_en) {
+                                if ($_note_label === 'Lời nhắn (tuỳ chọn)') {
+                                    $_note_label = 'Message (optional)';
+                                }
+                                if ($_note_ph === 'Lời chúc, ghi chú riêng hoặc thông tin E-ticket (ví dụ: #00XX)…') {
+                                    $_note_ph = 'A gift message, private note, or E-ticket info (e.g. #00XX)…';
+                                }
+                            }
+                            ?>
+                            <!-- Lời nhắn (tuỳ chọn) — lưu vào customer note, hiển thị ở mục NOTES trên E-ticket -->
+                            <div class="tsh-co-note-field">
+                                <label class="tsh-co-note-field__label" for="order_comments"><?php echo esc_html($_note_label); ?></label>
+                                <textarea class="tsh-co-note-field__input" id="order_comments" name="order_comments" rows="3" placeholder="<?php echo esc_attr($_note_ph); ?>"></textarea>
+                            </div>
+
                             <!-- Lưu ý -->
                             <div class="tsh-co-notes">
-                                <h4 class="tsh-co-notes__title"><?php esc_html_e('Lưu ý', 'monamedia'); ?></h4>
+                                <h4 class="tsh-co-notes__title"><?php echo esc_html($_notes_title); ?></h4>
+                                <?php if ($_notes_intro) : ?>
+                                    <p class="tsh-co-notes__intro"><?php echo esc_html($_notes_intro); ?></p>
+                                <?php endif; ?>
                                 <ul class="tsh-co-notes__list">
-                                    <li><?php esc_html_e('Vui lòng mặc trang phục thoải mái, phù hợp cho việc nằm thiền và thư giãn.', 'monamedia'); ?></li>
-                                    <li><?php echo wp_kses_post(__('Có mặt trước giờ bắt đầu <strong>15 phút</strong> để check-in và ổn định vị trí. Khách đến muộn quá 10 phút mà không báo trước sẽ được xem là vắng mặt.', 'monamedia')); ?></li>
-                                    <li><?php echo wp_kses_post(__('Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi phiên diễn ra.', 'monamedia')); ?></li>
-                                    <li><?php echo wp_kses_post(__('Vé đã mua được phép chuyển nhượng, nhưng <strong>không hoàn tiền</strong> dưới bất kỳ hình thức nào.', 'monamedia')); ?></li>
-                                    <li><?php esc_html_e('Sound Healing và các bộ môn Năng lượng là liệu pháp hỗ trợ thư giãn và cân bằng, không thay thế cho chẩn đoán hoặc điều trị y khoa.', 'monamedia'); ?></li>
+                                    <?php foreach ($_notes_main as $_note) : ?>
+                                        <li><?php echo wp_kses_post($_note); ?></li>
+                                    <?php endforeach; ?>
                                 </ul>
-                                <h4 class="tsh-co-notes__title tsh-co-notes__title--sub"><?php esc_html_e('Để có trải nghiệm tốt hơn', 'monamedia'); ?></h4>
-                                <ul class="tsh-co-notes__list">
-                                    <li><?php esc_html_e('Hạn chế sử dụng rượu bia hoặc chất kích thích trước phiên.', 'monamedia'); ?></li>
-                                    <li><?php esc_html_e('Uống đủ nước trước và sau khi tham gia.', 'monamedia'); ?></li>
-                                    <li><?php esc_html_e('Đến với một tâm thế cởi mở, thư giãn và không kỳ vọng vào một trải nghiệm cụ thể. Mỗi người sẽ có hành trình cảm nhận riêng.', 'monamedia'); ?></li>
-                                </ul>
+                                <?php if ($_notes_sub_title || $_notes_sub) : ?>
+                                    <h4 class="tsh-co-notes__title tsh-co-notes__title--sub"><?php echo esc_html($_notes_sub_title); ?></h4>
+                                    <ul class="tsh-co-notes__list">
+                                        <?php foreach ($_notes_sub as $_note) : ?>
+                                            <li><?php echo wp_kses_post($_note); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div><!-- /.tsh-co-box left -->

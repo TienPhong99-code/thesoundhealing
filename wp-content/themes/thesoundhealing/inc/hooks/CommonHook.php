@@ -61,7 +61,7 @@ add_filter('admin_url', function ($url, $path, $blog_id) {
 
 // Tailwind CDN
 add_action('wp_head', function () {
-   ?>
+?>
    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
    <style type="text/tailwindcss">
       @theme {
@@ -69,7 +69,7 @@ add_action('wp_head', function () {
         --color-sec: #ed1c24;
       }
       </style>
-   <?php
+<?php
 }, 1);
 
 // Register css
@@ -171,6 +171,9 @@ add_action('wp_enqueue_scripts', function () {
       ]);
    }
 
+   // NOTE: about.js chưa tồn tại trong assets/scripts/ → giữ tên template cũ (không match)
+   // để KHÔNG kích hoạt enqueue file 404 + warning filemtime(). Khi nào thêm about.js
+   // thì đổi điều kiện thành is_page_template('page-template/page-about.php').
    if (is_page_template('page-template/template-about.php')) {
       wp_enqueue_script('mona-about', MONA_THEME_PATH_URI . '/assets/scripts/about.js', array('jquery', 'mona-gsap', 'mona-ScrollTrigger', 'mona-main'), filemtime(MONA_THEME_PATH . '/assets/scripts/about.js'), array('in_footer' => true));
    }
@@ -181,7 +184,6 @@ add_action('wp_enqueue_scripts', function () {
       wp_enqueue_script('masonry');
       wp_enqueue_script('mona-hoat-dong-cong-dong', MONA_THEME_PATH_URI . '/assets/scripts/hoat-dong-cong-dong.js', array('jquery', 'mona-main', 'mona-fancybox', 'masonry'), filemtime(MONA_THEME_PATH . '/assets/scripts/hoat-dong-cong-dong.js'), array('in_footer' => true));
    }
-
 }, 10);
 
 // Change script type to module
@@ -201,10 +203,10 @@ add_filter('script_loader_tag', function ($tag, $handle) {
 
 // Preconnect google font
 add_action('wp_head', function () {
-   ?>
+?>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-   <?php
+<?php
 }, 1);
 
 // Dequeue plugin JS không dùng — mở lại khi cần
@@ -228,8 +230,8 @@ add_action('wp_enqueue_scripts', function () {
       || is_singular('khoa_hoc')
       || is_singular('workshop')
       || is_singular('dich_vu')
-      || is_page_template('page-template/template-tuyen-dung.php')
-      || is_page_template('page-template/template-contact.php');
+      || is_page_template('page-template/page-lien-he.php')  // Trang Liên Hệ — có form CF7
+      || is_page_template('page-template/page-about.php');   // Trang Về Chúng Tôi — có section-form CF7
    if (!$need_cf7) {
       wp_dequeue_script('swv');
       wp_deregister_script('swv');
@@ -294,9 +296,9 @@ add_action('pre_get_posts', function (WP_Query $query) {
 add_filter('mona_main_classes', function (array $classes) {
    if (is_page_template('page-template/template-policy.php')) {
       $classes[] = 'page-policy';
-   } elseif (is_page_template('page-template/template-contact.php')) {
+   } elseif (is_page_template('page-template/page-lien-he.php')) {
       $classes[] = 'page-contact';
-   } elseif (is_page_template('page-template/template-about.php')) {
+   } elseif (is_page_template('page-template/page-about.php')) {
       $classes[] = 'page-about';
    } elseif (is_singular('post')) {
       $classes[] = 'page-news';
@@ -374,52 +376,52 @@ add_filter('gettext', function (string $translated, string $text, string $domain
    if ($domain !== 'woocommerce')
       return $translated;
    static $map = [
-   // Bảng đơn hàng
-   'Product' => 'Sản phẩm',
-   'Subtotal' => 'Tạm tính',
-   'Total' => 'Tổng cộng',
-   'Cart' => 'Giỏ hàng',
-   'Order' => 'Đơn hàng',
-   'Order total' => 'Tổng đơn hàng',
-   'Cart totals' => 'Tổng giỏ hàng',
+      // Bảng đơn hàng
+      'Product' => 'Sản phẩm',
+      'Subtotal' => 'Tạm tính',
+      'Total' => 'Tổng cộng',
+      'Cart' => 'Giỏ hàng',
+      'Order' => 'Đơn hàng',
+      'Order total' => 'Tổng đơn hàng',
+      'Cart totals' => 'Tổng giỏ hàng',
 
-   // Nút & hành động
-   'Place order' => 'Đặt hàng ngay',
-   'Proceed to checkout' => 'Tiến hành thanh toán',
-   'Update cart' => 'Cập nhật giỏ hàng',
-   'Apply coupon' => 'Áp dụng mã giảm giá',
+      // Nút & hành động
+      'Place order' => 'Đặt hàng ngay',
+      'Proceed to checkout' => 'Tiến hành thanh toán',
+      'Update cart' => 'Cập nhật giỏ hàng',
+      'Apply coupon' => 'Áp dụng mã giảm giá',
 
-   // Thông tin cá nhân
-   'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our %s.' => 'Thông tin cá nhân của bạn sẽ được dùng để xử lý đơn hàng và hỗ trợ trải nghiệm trên website theo %s của chúng tôi.',
-   'privacy policy' => 'chính sách bảo mật',
+      // Thông tin cá nhân
+      'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our %s.' => 'Thông tin cá nhân của bạn sẽ được dùng để xử lý đơn hàng và hỗ trợ trải nghiệm trên website theo %s của chúng tôi.',
+      'privacy policy' => 'chính sách bảo mật',
 
-   // Thông báo
-   'Coupon code' => 'Mã giảm giá',
-   'Coupon:' => 'Mã giảm giá:',
-   'Shipping' => 'Phí vận chuyển',
-   'Free shipping' => 'Miễn phí vận chuyển',
-   'Tax' => 'Thuế',
+      // Thông báo
+      'Coupon code' => 'Mã giảm giá',
+      'Coupon:' => 'Mã giảm giá:',
+      'Shipping' => 'Phí vận chuyển',
+      'Free shipping' => 'Miễn phí vận chuyển',
+      'Tax' => 'Thuế',
 
-   // Thanh toán
-   'Payment method' => 'Phương thức thanh toán',
-   'Pay via %s' => 'Thanh toán qua %s',
+      // Thanh toán
+      'Payment method' => 'Phương thức thanh toán',
+      'Pay via %s' => 'Thanh toán qua %s',
 
-   // Trạng thái đơn hàng
-   'Pending payment' => 'Chờ thanh toán',
-   'Processing' => 'Đang xử lý',
-   'On hold' => 'Tạm giữ',
-   'Completed' => 'Hoàn thành',
-   'Cancelled' => 'Đã hủy',
-   'Refunded' => 'Đã hoàn tiền',
-   'Failed' => 'Thất bại',
+      // Trạng thái đơn hàng
+      'Pending payment' => 'Chờ thanh toán',
+      'Processing' => 'Đang xử lý',
+      'On hold' => 'Tạm giữ',
+      'Completed' => 'Hoàn thành',
+      'Cancelled' => 'Đã hủy',
+      'Refunded' => 'Đã hoàn tiền',
+      'Failed' => 'Thất bại',
 
-   // Trang cảm ơn
-   'Thank you. Your order has been received.' => 'Cảm ơn bạn. Đơn hàng của bạn đã được tiếp nhận.',
-   'Order number:' => 'Mã đơn hàng:',
-   'Date:' => 'Ngày đặt:',
-   'Email:' => 'Email:',
-   'Total:' => 'Tổng cộng:',
-   'Payment method:' => 'Phương thức thanh toán:',
+      // Trang cảm ơn
+      'Thank you. Your order has been received.' => 'Cảm ơn bạn. Đơn hàng của bạn đã được tiếp nhận.',
+      'Order number:' => 'Mã đơn hàng:',
+      'Date:' => 'Ngày đặt:',
+      'Email:' => 'Email:',
+      'Total:' => 'Tổng cộng:',
+      'Payment method:' => 'Phương thức thanh toán:',
    ];
    return $map[$text] ?? $translated;
 }, 20, 3);

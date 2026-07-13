@@ -10,9 +10,11 @@ add_filter('woocommerce_payment_gateways', function (array $gateways): array {
     return $gateways;
 });
 
-class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
+class WC_Gateway_TSH_Cash extends WC_Payment_Gateway
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->id                 = 'tsh_cash';
         $this->method_title       = 'Tiền mặt (Thủ công)';
         $this->method_description = 'Khách thanh toán tiền mặt trực tiếp. Admin kiểm tra và duyệt đơn.';
@@ -28,7 +30,8 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
         add_action('woocommerce_thankyou_' . $this->id, [$this, 'thankyou_page']);
     }
 
-    public function init_form_fields(): void {
+    public function init_form_fields(): void
+    {
         $this->form_fields = [
             'enabled' => [
                 'title'   => 'Bật/Tắt',
@@ -49,27 +52,34 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
         ];
     }
 
-    public function payment_fields(): void {
-        if (!$this->description) return;
+    public function payment_fields(): void
+    {
+        // Ghi chú cố định cho "Thanh toán khác" — dịch qua WPML String Translation
+        // (client sửa bản EN trong WPML → String Translation, KHÔNG dùng .po/.mo).
+        // Ô "Mô tả" trong admin không còn điều khiển đoạn này.
+        $note_title = mona_wpml_string('Cần hỗ trợ thanh toán hoặc đã có E-ticket?', 'Checkout – tiêu đề ghi chú Thanh toán khác');
+        $note_desc  = mona_wpml_string('Vui lòng nhấn "Đặt lịch ngay", chúng tôi sẽ liên hệ để xác nhận và hoàn tất đặt lịch.', 'Checkout – nội dung ghi chú Thanh toán khác');
         echo '<div class="tsh-cash-note">'
             . '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>'
-            . '<p>' . esc_html($this->description) . '</p>'
+            . '<p><strong>' . esc_html($note_title) . '</strong><br>' . esc_html($note_desc) . '</p>'
             . '</div>';
     }
 
-    public function process_payment($order_id): array {
+    public function process_payment($order_id): array
+    {
         $order = wc_get_order($order_id);
         $order->update_status('on-hold', 'Chờ thanh toán tiền mặt khi khách đến.');
         WC()->cart->empty_cart();
         return ['result' => 'success', 'redirect' => $this->get_return_url($order)];
     }
 
-    public function thankyou_page(int $order_id): void {
+    public function thankyou_page(int $order_id): void
+    {
         $order = wc_get_order($order_id);
         if (!$order) return;
 
         if (in_array($order->get_status(), ['processing', 'completed'], true)) {
-            ?>
+?>
             <div class="tsh-bacs-qr tsh-bacs-qr--ty tsh-bacs-qr--success">
                 <div class="tsh-payment-confirmed tsh-payment-confirmed--full">
                     <span>✓</span>
@@ -79,7 +89,7 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
                     </div>
                 </div>
             </div>
-            <?php
+        <?php
             return;
         }
         ?>
@@ -94,6 +104,6 @@ class WC_Gateway_TSH_Cash extends WC_Payment_Gateway {
                 <p class="tsh-cash-ty__note"><?php esc_html_e('Email xác nhận gửi đến:', 'monamedia'); ?> <strong><?= esc_html($order->get_billing_email()) ?></strong></p>
             </div>
         </div>
-        <?php
+<?php
     }
 }

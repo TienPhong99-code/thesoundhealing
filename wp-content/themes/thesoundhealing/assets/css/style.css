@@ -1449,6 +1449,7 @@ form .wpcf7-not-valid-tip {
 .cf7-workshop .wpcf7-form label {
   font-weight: 400;
   letter-spacing: 1.2px;
+  font-size: 14px;
 }
 
 /* Text / Email / Tel */
@@ -1701,7 +1702,7 @@ form .wpcf7-not-valid-tip {
 }
 .cf7-dich-vu .wpcf7-form label {
   font-weight: 400;
-  letter-spacing: 1.2px;
+  font-size: 14px;
 }
 .cf7-dich-vu .wpcf7-text,
 .cf7-dich-vu .wpcf7-email,
@@ -3326,6 +3327,42 @@ form .wpcf7-not-valid-tip {
   word-break: break-all;
 }
 
+/* ── Lời nhắn (customer note → NOTES trên E-ticket) ── */
+.tsh-co-note-field {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #edeae4;
+}
+.tsh-co-note-field__label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #a8b5b2;
+  margin-bottom: 8px;
+}
+.tsh-co-note-field__input {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-sec);
+  background: #fff;
+  border: 1px solid #e3ded4;
+  border-radius: 10px;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+.tsh-co-note-field__input:focus {
+  outline: none;
+  border-color: var(--color-pri);
+}
+.tsh-co-note-field__input::placeholder {
+  color: #b3aea3;
+}
+
 /* ── Order review table ── */
 .woocommerce-checkout-review-order-table {
   width: 100%;
@@ -3359,6 +3396,11 @@ form .wpcf7-not-valid-tip {
   color: #999;
   border-bottom: none;
   padding: 6px 0;
+}
+/* Ẩn dòng phí "Đặt cọc 50%" trong bảng order review (khối "Lựa chọn thanh toán"
+   bên dưới đã giải thích rõ) — Tổng cộng vẫn tự tính đúng 50% server-side. */
+.woocommerce-checkout-review-order-table tfoot tr.fee {
+  display: none;
 }
 .woocommerce-checkout-review-order-table tfoot .order-total th,
 .woocommerce-checkout-review-order-table tfoot .order-total td {
@@ -3495,13 +3537,9 @@ form .wpcf7-not-valid-tip {
    #payment_method_sepay_card:checked ~ .payment_box */
 #payment_method_bacs:checked ~ .payment_box,
 #payment_method_tsh_paypal_qr:checked ~ .payment_box,
-#payment_method_sepay:checked ~ .payment_box {
-  display: block !important;
-}
-
-/* ── Cổng KHÔNG hiện box khi chọn (giữ ẩn) ── */
+#payment_method_sepay:checked ~ .payment_box,
 #payment_method_tsh_cash:checked ~ .payment_box {
-  display: none !important;
+  display: block !important;
 }
 .tsh-paypal-desc {
   margin: 0 0 10px;
@@ -3581,6 +3619,7 @@ form .wpcf7-not-valid-tip {
 
 /* ── Place order button ── */
 #place_order {
+  position: relative;
   display: block;
   width: 100%;
   padding: 16px;
@@ -3590,20 +3629,25 @@ form .wpcf7-not-valid-tip {
   font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  border: none;
+  border: 1px solid var(--color-pri);
   border-radius: 8px;
   cursor: pointer;
   transition:
     background 0.25s,
+    color 0.25s,
     box-shadow 0.25s;
   text-align: center;
   box-shadow: 0 4px 14px -2px rgba(194, 160, 86, 0.4);
 }
 #place_order:hover {
-  background: #b8922e;
+  background: #fff;
+  color: var(--color-pri) !important;
   box-shadow: 0 6px 20px -4px rgba(194, 160, 86, 0.5);
 }
-
+#place_order.is-loading {
+  pointer-events: none;
+  opacity: 0.75;
+}
 /* ── Checkout notes ── */
 .tsh-co-notes {
   margin-top: 24px;
@@ -3620,6 +3664,12 @@ form .wpcf7-not-valid-tip {
 }
 .tsh-co-notes__title--sub {
   margin-top: 16px;
+}
+.tsh-co-notes__intro {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0 0 12px;
 }
 .tsh-co-notes__list {
   margin: 0;
@@ -3798,6 +3848,9 @@ form .wpcf7-not-valid-tip {
   flex-direction: column;
   gap: 20px;
   min-width: 0;
+  position: sticky;
+  top: calc(var(--size-hd) + 16px);
+  align-self: start;
 }
 .tsh-ty-content .tsh-ty-header {
   text-align: left;
@@ -4072,9 +4125,9 @@ form .wpcf7-not-valid-tip {
   box-shadow: 0 4px 14px -2px rgba(194, 160, 86, 0.35);
 }
 .tsh-ty-btn--pri:hover {
-  background: #b8922e;
-  border-color: #b8922e;
-  box-shadow: none;
+  background: #fff;
+  color: var(--color-pri);
+  box-shadow: 0 6px 20px -4px rgba(194, 160, 86, 0.5);
 }
 .tsh-ty-btn--ghost {
   background: transparent;
@@ -4115,6 +4168,7 @@ form .wpcf7-not-valid-tip {
   .tsh-ty-title {
     font-size: 22px;
   }
+  /* Mobile: Ngày đặt · Khung giờ 50/50 (hàng 1), Chi nhánh full 100% (hàng 2). */
   .tsh-ty-quick {
     grid-template-columns: 1fr 1fr;
   }
@@ -4123,6 +4177,10 @@ form .wpcf7-not-valid-tip {
     border-bottom: 1px solid #edeae4;
   }
   .tsh-ty-quick-item:nth-child(2n) {
+    border-right: none;
+  }
+  .tsh-ty-quick-item--full {
+    grid-column: 1 / -1;
     border-right: none;
   }
   .tsh-ty-quick-item:last-child {

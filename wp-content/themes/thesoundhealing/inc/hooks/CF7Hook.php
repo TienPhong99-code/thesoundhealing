@@ -2,12 +2,37 @@
 defined('ABSPATH') || exit;
 
 /**
- * Sau khi CF7 gửi mail thành công: lưu booking data vào transient + set cookie.
- * JS sẽ đọc data-buy-url trên wrapper và redirect sang WC checkout.
+ * Nhận diện 3 form ĐẶT LỊCH (Khóa học / Workshop / Dịch vụ) qua hash 7 ký tự của CF7.
+ * KH/WS/DV_CF7_FORM_ID (functions.php) chính là hash prefix dùng trong shortcode
+ * [contact-form-7 id="..."]; WPCF7_ContactForm::hash() mặc định cũng trả 7 ký tự đầu.
+ * Form Liên Hệ và Ứng tuyển KHÔNG thuộc nhóm này → gửi mail bình thường.
  */
-add_filter('wpcf7_skip_mail', '__return_true');
+function tsh_is_booking_cf7($cf7): bool
+{
+    if (!$cf7 || !method_exists($cf7, 'hash')) return false;
+    $booking = array_filter([
+        defined('KH_CF7_FORM_ID') ? KH_CF7_FORM_ID : '',
+        defined('WS_CF7_FORM_ID') ? WS_CF7_FORM_ID : '',
+        defined('DV_CF7_FORM_ID') ? DV_CF7_FORM_ID : '',
+    ]);
+    return in_array($cf7->hash(), $booking, true);
+}
 
+/**
+ * CHỈ form đặt lịch mới bỏ gửi mail CF7 (vì sẽ redirect sang WC checkout).
+ * Form Liên Hệ / Ứng tuyển giữ nguyên cấu hình Mail của CF7 → vẫn gửi mail.
+ */
+add_filter('wpcf7_skip_mail', function ($skip, $cf7) {
+    return tsh_is_booking_cf7($cf7) ? true : $skip;
+}, 10, 2);
+
+/**
+ * Sau khi form ĐẶT LỊCH gửi thành công: lưu booking data vào transient + set cookie.
+ * JS sẽ đọc data-buy-url trên wrapper và redirect sang WC checkout.
+ * Bỏ qua các form khác (Liên Hệ, Ứng tuyển) để không tạo transient/cookie thừa.
+ */
 add_action('wpcf7_mail_sent', function ($cf7) {
+    if (!tsh_is_booking_cf7($cf7)) return;
     $submission = WPCF7_Submission::get_instance();
     if (!$submission) return;
     $d = $submission->get_posted_data();

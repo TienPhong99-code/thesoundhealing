@@ -16,6 +16,7 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_checkout_order_processed', [$this, 'save_booking_meta']);
         add_action('woocommerce_checkout_create_order', [$this, 'save_payment_type_meta'], 10, 2);
         add_action('woocommerce_checkout_create_order', [$this, 'save_eticket_meta'], 10, 2);
+        add_action('woocommerce_checkout_create_order', [$this, 'save_customer_note'], 10, 2);
         add_action('woocommerce_order_status_processing', [$this, 'send_eticket_email'], 20, 2);
         add_action('woocommerce_order_status_completed',  [$this, 'send_eticket_email'], 20, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'display_booking_meta']);
@@ -28,6 +29,8 @@ class TSH_WooCommerce_Hook
         add_filter('woocommerce_email_heading_customer_on_hold_order',    [$this, 'booking_email_heading']);
         add_filter('woocommerce_email_subject_customer_processing_order', [$this, 'customer_email_subject'], 10, 2);
         add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'customer_email_subject'], 10, 2);
+        add_filter('woocommerce_email_heading_customer_completed_order',  [$this, 'thankyou_email_heading']);
+        add_filter('woocommerce_email_subject_customer_completed_order',  [$this, 'thankyou_email_subject'], 10, 2);
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
         add_action('woocommerce_thankyou',                   [$this, 'render_thankyou_payment'], 5);
         // Ẩn bảng "Chi tiết đơn hàng" + địa chỉ mặc định của WooCommerce trên trang cảm ơn
@@ -35,6 +38,7 @@ class TSH_WooCommerce_Hook
         remove_action('woocommerce_thankyou', 'woocommerce_order_details_table', 10);
         add_action('wp_footer',                              [$this, 'checkout_bacs_js']);
         add_action('wp_footer', [$this, 'payment_type_js']);
+        add_action('wp_footer',                              [$this, 'place_order_loading_js']);
         add_action('wp_footer',                              [$this, 'thankyou_polling_js']);
         add_action('woocommerce_email_after_order_table',    [$this, 'email_bacs_ref'], 10, 4);
         add_action('wp_ajax_nopriv_tsh_confirm_transfer',    [$this, 'ajax_confirm_transfer']);
@@ -66,6 +70,19 @@ class TSH_WooCommerce_Hook
         add_filter('gettext_woocommerce', [$this, 'i18n_wc_core_labels'], 20, 2);
         // Dịch tên phương thức thanh toán trong đơn/email (title đã lưu lúc đặt là tiếng Việt)
         add_filter('woocommerce_order_get_payment_method_title', [$this, 'i18n_order_payment_title'], 20, 2);
+        // Ẩn cột "Nguồn gốc" (Order Attribution) trong danh sách đơn hàng admin
+        add_filter('manage_edit-shop_order_columns',            [$this, 'hide_order_origin_column'], 20);
+        add_filter('manage_woocommerce_page_wc-orders_columns', [$this, 'hide_order_origin_column'], 20);
+    }
+
+    /**
+     * Ẩn cột "Nguồn gốc" (Order Attribution — key "origin") khỏi bảng danh sách
+     * đơn hàng trong admin. Hỗ trợ cả bảng cũ (shop_order) lẫn HPOS (wc-orders).
+     */
+    public function hide_order_origin_column(array $columns): array
+    {
+        unset($columns['origin']);
+        return $columns;
     }
 
     /**
@@ -89,6 +106,27 @@ class TSH_WooCommerce_Hook
     }
 
     /**
+     * Ngôn ngữ (en|vi) mà khách đã đặt đơn — theo WPML. Đọc từ order meta wpml_language
+     * của WCML (tin cậy cả trong webhook SePay, nơi determine_locale() không có ngữ cảnh),
+     * fallback filter WPML rồi ngôn ngữ mặc định.
+     */
+    private function order_language(\WC_Order $order): string
+    {
+        $lang = (string) $order->get_meta('wpml_language');
+        if ($lang === '') {
+            $lang = (string) apply_filters('wpml_element_language_code', null, [
+                'element_id'   => $order->get_id(),
+                'element_type' => 'post_shop_order',
+            ]);
+        }
+        if ($lang === '') {
+            $lang = (string) (apply_filters('wpml_current_language', null)
+                ?: (apply_filters('wpml_default_language', null) ?: 'vi'));
+        }
+        return strpos($lang, 'en') === 0 ? 'en' : 'vi';
+    }
+
+    /**
      * Tiêu đề email đặt lịch (processing/on-hold) theo ngôn ngữ khách. Set trực
      * tiếp theo locale — không qua __()/.mo vì chuỗi có <br> + bị WPML can thiệp
      * nên bản EN không trả về, dẫn tới kẹt tiếng Việt trên email tiếng Anh.
@@ -98,6 +136,21 @@ class TSH_WooCommerce_Hook
         return $this->is_en_locale()
             ? 'Thank you<br>for your booking'
             : 'Cảm ơn bạn<br>đã đặt lịch hẹn';
+    }
+
+    /**
+     * Email "đơn hoàn thành" = thư cảm ơn sau buổi trải nghiệm + mời đánh giá Google
+     * (không phải biên nhận đơn). Tiêu đề + subject dịch qua WPML String Translation
+     * (helper mona_wpml_string) — dùng chung 1 tên định danh vì cùng nội dung.
+     */
+    public function thankyou_email_heading(): string
+    {
+        return mona_wpml_string('Cảm ơn bạn đã đồng hành cùng The Sound Healing by Healiverse', 'Email hoàn thành – tiêu đề');
+    }
+
+    public function thankyou_email_subject($subject, $order): string
+    {
+        return mona_wpml_string('Cảm ơn bạn đã đồng hành cùng The Sound Healing by Healiverse', 'Email hoàn thành – tiêu đề');
     }
 
     /**
@@ -160,7 +213,17 @@ class TSH_WooCommerce_Hook
                 <input type="radio" name="tsh_paytype" value="deposit" <?php checked($type, 'deposit'); ?>>
                 <span class="tsh-paytype__main"><?php esc_html_e('Đặt cọc 50%', 'monamedia'); ?></span>
                 <span class="tsh-paytype__amt"><?= wc_price($deposit) ?></span>
-                <span class="tsh-paytype__note"><?php printf(esc_html__('Còn lại %s thu tại cơ sở', 'monamedia'), wp_kses_post(wc_price($remaining))); ?></span>
+                <span class="tsh-paytype__note"><?php
+                                                // Dùng str_replace thay printf: bản dịch WPML (EN) của chuỗi này có thể
+                                                // chứa ký tự % lạ hoặc thiếu %s → printf/sprintf ném ValueError trên PHP 8,
+                                                // làm chết (fatal) cả fragment thanh toán khi xem bản tiếng Anh. str_replace
+                                                // không bao giờ ném; nếu bản dịch mất %s thì nối số tiền vào cuối cho an toàn.
+                                                $tsh_note_fmt   = esc_html__('Còn lại %s thu tại cơ sở', 'monamedia');
+                                                $tsh_note_price = wp_kses_post(wc_price($remaining));
+                                                echo strpos($tsh_note_fmt, '%s') !== false
+                                                    ? str_replace('%s', $tsh_note_price, $tsh_note_fmt)
+                                                    : $tsh_note_fmt . ' ' . $tsh_note_price;
+                                                ?></span>
             </label>
         </div>
         <?php
@@ -330,6 +393,21 @@ class TSH_WooCommerce_Hook
     }
 
     /**
+     * Lưu lời nhắn của khách (ô "Lời nhắn" ở trang thanh toán) vào customer note của đơn.
+     * Hiển thị lại ở mục NOTES trên E-ticket (email + trang tải). Trường order mặc định
+     * đã bị gỡ (simplify_checkout_fields) nên WooCommerce không tự xử lý order_comments →
+     * đọc thủ công từ POST. Nonce checkout đã được WC verify trước khi tới hook này.
+     */
+    public function save_customer_note(\WC_Order $order, array $data): void
+    {
+        if (empty($_POST['order_comments'])) return; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $note = sanitize_textarea_field(wp_unslash($_POST['order_comments'])); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if ($note !== '') {
+            $order->set_customer_note($note);
+        }
+    }
+
+    /**
      * Ghi loại thanh toán + số tiền cọc/còn lại vào đơn.
      * Chạy khi tạo order (trước khi tính total), nên đọc subtotal từ cart.
      */
@@ -405,22 +483,27 @@ class TSH_WooCommerce_Hook
         if (!$email) return;
 
         // Cùng bộ thông tin như mail xác nhận đặt lịch (bỏ Tổng thanh toán & Phương thức thanh toán).
+        // Bỏ Ngày đặt / Khung giờ / Email / Người hướng dẫn — chỉ giữ thông tin cần cho vé quà tặng.
         $name         = trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name());
         $phone        = $order->get_billing_phone();
-        $b_date       = (string) $order->get_meta('_booking_date');
-        $b_time       = (string) $order->get_meta('_booking_time');
         $b_location   = (string) $order->get_meta('_booking_location');
         $b_guests     = (string) $order->get_meta('_booking_guests');
         $b_children   = (string) $order->get_meta('_booking_children');
-        $b_instructor = (string) $order->get_meta('_booking_instructor');
+        $note         = (string) $order->get_customer_note();
         $items        = $order->get_items();
         $service      = $items ? reset($items)->get_name() : '';
 
-        $logo_url   = MONA_THEME_PATH_URI . '/assets/images/logo2.png';
-        $banner_url = MONA_THEME_PATH_URI . '/assets/images/banner-confirm.png';
+        $banner_url = MONA_THEME_PATH_URI . '/assets/images/banner-confirmv3.png';
+
+        // Ngôn ngữ email e-ticket = ngôn ngữ của ĐƠN (không phải locale ambient). Mail này là
+        // wp_mail() tự chế, bắn trong hook order_status → chạy NGOÀI vùng switch ngôn ngữ của
+        // WCML (khác WC_Email), nên phải tự switch để esc_html__() + $is_en bám đúng ngôn ngữ.
+        $lang        = $this->order_language($order);
+        $is_en       = ($lang === 'en');
+        $prev_lang   = apply_filters('wpml_current_language', null);
+        do_action('wpml_switch_language', $lang);
 
         // Nút tải e-ticket (mở trang layout PC + html2canvas). lang khớp ngôn ngữ email.
-        $is_en       = $this->is_en_locale();
         $eticket_url = add_query_arg([
             'tsh_eticket' => 1,
             'order'       => $order_id,
@@ -440,19 +523,25 @@ class TSH_WooCommerce_Hook
                 . '</tr>';
         };
 
-        $rows  = $row(esc_html__('Ngày đặt', 'monamedia'), $b_date);
-        $rows .= $row(esc_html__('Khung giờ', 'monamedia'), $b_time);
-        $rows .= $row(esc_html__('Chi nhánh', 'monamedia'), $b_location);
+        $rows  = $row(esc_html__('Chi nhánh', 'monamedia'), $b_location);
         $rows .= $row(esc_html__('Họ và tên', 'monamedia'), $name);
         $rows .= $row(esc_html__('Số điện thoại', 'monamedia'), $phone);
-        $rows .= $row(esc_html__('Email', 'monamedia'), $email);
         $rows .= $row(esc_html__('Số người tham gia', 'monamedia'), $b_guests !== '' ? $b_guests . ' ' . __('người', 'monamedia') : '');
         $rows .= $row(esc_html__('Trẻ em tham gia', 'monamedia'), $b_children);
-        $rows .= $row(esc_html__('Người hướng dẫn', 'monamedia'), $b_instructor);
-        $rows .= $row(esc_html__('Dịch vụ', 'monamedia'), $service);
+        $rows .= $row($is_en ? 'Service / Course' : 'Dịch vụ / Khoá học', $service);
         $rows .= $row(esc_html__('Ngày hết hạn', 'monamedia'), $expiry_fmt, true);
 
-        $html = '<!DOCTYPE html><html lang="vi"><head>'
+        // Đoạn text cuối (lời chúc quà tặng + hotline) — dùng $is_en trực tiếp thay vì .mo/WPML
+        // vì chuỗi dài dễ bị bản dịch làm hỏng; giống cách booking_email_heading() xử lý.
+        $gift_msg   = $is_en
+            ? 'This gift is sent to you with love and warm wishes for moments of rest, relaxation, and renewed energy. To use your E-ticket, please contact us via Zalo/WhatsApp/Viber to make a booking before your visit:'
+            : 'Món quà này được gửi đến bạn như một lời yêu thương và lời chúc cho những phút giây nghỉ ngơi, thư giãn và tái tạo năng lượng. Để sử dụng E-ticket, vui lòng liên hệ với chúng tôi qua Zalo/Whatsapp/Viber để đặt lịch trước khi đến:';
+        $lbl_vi     = $is_en ? 'Vietnamese' : 'Tiếng Việt';
+        $lbl_en     = 'English';
+        $website_ln = $is_en ? 'Or book online through our website:' : 'Hoặc qua Website:';
+        $welcome_ln = $is_en ? 'We look forward to welcoming you at HEALIVERSE.' : 'Chúng tôi rất mong được chào đón bạn tại HEALIVERSE.';
+
+        $html = '<!DOCTYPE html><html lang="' . ($is_en ? 'en' : 'vi') . '"><head>'
             . '<meta charset="utf-8">'
             . '<meta name="viewport" content="width=device-width,initial-scale=1">'
             . '<meta name="color-scheme" content="light only">'
@@ -463,9 +552,6 @@ class TSH_WooCommerce_Hook
             . '<body style="margin:0;padding:24px 12px;background:#f4f2ec;font-family:Arial,Helvetica,sans-serif;color:#1b1c19">'
             . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center">'
             . '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:820px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(27,28,25,0.08)">'
-            // Header: nền trắng + logo
-            . '<tr><td style="background:#ffffff;padding:22px 24px;text-align:center;border-bottom:1px solid #efece4">'
-            . '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr__('The Sound Healing', 'monamedia') . '" width="180" style="display:inline-block;width:180px;max-width:58%;height:auto;border:0"></td></tr>'
             // Body: 2 cột inline-block (nội dung trái, banner phải) — font-size:0 khử khoảng trắng giữa 2 cột
             . '<tr><td style="padding:0;font-size:0;line-height:0">'
             . '<div class="tsh-col" style="display:inline-block;vertical-align:top;width:58%;box-sizing:border-box;padding:26px 24px;font-size:14px;line-height:1.5;color:#1b1c19">'
@@ -474,10 +560,16 @@ class TSH_WooCommerce_Hook
             . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px">'
             . $rows
             . '</table>'
-            . '<div style="margin-top:18px;padding:14px 16px;background:#fbf8f0;border-radius:10px;font-size:14px">'
-            . '<p style="margin:0 0 6px;color:#717171;font-size:12px">' . esc_html__('Liên hệ hotline để đặt lịch:', 'monamedia') . '</p>'
-            . '<p style="margin:0"><strong>' . esc_html__('English', 'monamedia') . ':</strong> 0939 624 684 &nbsp;|&nbsp; <strong>' . esc_html__('Tiếng Việt', 'monamedia') . ':</strong> 0906 502 582</p></div>'
-            . '<p style="margin:14px 0 0;font-size:12px;color:#8a8577;font-style:italic">' . esc_html__('Vui lòng xuất trình mã e-ticket khi sử dụng dịch vụ.', 'monamedia') . '</p>'
+            . ($note !== ''
+                ? '<div style="margin-top:18px;padding:12px 16px;background:#faf8f4;border-radius:10px;font-size:14px">'
+                . '<p style="margin:0 0 4px;color:#717171;font-size:12px;font-weight:700;letter-spacing:.5px">NOTES</p>'
+                . '<p style="margin:0;color:#1b1c19">' . nl2br(esc_html($note)) . '</p></div>'
+                : '')
+            . '<div style="margin-top:18px;padding:14px 16px;background:#fbf8f0;border-radius:10px;font-size:13px;line-height:1.6;color:#5c584d">'
+            . '<p style="margin:0 0 10px">' . esc_html($gift_msg) . '</p>'
+            . '<p style="margin:0 0 4px"><strong>' . esc_html($lbl_vi) . ':</strong> 0906 502 582 &nbsp;|&nbsp; <strong>' . esc_html($lbl_en) . ':</strong> 0939 624 684</p>'
+            . '<p style="margin:0 0 4px">' . esc_html($website_ln) . ' <strong>thesoundhealing.vn</strong></p>'
+            . '<p style="margin:0">' . esc_html($welcome_ln) . '</p></div>'
             . '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:18px"><tr><td>'
             . '<a href="' . esc_url($eticket_url) . '" style="display:inline-block;background:#c2a056;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:.3px;padding:12px 28px;border-radius:8px">' . esc_html($dl_label) . '</a>'
             . '</td></tr></table>'
@@ -489,8 +581,15 @@ class TSH_WooCommerce_Hook
             . '</td></tr></table>'
             . '</body></html>';
 
-        $subject = __('E-ticket quà tặng của bạn', 'monamedia') . ' — ' . $code;
+        // Tiêu đề gán trực tiếp theo $is_en (không qua __()/.mo) vì chuỗi marketing
+        // dễ bị bản dịch WPML làm sai — cùng cách xử lý như booking_email_heading/gift_msg.
+        $subject = $is_en
+            ? 'Want to Surprise Someone Special? Download Your Gift E-Ticket'
+            : 'Bạn muốn tặng cho người thân? Download E-ticket ngay!';
         $headers = ['Content-Type: text/html; charset=UTF-8'];
+
+        // Nội dung đã render xong vào $html/$subject → trả ngôn ngữ về như cũ.
+        if ($prev_lang) do_action('wpml_switch_language', $prev_lang);
 
         // Đánh dấu đã gửi TRƯỚC khi wp_mail → đóng race gửi trùng nếu 2 request đổi
         // trạng thái đơn gần như đồng thời.
@@ -794,9 +893,22 @@ class TSH_WooCommerce_Hook
         wp_send_json_success(['email' => $order->get_billing_email()]);
     }
 
+    /**
+     * Danh sách email admin nhận thông báo đơn hàng. Dùng chung với email
+     * "New order" của Woo: lấy từ WooCommerce → Settings → Emails → New order →
+     * Người nhận (nhiều email cách nhau dấu phẩy). Rỗng → fallback admin_email.
+     * Nhờ vậy thêm/bớt admin chỉ cần sửa trong UI, không phải deploy code.
+     */
+    private function admin_notification_recipients(): string
+    {
+        $opts      = get_option('woocommerce_new_order_settings', []);
+        $recipient = is_array($opts) && !empty($opts['recipient']) ? trim($opts['recipient']) : '';
+        return $recipient !== '' ? $recipient : get_option('admin_email');
+    }
+
     private function send_transfer_confirmed_email(\WC_Order $order): void
     {
-        $admin_email = get_option('admin_email');
+        $admin_email = $this->admin_notification_recipients();
         $order_id    = $order->get_id();
         $name        = trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name());
         $phone       = $order->get_billing_phone();
@@ -806,6 +918,8 @@ class TSH_WooCommerce_Hook
         $service     = $items ? reset($items)->get_name() : '';
         $b_date      = $order->get_meta('_booking_date');
         $b_time      = $order->get_meta('_booking_time');
+        $b_guests    = (string) $order->get_meta('_booking_guests');
+        $b_children  = (string) $order->get_meta('_booking_children');
         $method      = $order->get_payment_method();
         $is_paypal   = $method === 'tsh_paypal_qr';
 
@@ -846,6 +960,8 @@ class TSH_WooCommerce_Hook
                 <tr><td style="padding:8px 0;color:#666">Email</td><td style="padding:8px 0">' . esc_html($email) . '</td></tr>
                 ' . ($service ? '<tr><td style="padding:8px 0;color:#666">Dịch vụ</td><td style="padding:8px 0">' . esc_html($service) . '</td></tr>' : '') . '
                 ' . ($b_date  ? '<tr><td style="padding:8px 0;color:#666">Ngày đặt</td><td style="padding:8px 0">' . esc_html($b_date) . ($b_time ? ' — ' . esc_html($b_time) : '') . '</td></tr>' : '') . '
+                ' . ($b_guests   !== '' ? '<tr><td style="padding:8px 0;color:#666">Số lượng khách</td><td style="padding:8px 0">' . esc_html($b_guests) . ' người</td></tr>' : '') . '
+                ' . ($b_children !== '' ? '<tr><td style="padding:8px 0;color:#666">Trẻ em</td><td style="padding:8px 0">' . esc_html($b_children) . '</td></tr>' : '') . '
                 <tr><td style="padding:8px 0;color:#666">Số tiền</td><td style="padding:8px 0;font-weight:700;color:#c2a056">' . $total . '</td></tr>
             </table>
             ' . $payment_block . '
@@ -916,6 +1032,29 @@ class TSH_WooCommerce_Hook
                     $('.tsh-paytype__opt').removeClass('is-active');
                     $(this).closest('.tsh-paytype__opt').addClass('is-active');
                     $(document.body).trigger('update_checkout');
+                });
+            });
+        </script>
+    <?php
+    }
+
+    /**
+     * Loading cho nút "Đặt lịch ngay" (#place_order) khi submit checkout.
+     * Bỏ loading khi WooCommerce báo lỗi validate (checkout_error) để không kẹt.
+     */
+    public function place_order_loading_js(): void
+    {
+        if (!is_checkout() || is_order_received_page()) return;
+    ?>
+        <script>
+            jQuery(function($) {
+                var $form = $('form.checkout');
+                $form.on('submit', function() {
+                    $('#place_order').addClass('is-loading');
+                });
+                // Server trả lỗi (thiếu field, chưa chọn phương thức...) → mở khoá lại nút.
+                $(document.body).on('checkout_error', function() {
+                    $('#place_order').removeClass('is-loading');
                 });
             });
         </script>
@@ -1035,8 +1174,9 @@ class TSH_WooCommerce_Hook
         $date    = $order->get_meta('_booking_date');
         $time    = $order->get_meta('_booking_time');
 
-        $parts = array_filter([$service ?: '', $date ?: '', $time ?: '']);
-        return $parts ? '[Đặt lịch] ' . implode(' — ', $parts) : $subject;
+        $parts  = array_filter([$service ?: '', $date ?: '', $time ?: '']);
+        $prefix = $this->is_en_locale() ? '[Booking] ' : '[Đặt lịch] ';
+        return $parts ? $prefix . implode(' — ', $parts) : $subject;
     }
 
     // ── Guests pricing ────────────────────────────────────────────────────

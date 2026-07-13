@@ -57,21 +57,35 @@ function mona_normalize_date_list(array $parts): array
 }
 
 /**
- * Câu tóm tắt cho lịch định kỳ. VD "Thứ 3, 5, 7 · 12/08 – 12/09".
+ * Câu tóm tắt cho lịch định kỳ.
+ * VN: "Thứ 3, 5, 7 · 12/08 – 12/09". EN: "Tue, Thu, Sat · 12/08 – 12/09".
  */
 function mona_recurring_summary(array $weekdays, string $start, string $end): string
 {
-    $labels = mona_weekday_short_labels();
     $weekdays = array_map('strval', $weekdays);
     sort($weekdays);
+
+    // EN: liệt kê thứ bằng viết tắt tiếng Anh (Mon..Sun), bỏ tiền tố "Thứ".
+    // VN: giữ dạng gọn "Thứ 3, 4, 5, ..." như cũ.
+    $is_en = function_exists('determine_locale') && strpos(determine_locale(), 'en') === 0;
     $names = [];
-    foreach ($weekdays as $w) {
-        if (isset($labels[$w])) $names[] = $labels[$w];
+    if ($is_en) {
+        $en = ['1' => 'Mon', '2' => 'Tue', '3' => 'Wed', '4' => 'Thu', '5' => 'Fri', '6' => 'Sat', '7' => 'Sun'];
+        foreach ($weekdays as $w) {
+            if (isset($en[$w])) $names[] = $en[$w];
+        }
+        $wd = $names ? implode(', ', $names) : '';
+    } else {
+        $labels = mona_weekday_short_labels();
+        foreach ($weekdays as $w) {
+            if (isset($labels[$w])) $names[] = $labels[$w];
+        }
+        $wd = $names ? 'Thứ ' . implode(', ', $names) : '';
     }
+
     $ts = strtotime($start);
     $te = strtotime($end);
     $range = ($ts && $te) ? date('d/m', $ts) . ' – ' . date('d/m', $te) : '';
-    $wd = $names ? 'Thứ ' . implode(', ', $names) : '';
     return trim($wd . ($wd && $range ? ' · ' : '') . $range);
 }
 
@@ -170,16 +184,13 @@ function mona_schedule_is_past(int $post_id): bool
 }
 
 /**
- * Bỏ đoạn "Thứ ..." ở đầu chuỗi lịch cho card gọn hơn, chỉ giữ phần ngày.
- * VD "Thứ 3, 4, 5, 6, 7, CN · 07/07 – 31/07" -> "07/07 – 31/07".
- * Chuỗi không bắt đầu bằng "Thứ " (ngày đơn) -> giữ nguyên.
+ * Bỏ đoạn thứ ở đầu chuỗi lịch cho card gọn hơn, chỉ giữ phần ngày sau "·".
+ * VD "Thứ 3, 4, 5, 6, 7, CN · 07/07 – 31/07" (VN) hoặc "Tue, Wed, ... · 07/07 – 31/07" (EN)
+ * -> "07/07 – 31/07". Ngày đơn (không có "·") -> giữ nguyên.
  */
 function mona_schedule_dates_only(string $summary): string
 {
     $summary = trim($summary);
-    if ($summary === '' || !str_starts_with($summary, 'Thứ ')) {
-        return $summary;
-    }
     $pos = strpos($summary, '·');
-    return $pos !== false ? trim(substr($summary, $pos + strlen('·'))) : '';
+    return $pos !== false ? trim(substr($summary, $pos + strlen('·'))) : $summary;
 }
