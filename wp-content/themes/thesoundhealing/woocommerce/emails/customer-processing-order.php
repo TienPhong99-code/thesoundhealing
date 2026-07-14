@@ -1,6 +1,10 @@
 <?php
 defined('ABSPATH') || exit;
 
+// Ép locale theo ngôn ngữ ĐƠN trước mọi chuỗi dịch (WCML không phủ domain 'monamedia' của
+// theme — xem tsh_switch_email_locale). Restore ở cuối file.
+$tsh_switched = tsh_switch_email_locale($order);
+
 $b_date       = $order->get_meta('_booking_date');
 $b_time       = $order->get_meta('_booking_time');
 $b_location   = $order->get_meta('_booking_location');
@@ -154,7 +158,7 @@ do_action('woocommerce_email_header', $email_heading, $email);
 </table>
 
 <!-- Notice -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td style="background:#fdf9f0;border-left:3px solid #c2a056;border-radius:4px;padding:12px 16px">
             <p style="margin:0;font-size:12px;color:#888;line-height:1.7">
@@ -164,4 +168,16 @@ do_action('woocommerce_email_header', $email_heading, $email);
     </tr>
 </table>
 
-<?php do_action('woocommerce_email_footer', $email); ?>
+<!-- Chân thân email: giãn 24px để footer không dính sát. Dùng ô spacer chứ không đặt
+     padding-bottom trên <table> — Outlook (engine Word) bỏ qua padding của table. -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td style="height:24px;font-size:0;line-height:0">&nbsp;</td>
+    </tr>
+</table>
+
+<?php
+do_action('woocommerce_email_footer', $email);
+
+if ($tsh_switched) restore_previous_locale();
+?>

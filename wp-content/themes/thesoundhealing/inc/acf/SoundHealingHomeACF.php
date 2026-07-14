@@ -1,7 +1,6 @@
 <?php
 
 use Extended\ACF\Fields\Image;
-use Extended\ACF\Fields\Link;
 use Extended\ACF\Fields\PostObject;
 use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Tab;
@@ -53,12 +52,10 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Các Sự Kiện Nổi Bật')
                 ->default('Các Sự Kiện Nổi Bật'),
 
-            Textarea::make('Mô tả', 'featured_desc')
-                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
-                ->rows(2),
-
-            Link::make('Link "Xem tất cả"', 'featured_link')
-                ->helperText('Link dẫn đến trang tổng hợp sự kiện.'),
+            // Mô tả dưới tiêu đề — ẩn theo yêu cầu (không hiển thị ngoài frontend)
+            // Textarea::make('Mô tả', 'featured_desc')
+            //     ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
+            //     ->rows(2),
 
             PostObject::make('Chọn sự kiện nổi bật', 'featured_items')
                 ->helperText('Chọn các dịch vụ, khóa học hoặc workshop muốn hiển thị. Kéo thả để sắp xếp thứ tự.')
@@ -73,54 +70,49 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Trải Nghiệm Dịch Vụ')
                 ->default('Trải Nghiệm Dịch Vụ'),
 
-            Textarea::make('Mô tả', 'service_desc')
-                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
-                ->rows(2),
-
-            Link::make('Link "Xem tất cả"', 'service_link')
-                ->helperText('Link dẫn đến trang danh sách dịch vụ.'),
+            // Mô tả dưới tiêu đề — ẩn theo yêu cầu (không hiển thị ngoài frontend)
+            // Textarea::make('Mô tả', 'service_desc')
+            //     ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
+            //     ->rows(2),
 
             PostObject::make('Dịch vụ nổi bật', 'service_items')
-                ->helperText('Chọn các dịch vụ muốn hiển thị trên trang chủ. Để trống → lấy dịch vụ mới nhất.')
+                ->helperText('Chọn các dịch vụ muốn hiển thị trên trang chủ. Để trống → lấy 3 dịch vụ mới nhất.')
                 ->postTypes(['dich_vu'])
                 ->multiple()
                 ->format('object'),
 
-            // ─── TAB: COURSES ─────────────────────────────────────────────
-            Tab::make('Khóa học nổi bật')->placement('left'),
+            // ─── TAB: COURSES (ẩn — section khóa học riêng không còn hiển thị ở trang chủ, đã gộp vào "Khóa Học & Workshop") ───
+            // Tab::make('Khóa học nổi bật')->placement('left'),
+            //
+            // Text::make('Tiêu đề', 'courses_heading')
+            //     ->helperText('Ví dụ: Đào Tạo Chuyên Sâu')
+            //     ->default('Đào Tạo Chuyên Sâu'),
+            //
+            // PostObject::make('Khóa học nổi bật', 'courses_items')
+            //     ->helperText('Tick chọn các khóa học muốn hiển thị trên trang chủ.')
+            //     ->postTypes(['khoa_hoc'])
+            //     ->multiple()
+            //     ->format('object'),
 
-            Text::make('Tiêu đề', 'courses_heading')
-                ->helperText('Ví dụ: Đào Tạo Chuyên Sâu')
-                ->default('Đào Tạo Chuyên Sâu'),
-
-            Link::make('Link "Xem tất cả"', 'courses_link')
-                ->helperText('Link dẫn đến trang danh sách khóa học.'),
-
-            PostObject::make('Khóa học nổi bật', 'courses_items')
-                ->helperText('Tick chọn các khóa học muốn hiển thị trên trang chủ.')
-                ->postTypes(['khoa_hoc'])
-                ->multiple()
-                ->format('object'),
-
-            // ─── TAB: WORKSHOP ────────────────────────────────────────────
-            Tab::make('Workshop nổi bật')->placement('left'),
-
-            Text::make('Nhãn nhỏ (label)', 'ws_home_label')
-                ->helperText('Ví dụ: SỰ KIỆN SẮP TỚI')
-                ->default('SỰ KIỆN SẮP TỚI'),
-
-            Text::make('Tiêu đề', 'ws_home_heading')
-                ->helperText('Ví dụ: Workshop & Trải Nghiệm')
-                ->default('Workshop & Trải Nghiệm'),
-
-            Link::make('Link "Xem tất cả"', 'ws_home_link')
-                ->helperText('Link dẫn đến trang danh sách Workshop.'),
-
-            PostObject::make('Workshop nổi bật', 'ws_home_items')
-                ->helperText('Tick chọn các Workshop muốn hiển thị trên trang chủ. Để trống → lấy 3 workshop mới nhất.')
-                ->postTypes(['workshop'])
-                ->multiple()
-                ->format('object'),
+            // ─── TAB: WORKSHOP (ẩn — section workshop riêng không còn hiển thị ở trang chủ) ───
+            // Tab::make('Workshop nổi bật')->placement('left'),
+            //
+            // Text::make('Nhãn nhỏ (label)', 'ws_home_label')
+            //     ->helperText('Ví dụ: SỰ KIỆN SẮP TỚI')
+            //     ->default('SỰ KIỆN SẮP TỚI'),
+            //
+            // Text::make('Tiêu đề', 'ws_home_heading')
+            //     ->helperText('Ví dụ: Workshop & Trải Nghiệm')
+            //     ->default('Workshop & Trải Nghiệm'),
+            //
+            // Link::make('Link "Xem tất cả"', 'ws_home_link')
+            //     ->helperText('Link dẫn đến trang danh sách Workshop.'),
+            //
+            // PostObject::make('Workshop nổi bật', 'ws_home_items')
+            //     ->helperText('Tick chọn các Workshop muốn hiển thị trên trang chủ. Để trống → lấy 3 workshop mới nhất.')
+            //     ->postTypes(['workshop'])
+            //     ->multiple()
+            //     ->format('object'),
 
             // ─── TAB: KHÓA HỌC & WORKSHOP (mục gộp) ───────────────────────
             Tab::make('Khóa Học & Workshop')->placement('left'),
@@ -129,13 +121,17 @@ add_action('acf/init', function () {
                 ->helperText('Ví dụ: Khóa Học & Workshop')
                 ->default('Khóa Học & Workshop'),
 
-            Textarea::make('Mô tả', 'cwlist_desc')
-                ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
-                ->rows(2)
-                ->default('Tham gia các khóa học và workshop được thiết kế để dẫn dắt bạn qua từng giai đoạn chuyển hóa tâm thức sâu sắc.'),
+            // Mô tả dưới tiêu đề — ẩn theo yêu cầu (không hiển thị ngoài frontend)
+            // Textarea::make('Mô tả', 'cwlist_desc')
+            //     ->helperText('1–2 câu mô tả hiển thị dưới tiêu đề.')
+            //     ->rows(2)
+            //     ->default('Tham gia các khóa học và workshop được thiết kế để dẫn dắt bạn qua từng giai đoạn chuyển hóa tâm thức sâu sắc.'),
 
-            Link::make('Link "Xem tất cả"', 'cwlist_link_all')
-                ->helperText('Link dẫn đến trang tổng hợp Khóa học & Workshop.'),
+            PostObject::make('Chọn khóa học / workshop', 'cwlist_items')
+                ->helperText('Chọn bài muốn hiển thị (kéo thả để sắp thứ tự). Để trống → lấy 3 bài mới nhất.')
+                ->postTypes(['khoa_hoc', 'workshop'])
+                ->multiple()
+                ->format('object'),
 
             // ─── TAB: GALLERY ─────────────────────────────────────────────
             Tab::make('Học viên & Trải nghiệm')->placement('left'),
@@ -156,11 +152,12 @@ add_action('acf/init', function () {
                         ->format('array')
                         ->required(),
 
-                    Text::make('Trích dẫn (quote)', 'quote')
-                        ->helperText('Hiện khi hover. Bỏ trống nếu không có overlay.'),
-
-                    Text::make('Tên học viên', 'name')
-                        ->helperText('Ví dụ: — MAI LAN'),
+                    // Trích dẫn + tên học viên — ẩn theo yêu cầu (item chỉ nhập ảnh)
+                    // Text::make('Trích dẫn (quote)', 'quote')
+                    //     ->helperText('Hiện khi hover. Bỏ trống nếu không có overlay.'),
+                    //
+                    // Text::make('Tên học viên', 'name')
+                    //     ->helperText('Ví dụ: — MAI LAN'),
                 ]),
 
             // ─── TAB: TEAMS ───────────────────────────────────────────────

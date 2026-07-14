@@ -1,6 +1,10 @@
 <?php
 defined('ABSPATH') || exit;
 
+// Ép locale theo ngôn ngữ ĐƠN trước mọi chuỗi dịch (WCML không phủ domain 'monamedia' của
+// theme — xem tsh_switch_email_locale). Restore ở cuối file.
+$tsh_switched = tsh_switch_email_locale($order);
+
 $b_date       = $order->get_meta('_booking_date');
 $b_time       = $order->get_meta('_booking_time');
 $b_location   = $order->get_meta('_booking_location');
@@ -40,34 +44,36 @@ do_action('woocommerce_email_header', $email_heading, $email);
 </table>
 
 <?php if ($b_date || $b_time || $b_location) : ?>
-<!-- Booking quick info -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;border:1px solid #e8e4db;border-radius:8px;overflow:hidden">
-    <tr>
-        <?php if ($b_date) : ?>
-        <td width="33%" style="padding:14px 16px;border-right:1px solid #e8e4db;vertical-align:top">
-            <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Ngày đặt', 'monamedia'); ?></p>
-            <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_date); ?></p>
-        </td>
-        <?php endif; ?>
-        <?php if ($b_time) : ?>
-        <td width="33%" style="padding:14px 16px;<?php echo $b_location ? 'border-right:1px solid #e8e4db;' : ''; ?>vertical-align:top">
-            <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Khung giờ', 'monamedia'); ?></p>
-            <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_time); ?></p>
-        </td>
-        <?php endif; ?>
-        <?php if ($b_location) : ?>
-        <td width="34%" style="padding:14px 16px;vertical-align:top">
-            <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Chi nhánh', 'monamedia'); ?></p>
-            <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_location); ?></p>
-        </td>
-        <?php endif; ?>
-    </tr>
-</table>
+    <!-- Booking quick info -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;border:1px solid #e8e4db;border-radius:8px;overflow:hidden">
+        <tr>
+            <?php if ($b_date) : ?>
+                <td width="33%" style="padding:14px 16px;border-right:1px solid #e8e4db;vertical-align:top">
+                    <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Ngày đặt', 'monamedia'); ?></p>
+                    <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_date); ?></p>
+                </td>
+            <?php endif; ?>
+            <?php if ($b_time) : ?>
+                <td width="33%" style="padding:14px 16px;<?php echo $b_location ? 'border-right:1px solid #e8e4db;' : ''; ?>vertical-align:top">
+                    <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Khung giờ', 'monamedia'); ?></p>
+                    <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_time); ?></p>
+                </td>
+            <?php endif; ?>
+            <?php if ($b_location) : ?>
+                <td width="34%" style="padding:14px 16px;vertical-align:top">
+                    <p style="margin:0 0 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#bbb"><?php esc_html_e('Chi nhánh', 'monamedia'); ?></p>
+                    <p style="margin:0;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_location); ?></p>
+                </td>
+            <?php endif; ?>
+        </tr>
+    </table>
 <?php endif; ?>
 
 <!-- Divider -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px">
-    <tr><td style="border-top:1px solid #edeae4;font-size:0;line-height:0">&nbsp;</td></tr>
+    <tr>
+        <td style="border-top:1px solid #edeae4;font-size:0;line-height:0">&nbsp;</td>
+    </tr>
 </table>
 
 <!-- Detail rows -->
@@ -80,45 +86,45 @@ do_action('woocommerce_email_header', $email_heading, $email);
     </tr>
 
     <?php if ($name) : ?>
-    <tr>
-        <td width="40%" style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Họ và tên', 'monamedia'); ?></td>
-        <td width="60%" style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($name); ?></td>
-    </tr>
+        <tr>
+            <td width="40%" style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Họ và tên', 'monamedia'); ?></td>
+            <td width="60%" style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($name); ?></td>
+        </tr>
     <?php endif; ?>
 
     <?php if ($phone) : ?>
-    <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Số điện thoại', 'monamedia'); ?></td>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($phone); ?></td>
-    </tr>
+        <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Số điện thoại', 'monamedia'); ?></td>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($phone); ?></td>
+        </tr>
     <?php endif; ?>
 
     <?php if ($order->get_billing_email()) : ?>
-    <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Email', 'monamedia'); ?></td>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($order->get_billing_email()); ?></td>
-    </tr>
+        <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Email', 'monamedia'); ?></td>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($order->get_billing_email()); ?></td>
+        </tr>
     <?php endif; ?>
 
     <?php if ($b_guests) : ?>
-    <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Số người tham gia', 'monamedia'); ?></td>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_guests) . ' ' . esc_html__('người', 'monamedia'); ?></td>
-    </tr>
+        <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Số người tham gia', 'monamedia'); ?></td>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_guests) . ' ' . esc_html__('người', 'monamedia'); ?></td>
+        </tr>
     <?php endif; ?>
 
     <?php if ($b_children) : ?>
-    <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Trẻ em tham gia', 'monamedia'); ?></td>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_children); ?></td>
-    </tr>
+        <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Trẻ em tham gia', 'monamedia'); ?></td>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_children); ?></td>
+        </tr>
     <?php endif; ?>
 
     <?php if ($b_instructor) : ?>
-    <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Người hướng dẫn', 'monamedia'); ?></td>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_instructor); ?></td>
-    </tr>
+        <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Người hướng dẫn', 'monamedia'); ?></td>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($b_instructor); ?></td>
+        </tr>
     <?php endif; ?>
 
     <!-- Service + Payment -->
@@ -129,10 +135,10 @@ do_action('woocommerce_email_header', $email_heading, $email);
     </tr>
 
     <?php if ($service_name) : ?>
-    <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Dịch vụ', 'monamedia'); ?></td>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($service_name); ?></td>
-    </tr>
+        <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Dịch vụ', 'monamedia'); ?></td>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;font-weight:600;color:#1b1c19"><?php echo esc_html($service_name); ?></td>
+        </tr>
     <?php endif; ?>
 
     <tr>
@@ -158,4 +164,8 @@ do_action('woocommerce_email_header', $email_heading, $email);
     </tr>
 </table>
 
-<?php do_action('woocommerce_email_footer', $email); ?>
+<?php
+do_action('woocommerce_email_footer', $email);
+
+if ($tsh_switched) restore_previous_locale();
+?>

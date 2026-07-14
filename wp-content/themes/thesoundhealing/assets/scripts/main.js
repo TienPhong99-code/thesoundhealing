@@ -32,8 +32,9 @@
         if (!btn) return;
         var url = btn.getAttribute('data-copy-url') || window.location.href;
         var orig = btn.textContent;
+        var copiedText = btn.getAttribute('data-copied-text') || 'Đã sao chép';
         function showCopied() {
-            btn.textContent = 'Đã sao chép!';
+            btn.textContent = copiedText;
             setTimeout(function () { btn.textContent = orig; }, 2000);
         }
         if (navigator.clipboard) {

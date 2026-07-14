@@ -63,6 +63,15 @@
       .tsh-qcol--last {
         border-bottom: 0 !important
       }
+
+      .email-heading-band {
+        padding: 14px 20px !important
+      }
+
+      .email-heading {
+        font-size: 13px !important;
+        letter-spacing: .5px !important
+      }
     }
   </style>
 </head>
@@ -88,8 +97,8 @@
 
           <!-- Heading band -->
           <tr>
-            <td style="background:#c2a056;padding:18px 36px;text-align:center">
-              <h1 style="margin:0;font-size:16px;font-weight:600;letter-spacing:1px;line-height:1.5;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;text-transform:uppercase;text-align:center"><?php echo wp_kses($email_heading, ['br' => []]); ?></h1>
+            <td class="email-heading-band" style="background:#c2a056;padding:18px 36px;text-align:center">
+              <h1 class="email-heading" style="margin:0;font-size:16px;font-weight:600;letter-spacing:1px;line-height:1.5;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;text-transform:uppercase;text-align:center"><?php echo wp_kses($email_heading, ['br' => []]); ?></h1>
             </td>
           </tr>
 

@@ -25,11 +25,11 @@ class TSH_WooCommerce_Hook
         add_action('woocommerce_email_after_order_table',                [$this, 'email_deposit_notice'], 10, 4);
         add_filter('woocommerce_checkout_fields', [$this, 'simplify_checkout_fields']);
         add_filter('woocommerce_order_button_text', fn() => __('Đặt lịch ngay', 'monamedia'));
-        add_filter('woocommerce_email_heading_customer_processing_order', [$this, 'booking_email_heading']);
-        add_filter('woocommerce_email_heading_customer_on_hold_order',    [$this, 'booking_email_heading']);
-        add_filter('woocommerce_email_subject_customer_processing_order', [$this, 'customer_email_subject'], 10, 2);
-        add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'customer_email_subject'], 10, 2);
-        add_filter('woocommerce_email_heading_customer_completed_order',  [$this, 'thankyou_email_heading']);
+        add_filter('woocommerce_email_heading_customer_processing_order', [$this, 'booking_email_heading'], 10, 2);
+        add_filter('woocommerce_email_heading_customer_on_hold_order',    [$this, 'booking_email_heading'], 10, 2);
+        add_filter('woocommerce_email_subject_customer_processing_order', [$this, 'processing_email_subject'], 10, 2);
+        add_filter('woocommerce_email_subject_customer_on_hold_order',    [$this, 'on_hold_email_subject'], 10, 2);
+        add_filter('woocommerce_email_heading_customer_completed_order',  [$this, 'thankyou_email_heading'], 10, 2);
         add_filter('woocommerce_email_subject_customer_completed_order',  [$this, 'thankyou_email_subject'], 10, 2);
         add_filter('woocommerce_gateway_description',          [$this, 'add_bacs_qr_checkout'], 10, 2);
         add_action('woocommerce_thankyou',                   [$this, 'render_thankyou_payment'], 5);
@@ -106,51 +106,106 @@ class TSH_WooCommerce_Hook
     }
 
     /**
-     * Ngôn ngữ (en|vi) mà khách đã đặt đơn — theo WPML. Đọc từ order meta wpml_language
-     * của WCML (tin cậy cả trong webhook SePay, nơi determine_locale() không có ngữ cảnh),
-     * fallback filter WPML rồi ngôn ngữ mặc định.
+     * Email khách là tiếng Anh hay không — quyết định theo ngôn ngữ ĐƠN, KHÔNG theo locale
+     * hiện hành. Email gửi từ admin (tiếng Việt) hoặc từ webhook SePay (không có ngữ cảnh
+     * ngôn ngữ) → is_en_locale() sẽ trả false và khách EN nhận email tiếng Việt.
+     * Không có đơn (WC preview trong Settings) → fallback locale hiện hành.
      */
-    private function order_language(\WC_Order $order): string
+    private function is_en_order($order): bool
     {
-        $lang = (string) $order->get_meta('wpml_language');
-        if ($lang === '') {
-            $lang = (string) apply_filters('wpml_element_language_code', null, [
-                'element_id'   => $order->get_id(),
-                'element_type' => 'post_shop_order',
-            ]);
-        }
-        if ($lang === '') {
-            $lang = (string) (apply_filters('wpml_current_language', null)
-                ?: (apply_filters('wpml_default_language', null) ?: 'vi'));
-        }
-        return strpos($lang, 'en') === 0 ? 'en' : 'vi';
+        return $order instanceof \WC_Order
+            ? tsh_order_lang($order) === 'en'
+            : $this->is_en_locale();
     }
 
     /**
-     * Tiêu đề email đặt lịch (processing/on-hold) theo ngôn ngữ khách. Set trực
-     * tiếp theo locale — không qua __()/.mo vì chuỗi có <br> + bị WPML can thiệp
-     * nên bản EN không trả về, dẫn tới kẹt tiếng Việt trên email tiếng Anh.
+     * Ngôn ngữ (en|vi) mà khách đã đặt đơn — theo WPML. Logic nằm ở helper dùng chung
+     * tsh_order_lang() (inc/functions/CommonFunction.php) vì template email cũng cần.
      */
-    public function booking_email_heading(): string
+    private function order_language(\WC_Order $order): string
     {
-        return $this->is_en_locale()
-            ? 'Thank you<br>for your booking'
-            : 'Cảm ơn bạn<br>đã đặt lịch hẹn';
+        return tsh_order_lang($order);
+    }
+
+    /**
+     * Tiêu đề email đặt lịch (processing/on-hold), dịch qua WPML String Translation để client
+     * tự sửa. Tách làm 2 chuỗi vì tiêu đề phải xuống hàng: KHÔNG nhét <br> vào chuỗi WPML —
+     * WPML can thiệp làm bản dịch EN không trả về, khách EN kẹt tiêu đề tiếng Việt. <br> ghép
+     * ở PHP (xem thankyou_title_lines).
+     *
+     * Cột thứ 2 là bản EN viết sẵn, dùng khi WPML chưa dịch chuỗi đó: mona_wpml_string() trả
+     * về chuỗi GỐC tiếng Việt khi chưa có bản dịch, nên nếu không có fallback này thì từ lúc
+     * deploy tới lúc client kịp vào String Translation, khách EN sẽ nhận tiêu đề tiếng Việt.
+     */
+    private function booking_title_lines(?string $lang = null): array
+    {
+        $lines = [
+            ['Cảm ơn bạn',      'Thank you',        'Email đặt lịch – tiêu đề dòng 1'],
+            ['đã đặt lịch hẹn', 'for your booking', 'Email đặt lịch – tiêu đề dòng 2'],
+        ];
+
+        $is_en = $lang === null ? $this->is_en_locale() : ($lang === 'en');
+
+        $out = [];
+        foreach ($lines as [$vi, $en, $name]) {
+            $text  = mona_wpml_string($vi, $name, 'monamedia', $lang);
+            $out[] = ($is_en && $text === $vi) ? $en : $text;
+        }
+        return $out;
+    }
+
+    public function booking_email_heading($heading = '', $order = null): string
+    {
+        return implode('<br>', $this->booking_title_lines($this->email_lang($order)));
     }
 
     /**
      * Email "đơn hoàn thành" = thư cảm ơn sau buổi trải nghiệm + mời đánh giá Google
      * (không phải biên nhận đơn). Tiêu đề + subject dịch qua WPML String Translation
-     * (helper mona_wpml_string) — dùng chung 1 tên định danh vì cùng nội dung.
+     * (helper mona_wpml_string).
+     *
+     * Tách làm 2 chuỗi vì tiêu đề phải xuống hàng trước tên thương hiệu, còn subject
+     * là plain text (không chứa HTML). KHÔNG nhét <br> vào chuỗi WPML — WPML can thiệp
+     * làm bản dịch EN không trả về (xem booking_email_heading ở trên). Thay vào đó ghép
+     * <br> ở PHP: heading nối bằng <br>, subject nối bằng dấu cách.
+     *
+     * Ngôn ngữ ép theo ĐƠN, không theo ngôn ngữ hiện hành: email này gửi khi nhân viên bấm
+     * "Hoàn thành" trong admin (đang chạy tiếng Việt) → nếu để WPML tự chọn thì khách EN
+     * nhận email tiếng Việt.
      */
-    public function thankyou_email_heading(): string
+    private function thankyou_title_lines(?string $lang = null): array
     {
-        return mona_wpml_string('Cảm ơn bạn đã đồng hành cùng The Sound Healing by Healiverse', 'Email hoàn thành – tiêu đề');
+        return [
+            mona_wpml_string('Cảm ơn bạn đã đồng hành cùng', 'Email hoàn thành – tiêu đề dòng 1', 'monamedia', $lang),
+            mona_wpml_string('The Sound Healing by Healiverse', 'Email hoàn thành – tiêu đề dòng 2', 'monamedia', $lang),
+        ];
     }
 
+    /**
+     * Ngôn ngữ dùng để render email, theo ĐƠN. WC_Email truyền $order làm tham số thứ 2 của cả
+     * 2 filter heading/subject; null (WC preview trong Settings) → để WPML tự chọn.
+     */
+    private function email_lang($order): ?string
+    {
+        return $order instanceof \WC_Order ? $this->order_language($order) : null;
+    }
+
+    public function thankyou_email_heading($heading = '', $order = null): string
+    {
+        return implode('<br>', $this->thankyou_title_lines($this->email_lang($order)));
+    }
+
+    /**
+     * Subject email cảm ơn. Tiêu đề marketing giống hệt nhau ở mọi đơn → phải nối thêm mã đơn,
+     * nếu không Gmail gộp mọi email cảm ơn của cùng một khách vào một conversation rồi thu gọn
+     * phần trùng (footer, chữ ký) thành nút "•••" — xem booking_email_subject().
+     */
     public function thankyou_email_subject($subject, $order): string
     {
-        return mona_wpml_string('Cảm ơn bạn đã đồng hành cùng The Sound Healing by Healiverse', 'Email hoàn thành – tiêu đề');
+        $title = implode(' ', $this->thankyou_title_lines($this->email_lang($order)));
+        return $order instanceof \WC_Order
+            ? $title . ' — ' . $this->order_code($order)
+            : $title;
     }
 
     /**
@@ -547,14 +602,17 @@ class TSH_WooCommerce_Hook
             . '<meta name="color-scheme" content="light only">'
             . '<style>'
             . 'body{margin:0;padding:0;background:#f4f2ec}'
-            . '@media only screen and (max-width:600px){.tsh-col{display:block!important;width:100%!important}}'
+            . '@media only screen and (max-width:600px){.tsh-col{display:block!important;width:100%!important;box-sizing:border-box!important}}'
             . '</style></head>'
             . '<body style="margin:0;padding:24px 12px;background:#f4f2ec;font-family:Arial,Helvetica,sans-serif;color:#1b1c19">'
             . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center">'
             . '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:820px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(27,28,25,0.08)">'
-            // Body: 2 cột inline-block (nội dung trái, banner phải) — font-size:0 khử khoảng trắng giữa 2 cột
-            . '<tr><td style="padding:0;font-size:0;line-height:0">'
-            . '<div class="tsh-col" style="display:inline-block;vertical-align:top;width:58%;box-sizing:border-box;padding:26px 24px;font-size:14px;line-height:1.5;color:#1b1c19">'
+            // Body: 2 cột bằng <td> của table thật (nội dung trái, banner phải). KHÔNG dùng
+            // div inline-block — Outlook (engine Word) bỏ qua display:inline-block nên cột
+            // banner rớt xuống dưới. Stack trên mobile qua class .tsh-col (media query trên).
+            . '<tr><td style="padding:0">'
+            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse"><tr>'
+            . '<td class="tsh-col" width="58%" style="width:58%;padding:26px 24px;vertical-align:top;font-size:14px;line-height:1.5;color:#1b1c19">'
             . '<div style="padding:14px 18px;background:#faf8f4;border:1px dashed #c2a056;border-radius:10px;margin-bottom:18px">'
             . '<span style="color:#717171;font-size:13px">' . esc_html__('Mã e-ticket', 'monamedia') . '</span><br><strong style="color:#c2a056;font-size:22px;letter-spacing:1px">' . esc_html($code) . '</strong></div>'
             . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px">'
@@ -573,9 +631,11 @@ class TSH_WooCommerce_Hook
             . '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:18px"><tr><td>'
             . '<a href="' . esc_url($eticket_url) . '" style="display:inline-block;background:#c2a056;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:.3px;padding:12px 28px;border-radius:8px">' . esc_html($dl_label) . '</a>'
             . '</td></tr></table>'
-            . '</div>'
-            . '<div class="tsh-col" style="display:inline-block;vertical-align:top;width:42%;box-sizing:border-box;font-size:0;line-height:0;background:#f4f7ee">'
-            . '<img src="' . esc_url($banner_url) . '" alt="' . esc_attr__('The Healing Universe of Việt Nam', 'monamedia') . '" width="100%" style="display:block;width:100%;height:auto;border:0"></div>'
+            . '</td>'
+            . '<td class="tsh-col" width="42%" style="width:42%;background:#f4f7ee;vertical-align:top;font-size:0;line-height:0">'
+            . '<img src="' . esc_url($banner_url) . '" alt="' . esc_attr__('The Healing Universe of Việt Nam', 'monamedia') . '" width="100%" style="display:block;width:100%;height:auto;border:0">'
+            . '</td>'
+            . '</tr></table>'
             . '</td></tr>'
             . '</table>'
             . '</td></tr></table>'
@@ -1166,7 +1226,23 @@ class TSH_WooCommerce_Hook
         return $custom ? '[Đặt lịch] ' . $custom : $subject;
     }
 
-    public function customer_email_subject($subject, $order): string
+    /**
+     * Mã đơn hiển thị cho khách (#01043) — cũng dùng làm phần duy nhất của subject email.
+     */
+    private function order_code(\WC_Order $order): string
+    {
+        return '#' . str_pad((string) $order->get_id(), 5, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Subject email đặt lịch. MỌI email gửi cho khách phải có subject duy nhất: Gmail gộp các
+     * email trùng subject + trùng người nhận vào một conversation rồi thu gọn phần nội dung
+     * lặp lại của email trước thành nút "•••" (Show trimmed content) — khách mất luôn bảng chi
+     * tiết đặt lịch và footer. Vì vậy:
+     *   - prefix khác nhau giữa "chờ thanh toán" và "đã xác nhận" (2 email của cùng 1 đơn);
+     *   - mã đơn ở cuối, để 2 đơn cùng dịch vụ / ngày / khung giờ không trùng subject.
+     */
+    private function booking_email_subject($subject, $order, string $prefix): string
     {
         if (!$order instanceof \WC_Order) return $subject;
         $items   = $order->get_items();
@@ -1174,9 +1250,20 @@ class TSH_WooCommerce_Hook
         $date    = $order->get_meta('_booking_date');
         $time    = $order->get_meta('_booking_time');
 
-        $parts  = array_filter([$service ?: '', $date ?: '', $time ?: '']);
-        $prefix = $this->is_en_locale() ? '[Booking] ' : '[Đặt lịch] ';
-        return $parts ? $prefix . implode(' — ', $parts) : $subject;
+        $parts = array_filter([$service ?: '', $date ?: '', $time ?: '', $this->order_code($order)]);
+        return $prefix . implode(' — ', $parts);
+    }
+
+    public function on_hold_email_subject($subject, $order): string
+    {
+        $prefix = $this->is_en_order($order) ? '[Awaiting payment] ' : '[Chờ thanh toán] ';
+        return $this->booking_email_subject($subject, $order, $prefix);
+    }
+
+    public function processing_email_subject($subject, $order): string
+    {
+        $prefix = $this->is_en_order($order) ? '[Booking confirmed] ' : '[Xác nhận đặt lịch] ';
+        return $this->booking_email_subject($subject, $order, $prefix);
     }
 
     // ── Guests pricing ────────────────────────────────────────────────────

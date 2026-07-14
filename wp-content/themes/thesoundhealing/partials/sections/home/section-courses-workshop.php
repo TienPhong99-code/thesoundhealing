@@ -3,23 +3,54 @@ defined('ABSPATH') || exit;
 
 $page_id = MONA_PAGE_HOME;
 
-// --- Courses ---
-$course_posts = get_posts([
-    'post_type'      => 'khoa_hoc',
-    'post_status'    => 'publish',
-    'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
-    'posts_per_page' => -1,
-    'orderby'        => 'date',
-    'order'          => 'DESC',
-]);
+// Bài do admin chọn (kéo thả để sắp thứ tự); để trống → 3 bài mới nhất của cả 2 post type
+$raw_objects = get_field('cwlist_items', $page_id);
 
-$course_items = [];
-foreach ($course_posts as $post) {
-    $thumb     = get_the_post_thumbnail_url($post->ID, 'full');
+if (empty($raw_objects)) {
+    $raw_objects = get_posts([
+        'post_type'      => ['khoa_hoc', 'workshop'],
+        'post_status'    => 'publish',
+        'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
+        'posts_per_page' => 3,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
+}
+
+$all_items = [];
+foreach ($raw_objects as $post) {
+    $thumb = get_the_post_thumbnail_url($post->ID, 'full');
+
+    if ($post->post_type === 'workshop') {
+        $terms     = get_the_terms($post->ID, 'loai_workshop');
+        $type_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
+
+        $all_items[] = [
+            '_type'      => 'workshop',
+            'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
+            'type'       => $type_name,
+            'format'     => get_field('ws_format',        $post->ID) ?: 'Onsite',
+            'status'     => get_field('ws_status',        $post->ID) ?: 'open',
+            'date'       => mona_schedule_label($post->ID) ?: 'Sắp diễn ra',
+            'is_past'    => mona_schedule_is_past($post->ID),
+            'time'       => get_field('ws_time',          $post->ID) ?: '09:00 – 12:00',
+            'duration'   => get_field('ws_duration',      $post->ID) ?: '3 giờ',
+            'title'      => $post->post_title,
+            'location'   => get_field('ws_location',      $post->ID),
+            'instructor' => get_field('ws_instructor_name', $post->ID),
+            'desc'       => get_field('ws_short_desc',    $post->ID),
+            'price'      => get_field('ws_price',         $post->ID) ?: 'Liên hệ',
+            'spots'      => get_field('ws_spots',         $post->ID),
+            'url'        => get_permalink($post->ID),
+        ];
+
+        continue;
+    }
+
     $terms     = get_the_terms($post->ID, 'bo_mon_khoa_hoc');
     $term_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
 
-    $course_items[] = [
+    $all_items[] = [
         '_type'      => 'khoa_hoc',
         'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
         'term'       => $term_name,
@@ -38,57 +69,12 @@ foreach ($course_posts as $post) {
         'price'      => get_field('price',           $post->ID) ?: 'Liên hệ',
         'spots'      => get_field('kh_spots',        $post->ID),
         'url'        => get_permalink($post->ID),
-        '_date_sort' => (mona_expand_schedule($post->ID)['dates'][0] ?? null) ?: $post->post_date,
     ];
 }
-
-// --- Workshops ---
-$workshop_posts = get_posts([
-    'post_type'      => 'workshop',
-    'post_status'    => 'publish',
-    'suppress_filters' => false, // WPML: chỉ lấy bài theo ngôn ngữ hiện tại
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order date',
-    'order'          => 'ASC',
-]);
-
-$workshop_items = [];
-foreach ($workshop_posts as $post) {
-    $thumb     = get_the_post_thumbnail_url($post->ID, 'full');
-    $terms     = get_the_terms($post->ID, 'loai_workshop');
-    $type_name = (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
-
-    $workshop_items[] = [
-        '_type'      => 'workshop',
-        'image'      => ['url' => $thumb ?: '', 'alt' => get_the_title($post->ID)],
-        'type'       => $type_name,
-        'format'     => get_field('ws_format',        $post->ID) ?: 'Onsite',
-        'status'     => get_field('ws_status',        $post->ID) ?: 'open',
-        'date'       => mona_schedule_label($post->ID) ?: 'Sắp diễn ra',
-        'is_past'    => mona_schedule_is_past($post->ID),
-        'time'       => get_field('ws_time',          $post->ID) ?: '09:00 – 12:00',
-        'duration'   => get_field('ws_duration',      $post->ID) ?: '3 giờ',
-        'title'      => $post->post_title,
-        'location'   => get_field('ws_location',      $post->ID),
-        'instructor' => get_field('ws_instructor_name', $post->ID),
-        'desc'       => get_field('ws_short_desc',    $post->ID),
-        'price'      => get_field('ws_price',         $post->ID) ?: 'Liên hệ',
-        'spots'      => get_field('ws_spots',         $post->ID),
-        'url'        => get_permalink($post->ID),
-        '_date_sort' => (mona_expand_schedule($post->ID)['dates'][0] ?? null) ?: $post->post_date,
-    ];
-}
-
-// Merge & sort by date ascending
-$all_items = array_merge($course_items, $workshop_items);
-usort($all_items, function ($a, $b) {
-    return strcmp($a['_date_sort'], $b['_date_sort']);
-});
 
 $data = [
     'heading'         => get_field('cwlist_heading', $page_id),
-    'desc'            => get_field('cwlist_desc', $page_id),
-    'link_all'        => get_field('cwlist_link_all', $page_id) ?: ['url' => home_url('/khoa-hoc-workshop'), 'title' => __('Xem tất cả', 'monamedia'), 'target' => ''],
+    'link_all'        => mona_section_link('page-template/page-khoa-hoc-workshop.php'),
     'items'           => $all_items,
 ];
 ?>
@@ -100,14 +86,9 @@ $data = [
         <div class="flex md:items-end justify-between mb-8 max-md:flex-col gap-4">
             <div>
                 <?php if (!empty($data['heading'])) : ?>
-                    <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px] mb-3">
+                    <h2 class="font-title text-pri text-[32px] font-bold max-md:text-[24px]">
                         <?php echo esc_html($data['heading']); ?>
                     </h2>
-                <?php endif; ?>
-                <?php if (!empty($data['desc'])) : ?>
-                    <p class="text-[#414847]">
-                        <?php echo wp_kses_post($data['desc']); ?>
-                    </p>
                 <?php endif; ?>
             </div>
 

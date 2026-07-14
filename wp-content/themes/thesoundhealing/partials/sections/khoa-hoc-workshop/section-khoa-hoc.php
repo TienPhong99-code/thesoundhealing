@@ -9,69 +9,9 @@ $query = new WP_Query([
     'order'          => 'ASC',
 ]);
 
-$sample = [
-    [
-        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Hoà âm 7 chuông pha lê'],
-        'level'      => 'FOUNDATION',
-        'term'       => 'Bộ Môn Âm Thanh',
-        'format'     => 'Onsite',
-        'title'      => 'Hoà âm 7 chuông pha lê',
-        'desc'       => 'Nắm vững kỹ thuật chơi và hoà âm 7 luân xa với chuông pha lê, mang lại sự cân bằng sâu sắc cho cơ thể và tâm trí.',
-        'time'       => '09:00 – 17:00',
-        'start_date' => '15 THÁNG 2, 2025',
-        'duration'   => '4 tuần · Cuối tuần',
-        'instructor' => 'Linh Tâm',
-        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
-        'branch'     => 'Cơ sở Quận 1',
-        'status'     => 'open',
-        'spots'      => 15,
-        'price'      => '12.000.000 VNĐ',
-        'url'        => '#',
-    ],
-    [
-        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Liệu pháp chuông đồng'],
-        'level'      => 'MASTERY',
-        'term'       => 'Bộ Môn Âm Thanh',
-        'format'     => 'Onsite',
-        'title'      => 'Liệu pháp chuông đồng',
-        'desc'       => 'Khám phá nghệ thuật chữa lành cổ xưa qua rung động vật lý của chuông đồng nguyên bản Himalaya.',
-        'time'       => '09:00 – 17:00',
-        'start_date' => '01 THÁNG 3, 2025',
-        'duration'   => '2 ngày · Cuối tuần',
-        'instructor' => 'Linh Tâm',
-        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
-        'branch'     => 'Cơ sở Quận 1',
-        'status'     => 'upcoming',
-        'spots'      => 10,
-        'price'      => '15.000.000 VNĐ',
-        'url'        => '#',
-    ],
-    [
-        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Liệu pháp Sound Bath'],
-        'level'      => 'ADVANCED',
-        'term'       => 'Bộ Môn Âm Thanh',
-        'format'     => 'Onsite',
-        'title'      => 'Liệu pháp Sound Bath',
-        'desc'       => 'Đào tạo chuyên sâu kỹ năng tổ chức và dẫn dắt các buổi tắm âm thanh trị liệu chuyên nghiệp.',
-        'time'       => '09:00 – 17:00',
-        'start_date' => '15 THÁNG 3, 2025',
-        'duration'   => '6 tuần · Cuối tuần',
-        'instructor' => 'Linh Tâm',
-        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
-        'branch'     => 'Cơ sở Quận 1',
-        'status'     => 'open',
-        'spots'      => 8,
-        'price'      => '20.000.000 VNĐ',
-        'url'        => '#',
-    ],
-];
+$items = [];
 
-$use_sample = !$query->have_posts();
-$items      = [];
-
-if ($use_sample) {
-    $items = $sample;
-} else {
+if ($query->have_posts()) {
     while ($query->have_posts()) {
         $query->the_post();
         $post_id   = get_the_ID();
@@ -106,7 +46,7 @@ if ($use_sample) {
 <section class="sec-khws-kh-list section-pd max-md:!pt-20">
     <div class="container">
         <h2 class="font-title text-pri text-[40px] font-bold tracking-[-0.8px] leading-[48px] mb-10 max-md:text-[28px] max-md:mb-6">
-            Khóa Học
+            <?php esc_html_e('Khóa Học', 'monamedia'); ?>
         </h2>
         <div class="row">
             <?php foreach ($items as $item) : ?>

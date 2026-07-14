@@ -3,15 +3,12 @@ defined('ABSPATH') || exit;
 
 $page_id = MONA_PAGE_HOME;
 
-$raw_link    = get_field('featured_link', $page_id);
 $raw_objects = get_field('featured_items', $page_id);
 
 if (empty($raw_objects)) return;
 
 $data = [
     'heading' => get_field('featured_heading', $page_id) ?: 'Các Sự Kiện Nổi Bật',
-    'desc'    => get_field('featured_desc',    $page_id),
-    'link'    => $raw_link ?: null,
     'items'   => [],
 ];
 
@@ -98,20 +95,7 @@ if (empty($data['items'])) return;
                         <?php echo esc_html($data['heading']); ?>
                     </h2>
                 <?php endif; ?>
-                <?php if (!empty($data['desc'])) : ?>
-                    <p class="text-[16px] text-sec mt-3">
-                        <?php echo esc_html($data['desc']); ?>
-                    </p>
-                <?php endif; ?>
             </div>
-
-            <?php if (!empty($data['link']['url'])) : ?>
-                <a href="<?php echo esc_url($data['link']['url']); ?>"
-                    target="<?php echo esc_attr($data['link']['target'] ?? ''); ?>"
-                    class="flex items-center gap-1 text-pri text-[16px] font-semibold uppercase tracking-[1.2px] shrink-0">
-                    <?php echo esc_html($data['link']['title'] ?: __('XEM TẤT CẢ', 'monamedia')); ?>
-                </a>
-            <?php endif; ?>
         </div>
 
         <!-- Cards -->

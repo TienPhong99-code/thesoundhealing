@@ -65,12 +65,13 @@ defined('ABSPATH') || exit;
             <p class="text-[13px] text-[#414847]"><?php esc_html_e('Chia sẻ đường dẫn với mã giới thiệu của bạn', 'monamedia'); ?></p>
 
             <button type="button"
+                data-copied-text="<?php echo esc_attr__('Đã sao chép', 'monamedia'); ?>"
                 class="share-copy-btn w-full py-3 px-4 rounded-xl border border-[#c0c8c6] text-[14px] font-medium text-[#1b1c19] hover:bg-[#f5f4f1] transition-colors cursor-pointer">
                 <?php esc_html_e('Sao Chép Đường Dẫn', 'monamedia'); ?>
             </button>
 
             <button type="button"
-                class="share-qr-btn w-full py-3 px-4 rounded-xl border border-[#c0c8c6] text-[14px] font-medium text-[#1b1c19] hover:bg-[#f5f4f1] transition-colors cursor-pointer">
+                class="share-qr-btn max-md:hidden w-full py-3 px-4 rounded-xl border border-[#c0c8c6] text-[14px] font-medium text-[#1b1c19] hover:bg-[#f5f4f1] transition-colors cursor-pointer">
                 <?php esc_html_e('Tải Mã QR', 'monamedia'); ?>
             </button>
         </div>

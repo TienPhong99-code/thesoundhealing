@@ -1,6 +1,6 @@
 <?php
-    $link = get_the_permalink();
-    $link_encoded = urlencode($link);
+$link = get_the_permalink();
+$link_encoded = urlencode($link);
 ?>
 <div class="postdt-share">
     <span><?php esc_html_e('Chia sẻ:', 'monamedia'); ?></span>

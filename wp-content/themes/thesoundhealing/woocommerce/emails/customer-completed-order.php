@@ -17,17 +17,25 @@ defined('ABSPATH') || exit;
 $name       = trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name());
 $review_url = 'https://maps.app.goo.gl/QxQDTDfYL5SYFkVs8';
 
+// Ngôn ngữ ép theo ĐƠN chứ không theo ngôn ngữ hiện hành: email gửi khi nhân viên bấm
+// "Hoàn thành" trong admin (tiếng Việt) → để WPML tự chọn thì khách EN nhận email tiếng Việt.
+$lang = tsh_order_lang($order);
+
+// Thân email này dịch qua WPML ($lang ở trên), nhưng footer email vẫn dùng gettext
+// (domain 'monamedia') → phải ép locale luôn. Restore ở cuối file.
+$tsh_switched = tsh_switch_email_locale($order);
+
 // Chuỗi gốc tiếng Việt → dịch qua WPML String Translation. Xuất ra đều esc_html().
-$t_greet   = mona_wpml_string('Kính gửi', 'Email hoàn thành – lời chào');
-$t_guest   = mona_wpml_string('Quý khách', 'Email hoàn thành – tên mặc định');
-$t_p1      = mona_wpml_string('Cảm ơn bạn đã lựa chọn HEALIVERSE.', 'Email hoàn thành – câu 1');
-$t_p2      = mona_wpml_string('Chúng tôi hy vọng trải nghiệm tại HEALIVERSE đã mang đến cho bạn những phút giây thư giãn sâu, cân bằng và tiếp thêm năng lượng tích cực trên hành trình chăm sóc sức khỏe thể chất, tinh thần và phát triển bản thân.', 'Email hoàn thành – câu 2');
-$t_p3      = mona_wpml_string('Nếu bạn hài lòng với trải nghiệm của mình, chúng tôi rất mong bạn dành ít phút để chia sẻ cảm nhận bằng một đánh giá trên Google. Sự ủng hộ của bạn sẽ giúp nhiều người biết đến HEALIVERSE và có thêm cơ hội tìm thấy một không gian nghỉ ngơi, chữa lành và tái tạo năng lượng.', 'Email hoàn thành – câu 3');
-$t_cta     = mona_wpml_string('Để lại đánh giá 5 sao trên Google', 'Email hoàn thành – CTA tiêu đề');
-$t_cta_btn = mona_wpml_string('Đánh giá trên Google', 'Email hoàn thành – CTA nút');
-$t_close   = mona_wpml_string('Chúng tôi rất mong được chào đón bạn quay trở lại bất cứ khi nào bạn cần một khoảng lặng để nghỉ ngơi, tái tạo năng lượng và kết nối với chính mình.', 'Email hoàn thành – câu kết');
-$t_regards = mona_wpml_string('Trân trọng,', 'Email hoàn thành – Trân trọng');
-$t_vi_lbl  = mona_wpml_string('Tiếng Việt', 'Email hoàn thành – nhãn hotline VN');
+$t_greet   = mona_wpml_string('Kính gửi', 'Email hoàn thành – lời chào', 'monamedia', $lang);
+$t_guest   = mona_wpml_string('Quý khách', 'Email hoàn thành – tên mặc định', 'monamedia', $lang);
+$t_p1      = mona_wpml_string('Cảm ơn bạn đã lựa chọn HEALIVERSE.', 'Email hoàn thành – câu 1', 'monamedia', $lang);
+$t_p2      = mona_wpml_string('Chúng tôi hy vọng trải nghiệm tại HEALIVERSE đã mang đến cho bạn những phút giây thư giãn sâu, cân bằng và tiếp thêm năng lượng tích cực trên hành trình chăm sóc sức khỏe thể chất, tinh thần và phát triển bản thân.', 'Email hoàn thành – câu 2', 'monamedia', $lang);
+$t_p3      = mona_wpml_string('Nếu bạn hài lòng với trải nghiệm của mình, chúng tôi rất mong bạn dành ít phút để chia sẻ cảm nhận bằng một đánh giá trên Google. Sự ủng hộ của bạn sẽ giúp nhiều người biết đến HEALIVERSE và có thêm cơ hội tìm thấy một không gian nghỉ ngơi, chữa lành và tái tạo năng lượng.', 'Email hoàn thành – câu 3', 'monamedia', $lang);
+$t_cta     = mona_wpml_string('Để lại đánh giá 5 sao trên Google', 'Email hoàn thành – CTA tiêu đề', 'monamedia', $lang);
+$t_cta_btn = mona_wpml_string('Đánh giá trên Google', 'Email hoàn thành – CTA nút', 'monamedia', $lang);
+$t_close   = mona_wpml_string('Chúng tôi rất mong được chào đón bạn quay trở lại bất cứ khi nào bạn cần một khoảng lặng để nghỉ ngơi, tái tạo năng lượng và kết nối với chính mình.', 'Email hoàn thành – câu kết', 'monamedia', $lang);
+$t_regards = mona_wpml_string('Trân trọng,', 'Email hoàn thành – Trân trọng', 'monamedia', $lang);
+$t_vi_lbl  = mona_wpml_string('Tiếng Việt', 'Email hoàn thành – nhãn hotline VN', 'monamedia', $lang);
 
 do_action('woocommerce_email_header', $email_heading, $email);
 ?>
@@ -68,7 +76,7 @@ do_action('woocommerce_email_header', $email_heading, $email);
 </p>
 
 <!-- Signature -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px;border-top:1px solid #edeae4">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #edeae4">
     <tr>
         <td style="padding-top:22px">
             <p style="margin:0 0 6px;font-size:14px;color:#555;line-height:1.6"><?php echo esc_html($t_regards); ?></p>
@@ -91,4 +99,16 @@ do_action('woocommerce_email_header', $email_heading, $email);
     </tr>
 </table>
 
-<?php do_action('woocommerce_email_footer', $email); ?>
+<!-- Chân thân email: giãn 24px để footer không dính sát. Dùng ô spacer chứ không đặt
+     padding-bottom trên <table> — Outlook (engine Word) bỏ qua padding của table. -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td style="height:24px;font-size:0;line-height:0">&nbsp;</td>
+    </tr>
+</table>
+
+<?php
+do_action('woocommerce_email_footer', $email);
+
+if ($tsh_switched) restore_previous_locale();
+?>

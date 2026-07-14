@@ -5,21 +5,32 @@ $search_url = home_url('/tim-kiem/');
 
 $_img_base = get_template_directory_uri() . '/assets/images/';
 
-$_sb_imgs = [
-    'best-seller'   => get_field('sb_img_best_seller',   'option') ?: $_img_base . 'dv-exp-main.jpg',
-    'sound-healing' => get_field('sb_img_sound_healing', 'option') ?: $_img_base . 'dv-tam-am-ngu-ngon-rieng-tu.jpg',
-    'usui-reiki'    => get_field('sb_img_usui_reiki',    'option') ?: $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg',
-    'khoa-hoc'      => get_field('sb_img_khoa_hoc',      'option') ?: $_img_base . 'kh-hero.jpg',
-    'workshop'      => get_field('sb_img_workshop',      'option') ?: $_img_base . 'gallery-img-1.jpg',
+// Key của mỗi danh mục là logic tìm kiếm (map post type + slug taxonomy trong
+// page-search-results.php) nên cố định ở đây. Admin chỉ sửa được chữ + hình, tại
+// Theme Settings → tab "Search Booking – Danh mục"; bỏ trống thì rơi về mặc định dưới đây.
+$_sb_defaults = [
+    'best-seller'   => ['label' => __('Best Seller', 'monamedia'),   'desc' => __('Được yêu thích nhất', 'monamedia'),             'image' => $_img_base . 'dv-exp-main.jpg'],
+    'sound-healing' => ['label' => __('Sound Healing', 'monamedia'), 'desc' => __('Liệu pháp âm thanh chữa lành', 'monamedia'),    'image' => $_img_base . 'dv-tam-am-ngu-ngon-rieng-tu.jpg'],
+    'usui-reiki'    => ['label' => __('Usui Reiki', 'monamedia'),    'desc' => __('Năng lượng chữa lành Reiki', 'monamedia'),      'image' => $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg'],
+    'khoa-hoc'      => ['label' => __('Khoá Học', 'monamedia'),      'desc' => __('Chương trình đào tạo chuyên sâu', 'monamedia'), 'image' => $_img_base . 'kh-hero.jpg'],
+    'workshop'      => ['label' => __('Workshop', 'monamedia'),      'desc' => __('Sự kiện trải nghiệm ngắn hạn', 'monamedia'),    'image' => $_img_base . 'gallery-img-1.jpg'],
 ];
 
-$loai_hinh_opts = [
-    'best-seller'   => ['label' => __('Best Seller', 'monamedia'),   'desc' => __('Được yêu thích nhất', 'monamedia'),             'image' => $_sb_imgs['best-seller']],
-    'sound-healing' => ['label' => __('Sound Healing', 'monamedia'), 'desc' => __('Liệu pháp âm thanh chữa lành', 'monamedia'),   'image' => $_sb_imgs['sound-healing']],
-    'usui-reiki'    => ['label' => __('Usui Reiki', 'monamedia'),    'desc' => __('Năng lượng chữa lành Reiki', 'monamedia'),      'image' => $_sb_imgs['usui-reiki']],
-    'khoa-hoc'      => ['label' => __('Khoá Học', 'monamedia'),      'desc' => __('Chương trình đào tạo chuyên sâu', 'monamedia'), 'image' => $_sb_imgs['khoa-hoc']],
-    'workshop'      => ['label' => __('Workshop', 'monamedia'),      'desc' => __('Sự kiện trải nghiệm ngắn hạn', 'monamedia'),    'image' => $_sb_imgs['workshop']],
-];
+$loai_hinh_opts = [];
+foreach ($_sb_defaults as $_key => $_def) {
+    $_slug = str_replace('-', '_', $_key); // best-seller → sb_label_best_seller
+
+    // Chữ admin nhập đi qua mona_wpml_string để dịch được ở WPML → String Translation
+    // (khác với text mặc định: text đó nằm trong code nên dịch bằng .po/.mo).
+    $_label = trim((string) get_field("sb_label_{$_slug}", 'option'));
+    $_desc  = trim((string) get_field("sb_desc_{$_slug}",  'option'));
+
+    $loai_hinh_opts[$_key] = [
+        'label' => $_label !== '' ? mona_wpml_string($_label, "Search Booking - {$_key} label") : $_def['label'],
+        'desc'  => $_desc  !== '' ? mona_wpml_string($_desc,  "Search Booking - {$_key} desc")  : $_def['desc'],
+        'image' => get_field("sb_img_{$_slug}", 'option') ?: $_def['image'],
+    ];
+}
 
 $_td  = new DateTime();
 $_tm  = (new DateTime())->modify('+1 day');
@@ -211,7 +222,9 @@ $mobile_summary = !empty($mobile_parts) ? implode(' · ', $mobile_parts) : __('L
                                 data-label="<?php echo esc_attr($opt['label']); ?>">
                                 <span class="sb-price-item__label"><?php echo esc_html($opt['label']); ?></span>
                                 <span class="sb-price-item__check" aria-hidden="true">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
                                 </span>
                             </button>
                         <?php endforeach; ?>

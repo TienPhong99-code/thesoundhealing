@@ -37,17 +37,67 @@ if (! function_exists('mona_replace_tel')) {
  * Dùng cho chuỗi do dev viết nhưng muốn client tự sửa trong WPML → String Translation
  * (thay cho .po/.mo). WPML chưa bật / chưa dịch → trả về chuỗi gốc. Nhớ esc khi xuất.
  *
- * @param string $value   Chuỗi gốc (tiếng Việt)
- * @param string $name    Tên định danh hiển thị trong String Translation
- * @param string $context Nhóm (domain) trong String Translation
+ * @param string      $value   Chuỗi gốc (tiếng Việt)
+ * @param string      $name    Tên định danh hiển thị trong String Translation
+ * @param string      $context Nhóm (domain) trong String Translation
+ * @param string|null $lang    Ép dịch sang ngôn ngữ này ('en'|'vi'). null = ngôn ngữ hiện hành.
+ *                             Dùng khi render email: ngôn ngữ hiện hành là của admin, không phải
+ *                             của khách → phải ép theo ngôn ngữ ĐƠN (xem tsh_order_lang).
  *
  * @return string
  */
 if (! function_exists('mona_wpml_string')) {
-    function mona_wpml_string(string $value, string $name, string $context = 'monamedia'): string
+    function mona_wpml_string(string $value, string $name, string $context = 'monamedia', ?string $lang = null): string
     {
         do_action('wpml_register_single_string', $context, $name, $value);
-        return (string) apply_filters('wpml_translate_single_string', $value, $context, $name);
+        return (string) apply_filters('wpml_translate_single_string', $value, $context, $name, $lang);
+    }
+}
+
+/**
+ * Ngôn ngữ (en|vi) mà khách đã đặt đơn — theo WPML. Đọc từ order meta wpml_language của
+ * WCML (tin cậy cả trong webhook / khi admin bấm đổi trạng thái, nơi ngôn ngữ hiện hành là
+ * của admin chứ không phải của khách), fallback filter WPML rồi ngôn ngữ mặc định.
+ */
+if (! function_exists('tsh_order_lang')) {
+    function tsh_order_lang(\WC_Order $order): string
+    {
+        $lang = (string) $order->get_meta('wpml_language');
+        if ($lang === '') {
+            $lang = (string) apply_filters('wpml_element_language_code', null, [
+                'element_id'   => $order->get_id(),
+                'element_type' => 'post_shop_order',
+            ]);
+        }
+        if ($lang === '') {
+            $lang = (string) (apply_filters('wpml_current_language', null)
+                ?: (apply_filters('wpml_default_language', null) ?: 'vi'));
+        }
+        return strpos($lang, 'en') === 0 ? 'en' : 'vi';
+    }
+}
+
+/**
+ * Ép locale của email khách về ngôn ngữ ĐƠN, để chuỗi gettext của theme (domain 'monamedia',
+ * dịch bằng .po/.mo) ra đúng ngôn ngữ khách.
+ *
+ * VÌ SAO CẦN: WCML có đổi ngôn ngữ khi gửi email, NHƯNG:
+ *   - change_email_language() chỉ gọi sitepress->switch_lang(), không switch_to_locale()
+ *     → file .mo của theme đã nạp từ đầu request (locale admin/site) không được nạp lại;
+ *   - set_locale_for_emails() chỉ ghi đè locale cho domain 'woocommerce', KHÔNG cho 'monamedia'.
+ * → Khách EN vẫn nhận chuỗi theme tiếng Việt. switch_to_locale() buộc WP nạp lại textdomain.
+ *
+ * Gọi ở ĐẦU template email (trước mọi esc_html_e), và restore_previous_locale() ở cuối nếu
+ * hàm này trả về true. Phải nằm trong template vì header/footer email render bên trong đó.
+ *
+ * @return bool true nếu đã đổi locale (caller phải gọi restore_previous_locale()).
+ */
+if (! function_exists('tsh_switch_email_locale')) {
+    function tsh_switch_email_locale(\WC_Order $order): bool
+    {
+        $target = tsh_order_lang($order) === 'en' ? 'en_US' : 'vi';
+        if (determine_locale() === $target) return false;
+        return (bool) switch_to_locale($target);
     }
 }
 
@@ -422,6 +472,12 @@ if (! function_exists('mona_register_custom_taxonomy')) {
 if (! function_exists('mona_get_page_id_from_template')) {
     function mona_get_page_id_from_template(string $template)
     {
+        // meta_value rỗng khiến WP_Query bỏ qua điều kiện lọc template và trả về
+        // một trang bất kỳ có meta _wp_page_template — chặn từ đầu cho chắc.
+        if ($template === '') {
+            return null;
+        }
+
         $pages = get_posts([
             'post_type' => 'page',
             'post_status' => 'publish',
@@ -436,6 +492,63 @@ if (! function_exists('mona_get_page_id_from_template')) {
         }
 
         return null;
+    }
+}
+
+if (! function_exists('mona_page_url_from_template')) {
+    /**
+     * URL của trang dùng page template chỉ định, theo ngôn ngữ hiện tại.
+     * Dùng cho nút "Xem tất cả" của các section ở trang chủ.
+     */
+    function mona_page_url_from_template(string $template): string
+    {
+        static $cache = [];
+
+        $lang = apply_filters('wpml_current_language', null) ?: 'default';
+        $key  = $lang . '|' . $template;
+
+        if (isset($cache[$key])) {
+            return $cache[$key];
+        }
+
+        $page_id = mona_get_page_id_from_template($template);
+
+        if (! $page_id) {
+            return $cache[$key] = '';
+        }
+
+        // get_posts() trong helper trên chạy với suppress_filters => true nên WPML không lọc:
+        // phải tự map sang bản dịch của ngôn ngữ đang xem.
+        $translated_id = apply_filters('wpml_object_id', $page_id, 'page', true);
+
+        // Bản dịch chưa publish (nháp/thùng rác) thì get_permalink() trả URL dạng ?page_id=123
+        // và link đó 404 — trong trường hợp đó dùng trang gốc thay vì đưa khách vào ngõ cụt.
+        if ($translated_id && get_post_status($translated_id) === 'publish') {
+            $page_id = $translated_id;
+        }
+
+        return $cache[$key] = (string) get_permalink($page_id);
+    }
+}
+
+if (! function_exists('mona_section_link')) {
+    /**
+     * Link "Xem tất cả" của một section: luôn trỏ về trang tương ứng,
+     * admin không cần (và không thể) nhập tay.
+     */
+    function mona_section_link(string $template): ?array
+    {
+        $url = mona_page_url_from_template($template);
+
+        if (! $url) {
+            return null;
+        }
+
+        return [
+            'url'    => $url,
+            'title'  => __('XEM TẤT CẢ', 'monamedia'),
+            'target' => '',
+        ];
     }
 }
 

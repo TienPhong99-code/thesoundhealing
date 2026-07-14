@@ -9,63 +9,9 @@ $query = new WP_Query([
     'order'          => 'ASC',
 ]);
 
-$sample = [
-    [
-        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-1.png', 'alt' => 'Sound Bath Buổi Tối'],
-        'type'       => 'Workshop Âm Thanh',
-        'format'     => 'Onsite',
-        'status'     => 'open',
-        'date'       => '18 THÁNG 1, 2025',
-        'time'       => '19:00 – 21:00',
-        'duration'   => '2 giờ',
-        'title'      => 'Sound Bath Buổi Tối',
-        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
-        'instructor' => 'Linh Tâm',
-        'desc'       => 'Buổi tắm âm thanh thư giãn cuối tuần với bát pha lê và trống Himalaya, dành cho mọi trình độ.',
-        'spots'      => 18,
-        'price'      => '850.000 VNĐ',
-        'url'        => '#',
-    ],
-    [
-        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-2.png', 'alt' => 'Nhập Môn Reiki'],
-        'type'       => 'Workshop Năng Lượng',
-        'format'     => 'Onsite',
-        'status'     => 'limited',
-        'date'       => '25 THÁNG 1, 2025',
-        'time'       => '09:00 – 17:00',
-        'duration'   => '8 giờ',
-        'title'      => 'Nhập Môn Reiki',
-        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
-        'instructor' => 'Linh Tâm',
-        'desc'       => 'Trải nghiệm một ngày khám phá năng lượng Reiki cơ bản — phù hợp cho người chưa có kiến thức trước.',
-        'spots'      => 4,
-        'price'      => '1.500.000 VNĐ',
-        'url'        => '#',
-    ],
-    [
-        'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/courses-img-3.png', 'alt' => 'Hòa Âm Gong'],
-        'type'       => 'Workshop Âm Thanh',
-        'format'     => 'Onsite',
-        'status'     => 'upcoming',
-        'date'       => '8 THÁNG 2, 2025',
-        'time'       => '18:00 – 20:30',
-        'duration'   => '2.5 giờ',
-        'title'      => 'Hòa Âm Gong Thiêng',
-        'location'   => 'Aetheria Studio — Quận 1, TP.HCM',
-        'instructor' => 'Linh Tâm',
-        'desc'       => 'Đắm chìm trong tần số nguyên thủy của trống gong — hành trình đi sâu vào trạng thái thiền sâu.',
-        'spots'      => 0,
-        'price'      => '1.200.000 VNĐ',
-        'url'        => '#',
-    ],
-];
+$items = [];
 
-$use_sample = !$query->have_posts();
-$items      = [];
-
-if ($use_sample) {
-    $items = $sample;
-} else {
+if ($query->have_posts()) {
     while ($query->have_posts()) {
         $query->the_post();
         $post_id   = get_the_ID();
@@ -98,7 +44,7 @@ if ($use_sample) {
 <section class="sec-khws-ws-list pt-0 pb-(--pd-sc)">
     <div class="container">
         <h2 class="font-title text-pri text-[40px] font-bold tracking-[-0.8px] leading-[48px] mb-10 max-md:text-[28px] max-md:mb-6">
-            Workshop
+            <?php esc_html_e('Workshop', 'monamedia'); ?>
         </h2>
         <div class="row">
             <?php foreach ($items as $item) : ?>
