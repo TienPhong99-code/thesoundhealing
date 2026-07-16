@@ -11,8 +11,8 @@ defined('ABSPATH') || exit;
  * Danh mục "Loại hình" của box Search Booking.
  *
  * Chỉ chữ hiển thị + hình là sửa được. Key của từng danh mục (best-seller, sound-healing,
- * usui-reiki, khoa-hoc, workshop) là logic tìm kiếm — vừa map sang post type, vừa là slug
- * taxonomy trong page-search-results.php — nên cố định trong code, admin không đổi được.
+ * usui-reiki, khoa-hoc, workshop, eticket) là logic tìm kiếm — vừa map sang post type, vừa là
+ * slug taxonomy / meta trong page-search-results.php — nên cố định trong code, admin không đổi được.
  *
  * Để trống một ô chữ → tự dùng lại text mặc định trong partials/components/search-booking.php.
  */
@@ -96,6 +96,20 @@ add_action('acf/init', function () {
 
             Image::make('Workshop — Hình', 'sb_img_workshop')
                 ->helperText('Hình đại diện cho danh mục Workshop')
+                ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp', 'avif'])
+                ->format('url'),
+
+            // ─── Quà tặng E-ticket ────────────────────────────────────────
+            Text::make('Quà tặng E-ticket — Tên hiển thị', 'sb_label_eticket')
+                ->helperText('Để trống → dùng mặc định: Quà tặng E-ticket')
+                ->placeholder('Quà tặng E-ticket'),
+
+            Text::make('Quà tặng E-ticket — Mô tả', 'sb_desc_eticket')
+                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Tặng người thương một buổi chữa lành')
+                ->placeholder('Tặng người thương một buổi chữa lành'),
+
+            Image::make('Quà tặng E-ticket — Hình', 'sb_img_eticket')
+                ->helperText('Hình đại diện cho danh mục Quà tặng E-ticket')
                 ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'webp', 'avif'])
                 ->format('url'),
 

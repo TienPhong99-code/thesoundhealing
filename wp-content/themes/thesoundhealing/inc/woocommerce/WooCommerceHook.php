@@ -508,6 +508,8 @@ class TSH_WooCommerce_Hook
             'meta_value'     => $product_id,
             'posts_per_page' => 1,
             'fields'         => 'ids',
+            // Sự kiện ẩn vẫn bán vé được → tra ngược phải thấy cả bài đang ẩn (HiddenPostHook)
+            'tsh_include_hidden' => true,
         ]);
         if (empty($cpt)) return;
 
@@ -1413,16 +1415,14 @@ class TSH_WooCommerce_Hook
 
     private function deposit_notice_html(\WC_Order $order): string
     {
-        if ($order->get_meta('_tsh_payment_type') !== 'deposit') return '';
-        $deposit   = (float) $order->get_meta('_tsh_deposit_amount');
-        $remaining = (float) $order->get_meta('_tsh_remaining_amount');
-        if ($remaining <= 0) return '';
+        $info = tsh_deposit_info($order);
+        if (!$info) return '';
 
         return sprintf(
             /* translators: 1: số đã cọc, 2: số còn lại */
             __('Đã đặt cọc %1$s. Còn lại %2$s thu tại cơ sở khi tham gia.', 'monamedia'),
-            html_entity_decode(wp_strip_all_tags(wc_price($deposit)), ENT_QUOTES, 'UTF-8'),
-            html_entity_decode(wp_strip_all_tags(wc_price($remaining)), ENT_QUOTES, 'UTF-8')
+            html_entity_decode(wp_strip_all_tags(wc_price($info['deposit'])), ENT_QUOTES, 'UTF-8'),
+            html_entity_decode(wp_strip_all_tags(wc_price($info['remaining'])), ENT_QUOTES, 'UTF-8')
         );
     }
 

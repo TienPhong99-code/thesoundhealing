@@ -14,6 +14,7 @@ $_sb_defaults = [
     'usui-reiki'    => ['label' => __('Usui Reiki', 'monamedia'),    'desc' => __('Năng lượng chữa lành Reiki', 'monamedia'),      'image' => $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg'],
     'khoa-hoc'      => ['label' => __('Khoá Học', 'monamedia'),      'desc' => __('Chương trình đào tạo chuyên sâu', 'monamedia'), 'image' => $_img_base . 'kh-hero.jpg'],
     'workshop'      => ['label' => __('Workshop', 'monamedia'),      'desc' => __('Sự kiện trải nghiệm ngắn hạn', 'monamedia'),    'image' => $_img_base . 'gallery-img-1.jpg'],
+    'eticket'       => ['label' => __('Quà tặng E-ticket', 'monamedia'), 'desc' => __('Tặng người thương một buổi chữa lành', 'monamedia'), 'image' => $_img_base . 'dv-khai-van-huyen-hoc.jpg'],
 ];
 
 $loai_hinh_opts = [];

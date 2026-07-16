@@ -12,6 +12,7 @@ return [
 
     // Functions
     MONA_THEME_INC_PATH . '/functions/CommonFunction.php',
+    MONA_THEME_INC_PATH . '/functions/DepositFunction.php',
     MONA_THEME_INC_PATH . '/functions/EticketFunction.php',
     MONA_THEME_INC_PATH . '/functions/ImageFunction.php',
     MONA_THEME_INC_PATH . '/functions/PaginationFunction.php',
@@ -29,6 +30,7 @@ return [
     MONA_THEME_INC_PATH . '/hooks/AjaxHook.php',
     MONA_THEME_INC_PATH . '/hooks/ShortcodeHook.php',
     MONA_THEME_INC_PATH . '/hooks/CF7Hook.php',
+    MONA_THEME_INC_PATH . '/hooks/HiddenPostHook.php',
 
     // Caches
     MONA_THEME_INC_PATH . '/caches/MenuCache.php',
@@ -71,6 +73,7 @@ return [
     MONA_THEME_INC_PATH . '/acf/DichVuACF.php',
     MONA_THEME_INC_PATH . '/acf/DichVuPageACF.php',
     MONA_THEME_INC_PATH . '/acf/EticketACF.php',
+    MONA_THEME_INC_PATH . '/acf/HiddenPostACF.php',
     MONA_THEME_INC_PATH . '/acf/SearchBookingACF.php',
     MONA_THEME_INC_PATH . '/acf/CheckoutNotesACF.php',
 

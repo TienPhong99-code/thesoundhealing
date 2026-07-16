@@ -24,6 +24,8 @@ function tsh_eticket_expiry(\WC_Order $order, bool $persist = true): string
         'meta_value'     => $pid,
         'posts_per_page' => 1,
         'fields'         => 'ids',
+        // Sự kiện ẩn vẫn bán vé được → tra ngược phải thấy cả bài đang ẩn (HiddenPostHook)
+        'tsh_include_hidden' => true,
     ]);
     if (empty($cpt)) return '';
 

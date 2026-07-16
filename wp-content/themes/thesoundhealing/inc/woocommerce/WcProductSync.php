@@ -102,6 +102,9 @@ class TSH_WC_Product_Sync
             'fields'           => 'ids',
             'no_found_rows'    => true,
             'suppress_filters' => true,
+            // suppress_filters chỉ tắt các filter posts_* chứ không tắt pre_get_posts,
+            // nên vẫn cần cờ này để thấy bài đang ẩn (HiddenPostHook).
+            'tsh_include_hidden' => true,
         ]);
         return !empty($others);
     }

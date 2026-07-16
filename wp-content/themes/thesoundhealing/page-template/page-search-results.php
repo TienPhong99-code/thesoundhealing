@@ -31,6 +31,7 @@ $pt_map = [
     'usui-reiki'    => ['dich_vu'],
     'khoa-hoc'      => ['khoa_hoc'],
     'workshop'      => ['workshop'],
+    'eticket'       => ['dich_vu', 'khoa_hoc', 'workshop'],
 ];
 
 $post_types = !empty($loai_hinh) && isset($pt_map[$loai_hinh])
@@ -202,6 +203,14 @@ foreach ($post_types as $pt) {
         } else {
             $query_args['meta_query'] = [$bs_clause];
         }
+    } elseif ($loai_hinh === 'eticket') {
+        // Bài có phát hành e-ticket quà tặng: eticket_days > 0 (trống/0 = không phát hành)
+        $et_clause = ['key' => 'eticket_days', 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC'];
+        if (!empty($query_args['meta_query'])) {
+            $query_args['meta_query'][] = $et_clause;
+        } else {
+            $query_args['meta_query'] = [$et_clause];
+        }
     } elseif (in_array($loai_hinh, ['sound-healing', 'usui-reiki'], true) && isset($tax_map_pt[$pt])) {
         $tax_clause = ['taxonomy' => $tax_map_pt[$pt], 'field' => 'slug', 'terms' => $loai_hinh];
         if (!empty($query_args['tax_query'])) {
@@ -279,6 +288,7 @@ $label_map = [
     'usui-reiki'    => 'Usui Reiki',
     'khoa-hoc'      => 'Khoá Học',
     'workshop'      => 'Workshop',
+    'eticket'       => 'Quà tặng E-ticket',
 ];
 $time_label_map = ['today'   => 'Hôm nay', 'tomorrow' => 'Ngày mai', 'weekend'  => 'Cuối tuần này', 'month' => 'Trong tháng này'];
 

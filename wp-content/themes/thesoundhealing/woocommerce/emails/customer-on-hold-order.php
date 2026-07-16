@@ -141,10 +141,15 @@ do_action('woocommerce_email_header', $email_heading, $email);
         </tr>
     <?php endif; ?>
 
-    <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Tổng thanh toán', 'monamedia'); ?></td>
-        <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:14px;font-weight:700;color:#c2a056"><?php echo wp_kses_post($order->get_formatted_order_total()); ?></td>
-    </tr>
+    <?php if (tsh_deposit_info($order)) : // Đơn cọc: tổng dịch vụ / đã cọc / còn lại — thay cho 1 dòng tổng 
+    ?>
+        <?php tsh_email_deposit_rows($order); ?>
+    <?php else : ?>
+        <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:12px;color:#aaa"><?php esc_html_e('Tổng thanh toán', 'monamedia'); ?></td>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede6;font-size:14px;font-weight:700;color:#c2a056"><?php echo wp_kses_post($order->get_formatted_order_total()); ?></td>
+        </tr>
+    <?php endif; ?>
 
     <tr>
         <td style="padding:8px 0;font-size:12px;color:#aaa"><?php esc_html_e('Phương thức thanh toán', 'monamedia'); ?></td>
@@ -152,6 +157,8 @@ do_action('woocommerce_email_header', $email_heading, $email);
     </tr>
 
 </table>
+
+<?php tsh_email_deposit_box($order); ?>
 
 <!-- Notice -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px">
