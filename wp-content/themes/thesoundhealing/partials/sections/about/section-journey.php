@@ -5,8 +5,6 @@ $page_id = get_queried_object_id();
 
 $sample = [
     'heading'   => 'Hành Trình Của Chúng Tôi',
-    'desc_1'    => 'Aetheria ra đời từ một nhận thức đơn giản: trong một thế giới không ngừng chuyển động, sự tĩnh lặng đã trở thành một thứ xa xỉ. Chúng tôi không chỉ tạo ra một không gian vật lý, mà là một nơi tôn trú cho tâm hồn. Hành trình của chúng tôi bắt đầu bằng việc khám phá các phương pháp chữa lành cổ xưa qua âm thanh và năng lượng, sau đó tinh chỉnh chúng qua lăng kính của sự tối giản hiện đại.',
-    'desc_2'    => 'Mỗi chi tiết tại Aetheria, từ ánh sáng phản chiếu trên mặt sàn gỗ đến âm vang của những chiếc bát hát pha lê, đều được thiết kế tỉ mỉ để hướng bạn về với trạng thái cân bằng tự nhiên. Chúng tôi loại bỏ những yếu tố thừa thãi, để lại một không gian trong trẻo, nơi bạn có thể thực sự lắng nghe chính mình.',
     'link_text' => 'Khám Phá Triết Lý',
     'link_url'  => '#',
     'video_url' => '',
@@ -17,8 +15,8 @@ $raw_img = get_field('ab_journey_image', $page_id);
 
 $data = [
     'heading'   => get_field('ab_journey_heading', $page_id)   ?: $sample['heading'],
-    'desc_1'    => get_field('ab_journey_desc_1', $page_id)    ?: $sample['desc_1'],
-    'desc_2'    => get_field('ab_journey_desc_2', $page_id)    ?: $sample['desc_2'],
+    'desc_1'    => get_field('ab_journey_desc_1', $page_id),
+    'desc_2'    => get_field('ab_journey_desc_2', $page_id),
     'link_text' => get_field('ab_journey_link_text', $page_id) ?: $sample['link_text'],
     'link_url'  => get_field('ab_journey_link_url', $page_id)  ?: $sample['link_url'],
     'video_url' => get_field('ab_journey_video_url', $page_id) ?: $sample['video_url'],
@@ -110,12 +108,16 @@ if ($eco_raw_items) {
                         </h2>
 
                         <div class="flex flex-col gap-2">
-                            <p class="text-[#414847] text-[16px] leading-[26px]">
-                                <?php echo wp_kses_post($data['desc_1']); ?>
-                            </p>
-                            <p class="text-[#414847] text-[16px] leading-[26px]">
-                                <?php echo wp_kses_post($data['desc_2']); ?>
-                            </p>
+                            <?php if ($data['desc_1']) : ?>
+                                <p class="text-[#414847] text-[16px] leading-[26px]">
+                                    <?php echo wp_kses_post($data['desc_1']); ?>
+                                </p>
+                            <?php endif; ?>
+                            <?php if ($data['desc_2']) : ?>
+                                <p class="text-[#414847] text-[16px] leading-[26px]">
+                                    <?php echo wp_kses_post($data['desc_2']); ?>
+                                </p>
+                            <?php endif; ?>
                         </div>
 
                     </div>

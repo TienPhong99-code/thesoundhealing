@@ -172,13 +172,27 @@ class TSH_WooCommerce_Hook
      * Ngôn ngữ ép theo ĐƠN, không theo ngôn ngữ hiện hành: email này gửi khi nhân viên bấm
      * "Hoàn thành" trong admin (đang chạy tiếng Việt) → nếu để WPML tự chọn thì khách EN
      * nhận email tiếng Việt.
+     *
+     * Cột thứ 2 là bản EN viết sẵn, dùng khi WPML không trả bản dịch (như booking_title_lines):
+     * wpml_translate_single_string ép $lang chỉ đáng tin khi ngôn ngữ hiện hành đã là $lang
+     * (WCML switch trước khi email render); ngữ cảnh khác → trả nguyên chuỗi Việt → khách EN
+     * nhận subject/heading tiếng Việt dù body đúng (body dịch SAU tsh_switch_email_locale).
      */
     private function thankyou_title_lines(?string $lang = null): array
     {
-        return [
-            mona_wpml_string('Cảm ơn bạn đã đồng hành cùng', 'Email hoàn thành – tiêu đề dòng 1', 'monamedia', $lang),
-            mona_wpml_string('The Sound Healing by Healiverse', 'Email hoàn thành – tiêu đề dòng 2', 'monamedia', $lang),
+        $lines = [
+            ['Cảm ơn bạn đã đồng hành cùng',    'Thank you for journeying with us', 'Email hoàn thành – tiêu đề dòng 1'],
+            ['The Sound Healing by Healiverse', 'The Sound Healing by Healiverse',  'Email hoàn thành – tiêu đề dòng 2'],
         ];
+
+        $is_en = $lang === null ? $this->is_en_locale() : ($lang === 'en');
+
+        $out = [];
+        foreach ($lines as [$vi, $en, $name]) {
+            $text  = mona_wpml_string($vi, $name, 'monamedia', $lang);
+            $out[] = ($is_en && $text === $vi) ? $en : $text;
+        }
+        return $out;
     }
 
     /**

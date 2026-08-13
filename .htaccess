@@ -1,0 +1,49 @@
+# Wordpress rewrite
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+
+# Wordpress disallow post
+RewriteCond %{QUERY_STRING} ^(?:.*[&?])?mona-ajax|wc-ajax
+RewriteRule ^ - [E=allow:1]
+RewriteCond %{HTTP:x-mona-authentication} motTheLucMoi
+RewriteRule ^ - [E=allow:1]
+<Limit POST>
+  SetEnvIf Request_Method GET allow
+  SetEnvIf Request_URI "(\/my-account\/*|\/wp-json\/wc\/v3\/orders\/*|\/?rest_route|\/wp-json\/jetpack\/v4\/verify_xmlrpc_error\/*)" allow
+  SetEnvIf Request_URI "(\/checkout\/*|\/cart\/*|\/san-pham\/*|\/gio-hang\/|\/thanh-toan\/|\/kiem-tra-don-hang\/*|\/dich-vu\/*|\/tai-khoan\/*|\/product\/*)" allow
+  SetEnvIf x-mona-authentication motTheLucMoi allow
+  SetEnvIf Request_URI "(\/contact-forms\/.*\/)feedback$" allow
+  SetEnvIf Request_URI "\/wp-json\/tsh\/v1\/sepay" allow
+
+  order deny,allow
+  deny from all
+  allow from env=allow
+</Limit>
+
+
+# End of wordpress disallow post
+
+# BEGIN cPanel-generated php ini directives, do not edit
+# Manual editing of this file may result in unexpected behavior.
+# To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
+# For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
+<IfModule php8_module>
+   php_value error_log "/home/thesoundhealing/logs/php.error.log"
+   php_flag log_errors On
+</IfModule>
+<IfModule lsapi_module>
+   php_value error_log "/home/thesoundhealing/logs/php.error.log"
+   php_flag log_errors On
+</IfModule>
+# END cPanel-generated php ini directives, do not edit
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php80” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php80 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
