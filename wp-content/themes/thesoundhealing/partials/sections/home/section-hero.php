@@ -8,7 +8,6 @@ $sample = [
     'desc'     => 'Trải nghiệm âm thanh thư giãn và các buổi thực hành năng lượng chuyên sâu, được thiết kế cho tâm hồn hiện đại.',
     'btn_text' => 'KHÁM PHÁ KHÓA HỌC',
     'btn_url'  => home_url('/khoa-hoc'),
-    'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/banner.gif', 'alt' => ''],
 ];
 
 $raw_img = get_field('hero_image', $page_id);
@@ -18,7 +17,7 @@ $data = [
     'desc'     => get_field('hero_desc', $page_id),
     'btn_text' => get_field('hero_btn_text', $page_id) ?: $sample['btn_text'],
     'btn_url'  => get_field('hero_btn_url', $page_id)  ?: $sample['btn_url'],
-    'image'    => $raw_img ?: $sample['image'],
+    'image'    => $raw_img ?: null,
 ];
 ?>
 
@@ -49,11 +48,29 @@ $data = [
                 <div class="absolute max-md:fixed max-md:top-[calc(var(--size-hd))] max-md:w-full max-md:left-0 md:left-1/2 md:-translate-x-1/2 md:bottom-0 md:translate-y-1/2 w-full ">
                     <?php get_template_part('partials/components/search-booking'); ?>
                 </div>
-                <!-- Col 2: Image -->
+                <!-- Col 2: Visual — ảnh từ ACF, nếu chưa set thì dùng video minh hoạ mặc định -->
+                <?php $visual_class = 'block w-full max-w-[560px] h-auto object-contain rounded-2xl overflow-hidden'; ?>
                 <div class="flex items-center justify-center ">
-                    <img src="<?php echo esc_url($data['image']['url']); ?>"
-                        class="block w-full max-w-[560px] h-auto object-contain rounded-2xl overflow-hidden"
-                        alt="<?php echo esc_attr($data['image']['alt']); ?>">
+                    <?php if (!empty($data['image']['url'])) : ?>
+                        <img src="<?php echo esc_url($data['image']['url']); ?>"
+                            <?php if (!empty($data['image']['width']) && !empty($data['image']['height'])) : ?>
+                            width="<?php echo (int) $data['image']['width']; ?>"
+                            height="<?php echo (int) $data['image']['height']; ?>"
+                            <?php endif; ?>
+                            fetchpriority="high"
+                            decoding="async"
+                            class="<?php echo esc_attr($visual_class); ?>"
+                            alt="<?php echo esc_attr($data['image']['alt'] ?? ''); ?>">
+                    <?php else : ?>
+                        <video class="<?php echo esc_attr($visual_class); ?>"
+                            width="640" height="640"
+                            autoplay muted loop playsinline preload="auto"
+                            poster="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/banner-poster.webp'); ?>"
+                            aria-label="<?php esc_attr_e('Minh hoạ trải nghiệm chuông xoay và trị liệu âm thanh', 'monamedia'); ?>">
+                            <source src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/videos/banner.webm'); ?>" type="video/webm">
+                            <source src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/videos/banner.mp4'); ?>" type="video/mp4">
+                        </video>
+                    <?php endif; ?>
                 </div>
 
             </div>
