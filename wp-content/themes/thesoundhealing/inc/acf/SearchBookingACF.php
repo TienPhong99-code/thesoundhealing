@@ -35,8 +35,8 @@ add_action('acf/init', function () {
                 ->placeholder('Best Seller'),
 
             Text::make('Best Seller — Mô tả', 'sb_desc_best_seller')
-                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Được yêu thích nhất')
-                ->placeholder('Được yêu thích nhất'),
+                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Được nhiều học viên lựa chọn')
+                ->placeholder('Được nhiều học viên lựa chọn'),
 
             Image::make('Best Seller — Hình', 'sb_img_best_seller')
                 ->helperText('Hình đại diện cho danh mục Best Seller')
@@ -49,8 +49,8 @@ add_action('acf/init', function () {
                 ->placeholder('Sound Healing'),
 
             Text::make('Sound Healing — Mô tả', 'sb_desc_sound_healing')
-                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Liệu pháp âm thanh chữa lành')
-                ->placeholder('Liệu pháp âm thanh chữa lành'),
+                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Trải nghiệm âm thanh thư giãn')
+                ->placeholder('Trải nghiệm âm thanh thư giãn'),
 
             Image::make('Sound Healing — Hình', 'sb_img_sound_healing')
                 ->helperText('Hình đại diện cho danh mục Sound Healing')
@@ -63,8 +63,8 @@ add_action('acf/init', function () {
                 ->placeholder('Usui Reiki'),
 
             Text::make('Usui Reiki — Mô tả', 'sb_desc_usui_reiki')
-                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Năng lượng chữa lành Reiki')
-                ->placeholder('Năng lượng chữa lành Reiki'),
+                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Trải nghiệm thư giãn Reiki')
+                ->placeholder('Trải nghiệm thư giãn Reiki'),
 
             Image::make('Usui Reiki — Hình', 'sb_img_usui_reiki')
                 ->helperText('Hình đại diện cho danh mục Usui Reiki')
@@ -105,8 +105,8 @@ add_action('acf/init', function () {
                 ->placeholder('Quà tặng E-ticket'),
 
             Text::make('Quà tặng E-ticket — Mô tả', 'sb_desc_eticket')
-                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Tặng người thương một buổi chữa lành')
-                ->placeholder('Tặng người thương một buổi chữa lành'),
+                ->helperText('Dòng chữ nhỏ dưới tên. Để trống → dùng mặc định: Tặng người thương một buổi trải nghiệm thư giãn')
+                ->placeholder('Tặng người thương một buổi trải nghiệm thư giãn'),
 
             Image::make('Quà tặng E-ticket — Hình', 'sb_img_eticket')
                 ->helperText('Hình đại diện cho danh mục Quà tặng E-ticket')

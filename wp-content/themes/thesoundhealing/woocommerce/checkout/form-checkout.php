@@ -50,9 +50,9 @@ if (! $_notes_main) {
     $_notes_main = [
         __('Vui lòng mặc trang phục thoải mái, phù hợp cho việc nằm thiền và thư giãn.', 'monamedia'),
         __('Có mặt trước giờ bắt đầu <strong>15 phút</strong> để check-in và ổn định vị trí. Khách đến muộn quá 10 phút mà không báo trước sẽ được xem là vắng mặt.', 'monamedia'),
-        __('Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi phiên diễn ra.', 'monamedia'),
+        __('Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi buổi trải nghiệm diễn ra.', 'monamedia'),
         __('Vé đã mua được phép chuyển nhượng, nhưng <strong>không hoàn tiền</strong> dưới bất kỳ hình thức nào.', 'monamedia'),
-        __('Sound Healing và các bộ môn Năng lượng là liệu pháp hỗ trợ thư giãn và cân bằng, không thay thế cho chẩn đoán hoặc điều trị y khoa.', 'monamedia'),
+        __('Sound Healing và các bộ môn Năng lượng là hoạt động trải nghiệm hỗ trợ thư giãn tinh thần, không phải dịch vụ y tế và không thay thế cho chẩn đoán hoặc điều trị y khoa.', 'monamedia'),
     ];
 }
 

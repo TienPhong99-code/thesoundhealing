@@ -9,12 +9,12 @@ $_img_base = get_template_directory_uri() . '/assets/images/';
 // page-search-results.php) nên cố định ở đây. Admin chỉ sửa được chữ + hình, tại
 // Theme Settings → tab "Search Booking – Danh mục"; bỏ trống thì rơi về mặc định dưới đây.
 $_sb_defaults = [
-    'best-seller'   => ['label' => __('Best Seller', 'monamedia'),   'desc' => __('Được yêu thích nhất', 'monamedia'),             'image' => $_img_base . 'dv-exp-main.jpg'],
-    'sound-healing' => ['label' => __('Sound Healing', 'monamedia'), 'desc' => __('Liệu pháp âm thanh chữa lành', 'monamedia'),    'image' => $_img_base . 'dv-tam-am-ngu-ngon-rieng-tu.jpg'],
-    'usui-reiki'    => ['label' => __('Usui Reiki', 'monamedia'),    'desc' => __('Năng lượng chữa lành Reiki', 'monamedia'),      'image' => $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg'],
+    'best-seller'   => ['label' => __('Best Seller', 'monamedia'),   'desc' => __('Được nhiều học viên lựa chọn', 'monamedia'),    'image' => $_img_base . 'dv-exp-main.jpg'],
+    'sound-healing' => ['label' => __('Sound Healing', 'monamedia'), 'desc' => __('Trải nghiệm âm thanh thư giãn', 'monamedia'),  'image' => $_img_base . 'dv-tam-am-ngu-ngon-rieng-tu.jpg'],
+    'usui-reiki'    => ['label' => __('Usui Reiki', 'monamedia'),    'desc' => __('Trải nghiệm thư giãn Reiki', 'monamedia'),      'image' => $_img_base . 'dv-chua-lanh-reiki-rieng-tu.jpg'],
     'khoa-hoc'      => ['label' => __('Khoá Học', 'monamedia'),      'desc' => __('Chương trình đào tạo chuyên sâu', 'monamedia'), 'image' => $_img_base . 'kh-hero.jpg'],
     'workshop'      => ['label' => __('Workshop', 'monamedia'),      'desc' => __('Sự kiện trải nghiệm ngắn hạn', 'monamedia'),    'image' => $_img_base . 'gallery-img-1.jpg'],
-    'eticket'       => ['label' => __('Quà tặng E-ticket', 'monamedia'), 'desc' => __('Tặng người thương một buổi chữa lành', 'monamedia'), 'image' => $_img_base . 'dv-khai-van-huyen-hoc.jpg'],
+    'eticket'       => ['label' => __('Quà tặng E-ticket', 'monamedia'), 'desc' => __('Tặng người thương một buổi trải nghiệm thư giãn', 'monamedia'), 'image' => $_img_base . 'dv-khai-van-huyen-hoc.jpg'],
 ];
 
 $loai_hinh_opts = [];

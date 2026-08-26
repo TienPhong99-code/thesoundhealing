@@ -7,7 +7,7 @@ $sample = [
     'label'  => 'Người Sáng Lập',
     'name'   => 'Elias Thorne',
     'quote'  => '"Âm thanh không chỉ đi qua tai; nó cộng hưởng qua từng tế bào. Nhiệm vụ của chúng ta không phải là thêm vào tiếng ồn của thế giới, mà là tạo ra những khoảng lặng nơi sự thật có thể lên tiếng."',
-    'bio'    => 'Với hơn hai thập kỷ nghiên cứu về âm thanh học và y học phương Đông, Elias đã phát triển một phương pháp tiếp cận độc đáo kết hợp nghệ thuật chữa lành cổ xưa với thiết kế không gian hiện đại. Tầm nhìn của ông về Aetheria là tạo ra một nơi giao thoa giữa nghệ thuật, khoa học và tinh thần.',
+    'bio'    => 'Với hơn hai thập kỷ nghiên cứu về âm thanh học và văn hóa phương Đông, Elias đã phát triển một phương pháp tiếp cận độc đáo kết hợp nghệ thuật âm thanh cổ xưa với thiết kế không gian hiện đại. Tầm nhìn về Aetheria là tạo ra một nơi giao thoa giữa nghệ thuật, khoa học và tinh thần.',
     'image'  => ['url' => MONA_THEME_PATH_URI . '/assets/images/about-founder-img.jpg', 'alt' => 'Elias Thorne'],
     'bg'     => ['url' => MONA_THEME_PATH_URI . '/assets/images/about-visionary-bg.jpg', 'alt' => ''],
 ];

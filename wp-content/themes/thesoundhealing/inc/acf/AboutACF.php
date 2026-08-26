@@ -147,7 +147,7 @@ add_action('acf/init', function () {
             Tab::make('Đặc Điểm Nổi Bật')->placement('left'),
 
             Textarea::make('Tiêu đề (mỗi dòng 1 dòng)', 'ab_features_heading')
-                ->helperText('Dòng đầu sẽ in đậm. Ví dụ: Trải Nghiệm Chữa Lành\nToàn Diện')
+                ->helperText('Dòng đầu sẽ in đậm. Ví dụ: Trải Nghiệm Âm Thanh Thư Giãn\nToàn Diện')
                 ->rows(2),
 
             Image::make('Ảnh minh họa', 'ab_features_image')

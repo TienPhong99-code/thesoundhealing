@@ -35,6 +35,7 @@ return [
     // Caches
     MONA_THEME_INC_PATH . '/caches/MenuCache.php',
 
+
     // Ajax
     MONA_THEME_INC_PATH . '/ajax/PostAjax.php',
 

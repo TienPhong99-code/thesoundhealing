@@ -41,19 +41,19 @@ $eco_sample = [
             'logo'  => ['url' => '', 'alt' => 'Healiverse'],
             'name'  => 'HEALIVERSE.VN',
             'url'   => 'https://healiverse.vn',
-            'desc'  => 'Chuyên các <strong>sản phẩm mùi hương từ Khối thơm và Thảo mộc thanh tẩy, các sản phẩm Chuông xoay và nhạc cụ chữa lành</strong>, đang có mặt ở 30 cửa hàng, khách hàng từ hơn 30 quốc gia tin dùng.',
+            'desc'  => 'Chuyên các <strong>sản phẩm mùi hương từ Khối thơm và Thảo mộc thanh tẩy, các sản phẩm Chuông xoay và nhạc cụ âm thanh thư giãn</strong>, đang có mặt ở 30 cửa hàng, khách hàng từ hơn 30 quốc gia tin dùng.',
         ],
         [
             'logo'  => ['url' => '', 'alt' => 'Quantumleap'],
             'name'  => 'QUANTUMLEAP.VN',
             'url'   => 'https://quantumleap.vn',
-            'desc'  => 'Khoá học trực tuyến, dạy nghề Healing thực chiến hiện đại. Nền tảng E-learning số hoá tự động, xây dựng hơn 200+ Videos bài học chất lượng cao. Có ngay 10 bài học miễn phí chỉ cần đăng nhập tài khoản Google là trải nghiệm ngay!',
+            'desc'  => 'Khoá học trực tuyến, đào tạo kỹ năng thực hành Healing hiện đại. Nền tảng E-learning số hoá tự động, xây dựng hơn 200+ Videos bài học chất lượng cao. Có ngay 10 bài học miễn phí chỉ cần đăng nhập tài khoản Google là trải nghiệm ngay!',
         ],
         [
             'logo'  => ['url' => '', 'alt' => 'The Sound Healing'],
             'name'  => 'THESOUNDHEALING.VN',
             'url'   => 'https://thesoundhealing.vn',
-            'desc'  => '<strong>Nền tảng booking dịch vụ trải nghiệm về Healing và chữa lành</strong> hiện đại như: Sound healing, sound bath, chuông xoay, Reiki. Các sự kiện và khoá học trải nghiệm truyền nghề thực chiến.',
+            'desc'  => '<strong>Nền tảng booking dịch vụ trải nghiệm âm thanh và thư giãn</strong> hiện đại như: Sound healing, sound bath, chuông xoay, Reiki. Các sự kiện và khoá học trải nghiệm thực hành chuyên sâu.',
         ],
     ],
 ];

@@ -6,13 +6,13 @@ $page_id = MONA_PAGE_HOME;
 $sample = [
     'label'   => 'NGƯỜI DẪN DẮT',
     'heading' => 'Đội Ngũ Chuyên Gia',
-    'desc'    => 'Đội ngũ chuyên gia giàu kinh nghiệm, được đào tạo bài bản, đồng hành cùng bạn trên hành trình chữa lành và phát triển bản thân.',
+    'desc'    => 'Đội ngũ giàu kinh nghiệm, được đào tạo bài bản, đồng hành cùng bạn trên hành trình thư giãn và phát triển bản thân.',
     'items'   => [
         [
             'image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/teams-img-1.png', 'alt' => 'Elena Vu'],
             'name'  => 'Elena Vu',
             'role'  => 'MASTER SOUND HEALER',
-            'desc'  => 'Hơn 10 năm kinh nghiệm trong việc điều hướng tần số âm thanh để cân bằng luân xa và giải tỏa căng thẳng.',
+            'desc'  => 'Hơn 10 năm kinh nghiệm trong việc điều hướng tần số âm thanh để mang lại cảm giác thư giãn và giải tỏa căng thẳng.',
         ],
         [
             'image' => ['url' => MONA_THEME_PATH_URI . '/assets/images/teams-img-2.png', 'alt' => 'Minh Pham'],

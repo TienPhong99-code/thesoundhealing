@@ -288,8 +288,8 @@ msgstr "About the instructor"
 msgid "Mục tiêu & Lợi ích"
 msgstr "Goals & Benefits"
 
-msgid "Hành trình chữa lành"
-msgstr "Healing journey"
+msgid "Hành trình thư giãn"
+msgstr "Relaxation journey"
 
 msgid "Lợi ích dịch vụ"
 msgstr "Service benefits"
@@ -450,3 +450,49 @@ msgstr "Projects"
 msgid "Tuyển dụng"
 msgstr "Careers"
 
+# --- BCT: câu chữ đóng khung GIÁO DỤC / TRẢI NGHIỆM / THƯ GIÃN ---
+msgid "Được nhiều học viên lựa chọn"
+msgstr "Frequently booked"
+
+msgid "Trải nghiệm âm thanh thư giãn"
+msgstr "Sound relaxation experience"
+
+msgid "Trải nghiệm thư giãn Reiki"
+msgstr "Reiki relaxation experience"
+
+msgid "Tặng người thương một buổi trải nghiệm thư giãn"
+msgstr "Gift a loved one a relaxation session"
+
+msgid "Chương trình đào tạo chuyên sâu"
+msgstr "In-depth training programme"
+
+msgid "Sự kiện trải nghiệm ngắn hạn"
+msgstr "Short experience events"
+
+msgid "Quà tặng E-ticket"
+msgstr "E-ticket gift"
+
+msgid "Sound Healing và các bộ môn Năng lượng là hoạt động trải nghiệm hỗ trợ thư giãn tinh thần, không phải dịch vụ y tế và không thay thế cho chẩn đoán hoặc điều trị y khoa."
+msgstr "Sound Healing and our energy practices are relaxation experiences. They are not medical services and are not a substitute for medical diagnosis or treatment."
+
+msgid "Quý khách được đổi lịch <strong>01 lần</strong>, vui lòng thông báo ít nhất <strong>02 giờ</strong> trước khi buổi trải nghiệm diễn ra."
+msgstr "You may reschedule <strong>once</strong>; please notify us at least <strong>2 hours</strong> before your session begins."
+
+# --- Footer: thông tin pháp nhân bắt buộc công bố ---
+msgid "MST: %1$s, %2$s."
+msgstr "Tax code: %1$s, %2$s."
+
+msgid "do Sở Tài chính TP. Hồ Chí Minh cấp ngày 06/12/2022"
+msgstr "issued by the Department of Finance of Ho Chi Minh City on 06 Dec 2022"
+
+msgid "Địa chỉ: %s."
+msgstr "Address: %s."
+
+msgid "104/20 Mai Thị Lựu, Phường Tân Định, TP. Hồ Chí Minh"
+msgstr "104/20 Mai Thi Luu, Tan Dinh Ward, Ho Chi Minh City"
+
+msgid "Hotline:"
+msgstr "Hotline:"
+
+msgid "Email:"
+msgstr "Email:"

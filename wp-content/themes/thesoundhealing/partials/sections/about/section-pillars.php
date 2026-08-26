@@ -6,9 +6,9 @@ $page_id = get_queried_object_id();
 $sample = [
     'feat' => [
         'badge'      => 'Ưu điểm nổi bật',
-        'heading'    => 'Trải Nghiệm Chữa Lành Toàn Diện',
-        'desc'       => 'Chúng tôi kết hợp âm thanh học cổ đại với không gian thiết kế tối giản để mang lại trạng thái cân bằng sâu sắc cho cơ thể và tâm trí.',
-        'list'       => "Phòng âm thanh được thiết kế chuyên biệt\nÂm thoa và bát hát Tây Tạng chất lượng cao\nHướng dẫn bởi chuyên gia có chứng chỉ quốc tế\nLịch học linh hoạt, phù hợp mọi lịch trình",
+        'heading'    => 'Trải Nghiệm Âm Thanh Thư Giãn Toàn Diện',
+        'desc'       => 'Chúng tôi kết hợp âm thanh học cổ đại với không gian thiết kế tối giản để mang lại trạng thái thư giãn sâu cho cơ thể và tâm trí.',
+        'list'       => "Phòng âm thanh được thiết kế chuyên biệt\nÂm thoa và bát hát Tây Tạng chất lượng cao\nHướng dẫn bởi đội ngũ giàu kinh nghiệm, được đào tạo bài bản\nLịch học linh hoạt, phù hợp mọi lịch trình",
         'image'      => ['url' => MONA_THEME_PATH_URI . '/assets/images/about-pillar-1-img.jpg', 'alt' => 'Sound Healing'],
         'img_badge'  => 'Hơn 500 học viên',
         'link_text'  => 'Khám phá các khóa học',
@@ -21,13 +21,13 @@ $sample = [
             'list_items' => "Thiết kế không gian tối giản\nÂm thanh môi trường được kiểm soát\nÁnh sáng tự nhiên tối ưu",
         ],
         [
-            'title'      => 'Cộng Hưởng Chữa Lành',
-            'desc'       => 'Sử dụng âm thanh học tinh tế để tái lập sự cân bằng hài hòa của cơ thể.',
-            'list_items' => "Tần số Solfeggio\nBát hát Tây Tạng\nÂm thoa trị liệu",
+            'title'      => 'Cộng Hưởng Âm Thanh',
+            'desc'       => 'Sử dụng âm thanh học tinh tế để mang lại cảm giác thư giãn hài hòa cho cơ thể.',
+            'list_items' => "Tần số Solfeggio\nBát hát Tây Tạng\nÂm thoa",
         ],
         [
             'title'      => 'Thực Hành Có Hướng Dẫn',
-            'desc'       => 'Mỗi buổi học được dẫn dắt bởi chuyên gia giàu kinh nghiệm trong lĩnh vực âm thanh trị liệu.',
+            'desc'       => 'Mỗi buổi học được dẫn dắt bởi người hướng dẫn giàu kinh nghiệm trong lĩnh vực âm thanh thư giãn.',
             'list_items' => "Lớp học nhỏ, chú ý cá nhân\nTài liệu thực hành tại nhà\nHỗ trợ sau khóa học",
         ]
     ],

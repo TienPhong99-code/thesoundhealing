@@ -5,7 +5,7 @@ $page_id = get_queried_object_id();
 
 $sample = [
     'heading' => 'Kết Nối Cùng Aetheria',
-    'desc'    => 'Mỗi hành trình chữa lành đều bắt đầu từ một nhịp thở chậm lại. Hãy để lại lời nhắn, chúng tôi sẽ lắng nghe và đồng hành cùng bạn trên con đường tìm lại sự cân bằng.',
+    'desc'    => 'Mỗi hành trình thư giãn đều bắt đầu từ một nhịp thở chậm lại. Hãy để lại lời nhắn, chúng tôi sẽ lắng nghe và đồng hành cùng bạn trên con đường tìm lại sự cân bằng.',
 ];
 
 $data = [

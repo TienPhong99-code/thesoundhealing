@@ -6,7 +6,7 @@ $page_id = MONA_PAGE_HOME;
 $sample = [
     'label'   => 'VỀ CHÚNG TÔI',
     'heading' => 'Trí tuệ cổ xưa cho cuộc sống hiện đại.',
-    'desc'    => 'Tại Aetheria, chúng tôi tin rằng sự tĩnh lặng là nền tảng của mọi sự phát triển. Đội ngũ chuyên gia của chúng tôi kết hợp các phương pháp thực hành tâm linh truyền thống với cách tiếp cận tinh tế, tối giản để tạo ra một không gian chữa lành an toàn và chuyên nghiệp.',
+    'desc'    => 'Tại Aetheria, chúng tôi tin rằng sự tĩnh lặng là nền tảng của mọi sự phát triển. Đội ngũ của chúng tôi kết hợp các phương pháp thực hành truyền thống với cách tiếp cận tinh tế, tối giản để tạo ra một không gian thư giãn an toàn và chuyên nghiệp.',
     'image'   => ['url' => MONA_THEME_PATH_URI . '/assets/images/about-img-1.png', 'alt' => ''],
     'items'   => [
         [
@@ -16,8 +16,8 @@ $sample = [
         ],
         [
             'icon'  => MONA_THEME_PATH_URI . '/assets/images/ic-therapy.svg',
-            'title' => 'Liệu Pháp Độc Bản',
-            'desc'  => 'Không gian thiết kế tối ưu cho tần số chữa lành.',
+            'title' => 'Trải Nghiệm Độc Bản',
+            'desc'  => 'Không gian thiết kế tối ưu cho tần số âm thanh thư giãn.',
         ],
     ],
 ];

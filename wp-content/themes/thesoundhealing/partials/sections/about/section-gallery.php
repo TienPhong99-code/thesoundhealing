@@ -10,7 +10,7 @@ $sample = [
         ['url' => MONA_THEME_PATH_URI . '/assets/images/about-gallery-1.jpg', 'alt' => 'Chi tiết không gian'],
         ['url' => MONA_THEME_PATH_URI . '/assets/images/about-gallery-2.jpg', 'alt' => 'Thưởng trà'],
         ['url' => MONA_THEME_PATH_URI . '/assets/images/about-gallery-3.jpg', 'alt' => 'Góc thiền'],
-        ['url' => MONA_THEME_PATH_URI . '/assets/images/about-gallery-4.jpg', 'alt' => 'Vật dụng trị liệu'],
+        ['url' => MONA_THEME_PATH_URI . '/assets/images/about-gallery-4.jpg', 'alt' => 'Vật dụng trải nghiệm âm thanh'],
     ],
 ];
 

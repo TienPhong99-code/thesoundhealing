@@ -5,7 +5,7 @@ $page_id = MONA_PAGE_HOME;
 
 $sample = [
     'heading'  => 'Đánh Thức Sự Hài Hòa Bên Trong',
-    'desc'     => 'Trải nghiệm sự chuyển hóa tâm thức thông qua các liệu pháp âm thanh và năng lượng chuyên sâu, được thiết kế cho tâm hồn hiện đại.',
+    'desc'     => 'Trải nghiệm âm thanh thư giãn và các buổi thực hành năng lượng chuyên sâu, được thiết kế cho tâm hồn hiện đại.',
     'btn_text' => 'KHÁM PHÁ KHÓA HỌC',
     'btn_url'  => home_url('/khoa-hoc'),
     'image'    => ['url' => MONA_THEME_PATH_URI . '/assets/images/banner.gif', 'alt' => ''],

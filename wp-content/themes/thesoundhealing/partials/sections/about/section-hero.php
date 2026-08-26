@@ -5,7 +5,7 @@ $page_id = get_queried_object_id();
 
 $sample = [
     'heading' => 'Bản Chất Của Sự Tĩnh Lặng',
-    'desc'    => 'Nơi âm thanh hòa quyện cùng không gian, tạo nên một hành trình chữa lành sâu sắc từ bên trong. Chúng tôi tin vào sức mạnh của sự im lặng có chủ đích.',
+    'desc'    => 'Nơi âm thanh hòa quyện cùng không gian, tạo nên một hành trình thư giãn sâu sắc từ bên trong. Chúng tôi tin vào sức mạnh của sự im lặng có chủ đích.',
     'image'   => ['url' => MONA_THEME_PATH_URI . '/assets/images/about-hero-bg.jpg', 'alt' => ''],
     'note'    => '',
 ];

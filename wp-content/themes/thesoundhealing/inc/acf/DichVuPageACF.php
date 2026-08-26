@@ -23,8 +23,8 @@ add_action('acf/init', function () {
             Tab::make('Page Header')->placement('left'),
 
             Text::make('Tiêu đề trang', 'dv_page_heading')
-                ->helperText('Ví dụ: Dịch Vụ Trị Liệu')
-                ->default('Dịch Vụ Trị Liệu'),
+                ->helperText('Ví dụ: Dịch Vụ Trải Nghiệm')
+                ->default('Dịch Vụ Trải Nghiệm'),
 
         ],
     ], false);

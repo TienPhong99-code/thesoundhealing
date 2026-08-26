@@ -225,7 +225,7 @@ add_action('acf/init', function () {
                         ->rows(3),
 
                     Text::make('Tags', 'week_tags')
-                        ->helperText('Các tag cách nhau bởi dấu phẩy. Ví dụ: Lý thuyết tần số, Hệ thống luân xa'),
+                        ->helperText('Các tag cách nhau bởi dấu phẩy. Ví dụ: Lý thuyết tần số, Hệ 7 nốt nhạc'),
                 ]),
 
             // ─── TAB: LỢI ÍCH NHẬN ĐƯỢC ─────────────────────────────────

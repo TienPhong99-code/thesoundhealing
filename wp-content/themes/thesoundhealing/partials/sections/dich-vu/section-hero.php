@@ -5,7 +5,7 @@ $page_id = get_queried_object_id();
 
 $sample = [
     'heading' => 'Dịch Vụ',
-    'desc'    => 'Khám phá các liệu pháp chữa lành cá nhân hóa, từ trị liệu âm thanh đến năng lượng, được thiết kế để mang lại sự an lạc tuyệt đối.',
+    'desc'    => 'Khám phá các trải nghiệm thư giãn cá nhân hóa, từ âm thanh thư giãn đến năng lượng, được thiết kế để mang lại sự an lạc tuyệt đối.',
 ];
 
 $data = [
