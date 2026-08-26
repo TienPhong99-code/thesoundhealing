@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 @source "../../..";
+/* Class do JS/plugin thêm lúc chạy — Tailwind không quét được file nguồn nên phải khai báo tay.
+   Bỏ dòng này thì nội dung vốn ẩn cho screen-reader sẽ hiện ra. */
+@source inline("sr-only");
+
 
 @theme {
-  --color-pri: #283377;
-  --color-sec: #ed1c24;
+  /* Đồng bộ với assets/css/style.css — brand The Sound Healing.
+     Giá trị cũ (#283377 / #ed1c24) là màu của theme mẫu base-wp. */
+  --color-pri: #c2a056;
+  --color-sec: #1b1c19;
 }

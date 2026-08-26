@@ -59,21 +59,12 @@ add_filter('admin_url', function ($url, $path, $blog_id) {
    return $url;
 }, 999, 3);
 
-// Tailwind CDN
-add_action('wp_head', function () {
-?>
-   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-   <style type="text/tailwindcss">
-      @theme {
-        --color-pri: #283377;
-        --color-sec: #ed1c24;
-      }
-      </style>
-<?php
-}, 1);
-
 // Register css
 add_action('wp_enqueue_scripts', function () {
+   // Tailwind đã build sẵn — nạp ĐẦU TIÊN để style.css còn đè được biến/utility.
+   // Sinh bằng `npm run build`. Nếu sửa class trong PHP mà không build lại thì class mới sẽ không có CSS.
+   wp_enqueue_style('mona-tailwind', MONA_THEME_PATH_URI . '/assets/css/tailwind.output.css', [], filemtime(MONA_THEME_PATH . '/assets/css/tailwind.output.css'));
+
    // CSS thư viện — nằm trên để theme CSS đè lại
    wp_enqueue_style('mona-swiper', MONA_THEME_PATH_URI . '/assets/library/swiper/swiper-bundle.min.css', [], MONA_THEME_VERSION);
    wp_register_style('mona-fancybox', MONA_THEME_PATH_URI . '/assets/library/fancybox/fancybox.css', [], MONA_THEME_VERSION);
