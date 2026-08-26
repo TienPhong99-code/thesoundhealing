@@ -61,7 +61,7 @@ $data = [
          <div class="flex items-center gap-2 shrink-0">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="block">
                <?php if (!empty($data['logo'])) : ?>
-                  <?php echo mona_get_image_by_id($data['logo'], 'full', false, ['class' => 'block h-12 w-auto', 'alt' => get_bloginfo('name')]); ?>
+                  <?php echo mona_get_image_by_id($data['logo'], 'medium', false, ['class' => 'block h-12 w-auto', 'sizes' => '110px', 'alt' => get_bloginfo('name')]); ?>
                <?php else : ?>
                   <img src="<?php echo esc_url(MONA_THEME_PATH_URI . '/assets/images/logo2.png'); ?>"
                      class="block h-8 w-auto"
